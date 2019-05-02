@@ -38,10 +38,10 @@ sidebar:
         #     title: global.categories
         #     url: /all-categories
         #     icon: fa fa-bookmark
-        # tags:
-        #     title: global.tags
-        #     url: /all-tags
-        #     icon: fa fa-tags
+        tags:
+            title: global.tags
+            url: /all-tags
+            icon: fa fa-tags
         # archives:
         #     title: global.archives
         #     url: /all-archives
@@ -83,7 +83,7 @@ sidebar:
         #     icon: fab fa-linkedin
         mail:
             title: global.mail
-            url: mailto
+            url: 'mailto: root@yceffort.kr'
             icon: fa fa-envelope
     rss:
         rss:
@@ -275,3 +275,6 @@ sharing_options:
 #        title: "Odnoklassniki"
 #        icon: "fab fa-odnoklassniki"
 #        url: "https://connect.ok.ru/offer?url={{post.permalink}}"
+
+mathjax:
+  enable: true
