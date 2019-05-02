@@ -16,10 +16,10 @@ timezone: Asia/Seoul
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://yoursite.com
+url: https://www.yceffort.kr/
 root: /
-permalink: :year-:month-:day-:title.html
-permalink_defaults: :year-:month-:day-:title
+permalink: :year/:month/:day/:title/
+permalink_defaults: 
 
 # Directory
 source_dir: source
@@ -32,7 +32,7 @@ i18n_dir: :lang
 skip_render:
 
 # Writing
-new_post_name: :year-:month-:day-:title.md
+new_post_name: :year/:month/:day/:title.md
 default_layout: post
 titlecase: false # Transform title into titlecase
 external_link: true # Open external links in new tab
@@ -81,7 +81,9 @@ theme: tranquilpeak
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type:
+  type: heroku
+  repo: https://git.heroku.com/yceffort-blog.git
+  message:   
 
 algolia:
   appId: "LA1F1N8028"
@@ -100,6 +102,3 @@ algolia:
     - tags
     - title
 
-
-# plugins:
-#   - hexo-algoliasearch
