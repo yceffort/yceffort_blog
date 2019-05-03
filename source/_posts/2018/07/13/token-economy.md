@@ -2,12 +2,12 @@
 title: 토큰 이코노미란 무엇인가?
 updated: 2018-07-13 08:32:37
 layout: post
-tags: [blockchain, token-economy]
+tags: [blockchain, token_economy]
 ---
 
 먼저, 기존의 토큰 이코노미의 사전적인 정의 부터 알아보자.
 
-## [Token economy](https://en.wikipedia.org/wiki/token-economy)
+## [Token economy](https://en.wikipedia.org/wiki/Token_economy)
 
 토큰 이코노미는 특정 목표 행동을 체계적으로 강화하는 것을 기초로한 수반성 관리 시스템이다. 
 

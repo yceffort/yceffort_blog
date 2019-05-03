@@ -2,7 +2,7 @@
 title: "Computer Vision 01) - Image Representation"
 updated: 2019-04-01 09:35:16
 layout: post
-tags: [computer-vision]
+tags: [computer_vision]
 ---
 
 

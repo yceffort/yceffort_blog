@@ -2,7 +2,7 @@
 title: 블록체인 기술을 기반으로 한 스마트 에너지 그리드
 updated: 2018-07-20 12:17:07
 layout: post
-tags: [blockchain, smart-grid]
+tags: [blockchain, smart_grid]
 ---
 
 Smarter City: Smart Energy Grid based on Blockchain Technology
