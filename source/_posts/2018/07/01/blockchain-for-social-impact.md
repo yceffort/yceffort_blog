@@ -2,7 +2,7 @@
 title: 소셜임팩트를 위한 블록체인
 updated: 2018-07-01 18:17:17
 layout: post
-tags: [blockchain, social_impact]
+tags: [blockchain, social-impact]
 ---
 
 Blockchain for Social Impact

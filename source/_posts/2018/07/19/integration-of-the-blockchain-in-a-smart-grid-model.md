@@ -2,12 +2,12 @@
 title: 스마트 그리드에 적용하는 블록체인
 updated: 2018-07-19 12:17:07
 layout: post
-tags: [blockchain, smart_grid]
+tags: [blockchain, smart-grid]
 ---
 
 INTEGRATION OF THE BLOCKCHAIN IN A SMART GRID MODEL
 
-[원문](https://www.researchgate.net/publication/320518549_INTEGRATION_OF_THE_BLOCKCHAIN_IN_A_SMART_GRID_MODEL?enrichId=rgreq-9836cc88629c47c28cf25309f1ff653c-XXX&enrichSource=Y292ZXJQYWdlOzMyMDUxODU0OTtBUzo1NTE0NjQxOTgwNDE2MDBAMTUwODQ5MDcxODI1NQ%3D%3D&el=1_x_3&_esc=publicationCoverPdf)
+[원문](https://www.researchgate.net/publication/320518549_INTEGRATION_OF_THE_BLOCKCHAIN_IN_A_smart-grid_MODEL?enrichId=rgreq-9836cc88629c47c28cf25309f1ff653c-XXX&enrichSource=Y292ZXJQYWdlOzMyMDUxODU0OTtBUzo1NTE0NjQxOTgwNDE2MDBAMTUwODQ5MDcxODI1NQ%3D%3D&el=1_x_3&_esc=publicationCoverPdf)
 
 전세계적으로 전기 소비량이 꾸준히 증가하고 있다. 이는 지속적으로 전기를 사용하는 장비와 IoT로 인하여 증가하는 경향이 있다. 오늘날, 인터넷에 연결된 물건 들은 단순히 시계에서 부터 집에 이르기까지, 일상의 필수적인 부분으로 자리잡고 있다.
 

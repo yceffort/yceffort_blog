@@ -2,7 +2,7 @@
 title: 블록체인을 활용한 스마트 그리드
 updated: 2018-07-19 12:17:07
 layout: post
-tags: [blockchain, smart_grid]
+tags: [blockchain, smart-grid]
 ---
 
 How Blockchain Could Give Us a Smarter Energy Grid

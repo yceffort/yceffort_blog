@@ -2,7 +2,7 @@
 title: 블록체인으로 스마트 그리드의 보안을 향상시키는 방법
 updated: 2018-07-21 20:20:27
 layout: post
-tags: [blockchain, smart_grid]
+tags: [blockchain, smart-grid]
 ---
 
 How Blockchain Can Help Increase The Security Of Smart Grids
