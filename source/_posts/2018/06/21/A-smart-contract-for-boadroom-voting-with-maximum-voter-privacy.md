@@ -2,6 +2,7 @@
 title: Ethereum) 이더리움으로 구현한 선거 시스템
 updated: 2018-06-21  7:39:57
 layout: post
+mathjax: true
 ---
 
 유권자의 개인정보보호를 극대화 하는 스마트 컨트랙트를 활용한 이사회 투표

@@ -2,6 +2,7 @@
 title: Zerocoin) 비트코인 기반의 익명 분산화된 E-Cash
 updated: 2018-06-26 10:35:35
 layout: post
+mathjax: true
 ---
 
 Zerocoin: Anonymous Distributed E-Cash from Bitcoin

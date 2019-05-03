@@ -3,6 +3,7 @@ title: "Pytorch 07) - Convolutional Neural Network (2)"
 updated: 2019-02-21 22:21:57
 layout: post
 tags: [pytorch]
+mathjax: true
 ---
 
 Pytorch - 07) Convolutional Neural Network (2)

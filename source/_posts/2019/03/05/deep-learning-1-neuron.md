@@ -3,6 +3,7 @@ title: "Deep Learning 01) - Neuron"
 updated: 2019-03-05 18:08:28
 layout: post
 tags: [pytorch]
+mathjax: true
 ---
 
 Deep Learning 01) Neuron

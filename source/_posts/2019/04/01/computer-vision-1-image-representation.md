@@ -5,9 +5,9 @@ layout: post
 tags: [computer_vision]
 ---
 
-## Image Representation & Classification
 
-요즘 너무 바쁘다. 마음만 바쁜 것 같기도하고, 정신이 없다. 자고로 입에 바쁘다는 말을 달고사는 사람과는 가까이 하지 말라고 하였다. 나는 나를 가까이 하지 말아야겠다.
+
+## Image Representation & Classification
 
 ### Images as Grids of Pixels
 

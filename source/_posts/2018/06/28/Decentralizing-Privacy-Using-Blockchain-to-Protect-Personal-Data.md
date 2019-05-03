@@ -2,6 +2,7 @@
 title: 탈중앙화된 개인정보-블록체인으로 개인정보 지키는 법
 updated: 2018-06-28 10:57:52
 layout: post
+mathjax: true
 ---
 
 Decentralizing Privacy: Using Blockchain to Protect Personal Data

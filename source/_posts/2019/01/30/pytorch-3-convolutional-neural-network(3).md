@@ -3,6 +3,7 @@ title: "Pytorch (3-2) - CNN: Convolutional Neural Network "
 updated: 2019-01-30 09:17:08
 layout: post
 tags: [pytorch]
+mathjax: true
 ---
 
 앞서 CNN네트워크를 진행하면서 모르는 부분이 좀 있어서, 이론적인 측면을 좀더 강조해서 글을 써보려고 한다.

@@ -2,7 +2,7 @@
 title: Pytorch (1) - 퍼셉트론 알고리즘과 신경망 알고리즘
 updated: 2019-01-27 10:20:06
 layout: post
-tags: [pytorch]
+tags: [pytorch]mathjax: true
 ---
 
 ## 퍼셉트론 알고리즘

@@ -3,6 +3,7 @@ title: "Deep Learning 02) - Activation Function"
 updated: 2019-03-05 18:41:30
 layout: post
 tags: [pytorch]
+mathjax: true
 ---
 
 Deep Learning 02) Activation Function

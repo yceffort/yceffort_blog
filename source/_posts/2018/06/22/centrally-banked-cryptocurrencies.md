@@ -2,6 +2,7 @@
 title: RSCoin) 중앙은행화된 암호화폐
 updated: 2018-06-22  9:46:07
 layout: post
+mathjax: true
 ---
 
 중앙은행화된 암호화폐, RSCoin

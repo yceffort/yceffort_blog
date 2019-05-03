@@ -2,6 +2,7 @@
 title: Zero Knowledge Proof (ZKP)
 updated: 2018-06-26  1:12:03
 layout: post
+mathjax: true
 ---
 
 Zero Knowledge Proof - 영지식증명

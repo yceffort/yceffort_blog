@@ -3,6 +3,7 @@ title: "토큰화된 자산에서 어떻게 가치가 만들어지는가?"
 updated: 2018-10-29 20:49:52
 layout: post
 tags: [blockchain, cryptocurrency]
+mathjax: true
 ---
 
 How Value is Created in Tokenized Assets

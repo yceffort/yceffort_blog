@@ -2,6 +2,7 @@
 title: 작업 증명이 없는 암호화폐
 updated: 2018-06-23 10:13:44
 layout: post
+mathjax: true
 ---
 
 작업 증명이 없는 암호화폐

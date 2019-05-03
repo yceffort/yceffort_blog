@@ -2,6 +2,7 @@
 title: Permacoin) 데이터 보관을 위한 비트코인
 updated: 2018-06-25 12:41:27
 layout: post
+mathjax: true
 ---
 
 퍼마코인: 데이터 보존을 위한 비트코인

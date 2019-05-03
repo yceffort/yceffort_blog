@@ -3,6 +3,7 @@ title: "Step by Step machine laerning - 05"
 updated: 2018-12-17 10:43:27
 layout: post
 tags: [machine-learning, scikit-learn]
+mathjax: true
 ---
 
 ## Training Models

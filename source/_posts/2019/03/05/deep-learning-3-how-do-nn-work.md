@@ -3,6 +3,7 @@ title: "Deep Learning 03) - How do neural networks work/learn?"
 updated: 2019-03-05 19:43:15
 layout: post
 tags: [pytorch]
+mathjax: true
 ---
 
 How do neural networks work/learn?

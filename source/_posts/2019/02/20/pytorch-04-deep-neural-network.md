@@ -3,6 +3,7 @@ title: "Pytorch 04) - Deep Nueral Network"
 updated: 2019-02-20 14:36:43
 layout: post
 tags: [pytorch]
+mathjax: true
 ---
 
 Pytorch - 04) Deep Neural Network

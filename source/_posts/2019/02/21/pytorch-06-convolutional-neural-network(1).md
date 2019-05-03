@@ -3,6 +3,7 @@ title: "Pytorch 06) - Convolutional Neural Network (1)"
 updated: 2019-02-21 12:05:35
 layout: post
 tags: [pytorch]
+mathjax: true
 ---
 
 Pytorch - 06) Convolutional Neural Network (1)

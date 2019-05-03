@@ -3,6 +3,7 @@ title: Pytorch (3) - 합성곱신경망 (CNN - Convolutional Nerual Network)
 updated: 2019-01-29 10:03:00
 layout: post
 tags: [pytorch]
+mathjax: true
 ---
 
 합성곱신경망(CNN - Convolutaional Neural Network, 이하 CNN)은 말그대로, 합성곱 연산을 사용하는 인공신경망의 한 종류다. Convolution을 활용하면 3차원 데이터의 공간적 정보를 유지한 상태로 다음 레이어로 보내는 것이 가능하다.

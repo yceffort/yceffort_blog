@@ -3,6 +3,7 @@ title: "Step by Step machine laerning - 02"
 updated: 2018-11-16 19:44:01
 layout: post
 tags: [machine-learning, scikit-learn]
+mathjax: true
 ---
 
 ## Classification
