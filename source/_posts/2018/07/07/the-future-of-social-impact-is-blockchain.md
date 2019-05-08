@@ -2,7 +2,7 @@
 title: 소셜임팩트의 미래는 블록체인
 updated: 2018-07-07 21:27:54
 layout: post
-tags: [blockchain, social_impact]
+tags: [blockchain, social-impact]
 ---
 
 The Future Of Social Impact Is...Blockchain
