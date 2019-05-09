@@ -101,3 +101,14 @@ algolia:
     - slug
     - tags
     - title
+
+markdown:
+  anchors:    
+    level: 2
+    collisionSuffix: 'v'  
+    permalink: true
+    permalinkClass: header-anchor 
+    permalinkSymbol: ¶
+
+mathjax:
+  enable: true
