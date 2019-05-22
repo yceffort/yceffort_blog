@@ -3,7 +3,7 @@
 
 // Font families
 $noto-sans-kr:          'Noto Sans KR', sans-serif;
-$nanum-gothic-coding:   'Nanum Gothic Coding', monospace;
+$inconsolata:   'Inconsolata', monospace;
 
 $open-sans:            'Open Sans';
 $open-sans-sans-serif: 'Open Sans', sans-serif;
@@ -17,14 +17,14 @@ $font-families: (
    // base
    'headings':          $noto-sans-kr,
    // components
-   'code':              $nanum-gothic-coding,
+   'code':              $inconsolata,
    'caption':           $noto-sans-kr,
    'image-gallery':     $noto-sans-kr,
    'post-header-cover': $noto-sans-kr,
    'post-meta':         $noto-sans-kr,
    'post-content':      $noto-sans-kr,
    'post-excerpt-link': $open-sans-sans-serif,
-   'highlight':         $noto-sans-kr,
+   'highlight':         $inconsolata,
    // layout
    'sidebar':           $noto-sans-kr
 );
