@@ -2,7 +2,7 @@
 title: "Typescript Type, Enum, Partial, Record로 글로벌 변수 관리하기"
 date: 2019-06-17 16:20:52
 layout: post
-tags: [react, javascript]
+tags: [react, javascript, typescript]
 ---
 
 ## 고민지점
