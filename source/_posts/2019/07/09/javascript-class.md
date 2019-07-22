@@ -2,7 +2,7 @@
 title: "javascript class"
 date: 2019-07-09 16:01:24
 layout: post
-tags: [javascript]
+tags: [javascript, es6]
 ---
 
 # Class
@@ -11,9 +11,9 @@ tags: [javascript]
 
 ```javascript
 class Member {
-    getName() {
-        return "이름";
-    }
+  getName() {
+    return "이름";
+  }
 }
 
 let obj = new Member();
@@ -30,13 +30,13 @@ console.log(obj.getName());
 
 ```javascript
 class Member {
-    setName(name) {
-        this.name = name;
-    }
+  setName(name) {
+    this.name = name;
+  }
 
-    getName(name) {
-        this.name = name;
-    }
+  getName(name) {
+    this.name = name;
+  }
 }
 ```
 
@@ -46,15 +46,18 @@ class Member {
 
 ```javascript
 class Member {
-    setName(name) {
-        this.name = name
-    }
+  setName(name) {
+    this.name = name;
+  }
 }
 ```
+
 위 코드와
 
 ```javascript
-Member.prototype.setName = function(namn) {this.name = name};
+Member.prototype.setName = function(namn) {
+  this.name = name;
+};
 ```
 
 위 코드는 같다.
@@ -65,17 +68,17 @@ Member.prototype.setName = function(namn) {this.name = name};
 
 ```javascript
 class Member {
-    constructor(name) {
-        this.name = name
-    }
+  constructor(name) {
+    this.name = name;
+  }
 
-    getName() {
-        return this.name
-    }
+  getName() {
+    return this.name;
+  }
 }
 
-let newMember = new Member('라이오넬 멧시')
-console.log(newMember.getName())
+let newMember = new Member("라이오넬 멧시");
+console.log(newMember.getName());
 ```
 
 만약 `constructor`에서 이상한 값을 반환하면 어떻게 될까?
@@ -92,18 +95,18 @@ constructor() {
 
 ```javascript
 class Member {
-    constructor(name) {
-        return {name: '메켓트'}
-    }
+  constructor(name) {
+    return { name: "메켓트" };
+  }
 
-    getName() {
-        return this.name
-    }
+  getName() {
+    return this.name;
+  }
 }
 
-let newMember = new Member('라이오넬 멧시')
-console.log(newMember.name)
-console.log(newMember.getName)
+let newMember = new Member("라이오넬 멧시");
+console.log(newMember.name);
+console.log(newMember.getName);
 ```
 
 ```
@@ -126,5 +129,3 @@ class Member {
     }
 }
 ```
-
-

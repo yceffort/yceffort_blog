@@ -3,6 +3,7 @@ date_format: "MMM DD, YYYY"
 
 global:
     home: "Home"
+    bookmark: "Bookmark"
     categories: "Categories"
     category: "Category"
     tags: "Tags"

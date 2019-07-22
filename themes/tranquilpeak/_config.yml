@@ -52,6 +52,10 @@ sidebar:
             icon: fa fa-search
             # `open-algolia-search` classes are used to open algolia search modal
             class: open-algolia-search
+        bookmark:
+            title: global.bookmark
+            url: /bookmark
+            icon: fa fa-tags
         about:
             title: global.about
             url: /#about
