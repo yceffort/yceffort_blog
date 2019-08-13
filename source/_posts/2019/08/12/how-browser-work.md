@@ -5,7 +5,7 @@ layout: post
 tags: [browser]
 ---
 
-### 작업중
+### 🚧작성중 🚧
 
 [원문-How Browsers Work: Behind the scenes of modern web browsers](https://www.html5rocks.com/en/tutorials/internals/howbrowserswork/)
 
