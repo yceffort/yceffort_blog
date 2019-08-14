@@ -236,7 +236,7 @@ f1_score(y_train_5, y_train_pred)
 
 ![decision threshold and precision recall trade off](https://lh3.googleusercontent.com/HtSa0QJBxFJv1yCenDFzKRsraMzIx03ksh0NKVEdttMtc7ogrkU-tCF7TzathDnyV0xvGw=s170){:width="400px"}
 
-왼쪽에는 낮은 점수를 기록한 negative, 오른쪽에는 높은 점수를 기록한 positive가 존재한다. `threshold`가 가운데에 있다고 가정했을 떄, 그리고 이 `threshold`가 어느정도이냐에 따라서 Precision 과 Recall값이 달라지게 된다. 즉 5라고 일단 예측해버리면, Recall은 성공하겠지만, 모두 5가 아니라고 판단하면, Precision이 높아지게 될 것이다.
+왼쪽에는 낮은 점수를 기록한 negative, 오른쪽에는 높은 점수를 기록한 positive가 존재한다. `threshold`가 가운데에 있다고 가정했을 때, 그리고 이 `threshold`가 어느정도이냐에 따라서 Precision 과 Recall값이 달라지게 된다. 즉 5라고 일단 예측해버리면, Recall은 성공하겠지만, 모두 5가 아니라고 판단하면, Precision이 높아지게 될 것이다.
 
 실제 어떤지 살펴보자. 앞서 숫자 5짜리 이미지를 가지고 판단해본다.
 

@@ -48,7 +48,7 @@ var observer = new IntersectionObserver(callback, options);
 
 `rootMargin`: css의 margin property와 사용법이 같다. root에 margin 값을 주는 것이다.
 
-`threshold`: number, 또는 array of number가 가능하다. 여기서 숫자는 viewport의 n%가 되었을 떄 이벤트를 호출할 것인지 결정하는 것이다. array라면 해당 숫자만큼 노출될때 마다 이벤트가 발생하게 된다. 기본값은 0 으로, 단 1픽셀이라도 노출될 경우 이벤트가 발생된다.
+`threshold`: number, 또는 array of number가 가능하다. 여기서 숫자는 viewport의 n%가 되었을 때 이벤트를 호출할 것인지 결정하는 것이다. array라면 해당 숫자만큼 노출될때 마다 이벤트가 발생하게 된다. 기본값은 0 으로, 단 1픽셀이라도 노출될 경우 이벤트가 발생된다.
 
 `callback`: 타겟이 노출될때 실행되는 콜백함수다. 여기서는 두개의 값을 반환한다.
 

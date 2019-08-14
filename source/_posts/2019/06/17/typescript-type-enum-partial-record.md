@@ -10,7 +10,7 @@ tags: [react, javascript, typescript]
 - Global 로 관리하는 Colorset Red, Blue, Green, Black이 있다.
 - 이 색들은 각각 지정된 칼라코드가 있다
 - 그러나 때로는 그 컬러코드에 맞게 안쓰는 경우도 있다
-- 그러나 떄로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.
+- 그러나 때로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.
 
 ## Union types
 

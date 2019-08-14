@@ -17,7 +17,7 @@ tags: [react, javascript, typescript]
 
 ### koa
 
-express를 만든 개발자들이 따로 떨어져 나와서 만든 web framework가 바로 koa다. express와 비교했을 떄는 koa가 비교적 가볍고, node.js v7의 async/await 를 자유자재로 쓸 수 있다는 데 있다. 그리고 es6를 도입해서 `generator`도 사용할 수 있다. IBM이 express를 인수해버린 관계로, 많은 개발자들이? koa로 넘어가는 추세라고 하는데, 아직은 잘 모르겠다.
+express를 만든 개발자들이 따로 떨어져 나와서 만든 web framework가 바로 koa다. express와 비교했을 때는 koa가 비교적 가볍고, node.js v7의 async/await 를 자유자재로 쓸 수 있다는 데 있다. 그리고 es6를 도입해서 `generator`도 사용할 수 있다. IBM이 express를 인수해버린 관계로, 많은 개발자들이? koa로 넘어가는 추세라고 하는데, 아직은 잘 모르겠다.
 
 ### Styled Component
 

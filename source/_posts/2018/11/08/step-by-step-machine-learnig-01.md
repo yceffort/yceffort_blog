@@ -1072,7 +1072,7 @@ lin_rmse
 
 median_housing_values가 120,000~265,000 인걸 감안했을때, 68628은 너무나 큰 값이다. 굉장히 underfit한 상태임을 알 수 있다. 
 
-이번엔 `DecsionTreeRegressor`를 활용해보자. 이 모델은 linear하지 않은 데이터 들 사이에 상관관계를 찾을 떄 유용하다. [여기](https://ko.wikipedia.org/wiki/%EA%B2%B0%EC%A0%95_%ED%8A%B8%EB%A6%AC_%ED%95%99%EC%8A%B5%EB%B2%95) 에서 자세하게 공부해 볼 수 있다.
+이번엔 `DecsionTreeRegressor`를 활용해보자. 이 모델은 linear하지 않은 데이터 들 사이에 상관관계를 찾을 때 유용하다. [여기](https://ko.wikipedia.org/wiki/%EA%B2%B0%EC%A0%95_%ED%8A%B8%EB%A6%AC_%ED%95%99%EC%8A%B5%EB%B2%95) 에서 자세하게 공부해 볼 수 있다.
 
 
 ```py

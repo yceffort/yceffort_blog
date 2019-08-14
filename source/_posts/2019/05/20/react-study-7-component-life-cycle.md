@@ -63,7 +63,7 @@ DOM이 생성되고, 웹 브라우저 상에 나타나는 것을 mount라고 한
 
 ### getDerivedStateFromProps
 
-v16.3 이후에 등장한 메서드로, `props`로 받아온 값을 `state`에 동기화 시키는 용도로 사용되며, 컴포넌트를 마운트하거나 `props`를 변경할 떄 호출된다.
+v16.3 이후에 등장한 메서드로, `props`로 받아온 값을 `state`에 동기화 시키는 용도로 사용되며, 컴포넌트를 마운트하거나 `props`를 변경할 때 호출된다.
 
 ### componentDidMount 
 

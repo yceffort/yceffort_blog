@@ -147,7 +147,7 @@ class Greeting extends React.Component {
 
 ### When to use a Class Component over a Function Component?
 
-컴포넌트가 **state나 라이프 사이클 메소드를** 필요로 할 떄 클래스 컴포넌트를, 그렇지 않으면 함수형 컴포넌트를 활용하면 된다.
+컴포넌트가 **state나 라이프 사이클 메소드를** 필요로 할 때 클래스 컴포넌트를, 그렇지 않으면 함수형 컴포넌트를 활용하면 된다.
 
 > 근데 요즘은 `useState`을 사용하면 함수형 컴포넌트에서도 state사용이 가능하다
 
@@ -402,7 +402,7 @@ const todoItems = todos.map((todo, index) =>
 
 ### What is the use of refs?
 
-`ref`는 element의 참조값을 반환한다. 대부분 이러한 경우는 피해야 하지만, DOM이나 component에 다이렉트로 접근해야할 떄 유용하다.
+`ref`는 element의 참조값을 반환한다. 대부분 이러한 경우는 피해야 하지만, DOM이나 component에 다이렉트로 접근해야할 때 유용하다.
 
 [👆](#table-of-contents)
 
