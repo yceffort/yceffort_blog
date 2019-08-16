@@ -34,6 +34,16 @@ tags: [javascript, react]
 | 18  | [`key` props는 무엇이며, 배열의 요소에서 사용함으로써 얻을 수 있는 이점은 무엇인가?](#what-are-key-props-and-what-is-the-benefit-of-using-them-in-arrays-of-elements) |
 | 19  | [`ref`의 목적은 무엇인가?](#what-is-the-use-of-refs)                                                                                                                  |
 | 20  | [`ref`는 어떻게 생성하는가?](#how-to-create-refs)                                                                                                                     |
+| 21  | [forward refs란 무엇이인가?](#what-are-forward-refs)                                                                                                                  |
+| 22  | [callback ref와 findDOMNode중 어떤것이 더 선호되는가?](#which-is-preferred-option-with-in-callback-refs-and-finddomnode)                                              |
+| 23  | [string ref가 왜 legacy가 되었는가?](#why-are-string-refs-legacy)                                                                                                     |
+| 24  | [Virtual DOM 은 무엇인가?](#what-is-virtual-dom)                                                                                                                      |
+| 25  | [Virtual DOM은 어떻게 작동하는가?](#how-virtual-dom-works)                                                                                                            |
+| 26  | [Shadow DOM과 Virtual DOM의 차이는 무엇인가?](#what-is-the-difference-between-shadow-dom-and-virtual-dom)                                                             |
+| 27  | [What is React Fiber?](#what-is-react-fiber)                                                                                                                          |
+| 28  | [React Fiber의 목적은 무엇인가?](#what-is-the-main-goal-of-react-fiber)                                                                                               |
+| 29  | [controlled components는 무엇인가?](#what-are-controlled-components)                                                                                                  |
+| 30  | [uncontrolled components는 무엇인가?](#what-are-uncontrolled-components)                                                                                              |
 
 ---
 
@@ -452,5 +462,176 @@ class SearchBar extends Component {
 또한 컴포넌트의 함수 내에서 클로져를 `ref`를 사용할 수도 있다.
 
 주의: 추천할만한 방법은 아니지만, 인라인 `ref` callback을 이용하는 방식도 있다.
+
+[👆](#table-of-contents)
+
+### What are forward refs?
+
+Ref forwarding은 일부 컴포넌트에서 ref를 받아서 자식 컴포넌트에게 전달하는 것을 의미한다.
+
+```javascript
+const ButtonElement = React.forwardRef((props, ref) => (
+  <button ref={ref} className="CustomButton">
+    {props.children}
+  </button>
+));
+
+// Create ref to the DOM button:
+const ref = React.createRef();
+<ButtonElement ref={ref}>{"Forward Ref"}</ButtonElement>;
+```
+
+[👆](#table-of-contents)
+
+### Which is preferred option with in callback refs and findDOMNode()?
+
+callback ref를 쓰는 것이 더 선호된다. 왜냐하면 `findDOMNode()`는 향후에 있을 리액트의 개선사항이 반영되지 않기 때문이다.
+
+레거시에서 `findDOMNode`를 사용하는 방법이 있다.
+
+```javascript
+class MyComponent extends Component {
+  componentDidMount() {
+    findDOMNode(this).scrollIntoView();
+  }
+
+  render() {
+    return <div />;
+  }
+}
+```
+
+그래서 선호하는 방법은 다음과 같다.
+
+```javascript
+class MyComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.node = createRef();
+  }
+  componentDidMount() {
+    this.node.current.scrollIntoView();
+  }
+
+  render() {
+    return <div ref={this.node} />;
+  }
+}
+```
+
+[👆](#table-of-contents)
+
+### Why are String Refs legacy?
+
+예전에 React를 다뤄보았다면, 옛날 방식인 `ref`를 string으로 쓰는, `ref={'textInput'}` 와 같이 ref속성이 string이고, DOM Node인 `refs.textInput`로 접근하는 방법에 익숙할 것이다. 그러나 이러한 string ref는 하단에서 언급할 문제들 때문에, 레거시로 보는 것이 맞다. 그리고 string ref는 React v16에서 제거 되었다.
+
+1. String ref는 실행중인 component 요소를 추적하도록 강제한다. 그리고 React Module을 stateful하게 만들기 떄문에, 이는 번들시 react module이 중복 되는 경우 이상한 오류를 발생시킨다.
+2. 라이브러리를 추가하여 String ref를 child component에 전달한다면, 사용자는 다른 ref를 추가할 수 없다. 그러나 callback ref를 사용하면 이런 문제를 해결할 수 있다.
+3. Flow와 같은 정적 분석에서는 동작하지 않는다. Flow는 string ref를 this.refs와 같은 형태로 표시하도록 만드는 트릭을 추적할 수 없다. callback ref는 string ref보다 flow에 더 잘맞다.
+4. 대부분이 render callback 패턴으로 동작하기를 기대하지만, 그렇게 동작하지 않는다.
+
+```javascript
+class MyComponent extends Component {
+  renderRow = index => {
+    // 동작하지 않는다. ref는 MyComponent가 아닌 DataTable에 연결될 것이다.
+    return <input ref={"input-" + index} />;
+
+    // 이거는 동작한다. callback ref가 짱이다.
+    return <input ref={input => (this["input-" + index] = input)} />;
+  };
+
+  render() {
+    return <DataTable data={this.props.data} renderRow={this.renderRow} />;
+  }
+}
+```
+
+[👆](#table-of-contents)
+
+### What is Virtual DOM?
+
+Virtual DOM은 메모리 내에서 표현되는 Real DOM 이다. UI는 메모리 상에서 표현되며, 그리고 real DOM과 동기화 된다. 이는 렌더 함수 호출과 화면에 elements 표시 하는 사이에 일어난다. 이 모든 과정을 `reconciliation`이라고 한다.
+
+[👆](#table-of-contents)
+
+### How Virtual DOM works?
+
+1. 어디서든 데이터가 편하면, Virtual DOM내에서 전체 UI가 다시 렌덜이 된다.
+   ![virtual-dom-1](https://github.com/sudheerj/reactjs-interview-questions/raw/master/images/vdom1.png)
+
+2. 그런 다음 이전 DOM과 새로운 DOM을 비교한다.
+   ![virtual-dom-2](https://github.com/sudheerj/reactjs-interview-questions/raw/master/images/vdom2.png)
+
+3. 계산이 끝나면, Real DOM 중에서 실제로 업데이트가 있었던 부분 만 변경을 가한다.
+   ![virtual-dom-3](https://github.com/sudheerj/reactjs-interview-questions/raw/master/images/vdom3.png)
+
+[👆](#table-of-contents)
+
+### What is the difference between Shadow DOM and Virtual DOM?
+
+Shadow DOM은 web component의 scope및 CSS scope 지정을 위해 설계된 web browser 기술이다. Virtual DOM은 브라우저 API 위에 자바스크립트에서 구현되는 개념이다.
+
+[👆](#table-of-contents)
+
+### What is React Fiber?
+
+Fiber는 React v16에서 새로운 reconciliation 엔진, 그리고 코어 알고리즘을 새로 작성한 것으로 볼 수 있다. React Fiber의 목적은 애니메이션, 레이아웃, 제스쳐, 작업일시정지 및 중단, 여려 유형의 업데이트 우선순위 조절, 동시성 등 여러가지 기본 사항에 대한 성능을 높이는 것이다.
+
+[👆](#table-of-contents)
+
+### What is the main goal of React Fiber?
+
+React Fiber 의 목표는 애니메이션, 레이아웃, 제스처등의 성능을 높이는 것이다. 렌더링 작업을 chunk별로 작업하고, 여러 프레임 별로 이를 펼치면서 작업하는 점진적 렌더링을 통해 이를 구현했다.
+
+[👆](#table-of-contents)
+
+### What are controlled components?
+
+입력요소를 제어하는 component를 controlled components라고 부른다. 모든 상태변경에 연관뢴 handler function이 존재한다.
+
+예를 들어, 모든 이름을 대문자로 쓰기 위해서는, `handleChange`를 아래와 같이 쓰게 된다.
+
+```javascript
+handleChange(event) {
+  this.setState({value: event.target.value.toUpperCase()})
+}
+```
+
+[👆](#table-of-contents)
+
+### What are uncontrolled components?
+
+uncontrolled components란 내부적으로 자기 자신의 state를 가지고 있는 component다. 현재 필요한 값을 찾기 위해 ref를 사용하여 DOM query를 할 수 있다. 이는 전통적인 HTML 과 비슷하다.
+
+`UserProfile` Component를 아래에서 보자면, `name` input이 ref를 통해서 접근할 수 있다.
+
+```javascript
+class UserProfile extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.input = React.createRef();
+  }
+
+  handleSubmit(event) {
+    alert("A name was submitted: " + this.input.current.value);
+    event.preventDefault();
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          {"Name:"}
+          <input type="text" ref={this.input} />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
+    );
+  }
+}
+```
+
+대부분의 경우, 폼에서는 controlled component를 사용하기를 추천한다.
 
 [👆](#table-of-contents)
