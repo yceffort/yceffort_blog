@@ -44,6 +44,16 @@ tags: [javascript, react]
 | 28  | [React Fiber의 목적은 무엇인가?](#what-is-the-main-goal-of-react-fiber)                                                                                               |
 | 29  | [controlled components는 무엇인가?](#what-are-controlled-components)                                                                                                  |
 | 30  | [uncontrolled components는 무엇인가?](#what-are-uncontrolled-components)                                                                                              |
+| 31  | [`createElement`와 `cloneElement`의 차이는 무엇인가?](#what-is-the-difference-between-createelement-and-cloneelement)                                                 |
+| 32  | [React에서 lifting state up은 무엇인가?](#what-is-lifting-state-up-in-react)                                                                                          |
+| 33  | [Component Lifecycle의 각 phase에는 어떤 차이가 있는가?](#what-are-the-different-phases-of-component-lifecycle)                                                       |
+| 34  | [Component Lifecycle에는 어떤 method가 있는가?](#what-are-the-lifecycle-methods-of-react)                                                                             |
+| 35  | [Higher-Order 컴포넌트는 무엇인가?](#what-are-higher-order-components)                                                                                                |
+| 36  | [HOC 컴포넌트에서 props proxy를 어떻게 만드는가?](#how-to-create-props-proxy-for-hoc-component)                                                                       |
+| 37  | [Context란 무엇인가?](#what-is-context)                                                                                                                               |
+| 38  | [자식 prop는 무엇인가?](#what-is-children-prop)                                                                                                                       |
+| 39  | [React에서 주석을 어떻게 쓰는가?](#how-to-write-comments-in-react)                                                                                                    |
+| 40  | [props 변수가 있는 super 생성자의 목적은 무엇인가?](#what-is-the-purpose-of-using-super-constructor-with-props-argument)                                              |
 
 ---
 
@@ -635,3 +645,200 @@ class UserProfile extends React.Component {
 대부분의 경우, 폼에서는 controlled component를 사용하기를 추천한다.
 
 [👆](#table-of-contents)
+
+### What is the difference between createElement and cloneElement?
+
+JSX는 `React.createElement()` 함수로 UI에 나타낼 React element를 생성한다. 반면 `cloneElement`는 element를 props로 보낼 때 사용한다.
+
+[👆](#table-of-contents)
+
+### What is Lifting State Up in React?
+
+여러 component 들이 동일한 변경 데이터를 공유해야하는 경우 가까운 부모 component 로 state를 올리는 것이 좋다. 즉, 두개의 자식 component가 부모에 있는 동일한 데이터를 공유할 때. 두개의 자식 component 들은 local state를 유지하는 대신, 부모로 state를 올려야 한다.
+
+[👆](#table-of-contents)
+
+### What are the different phases of component lifecycle?
+
+React lifecycle에는 세 개의 phase가 있다.
+
+1. `mounting`: 컴포넌트가 browser DOM에 마운트 될 준비가 된 상태다. 이 phase에는 `constructor()` `getDerivedStateFromProps()` `render()` `componentDidMount()`가 있다
+2. `updating`: 이 단계에서는, 컴포넌트가 두가지 방법으로 업데이트 된다. 새로운 `props`를 보내거나, `setState()` `forceUpdate()`를 통해서 state를 업데이트 하는 방법이 있다. 이 단계에서는, `getDerivedStateFromProps()` `shouldComponentUpdate()` `render()` `getSnapshotBeforeUpdate()` `componentDidUpdate()` 가 포함된다.
+3. `unmounting`: 이단계에서는, browser DOM이 더 이 더이상 필요 없어지거나 unmount된다. 여기에는 `componentWillUnmount()`가 포함된다.
+
+DOM에서의 변경을 적용할 때, 내부에서 어떤 과정을 거치는지 알아볼 필요가 있다. 각 단계는 아래와 같다.
+
+1. `Render` 컴포넌트가 어떠한 사이드 이펙트 없이 렌더링 된다. 이는 Pure Component에 적용되며, 이 단계에서는 일시정지, 중단, 렌더 재시작등이 가능하다.
+2. `Pre-commit`: 컴포넌트가 실제 변화를 DOM에 반영하기 전에, 리액트가 DOM을 `getSnapshotBeforeUpdate()` 통해서 DOM 을 읽을 수도 있다.
+3. `Commit`: React는 DOM과 함꼐 작동하며, 각각의 라이프 사이클 마지막에 실행되는 것들이 포함된다. `componentDidMount()` `componentDidUpdate()` `componentWillUnmount()`
+
+   16.3 이후
+
+![react-16.3-phases](https://github.com/sudheerj/reactjs-interview-questions/raw/master/images/phases16.3.jpg?raw=true)
+
+16.3 이전
+
+![before-react-16.3](https://github.com/sudheerj/reactjs-interview-questions/blob/master/images/phases.png?raw=true)
+
+[👆](#table-of-contents)
+
+### What are the lifecycle methods of React?
+
+React 16.3+
+
+- `getDerivedStateFromProps`: 모든 `render()`가 실행되기 바로 직전에 호출된다. props의 변화의 결과로 내부 state 변화를 가능하게 해주는 메서드로, 굉장히 드물게 사용된다.
+- `componentDidMount`: 첫렌더링이 다 끝나고, 모든 ajax 요청이 완료, DOM이나 state 변화, 그리고 이벤트 리스너가 모두 설정된 다음에 호출된다.
+- `shouldComponentUpdate`: 컴포넌트가 업데이트 될지 말지를 결정한다. default로 true를 리턴한다. 만약 state나 props 업데이트 이후에 컴포넌트가 업데이트 될 필요가 없다고 생각한다면, false를 리턴하면 된다. 컴포넌트가 새로운 props를 받은 후에, 리 렌더링을 방지해서 성능을 향상시키기에 가장 좋은 위치다.
+- `getSnapshotBeforeUpdate`: 렌더 결과물이 DOM에 커밋되기 직전에 호출된다. 여기서 리턴된 모든 값은 `componentDidUpdate()`로 넘겨진다. 스크롤 포지션 등, DOM에서 필요한 정보를 사용할 때 유용하다.
+- `componentDidUpdate`: prop/state의 변화d의 응답으로 DOM을 업데이트 할 때 필요하다. 이 메소드는 만약 `shouldComponentUpdate()`가 `false`를 리턴하면 호출되지 않는다.
+- `componentWillUnmount`: 네트워크 요청을 취소하거나, 컴포넌트와 관련된 이벤트 리스너를 삭제할 때 쓰인다.
+
+> before 16.3은 따로 번역하지 않겠습니다.
+
+- `componentWillMount`: Executed before rendering and is used for App level configuration in your root component.
+- `componentDidMount`: Executed after first rendering and here all AJAX requests, DOM or state updates, and set up event listeners should occur.
+  componentWillReceiveProps: Executed when particular prop updates to trigger state transitions.
+- `shouldComponentUpdate`: Determines if the component will be updated or not. By default it returns true. If you are sure that the component doesn't need to render after state or props are updated, you can return false value. It is a great place to improve performance as it allows you to prevent a re-render if component receives new prop.
+- `componentWillUpdate`: Executed before re-rendering the component when there are props & state changes confirmed by shouldComponentUpdate() which returns true.
+- `componentDidUpdate`: Mostly it is used to update the DOM in response to prop or state changes.
+- `componentWillUnmount`: It will be used to cancel any outgoing network requests, or remove all event listeners associated with the component.
+
+[👆](#table-of-contents)
+
+### What are Higher-Order Components?
+
+Higher-order Component (이하 HOC)는 컴포넌트를 받아서 새로운 컴포넌트를 리턴하는 컴포넌트다. 기본적으로, 이러한 패턴은 리액트의 컴포넌트적인 특성에서 유래되었다.
+
+이를 `Pure Component`라고 부르는데, 동적으로 제공되는 하위 component를 그대로 사용하지만, 입력받은 component를 수정/복사하지 않기 때문이다.
+
+HOC는 아래와 같은 use case에서 사용할 수 있다.
+
+- 코드 재사용, 로직 추상화
+- render 하이재킹
+- state 추상화 또는 조작
+- props 조작
+
+[👆](#table-of-contents)
+
+### How to create props proxy for HOC component?
+
+`props proxy pattern`을 아래와 같이 사용한다면, 컴포넌트에 넘겨진 props를 추가/수정할 수 있다.
+
+```javascript
+function HOC(WrappedComponent) {
+  return class Test extends Component {
+    render() {
+      const newProps = {
+        title: "New Header",
+        footer: false,
+        showFeatureX: false,
+        showFeatureY: true
+      };
+
+      return <WrappedComponent {...this.props} {...newProps} />;
+    }
+  };
+}
+```
+
+[👆](#table-of-contents)
+
+### What is context?
+
+Context는 props을 탑다운으로 주지 않고도, 어느 레벨에서든 데이터를 컴포넌트 트리에 넘기는 방법이다. 예를 들어 인증받은 사용자, 언어 설정, UI theme 등 어플리케이션 단위에서 다양한 컴포넌트가 사용해야 하는 데이터를 context를 통해서 줄 수 있다.
+
+```javascript
+const { Provider, Consumer } = React.createContext(defaultValue);
+```
+
+[👆](#table-of-contents)
+
+### What is children prop?
+
+Children은 prop (`this.prop.children`) 으로, 다른 컴포넌트에 컴포넌트를 넘길 수 있는 방법으로, 다른 prop를 사용하는 것과 동일하다. 컴포넌트 트리는 이 children을 여닫는 태그 사이에 두며, 이는 컴포넌트를 `children prop`으로 건내게 된다.
+
+React API에서 이러한 형태로 다양한 prop을 제공하고 있다. `React.Children.map` `React.Children.forEach` `React.Children.count` `React.Children.only` `React.Children.toArray` 사용예제는 아래와 같다.
+
+```javascript
+const MyDiv = React.createClass({
+  render: function() {
+    return <div>{this.props.children}</div>;
+  }
+});
+
+ReactDOM.render(
+  <MyDiv>
+    <span>{"Hello"}</span>
+    <span>{"World"}</span>
+  </MyDiv>,
+  node
+);
+```
+
+[👆](#table-of-contents)
+
+### How to write comments in React?
+
+React/JSX의 주석은 자바스크립트의 다중 주석과 비슷하지만, `{ }`에 쌓여있다는 것이 다르다.
+
+한 줄
+
+```html
+<div>
+  {/* Single-line comments(In vanilla JavaScript, the single-line comments are
+  represented by double slash(//)) */} {`Welcome ${user}, let's play React`}
+</div>
+```
+
+여러 줄
+
+```html
+<div>
+  {/* Multi-line comments for more than one line */} {`Welcome ${user}, let's
+  play React`}
+</div>
+```
+
+[👆](#table-of-contents)
+
+### What is the purpose of using super constructor with props argument?
+
+자식 클래스 생성자는 `super()`메소드가 호출되기 전까지 `this` 레퍼런스를 쓸 수 없다. 이와 동일한것이 es6의 서브 클래스에 구현되어 있다. `super()` 메소드에 props를 파라미터로 호출하는 주요 이유는 `this.props`를 자식 생성자에서 쓰기 위해서다.
+
+props 넘기는 경우
+
+```javascript
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+
+    console.log(this.props); // prints { name: 'John', age: 42 }
+  }
+}
+```
+
+props 안 넘기는 경우
+
+```javascript
+class MyComponent extends React.Component {
+  constructor(props) {
+    super();
+
+    console.log(this.props); // prints undefined
+
+    // but props parameter is still available
+    console.log(props); // prints { name: 'John', age: 42 }
+  }
+
+  render() {
+    // no difference outside constructor
+    console.log(this.props); // prints { name: 'John', age: 42 }
+  }
+}
+```
+
+[👆](#table-of-contents)
+
+```
+
+```
