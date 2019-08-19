@@ -54,6 +54,26 @@ tags: [javascript, react]
 | 38  | [자식 prop는 무엇인가?](#what-is-children-prop)                                                                                                                       |
 | 39  | [React에서 주석을 어떻게 쓰는가?](#how-to-write-comments-in-react)                                                                                                    |
 | 40  | [props 변수가 있는 super 생성자의 목적은 무엇인가?](#what-is-the-purpose-of-using-super-constructor-with-props-argument)                                              |
+| 41  | [reconciliation은 무엇인가??](#what-is-reconciliation)                                                                                                                |
+| 42  | [동적 key name으로 setState하는 방법은?](#how-to-set-state-with-a-dynamic-key-name)                                                                                   |
+| 43  | [렌더가 될 때 마다 호출되는 function의 일반적인 실수는 무엇인가?](#what-would-be-the-common-mistake-of-function-being-called-every-time-the-component-renders)        |
+| 44  | [lazy함수가 named exports를 지원하는가?](#is-lazy-function-supports-named-exports)                                                                                    |
+| 45  | [리액트가 class 속성에 class 대신 className을 쓰는가?](#why-react-uses-classname-over-class-attribute)                                                                |
+| 46  | [fragments란 무엇인가?](#what-are-fragments)                                                                                                                          |
+| 47  | [fragment가 div 컨테이너보다 좋은 이유는?](#why-fragments-are-better-than-container-divs)                                                                             |
+| 48  | [react에서 portals란 무엇인가?](#what-are-portals-in-react)                                                                                                           |
+| 49  | [stateless 컴포넌트란?](#what-are-stateless-components)                                                                                                               |
+| 50  | [stateful 컴포넌트란?](#what-are-stateful-components)                                                                                                                 |
+| 51  | [React props에서 유효성 검사를 하는 방법은?](#how-to-apply-validation-on-props-in-react)                                                                              |
+| 52  | [React의 장점은?](#what-are-the-advantages-of-react)                                                                                                                  |
+| 53  | [React의 한계는?](#what-are-the-limitations-of-react)                                                                                                                 |
+| 54  | [React v16에서 error boundaries는?](#what-are-error-boundaries-in-react-v16)                                                                                          |
+| 55  | [React v15에서 error boundaries는?](#how-error-boundaries-handled-in-react-v15)                                                                                       |
+| 56  | [정적 타입 체킹을 하는 최선의 방법은?](#what-are-the-recommended-ways-for-static-type-checking)                                                                       |
+| 57  | [react-dom package의 쓰임새는?](#what-is-the-use-of-react-dom-package)                                                                                                |
+| 58  | [react-dom의 render 메서드의 목적?](#what-is-the-purpose-of-render-method-of-react-dom)                                                                               |
+| 59  | [ReactDOMServer란?](#what-is-reactdomserver)                                                                                                                          |
+| 60  | [React에서 InnerHtml를 쓰는 방법은?](#how-to-use-innerhtml-in-react)                                                                                                  |
 
 ---
 
@@ -839,6 +859,321 @@ class MyComponent extends React.Component {
 
 [👆](#table-of-contents)
 
+### What is reconciliation?
+
+컴포넌트의 props나 state에 변경이 있을때, React는 이전에 렌더링 된 element와 새롭게 렌더링된 것을 비교하여 실제 DOM이 업데이트 되어야 할지를 결정한다. 똑같지 않을때, React는 DOM을 업데이트 한다. 이 과정을 `reconciliation`이라고 한다.
+
+[👆](#table-of-contents)
+
+### How to set state with a dynamic key name?
+
+JSX코드 내에서 es6또는 바벨 트랜스파일러를 쓰고 있다면, computed property 명을 쓸 수 있다.
+
+```javascript
+handleInputChange(event) {
+  this.setState({ [event.target.id]: event.target.value })
+}
 ```
 
+[👆](#table-of-contents)
+
+### What would be the common mistake of function being called every time the component renders?
+
+함수를 파라미터로 넘기는 과정에서 함수가 호출되지 않는지 확인해야 한다.
+
+[👆](#table-of-contents)
+
+### Is lazy function supports named exports?
+
+아니다. 현재 `React.lazy`함수는 default export만 지원한다. named exports된 모듈을 import 하고 싶을 경우에는, 사이에 디폴트로 reexports 하는 모듈을 만들수 있다. 이는 트리쉐이킹을 도와주고, 사용하지 않는 컴포넌트를 pull하지 않을 수 있다. 밑에서 예를 살펴보자.
+
+```javascript
+// MoreComponents.js
+export const SomeComponent = /* ... */;
+export const UnusedComponent = /* ... */;
 ```
+
+이 컴포넌트 중간에 `IntermediateComponent.js`를 만들어서 다시 export 한다.
+
+```javascript
+// IntermediateComponent.js
+export { SomeComponent as default } from "./MoreComponents.js";
+```
+
+그리고 lazy 함수를 이용해서 아래와 같이 임포트 할 수 있다.
+
+```javascript
+import React, { lazy } from "react";
+const SomeComponent = lazy(() => import("./IntermediateComponent.js"));
+```
+
+[👆](#table-of-contents)
+
+### Why React uses `className` over `class` attribute?
+
+`class`는 자바스크립트의 예약어 이고, JSX는 javascript를 확장해 만든 것이다. 따라서 `class`를 쓰면 충돌이 일어나기 자바스크립트 예약어와 충동리 발생하기 때문에 `className`을 사용한다. `className` prop에 `string`을 넘겨 주면 된다.
+
+```javascript
+render() {
+  return <span className={'menu navigation-menu'}>{'Menu'}</span>
+}
+```
+
+[👆](#table-of-contents)
+
+### What are fragments?
+
+React에서는 하나의 컴포넌트가 여러개의 elements를 리턴하는 것이 일반적인 패턴이다. Fragments는 추가로 DOM 노드를 사용하지 않더라도 여러개의 노드들을 묶을 수 있게 해준다.
+
+```javascript
+render() {
+  return (
+    <React.Fragment>
+      <ChildA />
+      <ChildB />
+      <ChildC />
+    </React.Fragment>
+  )
+}
+```
+
+```javascript
+render() {
+  return (
+    <>
+      <ChildA />
+      <ChildB />
+      <ChildC />
+    </>
+  )
+}
+```
+
+[👆](#table-of-contents)
+
+### Why fragments are better than container divs?
+
+1. Fragment는 실제로 추가적인 DOM을 만들지 않기 때문에 더 빠르고 메모리 사용량도 적다. 이는 매우 크고 깊은 트리를 만들 때 상당한 이점으로 작용한다.
+2. CSS Grid나 firefox같은 일부 특수한 CSS 메커니즘은 특별한 부모-자식 관계를 가지고 있는데, div를 중간에 추가하는 것은 원하는 레이아웃을 그리기 어렵게 한다.
+3. DOM Inspector를 사용할 때 덜 혼잡스럽다.
+
+[👆](#table-of-contents)
+
+### What are portals in React?
+
+portals 은 상위 Component 의 DOM 계층 구조 외부에 존재하는 DOM 노드로, 자식을 render 하는데 권장되는 방법이다.
+
+```javascript
+ReactDOM.createPortal(child, container);
+```
+
+첫번째 인자는 React Child에서만 렌더링이 가능하며, 여기에는 element, string, fragment 가 포함된다. 두번째 인자는 DOM 엘리먼트다.
+
+[👆](#table-of-contents)
+
+### What are stateless components?
+
+컴포넌트의 동작이 state와 독립되어 있다면, 이는 stateless 컴포넌트다. 함수나 클래스를 이용해서 stateless 컴포넌트를 만들 수 있다. 하지만 컴포넌트의 라이프 사이클 훅이 필요하지 않다면, 함수형으로 가는 것이 좋다. 함수형 컴포넌트를 선택한다면 많은 이점을 가져갈 수 있다. 코드 사용 및 이해가 쉽고, 조금더 빠르며, 그리고 `this` 키워드의 충돌을 막을 수 있다.
+
+[👆](#table-of-contents)
+
+### What are stateful components?
+
+state의 사용에 종속적인 컴포넌트를 stateful component라고 한다. 이 컴포넌트는 항상 class 컴포넌트로 만들어 져야 하며, `constructor`를 통해서 초기화 되어야 한다.
+
+```javascript
+class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { count: 0 };
+  }
+
+  render() {
+    // ...
+  }
+}
+```
+
+[👆](#table-of-contents)
+
+### How to apply validation on props in React?
+
+React가 development로 실행한다면, 자동으로 컴포넌트에 있는 props의 타입을 올바르게 체크해 준다. 만약 타입이 올바르지 않다면, React는 콘솔에 경고 메시지를 띄운다. 성능 상의 이슈를 위해 production에서는 이 기능이 꺼져 있다. 필수적인 prop은 `isRequired`다. 사용할 수 있는 prop type의 종류는 아래와 같다.
+
+1. `PropTypes.number`
+2. `PropTypes.string`
+3. `PropTypes.array`
+4. `PropTypes.object`
+5. `PropTypes.func`
+6. `PropTypes.node`
+7. `PropTypes.element`
+8. `PropTypes.bool`
+9. `PropTypes.symbol`
+10. `PropTypes.any`
+
+아래와 같이 쓸수 있다.
+
+```javascript
+import React from "react";
+import PropTypes from "prop-types";
+
+class User extends React.Component {
+  static propTypes = {
+    name: PropTypes.string.isRequired,
+    age: PropTypes.number.isRequired
+  };
+
+  render() {
+    return (
+      <>
+        <h1>{`Welcome, ${this.props.name}`}</h1>
+        <h2>{`Age, ${this.props.age}`}</h2>
+      </>
+    );
+  }
+}
+```
+
+주의: 리액트 v15.5부터 PropType이 `React.PropTypes`에서 `prop-types`로 이동했다.
+
+[👆](#table-of-contents)
+
+### What are the advantages of React?
+
+1. Virtual DOM으로 어플리케이션의 성능을 향상시킬 수 있음
+2. JSX를 통해 코들르 쉽게 읽고 쓸수 있음
+3. 클라이언트와 서버사이드 양쪽에서 렌더링 라능
+4. 뷰만 다루는 라이브러리이기 때문에, 다른 프레임워크 (Angular, Backbone) 등과 쉽게 연동 가능
+5. Jest와 같은 툴로 쉽게 유닛/인티그레이션 테스트 가능
+
+[👆](#table-of-contents)
+
+### What are the limitations of React?
+
+1. 풀 프레임워크가 아니라, view만 다루고 있음.
+2. 뉴비 웹 개발자들에게 러닝 커브가 존재
+3. 전통적인 MVC 프레임워크와 인터그레이팅을 하기 위해서는 추가적인 설정이 필요
+4. inline 템플릿과 JSX로 인해 코드의 복잡성 증가
+5. 오버엔지니어링/보일러플레이팅을 야기하는 작은 단위의 컴포넌트가 너무 많이 존재
+
+[👆](#table-of-contents)
+
+### What are error boundaries in React v16?
+
+Error boundaries란 하위 component tree 에서 자바스크립트 에러 를 catch 하고, 기록하고, 에가 발생한 component tree가 아닌 대체 UI를 표현해 주는 component를 말한다.
+
+새롭게 추가된 라이프사이클 메서드인 `componentDidCatch(error, info)`나 `static getDerivedStateFromError()`를 사용한다면, 클래스 컴포넌트는 error boundary가 될 수 있다.
+
+```javascript
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  componentDidCatch(error, info) {
+    // 에러 리포틍 서비스를 위해 로그를 기록할 수도 있고
+    logErrorToMyService(error, info);
+  }
+
+  static getDerivedStateFromError(error) {
+    // fallback UI를 표현하기 위해여 state를 업데이트 할 수도 있다.
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // custom Fallback UI를 그릴 수 있다.
+      return <h1>{"Something went wrong."}</h1>;
+    }
+    return this.props.children;
+  }
+}
+```
+
+그리고 이 컴포넌트는 아래와 같이 사용할 수 있다.
+
+```html
+<ErrorBoundary>
+  <MyWidget />
+</ErrorBoundary>
+```
+
+[👆](#table-of-contents)
+
+### How error boundaries handled in React v15?
+
+`unstable_handleError` 메서드를 활용한 기본적인 error boundaries만 제공하고 있다. 그리고 v16에서 `componentDidCatch`로 변경되었다.
+
+[👆](#table-of-contents)
+
+### What are the recommended ways for static type checking?
+
+보통 `PropTypes`를 많이 사용한다. 그러나 크기가 큰 어플리케이션의 경우에는, Flow나 타입스크립트같은, 컴파일 단계에서 타입체킹을 제공하고 자동완성을 지원해주는 정적 타입 체커를 사용하는 것이 좋다.
+
+[👆](#table-of-contents)
+
+### What is the use of `react-dom` package?
+
+`react-dom`은 앱 최 상단 레벨에서 사용되는, DOM을 다루는데 필요한 메서드를 제공한다. 대부분의 컴포넌트는 이 모듈을 필요로 하지 않는다. 여기에 있는 메소드를 몇가지 나열하면
+
+1. `render()`
+2. `hydrate()`
+3. `unmountComponentAtNode()`
+4. `findDOMNode()`
+5. `createPortal()`
+
+[👆](#table-of-contents)
+
+### What is the purpose of render method of `react-dom`?
+
+render 메서드는 제공된 컨테이너의 DOM에 있는 React element를 render 하고 Component에 대한 참조를 반환하는데 사용된다. React element가 이전에 렌더링 되었다면 update 를 수행하고 최근의 변경사항을 반영하기 위해 필요에 따라 DOM을 변경하기도 한다.
+
+```javascript
+ReactDOM.render(element, container[, callback])
+```
+
+옵셔널 콜백이 있따면, 컴포넌트가 렌더링/업데이트 된 이후로 실행된다.
+
+[👆](#table-of-contents)
+
+### What is ReactDOMServer?
+
+`ReactDOMServer`는 컴포넌트를 정적 마크업으로 렌더링할 수 있게 해준다. (보통 노드 서버에서 많이 사용 된다) 이 오브젝트는 서버사이드 렌더링을 할 때 사용된다. 아래 메서드들은 서버와 브라우저 환경 모두에서 사용할 수 있다.
+
+1. `renderToString()`
+2. `renderToStaticMarkup()`
+
+예를 들어, 노드 베이스 웹서버인 Express, Hapi, Koa 등에서 서버를 실행한다면, `renderToString`메서드를 호출하여 이에 대한 응답으로 루트 컴포넌트를 string으로 렌더링할 수 있다.
+
+```javascript
+// using Express
+import { renderToString } from "react-dom/server";
+import MyPage from "./MyPage";
+
+app.get("/", (req, res) => {
+  res.write("<!DOCTYPE html><html><head><title>My Page</title></head><body>");
+  res.write('<div id="content">');
+  res.write(renderToString(<MyPage />));
+  res.write("</div></body></html>");
+  res.end();
+});
+```
+
+[👆](#table-of-contents)
+
+### How to use innerHTML in React?
+
+browser DOM에서 `innerHTML`대신 `dangerouslySetInnerHTML`를 사용할 수 있다. `innerHTML`과 마찬가지로, 이 속성 또한 크로스 사이트 스크립팅 공격 (XSS)에 취약하다. `__html`을 키로 하고 HTML text를 값으로 가지는 object를 리턴하면 된다.
+
+```javascript
+function createMarkup() {
+  return { __html: "First &middot; Second" };
+}
+
+function MyComponent() {
+  return <div dangerouslySetInnerHTML={createMarkup()} />;
+}
+```
+
+[👆](#table-of-contents)

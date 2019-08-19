@@ -6,7 +6,7 @@
     "version": "3.9.0"
   },
   "scripts": {
-    "deploy": "hexo clean; hexo algolia; hexo deploy;",
+    "deploy": "hexo clean && hexo generate && hexo algolia && hexo deploy;",
     "dev": "hexo server;"
   },
   "dependencies": {
