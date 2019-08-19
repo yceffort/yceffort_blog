@@ -74,6 +74,26 @@ tags: [javascript, react]
 | 58  | [react-dom의 render 메서드의 목적?](#what-is-the-purpose-of-render-method-of-react-dom)                                                                               |
 | 59  | [ReactDOMServer란?](#what-is-reactdomserver)                                                                                                                          |
 | 60  | [React에서 InnerHtml를 쓰는 방법은?](#how-to-use-innerhtml-in-react)                                                                                                  |
+| 61  | [React에서 스타일을 쓰는 방법은?](#how-to-use-styles-in-react)                                                                                                        |
+| 62  | [React에서 이벤트는 어떻게 다른가?](#how-events-are-different-in-react)                                                                                               |
+| 63  | [constructor에서 setState를 쓴다면?](#what-will-happen-if-you-use-setstate-in-constructor)                                                                            |
+| 64  | [index를 키로 쓸 경우 어떤 일이 벌어지는가?](#what-is-the-impact-of-indexes-as-keys)                                                                                  |
+| 65  | [componentWillMount() method안에서 setState()를 쓰는 것이 바람직한가?](#is-it-good-to-use-setstate-in-componentwillmount-method)                                      |
+| 66  | [initial state에서 props를 쓰면 어떻게 되는가?](#what-will-happen-if-you-use-props-in-initial-state)                                                                  |
+| 67  | [어떻게 조건부로 컴포넌트를 렌더링하는가?](#how-do-you-conditionally-render-components)                                                                               |
+| 68  | [DOM 엘리먼트에서 스프레드 props를 쓸 때 주의해야 할 점은?](#why-we-need-to-be-careful-when-spreading-props-on-dom-elements)                                          |
+| 69  | [React에서 decorator를 쓰는 방법은?](#how-you-use-decorators-in-react)                                                                                                |
+| 70  | [컴포넌트를 메모이제이션 하는 법은?](#how-do-you-memoize-a-component)                                                                                                 |
+| 71  | [서버사이드렌더링을 하는 방법은?](#how-you-implement-server-side-rendering-or-ssr)                                                                                    |
+| 72  | [React에서 프로덕션 모드를 키는 방법은?](#how-to-enable-production-mode-in-react)                                                                                     |
+| 73  | [CRA는 무엇이고 이점은 무엇인가?](#what-is-cra-and-its-benefits)                                                                                                      |
+| 74  | [마운팅시 라이프사이클 메서드의 순서는?](#what-is-the-lifecycle-methods-order-in-mounting)                                                                            |
+| 75  | [React v16에서 deprecated된 라이프 사이클 메서드는?](#what-are-the-lifecycle-methods-going-to-be-deprecated-in-react-v16)                                             |
+| 76  | [getDerivedStateFromProps() 의 목적은?](#what-is-the-purpose-of-getderivedstatefromprops-lifecycle-method)                                                            |
+| 77  | [getSnapshotBeforeUpdate()의 목적은?](#what-is-the-purpose-of-getsnapshotbeforeupdate-lifecycle-method)                                                               |
+| 78  | [Hooks api가 render props와 HOC를 대체하는가?](#do-hooks-replace-render-props-and-higher-order-components)                                                              |
+| 79  | [네이밍 컴포넌트를 위한 최상의 방법은?](#what-is-the-recommended-way-for-naming-components)                                                                           |
+| 80  | [컴포넌트 클래스에서 메소더의 순서를 정하는 방법은?](#what-is-the-recommended-ordering-of-methods-in-component-class)                                                 |
 
 ---
 
@@ -555,7 +575,7 @@ class MyComponent extends Component {
 
 예전에 React를 다뤄보았다면, 옛날 방식인 `ref`를 string으로 쓰는, `ref={'textInput'}` 와 같이 ref속성이 string이고, DOM Node인 `refs.textInput`로 접근하는 방법에 익숙할 것이다. 그러나 이러한 string ref는 하단에서 언급할 문제들 때문에, 레거시로 보는 것이 맞다. 그리고 string ref는 React v16에서 제거 되었다.
 
-1. String ref는 실행중인 component 요소를 추적하도록 강제한다. 그리고 React Module을 stateful하게 만들기 떄문에, 이는 번들시 react module이 중복 되는 경우 이상한 오류를 발생시킨다.
+1. String ref는 실행중인 component 요소를 추적하도록 강제한다. 그리고 React Module을 stateful하게 만들기 때문에, 이는 번들시 react module이 중복 되는 경우 이상한 오류를 발생시킨다.
 2. 라이브러리를 추가하여 String ref를 child component에 전달한다면, 사용자는 다른 ref를 추가할 수 없다. 그러나 callback ref를 사용하면 이런 문제를 해결할 수 있다.
 3. Flow와 같은 정적 분석에서는 동작하지 않는다. Flow는 string ref를 this.refs와 같은 형태로 표시하도록 만드는 트릭을 추적할 수 없다. callback ref는 string ref보다 flow에 더 잘맞다.
 4. 대부분이 render callback 패턴으로 동작하기를 기대하지만, 그렇게 동작하지 않는다.
@@ -1146,7 +1166,7 @@ ReactDOM.render(element, container[, callback])
 
 예를 들어, 노드 베이스 웹서버인 Express, Hapi, Koa 등에서 서버를 실행한다면, `renderToString`메서드를 호출하여 이에 대한 응답으로 루트 컴포넌트를 string으로 렌더링할 수 있다.
 
-```javascript
+```jsx
 // using Express
 import { renderToString } from "react-dom/server";
 import MyPage from "./MyPage";
@@ -1177,3 +1197,350 @@ function MyComponent() {
 ```
 
 [👆](#table-of-contents)
+
+### How to use styles in React?
+
+style 속성은 css 문자열 대신 camelCased속성이 있는 자바스크립트 오브젝트를 허용한다. 이는 DOM 스타일 자바스크립트 속성과 일치하며, 효율적이고, XSS 보안 허점을 막아준다.
+
+[👆](#table-of-contents)
+
+### How events are different in React?
+
+React 엘리먼트에서 이벤트를 다루는 것은 문법상 약간의 차이가 있다.
+
+1. 리액트 이벤트 핸들러는 lowerCase가 아닌 camelCase로 써야한다.
+2. JSX에서는 문자열이 아닌, 함수 이벤트 핸들러를 파라미터로 보낸다.
+
+[👆](#table-of-contents)
+
+### What will happen if you use `setState()` in constructor?
+
+`setState()`를 사용하면, 객체 상태가 할당되고, 자식을 포함한 모든 컴포넌트가 다시 렌더링된다. 그리고 아래와 같은 에러메시지가 나타난다. **Can only update a mounted or mounting component.** 따라서 `this.state`를 사용하여 생성자내에서 변수를 초기화 해야 한다.
+
+[👆](#table-of-contents)
+
+### What is the impact of indexes as keys?
+
+키는 리액트에서 엘리먼트를 추적할 수 있도록 안정적이어야 하고, 예측가능해야 하고, 유니크해야 한다.
+
+아래 코드에서 각 엘리먼트의 키는 데이터를 따르는 것이 아니라 단순히 순서에 따라 결정된다. 이는 React가 하는 최적화를 제한한다.
+
+```jsx harmony
+{
+  todos.map((todo, index) => <Todo {...todo} key={index} />);
+}
+```
+
+만약 데이터를 유니크 키로 사용한다면 위의 조건을 만족하기 때문에, React는 다시 연산할 필요 없이 재정렬할 수 있다.
+
+```jsx harmony
+{
+  todos.map(todo => <Todo {...todo} key={todo.id} />);
+}
+```
+
+[👆](#table-of-contents)
+
+### Is it good to use `setState()` in `componentWillMount()` method?
+
+`componentWillMount()`에서 비동기 초기화를 하는 것은 피하도록 권장한다. `componentWillMount()`는 마운팅이 일어나기 직전에 바로 실행된다. 이는 `render()`함수가 불리우기 직전이며, 따라서 여기에서 state를 새로 값을 할당 한다 하더라도 리렌더링을 트리거 하지 않는다. 이 메소드 내에서는 사이드 이펙트나 subscription등은 피해야 한다. 따라서 비동기 초기화는 `componentDidMount()`에서 하는 것이 좋다.
+
+```jsx harmony
+componentDidMount() {
+  axios.get(`api/todos`)
+    .then((result) => {
+      this.setState({
+        messages: [...result.data]
+      })
+    })
+}
+```
+
+[👆](#table-of-contents)
+
+### What will happen if you use props in initial state?
+
+컴포넌트의 새로고칩 없이 props가 변경된다면, 현재 상태의 컴포넌트는 절대로 업데이트 하지 않기 때문에 새로운 prop값이 화면에 표시되지 않을 것이다. props를 통한 state값의 초기화는 컴포넌트가 딱 초기화 되었을 때만 실행된다.
+
+```jsx harmony
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      records: [],
+      inputValue: this.props.inputValue
+    };
+  }
+
+  render() {
+    return <div>{this.state.inputValue}</div>;
+  }
+}
+```
+
+props를 render 함수 내에서 쓰면 값을 업데이트 한다.
+
+```jsx harmony
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      record: []
+    };
+  }
+
+  render() {
+    return <div>{this.props.inputValue}</div>;
+  }
+}
+```
+
+[👆](#table-of-contents)
+
+### How do you conditionally render components?
+
+때로는 어떤 상태값에 따라서 렌더링을 다르게 해야하는 경우가 발생한다. JSX는 `false`나 `undefined`는 렌더링하지 않으므로, 특정 조건에 true를 주는 형식으로 조건부 렌더링을 할 수 있다.
+
+```jsx harmony
+const MyComponent = ({ name, address }) => (
+  <div>
+    <h2>{name}</h2>
+    {address && <p>{address}</p>}
+  </div>
+);
+```
+
+if-else도 삼항연산자를 활용하면 아래와 같이 할 수 있다.
+
+```jsx harmony
+const MyComponent = ({ name, address }) => (
+  <div>
+    <h2>{name}</h2>
+    {address ? <p>{address}</p> : <p>{"Address is not available"}</p>}
+  </div>
+);
+```
+
+[👆](#table-of-contents)
+
+### Why we need to be careful when spreading props on DOM elements?
+
+spread prop를 쓴다면, HTML에 알수없는 속성을 추가할 수 있는 위험이 있기 때문에 좋지 못하다. 대신 `...rest` 연산자를 쓴다면, 필요한 props만 추가해서 넣을 수 있다.
+
+```javascript
+const ComponentA = () => (
+  <ComponentB isDisplay={true} className={"componentStyle"} />
+);
+
+const ComponentB = ({ isDisplay, ...domProps }) => (
+  <div {...domProps}>{"ComponentB"}</div>
+);
+```
+
+[👆](#table-of-contents)
+
+### How you use decorators in React?
+
+클래스 컴포넌트에 데코레이터를 쓸 수 있으며, 이는 함수에 컴포넌트를 넘기는 것과 동일하다. 데코레이터는 유연하고 읽기 쉬운 방법으로 컴포넌트를 기능적으로 수정할 수 있도록 한다.
+
+```javascript
+@setTitle("Profile")
+class Profile extends React.Component {
+  //....
+}
+const setTitle = title => WrappedComponent => {
+  return class extends React.Component {
+    componentDidMount() {
+      document.title = title;
+    }
+
+    render() {
+      return <WrappedComponent {...this.props} />;
+    }
+  };
+};
+```
+
+주의: 데코레이터는 es7 문법에 포함되지 못하고 현재 stage2 단계에 있다.
+
+[👆](#table-of-contents)
+
+### How do you memoize a component?
+
+함수형 컴포넌트를 기반으로한 메모이제이션이 가능한 라이브러리가 있다. 예를 들어, `moize`라이브러리를 활용하면, 다른 컴포넌트 내에서 컴포넌트를 메모이제이션 할 수 있다.
+
+```javascript
+import moize from "moize";
+import Component from "./components/Component"; // this module exports a non-memoized component
+
+const MemoizedFoo = moize.react(Component);
+
+const Consumer = () => {
+  <div>
+    {"I will memoize the following entry:"}
+    <MemoizedFoo />
+  </div>;
+};
+```
+
+[👆](#table-of-contents)
+
+### How you implement Server Side Rendering or SSR?
+
+React는 이미 노드 서버에서 렌더링을 다룰 수 있도록 지원되고 있다. 클라이언트 사이드와 동일하게 렌더링할 수 있는 특수한 버전의 DOM renderer가 제공되고 있다.
+
+```javascript
+import ReactDOMServer from "react-dom/server";
+import App from "./App";
+
+ReactDOMServer.renderToString(<App />);
+```
+
+이 메소드는 일반적인 HTML을 string으로 내보내며, 이는 서버의 응답 일부를 페이지 본문 내부에 위치시킬 수 있다. 클라이언트 사이드에서, 리액트는 미리 렌더링된 컨텐츠를 감지하고 나머지를 원활하게 렌더링할 수 있다.
+
+[👆](#table-of-contents)
+
+### How to enable production mode in React?
+
+Webpack의 `DefinePlugin` 메서드를 활용하여, `NODE_ENV`를 `production`으로 설정해야 propType의 유효성 검사 같은 추가적인 경고를 제거할 수 있다.
+
+production 모드와 별도로, 주석을 제거하고 코드르 압축시키는 uglify의 dead-code 코드를 사용하여 minify하면 번들링 사이즈를 줄일 수 있다.
+
+[👆](#table-of-contents)
+
+### What is CRA and its benefits?
+
+CRA(`create-react-app`)는 특별한 설정없이도 빠르고 간편하게 리액트 어플리케이션을 만들수 있도록 해주는 Cli tool이다.
+
+```
+# Installation
+$ npm install -g create-react-app
+
+# Create new project
+$ create-react-app todo-app
+$ cd todo-app
+
+# Build, test and run
+$ npm run build
+$ npm run test
+$ npm start`
+```
+
+여기에는 리액트 앱을 만드는데 필요한 모든 것이 담겨져 있다.
+
+1. React, JSX, ES6, 문법 지원을 위한 Flow
+2. spread operator와 같은 es6 문법
+3. auto prefixed css를 통해, -web-kit` 과 같은 접두어를 붙이지 않아도 됨
+4. 빠른 인터렉티브 유닛 테스트 러너와 함께 커버리지 리포팅
+5. 일반적인 실수에 대해 경고하는 라이브 dev 서버
+6. 배포를 위해 소스맵, 해쉬와 함께 제공되는 JS, CSS, 이미지 번들링 해주는 빌드 스크립트
+
+[👆](#table-of-contents)
+
+### What is the lifecycle methods order in mounting?
+
+컴포넌트가 생성되고, DOM에 들어가는 과정에서 아래와 같은 라이프 사이클 메서드가 순서대로 호출된다.
+
+1. `constructor()`
+2. `static getDerivedStateFromProps()`
+3. `render()`
+4. `componentDidMount()`
+
+[👆](#table-of-contents)
+
+### What are the lifecycle methods going to be deprecated in React v16?
+
+다음 lifecycle메서드는 안전하지 않은 코딩법이 될 수 있고, 비동기 렌더링시 문제가 발생할 수 있다.
+
+1. `componentWillMount()`
+2. `componentWillReceiveProps()`
+3. `componentWillUpdate()`
+
+v16.3 부터 `UNSAFE_` prefix가 붙고, v17에서는 삭제된다.
+
+[👆](#table-of-contents)
+
+### What is the purpose of `getDerivedStateFromProps()` lifecycle method?
+
+새로운 라이프 사이클 메서드 `getDerivedStateFromProps()`는 component가 인스턴스화 된 후, 다시 렌더링 되기전에 호출된다. object를 반환하여 state를 업데이트 하거나, null을 리턴하ㅕㅇ 새로운 props에서 state update가 필요하지 않도록 나타낼 수도 있다.
+
+```javascript
+class MyComponent extends React.Component {
+  static getDerivedStateFromProps(props, state) {
+    // ...
+  }
+}
+```
+
+이 메서드는 `componentDidUpdate()`와 함께 쓴다면, `componentWillReceiveProps()`의 모든 유즈케이스에 적용할 수 있다.
+
+[👆](#table-of-contents)
+
+### What is the purpose of `getSnapshotBeforeUpdate()` lifecycle method?
+
+새로운 메서드 `getSnapshotBeforeUpdate()`는 DOM 업데이트 직전에 호출된다. 이 메서드의 반환값은 `componentDidUpdate()`의 세번째 파라미터로 전달된다.
+
+```javascript
+class MyComponent extends React.Component {
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    // ...
+  }
+}
+```
+
+이 메서드는 `componentDidUpdate()`와 함께 쓴다면, `componentWillUpdate()`의 모든 유즈케이스에 적용할 수 있다.
+
+
+[👆](#table-of-contents)
+
+### Do Hooks replace render props and higher order components?
+
+render props와 HOC 모두 한개의 자식만 렌더링 하지만, 대부분의 경우 Hooks API를 아용하면 트리에 의존성을 줄이면서 간단하게 구현할 수 있다.
+
+[👆](#table-of-contents)
+
+### What is the recommended way for naming components?
+
+`displayName`을 쓰는 것 보다 컴포넌트에 레퍼런스를 주는 방법이 더 좋다.
+
+`displayName`을 쓰는 법 보다
+
+```javascript
+export default React.createClass({
+  displayName: 'TodoApp',
+  // ...
+})
+```
+
+이렇게 하는게 더 좋다.
+
+```javascript
+export default class TodoApp extends React.Component {
+  // ...
+}
+```
+
+[👆](#table-of-contents)
+
+### What is the recommended ordering of methods in component class?
+
+마운팅에서 렌더링까지 아래와 같은 순서로 나열하길 권장한다.
+
+[👆](#table-of-contents)
+
+1. `static` 메서드
+2. `constructor()`
+3. `getChildContext()`
+4. `componentWillMount()`
+5. `componentDidMount()`
+6. `componentWillReceiveProps()`
+7. `shouldComponentUpdate()`
+8. `componentWillUpdate()`
+9. `componentDidUpdate()`
+10. `componentWillUnmount()`
+11. 클릭 또는 이벤트 핸들러 `onClickSubmit()` `onChangeDescription()`
+12. 렌더를 위한 `getter` 메서드 `getSelectReason()` `getFooterContent()`
+13. 옵셔널 렌더 메서드 `renderNavigation()` `renderProfilePicture()`
+14. `render()`
