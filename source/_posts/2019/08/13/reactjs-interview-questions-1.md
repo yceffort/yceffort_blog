@@ -1683,12 +1683,12 @@ function ExampleApplication() {
 가장 유명한 사용법중 하나는 `PureRenderMixin`이다. 이전 props또는 state와 얕은 비교를 했을 때 일치하는 경우, 리렌더링을 막아주는 역할을 한다.
 
 ```javascript
-const PureRenderMixin = require('react-addons-pure-render-mixin')
+const PureRenderMixin = require("react-addons-pure-render-mixin");
 
 const Button = React.createClass({
-  mixins: [PureRenderMixin],
+  mixins: [PureRenderMixin]
   // ...
-})
+});
 ```
 
 [👆](#table-of-contents)
@@ -1743,16 +1743,15 @@ class SomeComponent extends Component {
 ```javascript
 class myComponent extends Component {
   render() {
-    return <div />
+    return <div />;
   }
 }
 
-export default myComponent
+export default myComponent;
 ```
 
 ```javascript
-import MyComponent from './MyComponent'
-
+import MyComponent from "./MyComponent";
 ```
 
 [👆](#table-of-contents)
@@ -1764,7 +1763,7 @@ import MyComponent from './MyComponent'
 예를 들어, 과거에는 아래와 같이 동작했다.
 
 ```javascript
-<div mycustomattribute={'something'} />
+<div mycustomattribute={"something"} />
 ```
 
 ```html
@@ -1774,7 +1773,7 @@ import MyComponent from './MyComponent'
 그러나 React v16부터는 알수없는 속성도 결국 DOM에 반영된다.
 
 ```html
-<div mycustomattribute='something' />
+<div mycustomattribute="something" />
 ```
 
 이는 브라우저에 특화된 비표준 속성, 새로운 DOM api, 서드파티 라이브러리 등을 사용할 때 유용하다.
@@ -1783,161 +1782,746 @@ import MyComponent from './MyComponent'
 
 ### What is the difference between constructor and getInitialState?
 
+es6 클래스에서는 `constructor`로 state를 초기화 하고, `React.createClass`를 사용할 떄는 `getInitialState()`으로 초기화 한다.
+
+es6
+
+```javascript
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      /* initial state */
+    };
+  }
+}
+```
+
+`React.createClass()`
+
+```javascript
+const MyComponent = React.createClass({
+  getInitialState() {
+    return {
+      /* initial state */
+    };
+  }
+});
+```
+
 [👆](#table-of-contents)
 
 ### Can you force a component to re-render without calling setState?
+
+기본적으로, state나 prop의 변화가 있을 때만 컴포넌트가 리렌더링 된다. 만약 `render()` 메서드가 외부의 다른 데이터에 의존적이라면, `forceUpdate()`를 통해서 컴포넌트를 리렌더링 할 수 있다.
+
+```javascript
+component.forceUpdate(callback);
+```
+
+다만 이러한 방법은 권장되지 않으며, `render()`메소드에서 `this.props`나 `this.state`를 참조하는 것이 권장된다.
 
 [👆](#table-of-contents)
 
 ### What is the difference between `super()` and `super(props)` in React using ES6 classes?
 
+`constructor()`에서 `this.props`에 접근하고 싶다면, `super()`메서드에 `this.props`를 넘겨야 한다.
+
+```javascript
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    console.log(this.props); // { name: 'John', ... }
+  }
+}
+```
+
+```javascript
+class MyComponent extends React.Component {
+  constructor(props) {
+    super();
+    console.log(this.props); // undefined
+  }
+}
+```
+
 [👆](#table-of-contents)
 
 ### How to loop inside JSX?
+
+`Array.prototype.map`을 es6의 화살표 함수 문법과 사용하면 된다.
+
+```html
+<tbody>
+  {items.map(item =>
+  <SomeComponent key="{item.id}" name="{item.name}" />)}
+</tbody>
+```
+
+`for`루프는 사용할 수 없다.
+
+```html
+<tbody>
+  for (let i = 0; i < items.length; i++) {
+  <SomeComponent key="{items[i].id}" name="{items[i].name}" />
+  }
+</tbody>
+```
+
+JSX 태그는 함수호출로 트랜스파일이 되는데, 이 경우 표현식내에 제어문을 사용할 수 없다. 다만 이는 stage1에 있는 [do](https://github.com/tc39/proposal-do-expressions) proposal로 해결 될 수도 있다.
 
 [👆](#table-of-contents)
 
 ### How do you access props in attribute quotes?
 
+React와 JSX는 속성 값에 string interpolation을 지원하지 않는다. 따라서 아래 코드는 작동하지 않는다.
+
+```html
+<img className="image" src="images/{this.props.image}" />
+```
+
+하지만 `{}`와 함께 javascript 표현식을 넣으면 가능하다.
+
+```html
+<img className='image' src={'images/' + this.props.image} /> <img
+className='image' src={`images/${this.props.image}`} />
+```
+
 [👆](#table-of-contents)
 
 ### What is React proptype array with shape?
+
+만약 특정 object를 가진 array를 넘기고 싶다면, `React.PropTypes.arrayOf()`와 함께 `React.PropTypes.shape()`를 쓰면 된다.
+
+```javascript
+ReactComponent.propTypes = {
+  arrayWithShape: React.PropTypes.arrayOf(
+    React.PropTypes.shape({
+      color: React.PropTypes.string.isRequired,
+      fontSize: React.PropTypes.number.isRequired
+    })
+  ).isRequired
+};
+```
 
 [👆](#table-of-contents)
 
 ### How to conditionally apply class attributes?
 
+따옴표 안에 내용은 모두 string으로 인식하기 때문에 `{}`를 쓸 수 없다.
+
+```html
+<div className="btn-panel {this.props.visible ? 'show' : 'hidden'}"></div>
+```
+
+다만 `{}`안에 모든 식을 넣으면 가능하다. (공백은 반드시 있어야 한다)
+
+```html
+<div className={'btn-panel ' + (this.props.visible ? 'show' : 'hidden')}>
+```
+
+템플릿 string도 가능하다
+
+```html
+<div className={`btn-panel ${this.props.visible ? 'show' : 'hidden'}`}>
+```
+
 [👆](#table-of-contents)
 
 ### What is the difference between React and ReactDOM?
+
+React 패키지내에는 엘리먼트와 컴포넌트 클래스에 도움을 줄 수 있는 `React.createElement()` `React.Component` `React.children`등을 가지고 있다. React 패키지 내에는 컴포넌트를 만드는데 도움이 되는 이러한 요소들이 있다고 보면 된다. 반면 `React-dom`패키지는 `ReactDOM.render()` 서버사이드 렌더링에 필요한 `react-dom/server`에 속한 `ReactDOMServer.renderToString()` `ReactDOMServer.renderToStaticMarkUp()` 이 있다.
 
 [👆](#table-of-contents)
 
 ### Why ReactDOM is separated from React?
 
+React 팀은 DOM조작과 관련된 모든 기능을 `ReactDOM` 라이브러리로 옮겼다. 이는 React v0.14에서 처음으로 분리되었다. 이 때 패키지를 보자면, `react-native` `react-art` `react-canvas` `react-three`등 패키지 분리가 깔끔해졌으며, `React`패키지 자체에는 브라우저 DOM 조작과 관련된 라이브러리가 없다는 것이 명확해졌다. React가 다수의 환경에서 렌더링을 지원하기 위해, React팀은 React와 React-dom을 분리할 계획을 수립햇다. 이러한 방법론은 웹 버전에서 쓰이는 React와 React-Native사이에 컴포넌트를 쓰는 방법론을 공유할 수 있도록 해준다.
+
 [👆](#table-of-contents)
 
 ### How to use React label element?
+
+표준 `for` 속성을 사용하는 `text input`에 바인드된 `<label>`을 사용하려고 하면, 속성이 없는 HTML이 생성되고 콘솔에 경고가 출력된다.
+
+```html
+<label for={'user'}>{'User'}</label>
+<input type={'text'} id={'user'} />
+```
+
+for는 자바스크립트의 예약어이므로, `htmlFor`를 사용해야 한다.
+
+```html
+<label htmlFor={'user'}>{'User'}</label>
+<input type={'text'} id={'user'} />
+```
 
 [👆](#table-of-contents)
 
 ### How to combine multiple inline style objects?
 
+spread 연산자를 사용하면 된다.
+
+```html
+ <button style={{...styles.panel.button, ...styles.panel.submitButton}}>{'Submit'}</button>
+```
+
+React Native라면 array를 사용하면 된다.
+
+```html
+<button style={[styles.panel.button, styles.panel.submitButton]}>{'Submit'}</button>
+```
+
 [👆](#table-of-contents)
 
 ### How to re-render the view when the browser is resized?
+
+`componentDidMount()`에서 `resize`이벤트를 걸어두고, width와 height를 업데이트 하면 된다. 그리고 이 이벤트는 `componentWillUnmount()`에서 제거해줘야 한다.
+
+```javascript
+class WindowDimensions extends React.Component {
+  constructor(props){
+    super(props);
+    this.updateDimensions = this.updateDimensions.bind(this);
+  }
+   
+  componentWillMount() {
+    this.updateDimensions()
+  }
+
+  componentDidMount() {
+    window.addEventListener('resize', this.updateDimensions)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.updateDimensions)
+  }
+
+  updateDimensions() {
+    this.setState({width: window.innerWidth, height: window.innerHeight})
+  }
+
+  render() {
+    return <span>{this.state.width} x {this.state.height}</span>
+  }
+}
+```
 
 [👆](#table-of-contents)
 
 ### What is the difference between `setState()` and `replaceState()` methods?
 
+`setState()`는 과거의 state값을 현재 값으로 합친다. 반면 `replaceState()`는 현재 state를 버리고 넘어오는 `state`로 바꾼다. 이전 key를 모두 제거하는 경우가 아니라면 보통 `useState()`를 사용한다. `replaceState()`대신 `setState()`에서 `false/null`을 사용할 수도 있다.
+
 [👆](#table-of-contents)
 
 ### How to listen to state changes?
+
+아래 라이프사이클 메서드는 state으 ㅣ변화가 있을 떄 호출된다. 여기에서 이전 state와 props과 현재 state/props 값을 비교하여 의미있는 변화가 있었는지 추적할 수 있다.
+
+```javascript
+componentWillUpdate(object nextProps, object nextState)
+componentDidUpdate(object prevProps, object prevState)
+```
 
 [👆](#table-of-contents)
 
 ### What is the recommended approach of removing an array element in React state?
 
+`Array.prototype.filter()`메서드가 올바른 방법이다.
+
+```javascript
+removeItem(index) {
+  this.setState({
+    data: this.state.data.filter((item, i) => i !== index)
+  })
+}
+```
+
 [👆](#table-of-contents)
 
 ### Is it possible to use React without rendering HTML?
+
+16.2 이상의 버전에서는 가능하다.
+
+```javascript
+render() {
+  return false
+}
+```
+
+```javascript
+render() {
+  return null
+}
+```
+
+```javascript
+render() {
+  return []
+}
+```
+
+```javascript
+render() {
+  return <React.Fragment></React.Fragment>
+}
+```
+
+```javascript
+render() {
+  return <></>
+}
+```
+
+`undefined`의 경우에는 작동하지 않는다.
 
 [👆](#table-of-contents)
 
 ### How to pretty print JSON with React?
 
+`<pre>` 태그안에 `JSON.stringify()`를 사용하면 된다.
+
+```javascript
+const data = { name: 'John', age: 42 }
+
+class User extends React.Component {
+  render() {
+    return (
+      <pre>
+        {JSON.stringify(data, null, 2)}
+      </pre>
+    )
+  }
+}
+
+React.render(<User />, document.getElementById('container'))
+```
+
 [👆](#table-of-contents)
 
 ### Why you can't update props in React?
+
+props은 불변이며, 하향식으로 전달되는 것이 `React`의 철학이다. 이 말인 즉, 부모는 어떤 prop값이든 자식에세 보낼 수 있지만, 자식은 그 prop값을 수정할 수 없다는 것이다.
 
 [👆](#table-of-contents)
 
 ### How to focus an input element on page load?
 
+`input` 엘리먼트에 ref를 만들고, 이를 `componentDidMount()`에서 쓰면 된다.
+
+```javascript
+class App extends React.Component{
+  componentDidMount() {
+    this.nameInput.focus()
+  }
+
+  render() {
+    return (
+      <div>
+        <input
+          defaultValue={'Won\'t focus'}
+        />
+        <input
+          ref={(input) => this.nameInput = input}
+          defaultValue={'Will focus'}
+        />
+      </div>
+    )
+  }
+}
+
+ReactDOM.render(<App />, document.getElementById('app'))
+```
+
 [👆](#table-of-contents)
 
 ### What are the possible ways of updating objects in state?
+
+1. state를 병합할 object를 `setState()`에 서 사용하는 법
+   - `Object.assign()로 Object의 복사본을 만든다.
+```javascript
+const user = Object.assign({}, this.state.user, { age: 42 })
+this.setState({ user })-
+```
+   - spread 연산자를 사용하는 법 
+```javascript
+const user = { ...this.state.user, age: 42 }
+this.setState({ user })
+```
+
+2. `setState()`와 함수를 사용하는 법
+   
+```javascript
+this.setState(prevState => ({
+  user: {
+    ...prevState.user,
+    age: 42
+  }
+}))
+```
 
 [👆](#table-of-contents)
 
 ### Why function is preferred over object for `setState()`?
 
+React는 성능의 문제로 인해 여러개의 `setState()`를 배치 형태로 호출하게 된다. 왜냐하면 `this.props`와 `this.state`는 비동기로 업데이트 될 수 있기 때문이다. 다음 state를 계산할 때 이전에 계산된 값을 신뢰하면 안된다.
+
+아래 예제는 제대로 작동하지 않는다.
+
+```javascript
+// Wrong
+this.setState({
+  counter: this.state.counter + this.props.increment,
+})
+```
+
+이를 위해 함수로 `setState()`를 호출하는 것이 권장된다. 함수로 호출시 이전 state값을 받을 수 있고, 업데이트할 때 사용할 `prop`도 받아올 수 있다.
+
+```javascript
+// Correct
+this.setState((prevState, props) => ({
+  counter: prevState.counter + props.increment
+}))
+```
+
 [👆](#table-of-contents)
 
 ### How can we find the version of React at runtime in the browser?
+
+`React.version`을 사용하면 된다.
+
+```javascript
+const REACT_VERSION = React.version
+
+ReactDOM.render(
+  <div>{`React version: ${REACT_VERSION}`}</div>,
+  document.getElementById('app')
+)
+```
 
 [👆](#table-of-contents)
 
 ### What are the approaches to include polyfills in your `create-react-app`?
 
+1. `core-js`를 수동으로 임포트하는 법
+`polyfills.js`과 같은 파일을 만들고, 이를 루트인 `index.js`에서 임포트 한다. 그리고 `core-js`를 설치하여 필요한 기능을 임포트 한다.
+```javascript
+import 'core-js/fn/array/find'
+import 'core-js/fn/array/includes'
+import 'core-js/fn/number/is-nan'
+```
+2. 폴리필 서비스를 이용하는 방법
+`polyfill.io`를 CDN으로 가져와서, `index.html`에 추가하는 방법
+```html
+<script src='https://cdn.polyfill.io/v2/polyfill.min.js?features=default,Array.prototype.includes'></script>
+```
 [👆](#table-of-contents)
 
 ### How to use https instead of http in create-react-app?
+
+환경설정에 `HTTPS=true`를 세팅하면 된다. 
+
+pacakge.json
+
+```json
+"scripts": {
+  "start": "set HTTPS=true && react-scripts start"
+}
+```
+
+아니면 `set HTTPS=true && npm start`로 실행하면 된다.
 
 [👆](#table-of-contents)
 
 ### How to avoid using relative path imports in create-react-app?
 
+루트 디렉토리에 `.env`를 만들고, 임포트 경로를 작성한다.
+
+`NODE_PATH=src/app`
+
+개발서벌르 재시작하면, 상대경로 없이 `src/app`에 있는 파일을 import 할 수 있다.
+
 [👆](#table-of-contents)
 
 ### How to add Google Analytics for React Router?
+
+history 객체에 리스너를 추가하여 각 페이지 뷰에 달아 둔다.
+
+```javascript
+history.listen(function (location) {
+  window.ga('set', 'page', location.pathname + location.search)
+  window.ga('send', 'pageview', location.pathname + location.search)
+})
+```
 
 [👆](#table-of-contents)
 
 ### How to update a component every second?
 
+`setInterval()`에 트리거를 걸어두면 되지만, unmount시에 이를 해제하여 메모리 누수와 에러를 방지해야 한다.
+
+```javascript
+componentDidMount() {
+  this.interval = setInterval(() => this.setState({ time: Date.now() }), 1000)
+}
+
+componentWillUnmount() {
+  clearInterval(this.interval)
+}
+```
+
 [👆](#table-of-contents)
 
 ### How do you apply vendor prefixes to inline styles in React?
+
+react는 자동으로 vender prefix를 붙여주지 않으므로, 수동으로 붙여야 한다.
+
+```javascript
+<div style={{
+  transform: 'rotate(90deg)',
+  WebkitTransform: 'rotate(90deg)', // note the capital 'W' here
+  msTransform: 'rotate(90deg)' // 'ms' is the only lowercase vendor prefix
+}} />
+```
 
 [👆](#table-of-contents)
 
 ### How to import and export components using React and ES6?
 
+`default`키워드를 사용하여 컴포넌트를 익스포트 한다.
+
+```javascript
+import React from 'react'
+import User from 'user'
+
+export default class MyProfile extends React.Component {
+  render(){
+    return (
+      <User type="customer">
+        //...
+      </User>
+    )
+  }
+}
+```
+
+위 예제에서는 MyProfile이 멤버가 되어 모듈로 익스포트 되는데, 이는 다른 컴포넌트에서 굳이 이름을 명세하지 않더라도 임포트 할 수 있게 해준다.
+
 [👆](#table-of-contents)
 
 ### What are the exceptions on React component naming?
+
+몇가지 예외적인 경우를 제외하고, 컴포넌트 명은 대문자로 시작해야 한다. 소문자와 . (속성 접근자)을 사용하는 경우 유효한 컴포넌트 명이다. 아래의 예가 그러한 유효한 경우다.
+
+```javascript
+render(){
+   return (
+       <obj.component /> // `React.createElement(obj.component)`
+      )
+}
+```
 
 [👆](#table-of-contents)
 
 ### Why is a component constructor called only once?
 
+React의 reconciliation 알고리즘은 후속 렌더링 과정에서 사용자 정의 컴포넌트가 똒같은 위치에 나타나면, 이전과 동일 한 요소이므로 새로운 인스턴스를 만드는 대신 이전 인스턴스를 재사용한다고 가정한다.
+
 [👆](#table-of-contents)
 
 ### How to define constants in React?
+
+es7의 static 필드를 사용하여 상수를 정의할 수 있다.
+
+```javascript
+class MyComponent extends React.Component {
+  static DEFAULT_PAGINATION = 10
+}
+```
+
+현재 static 필드는 stage3에 있다.
 
 [👆](#table-of-contents)
 
 ### How to programmatically trigger click event in React?
 
+callback을 통한 ref prop를 사용하여 HTMLInputElement 객체에 대한 참조를 가져와서 class property 로 저장한 다음, 이렇게 저장된 참조를 활용하여 `HTMLElement.click` 메서드를 사용해 이벤트 핸들러에서 클릭 이벤트를 트리거 할 수 있다.
+
+1. render 메서드에서 ref를 생성한다.
+
+```javascript
+<input ref={input => this.inputElement = input} />
+```
+
+2. 이벤트 핸들러에서 클릭 이벤트를 트리거 한다.
+```javascript
+this.inputElement.click()
+```
+
 [👆](#table-of-contents)
 
 ### Is it possible to use async/await in plain React?
+
+React 에서 async/await 을 사용하고 싶다면 Babel 과 transform-async-to-generator 플러그인이 필요하다. React Native에서는 기본적으로 지원하고 있다.
 
 [👆](#table-of-contents)
 
 ### What are the common folder structures for React?
 
+크게 두가지 종류가 있다.
+
+1. 기능 또는 라우팅으로 분류하는 방법
+
+기능과 라우팅에 따라서 css, js, 테스트 코드를 묶는 방법이다.
+
+```
+common/
+├─ Avatar.js
+├─ Avatar.css
+├─ APIUtils.js
+└─ APIUtils.test.js
+feed/
+├─ index.js
+├─ Feed.js
+├─ Feed.css
+├─ FeedStory.js
+├─ FeedStory.test.js
+└─ FeedAPI.js
+profile/
+├─ index.js
+├─ Profile.js
+├─ ProfileHeader.js
+├─ ProfileHeader.css
+└─ ProfileAPI.js
+```
+
+2. 파일 타입 별로 분류하는 법
+```
+api/
+├─ APIUtils.js
+├─ APIUtils.test.js
+├─ ProfileAPI.js
+└─ UserAPI.js
+components/
+├─ Avatar.js
+├─ Avatar.css
+├─ Feed.js
+├─ Feed.css
+├─ FeedStory.js
+├─ FeedStory.test.js
+├─ Profile.js
+├─ ProfileHeader.js
+└─ ProfileHeader.css
+```
+
 [👆](#table-of-contents)
 
 ### What are the popular packages for animation?
+
+React Transition Group과 React Motion이 React 생태계에서 유명한 애니메이션 패키지다.
 
 [👆](#table-of-contents)
 
 ### What is the benefit of styles modules?
 
+스타일 값을 하드코딩 하는 것은 권장하지 않는 방식이다. 서로다른 UI 컴포넌트에서 넓게 사용되는 값은 하나의 모듈에서 추출해서 쓰는 것이 좋다.
+
+아래와 같은 방식을 사용하면, 서로다른 컴포넌트에서 동일한 스타일을 가져올 수 있다.
+
+```javascript
+export const colors = {
+  white,
+  black,
+  blue
+}
+
+export const space = [
+  0,
+  8,
+  16,
+  32,
+  64
+]
+```
+
+그리고 각각의 컴포넌트에서 이를 임포트 하면 된다.
+
+```javascript
+import { space, colors } from './styles'
+```
+
 [👆](#table-of-contents)
 
 ### What are the popular React-specific linters?
+
+자바스크립트 lint로는 eslint가 유명하다. 코드 스타일을 분석할 수 있는 다양한 플러그인이 있다. React에서 가장 유명한 것은 `eslint-plugin-react`다. 기본적으로 몇가지 베스트 프랙티스를 확인하여, 이 규칙을 바탕으로 iterator의 키에서 부터 prop type까지 확인해 준다. 다른 유명한 플러그인으로는 `eslint-plugin-jsx-a11y`가 있는데, 이는 접근성과 관련된 일반적인 문제를 해결하는데 도움을 준다. JSX는 `alt` `tabindex`와 같은 HTML과 약간 다른 문법을 제공하므로, 일반적인 플러그인으로 는 확인이 어렵다.
 
 [👆](#table-of-contents)
 
 ### How to make AJAX call and in which component lifecycle methods should I make an AJAX call?
 
+Axios, jQuery Ajax, 브라우저 빌트인 `fetch`등을 활용하여 ajax를 활용할 수 있다. 이렇게 데이터를 가져오는 것은 반드시 `componentDidMount()`내에서 해야 한다. 이는 데이터를 받어온 뒤에 `setState()`로 컴포넌트를 업데이트 할 수 있게 해준다.
+
+예를 들어, 아래 코드에서 employee 목록을 가져오고 state를 업데이트 한다.
+
+```javascript
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      employees: [],
+      error: null
+    }
+  }
+
+  componentDidMount() {
+    fetch('https://api.example.com/items')
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            employees: result.employees
+          })
+        },
+        (error) => {
+          this.setState({ error })
+        }
+      )
+  }
+
+  render() {
+    const { error, employees } = this.state
+    if (error) {
+      return <div>Error: {error.message}</div>;
+    } else {
+      return (
+        <ul>
+          {employees.map(item => (
+            <li key={employee.name}>
+              {employee.name}-{employees.experience}
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  }
+}
+```
+
 [👆](#table-of-contents)
 
 ### What are render props?
 
-[👆](#table-of-contents)
+**Render Props**는 값이 함수인 prop을 활용하여 컴포넌트 간에 코드를 share할 수 있게 해주는 방법이다. 아래 컴포넌트는 `render prop`을 활용하여 React element를 리턴한다.
+
+```javascript
+<DataProvider render={data => (
+  <h1>{`Hello ${data.target}`}</h1>
+)}/>
 ```
+
+React Router 와 DownShift 라이브러리가 이 패턴을 사용한다.
+
+[👆](#table-of-contents)
+
