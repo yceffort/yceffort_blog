@@ -3,7 +3,6 @@ title: "리액트 인터뷰 질문 & 답 (2)"
 date: 2019-08-21 10:17:16
 layout: post
 tags: [javascript, react]
-published: false
 ---
 
 [목차](/2019/08/13/reactjs-interview-questions/)
@@ -100,45 +99,233 @@ published: false
 
 ### What is React Router?
 
+React Router는 리액트 최상단에 있는 강력한 라우팅 라이브러리로, 페이지에 보여주는 내용과 URL사이에 동기화를 유지해주고, 어플리케이션에 새로운 화면과 흐름을 추가할 수 있도록 도와준다.
+
 [👆](#table-of-contents)
 
 ### How React Router is different from history library?
+
+React router는 history라이브러리를 감싼 래퍼로, 브라우저의 `window.history`와 상호작용하고, 브라우저 및 해쉬의 히스토리를 다룬다. 또한 모바일 앱 개발 (React Native) 및 Node의 unit testing처럼 global histroy가 없는 환경에 유용한 메모리 히스토리를 제공한다.
 
 [👆](#table-of-contents)
 
 ### What are the `<Router>` components of React Router v4?
 
+v4는 새로운 3개의 `<Router>` 컴포넌트를 제공한다.
+
+1. `<BrowserRouter>`
+2. `<HashRouter>`
+3. `<MemoryRouter>`
+
+위 컴포넌트는 각각 브라우저, 해쉬, 메모리 히스토리 인스턴스를 만들어준다. React Router v4는 Router Object의 context를 통해, history 인스턴스의 속성과 메소드를 활용할 수 있게 해준다.
+
 [👆](#table-of-contents)
 
 ### What is the purpose of `push()` and `replace()` methods of `history`?
+
+히스토리 인스턴스에는 네비게이션 목적으로 두개의 메소드를 제공한다.
+
+1. `push()`
+2. `replace()`
+
+만약 히스토리가 방문했던 곳들의 배열이라고 생각한다면, `push()`가 그 역할을 할 것이고, 현재 위치를 덮어쓰는 느낌을 원한다면 `replace()`가 맞을 것이다.
 
 [👆](#table-of-contents)
 
 ### How do you programmatically navigate using React Router v4?
 
+Component 내에서 프로그래밍으로 라우팅/네비게이팅 하는 방법에는 3가지가 있다.
+
+1. HOF에서 `withRouter()`를 쓰는법
+   HOF의 `withRouter()`는 컴포넌트의 prop에 히스토리 오브젝트를 인젝트 한다. 이 오브젝트는 `push()` `replace()`를 제공하여 context의 사용을 피하게 해준다.
+
+```javascript
+import { withRouter } from "react-router-dom"; // this also works with 'react-router-native'
+
+const Button = withRouter(({ history }) => (
+  <button
+    type="button"
+    onClick={() => {
+      history.push("/new-location");
+    }}
+  >
+    {"Click Me!"}
+  </button>
+));
+```
+
+2. `<Route>` 컴포넌트와 render props 패턴을 사용하는 법
+   `<Route>`는 `withRouter()`와 같은 props를 넘기므로, history prop을 통해 histoy 메서드에 접근할 수 있을 것이다.
+
+```javascript
+import { Route } from "react-router-dom";
+
+const Button = () => (
+  <Route
+    render={({ history }) => (
+      <button
+        type="button"
+        onClick={() => {
+          history.push("/new-location");
+        }}
+      >
+        {"Click Me!"}
+      </button>
+    )}
+  />
+);
+```
+
+3. Context
+   이 방식은 딱히 추천되지 않고, 불안정한 API 활용으로 간주된다.
+
+```javascript
+const Button = (props, context) => (
+  <button
+    type="button"
+    onClick={() => {
+      context.history.push("/new-location");
+    }}
+  >
+    {"Click Me!"}
+  </button>
+);
+
+Button.contextTypes = {
+  history: React.PropTypes.shape({
+    push: React.PropTypes.func.isRequired
+  })
+};
+```
+
 [👆](#table-of-contents)
 
 ### How to get query parameters in React Router v4?
+
+수년간 다른 구현 지원에 대한 사용자들의 많은 요청 떄문에, React Router v4에서는 query string을 parsing 하는 방법은 사라졌다. 이는 유저가 원하는 대로 구현할 수 있는 자유도를 주었다. 추천하는 방법은, query string 라이브러리를 사용하는 것이다.
+
+```javascript
+const queryString = require("query-string");
+const parsed = queryString.parse(props.location.search);
+```
+
+native 방식을 선호한다면 `URLSearchParam`을 사용할 수도 있다.
+
+```javascript
+const params = new URLSearchParams(props.location.search);
+const foo = params.get("name");
+```
+
+다만 IE11에서는 폴리필이 필요하다.
 
 [👆](#table-of-contents)
 
 ### Why you get "Router may have only one child element" warning?
 
+Route는 `<Switch>` 블록으로 감싸줘야 하는데, 왜냐하면 `<Switch>`는 라우트를 베타적으로 감싸기 때문이다. 먼저 `Switch`를 임포트 해야 한다.
+
+```javascript
+import { Switch, Router, Route } from "react-router";
+```
+
+그리고 route를 `<Switch>` 블록에 넣어햐 한다.
+
+```html
+<Router>
+  <Switch>
+    <Route {/* ... */} /> <Route {/* ... */} />
+  </Switch>
+</Router>
+```
+
 [👆](#table-of-contents)
 
 ### How to pass params to `history.push` method in React Router v4?
+
+history 객체에 props를 보낼 수 있다.
+
+```javascript
+this.props.history.push({
+  pathname: "/template",
+  search: "?name=sudheer",
+  state: { detail: response.data }
+});
+```
+
+`search` 속성은 `push()`에서 query param을 보낼 때 사용된다.
 
 [👆](#table-of-contents)
 
 ### How to implement _default_ or _NotFound_ page?
 
+`<Switch>`는 첫번째로 일치하는 `<Route>`를 렌더링한다. path가 없는 route는 항상 매치하게 되어 있다. 따라서, path를 제거한 route를 하나 추가하면 된다.
+
+```javascript
+<Switch>
+  <Route exact path="/" component={Home} />
+  <Route path="/user" component={User} />
+  <Route component={NotFound} />
+</Switch>
+```
+
 [👆](#table-of-contents)
 
 ### How to get history on React Router v4?
 
+1. history 오브젝트를 익스포트 하는 모듈을 만들고, 프로젝트 전체에서 해당 모듈을 임포트 한다. 예를들어,
+
+```javascript
+import { createBrowserHistory } from "history";
+
+export default createBrowserHistory({
+  /* pass a configuration object here if needed */
+});
+```
+
+2. 빌트인 라우터 대신에, `<Router>` 컴포넌트를 쓴다. 위에서 만든 `history.js`를 `index.js`에 임포트 한다.
+
+```javascript
+import { Router } from "react-router-dom";
+import history from "./history";
+import App from "./App";
+
+ReactDOM.render(
+  <Router history={history}>
+    <App />
+  </Router>,
+  holder
+);
+```
+
+3. 빌트인 히스토리 오브젝트와 비슷하게, history의 push메소드를 쓸수도 있다.
+
+```javascript
+// some-other-file.js
+import history from "./history";
+
+history.push("/go-here");
+```
+
 [👆](#table-of-contents)
 
 ### How to perform automatic redirect after login?
+
+`react-router`sms `<Redirect>` 컴포넌트를 제공한다. `<Redirect>`를 렌더링 하면 새로운 위치로 이동하게 된다. 서버사이드 리다이렉트와 마찬가지로, 새로운 위치는 현재 히스토리 스택에 있는 현재 위치를 덮어쓰게 된다.
+
+```javascript
+import React, { Component } from "react";
+import { Redirect } from "react-router";
+
+export default class LoginComponent extends Component {
+  render() {
+    if (this.state.isLoggedIn === true) {
+      return <Redirect to="/your/redirect/page" />;
+    } else {
+      return <div>{"Login Please"}</div>;
+    }
+  }
+}
+```
 
 [👆](#table-of-contents)
 
