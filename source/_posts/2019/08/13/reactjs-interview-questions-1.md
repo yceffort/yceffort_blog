@@ -7,12 +7,6 @@ tags: [javascript, react]
 
 [목차](/2019/08/13/reactjs-interview-questions/)
 
-### 🚧작성중 🚧
-
-## Core React
-
-### Table of Contents
-
 | No. | Questions                                                                                                                                                              |
 | --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |     | **Core React**                                                                                                                                                         |
@@ -146,6 +140,8 @@ tags: [javascript, react]
 | 128 | [render props란 무엇인가?](#what-are-render-props)                                                                                                                     |
 
 ---
+
+## Core React
 
 ### What is React
 
