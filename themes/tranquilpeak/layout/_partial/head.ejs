@@ -110,22 +110,37 @@
         }
     })();
 %>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="<%= config.title %>">
     <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
-    
+
     <title><%= title %></title>
     <meta name="author" content="<%= config.author %>">
     <% if (keywords) { %>
-        <meta name="keywords" content="<%= keywords %>">
+    <meta name="keywords" content="<%= keywords %>">
     <% } %>
-    <% if (theme.favicon) { %>
-        <link rel="icon" href="https://www.yceffort.kr/images/favicon.png">
-    <% } %>
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
     <% if ((config.feed) && (config.feed.path.length)) { %>
-        <link rel="alternate" type="application/atom+xml" title="RSS" href="<%- url_for(config.feed.path) %>">
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="<%- url_for(config.feed.path) %>">
     <% } %>
     <%- json_ld() %>
     <%- open_graph({
@@ -134,31 +149,33 @@
         fb_app_id: theme.fb_app_id
     }) %>
     <% if (publisher) { %>
-        <link rel="publisher" href="https://plus.google.com/<%= publisher %>"/>
+    <link rel="publisher" href="https://plus.google.com/<%= publisher %>" />
     <% } %>
     <% if (typeof fb_admin_ids !== 'undefined') { %>
-        <% fb_admin_ids.forEach(function(fb_admin_id) { %>
-            <meta property="fb:admins" content="<%= fb_admin_id %>" />
-        <% }) %>
+    <% fb_admin_ids.forEach(function(fb_admin_id) { %>
+    <meta property="fb:admins" content="<%= fb_admin_id %>" />
+    <% }) %>
     <% } %>
     <% if (theme.gravatar_email) { %>
-        <meta property="og:image" content="<%- gravatar(theme.gravatar_email, 640) %>"/>
+    <meta property="og:image" content="<%- gravatar(theme.gravatar_email, 640) %>" />
     <% } else if (theme.author.picture) { %>
-        <meta property="og:image" content="<%= resolve_asset_url(theme.image_dir, theme.author.picture) %>"/>
+    <meta property="og:image" content="<%= resolve_asset_url(theme.image_dir, theme.author.picture) %>" />
     <% } %>
     <% if (page.thumbnailImage && page.thumbnailImage.length) { %>
-        <meta property="og:image" content="<%= resolve_asset_url(page.path, page.thumbnailImage) %>"/>
-        <meta class="swiftype" name="image" data-type="enum" content="<%= resolve_asset_url(page.path, page.thumbnailImage) %>" />
+    <meta property="og:image" content="<%= resolve_asset_url(page.path, page.thumbnailImage) %>" />
+    <meta class="swiftype" name="image" data-type="enum"
+        content="<%= resolve_asset_url(page.path, page.thumbnailImage) %>" />
     <% } %>
     <% if (page.coverImage && page.coverImage.length) { %>
-        <meta property="og:image" content="<%= resolve_asset_url(page.path, page.coverImage) %>"/>
-        <meta class="swiftype" name="image" data-type="enum" content="<%= resolve_asset_url(page.path, page.coverImage) %>" />
+    <meta property="og:image" content="<%= resolve_asset_url(page.path, page.coverImage) %>" />
+    <meta class="swiftype" name="image" data-type="enum"
+        content="<%= resolve_asset_url(page.path, page.coverImage) %>" />
     <% } %>
     <% if (photos && photos.length) { %>
-        <% photos.forEach(function(photo) { %>
-            <meta property="og:image" content="<%= photo %>" />
-            <meta class="swiftype" name="image" data-type="enum" content="<%= photo %>" />
-        <% }) %>
+    <% photos.forEach(function(photo) { %>
+    <meta property="og:image" content="<%= photo %>" />
+    <meta class="swiftype" name="image" data-type="enum" content="<%= photo %>" />
+    <% }) %>
     <% } %>
     <!--STYLES-->
     <%- css('assets/css/all.css') %>
