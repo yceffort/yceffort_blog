@@ -202,7 +202,7 @@ Button.contextTypes = {
 
 ### How to get query parameters in React Router v4?
 
-수년간 다른 구현 지원에 대한 사용자들의 많은 요청 떄문에, React Router v4에서는 query string을 parsing 하는 방법은 사라졌다. 이는 유저가 원하는 대로 구현할 수 있는 자유도를 주었다. 추천하는 방법은, query string 라이브러리를 사용하는 것이다.
+수년간 다른 구현 지원에 대한 사용자들의 많은 요청 때문에, React Router v4에서는 query string을 parsing 하는 방법은 사라졌다. 이는 유저가 원하는 대로 구현할 수 있는 자유도를 주었다. 추천하는 방법은, query string 라이브러리를 사용하는 것이다.
 
 ```javascript
 const queryString = require("query-string");
@@ -333,25 +333,97 @@ export default class LoginComponent extends Component {
 
 ### What is React Intl?
 
+React Intl string, dates, numbers, 복수 표현 등을 다국어로 포맷팅할 수 있는 컴포넌트와 API를 제공한다. React Intl는 components 와 API 를 바탕으로 Reac를 바인딩하는 FormatJS 의 일부분이다.
+
 [👆](#table-of-contents)
 
 ### What are the main features of React Intl?
+
+1. 숫자를 , 와 함께 표현
+2. 날짜와 시간을 올바르게 표현
+3. 현재시간을 기준으로 날자를 표현
+4. string의 복수표현
+5. 150+개의 언어 지원
+6. 브라우저와 노드에서 실행
+7. 표준에 맞춰 제작
 
 [👆](#table-of-contents)
 
 ### What are the two ways of formatting in React Intl?
 
+string, number, date를 포맷팅하는 방법은 react 컴포넌트 또는 api를 사용하는 두가지 방법이 있다.
+
+```jsx harmony
+<FormattedMessage
+  id={"account"}
+  defaultMessage={"The amount is less than minimum balance."}
+/>
+```
+
+```javascript
+const messages = defineMessages({
+  accountMessage: {
+    id: "account",
+    defaultMessage: "The amount is less than minimum balance."
+  }
+});
+
+formatMessage(messages.accountMessage);
+```
+
 [👆](#table-of-contents)
 
 ### How to use `<FormattedMessage>` as placeholder using React Intl?
+
+`<Formatted... />` 컴포넌트는 plain text가 아닌 elements를 반환하므로, placeholder, alt text처럼 string이 필요한 곳에는 쓸 수 없다. 따라서 여기에서는 `formatMessage()`를 사용해야한다. higher-order component인 injectIntl()을 사용하여, 컴포넌트에 intl 객체를 주입하고, 객체에서 사용할 수 있는 `formatMessage()`를 사용하여 message를 포맷팅할 수 있다.
+
+```jsx harmony
+import React from "react";
+import { injectIntl, intlShape } from "react-intl";
+
+const MyComponent = ({ intl }) => {
+  const placeholder = intl.formatMessage({ id: "messageId" });
+  return <input placeholder={placeholder} />;
+};
+
+MyComponent.propTypes = {
+  intl: intlShape.isRequired
+};
+
+export default injectIntl(MyComponent);
+```
 
 [👆](#table-of-contents)
 
 ### How to access current locale with React Intl?
 
+어느 어플리케이션에서든 `injectIntl()`를 사용하면 현재 로케일을 얻을 수 있다.
+
 [👆](#table-of-contents)
 
 ### How to format date using React Intl?
+
+higher-order 컴포넌트 `injectIntl()`는 컴포넌트의 props에 `formatDate()`메서드를 제공한다. 이 메서드는 내부적으로 `FormattedDate`인스턴스를 활용하고, 이는 포맷된 날짜를 string으로 제공한다.
+
+```jsx harmony
+import { injectIntl, intlShape } from "react-intl";
+
+const stringDate = this.props.intl.formatDate(date, {
+  year: "numeric",
+  month: "numeric",
+  day: "numeric"
+});
+
+const MyComponent = ({ intl }) => (
+  <div>{`The formatted date is ${stringDate}`}</div>
+);
+
+MyComponent.propTypes = {
+  intl: intlShape.isRequired
+};
+
+export default injectIntl(MyComponent);
+```
 
 [👆](#table-of-contents)
 
@@ -359,25 +431,119 @@ export default class LoginComponent extends Component {
 
 ### What is Shallow Renderer in React testing?
 
+`Shallow rendering`는 React에서 유닛테스트 케이스를 작성할 때 유용하다. 이는 컴포넌트를 한단계 더 깊이 렌더링하며, 렌더링되지 않은 하위 컴포넌트에 대한 고민 ㅇ벗이 렌더링 메서드가 반환하는 것에 대해 asset를 수행할 수 있다.
+
+```jsx harmony
+function MyComponent() {
+  return (
+    <div>
+      <span className={"heading"}>{"Title"}</span>
+      <span className={"description"}>{"Description"}</span>
+    </div>
+  );
+}
+```
+
+```javascript
+import ShallowRenderer from "react-test-renderer/shallow";
+
+const renderer = new ShallowRenderer();
+renderer.render(<MyComponent />);
+
+const result = renderer.getRenderOutput();
+
+expect(result.type).toBe("div");
+expect(result.props.children).toEqual([
+  <span className={"heading"}>{"Title"}</span>,
+  <span className={"description"}>{"Description"}</span>
+]);
+```
+
 [👆](#table-of-contents)
 
 ### What is `TestRenderer` package in React?
+
+`TestRenderer` 패키지는 component 를 DOM 또는 Native mobile 환경에 의존없이 순수 Javascript Object 로 렌더링 할 수 있는 renderer 를 제공한다. 이 패키지를 사용하면 브라우저 또는 jsdom 의 사용없이 ReactDOM 또는 React Native 에서 렌더링 되는 플랫폼의 뷰 계층구조 (DOM 트리와 유사) 의 스냅샷을 쉽게 가져올 수 있다.
+
+```jsx harmony
+import TestRenderer from "react-test-renderer";
+
+const Link = ({ page, children }) => <a href={page}>{children}</a>;
+
+const testRenderer = TestRenderer.create(
+  <Link page={"https://www.facebook.com/"}>{"Facebook"}</Link>
+);
+
+console.log(testRenderer.toJSON());
+// {
+//   type: 'a',
+//   props: { href: 'https://www.facebook.com/' },
+//   children: [ 'Facebook' ]
+// }
+```
 
 [👆](#table-of-contents)
 
 ### What is the purpose of ReactTestUtils package?
 
+`ReactTestUtils`는 유닛테스트를 목적으로 DOM을 조작할 수 있는 `with-addons`패키지를 제공한다.
+
 [👆](#table-of-contents)
 
 ### What is Jest?
+
+Jest는 페이스북이 만든 자바스크립트 유닛테스트 프레임워크로, Jasmine을 기반으로 만들어 졌으며 자동 mock 생성, `jsdom` 환경 제공 등의 기능을 제공한다. 컴포넌트를 테스트 하는데 사용 된다.
 
 [👆](#table-of-contents)
 
 ### What are the advantages of Jest over Jasmine?
 
+Jasmine보다 Jest가 더 좋은 점은
+
+- 소스코드에서 자동으로 테스트 코드를 찾아서 테스트
+- 테스트 시 자동으로 mock 의 존성 참고
+- 동기로 작성된 코드를 비동기로 테스트
+- fake Dom implementation으로 테스트 하여, 명령줄에서도 테스트 가능
+- 병렬 프로세스로 테스트 하여 테스트가 더욱 빠르게 수행됨
+
 [👆](#table-of-contents)
 
 ### Give a simple example of Jest test case
+
+두 숫자를 더하는 `sum.js`를 작성한다.
+
+```javascript
+const sum = (a, b) => a + b;
+export default sum;
+```
+
+테스트를 수행하는 `sum.test.js`를 작성
+
+```javascript
+import sum from "./sum";
+
+test("adds 1 + 2 to equal 3", () => {
+  expect(sum(1, 2)).toBe(3);
+});
+```
+
+`package.json`에 테스트를 실행하는 코드 추가
+
+```json
+{
+  "scripts": {
+    "test": "jest"
+  }
+}
+```
+
+`yarn test` `npm test`로 테스트 실행 및 결과 확인
+
+```shell
+$ yarn test
+PASS ./sum.test.js
+✓ adds 1 + 2 to equal 3 (2ms)
+```
 
 [👆](#table-of-contents)
 
@@ -385,45 +551,167 @@ export default class LoginComponent extends Component {
 
 ### What is flux?
 
+Flux는 어플리케이션 디자인 패러다임으로, 전통적인 모델인 MVC pattern을 대체하기 위해 나왔다. Flux는 프레임워크나 라이브러리가 아닌, React와 양방향 데이터 흐름을 기반으로 하는 새로운 아키텍쳐다. 페이스북이 React를 사용할 때 내부적으로 이 패턴을 활용한다.
+
+dispatcher, sotres, views 컴포넌트 사이 작업흐름은 아래처럼 input과 output이 구별되어 나타난다.
+
+![flux-diagram](https://github.com/sudheerj/reactjs-interview-questions/raw/master/images/flux.png)
+
 [👆](#table-of-contents)
 
 ### What is Redux?
+
+Redux는 flux 디자인 패턴을 기반으로 한 자바스크립트 앱의 예측가능한 state container다. Redux는 React또는 다른 어떤 뷰 라이브러리와 함께 사용할 수 있다. Redux는 크기가 매우 작고 (2kb), 다른 디펜던시를 갖고 있지 않다.
 
 [👆](#table-of-contents)
 
 ### What are the core principles of Redux?
 
+Redux는 다음 세가지 기본 원칙을 가지고 있다.
+
+1. 신뢰할 수 있는 단일 출처: 어플리케이션의 state는 단일 store에 객체트리 형태로 저장되어 있다. 단일 state tree는 변화를 쉽게 추적ㄷ할 수 있게 해주며, 어플리케이션을 디버그하고 검사하는 것을 쉽게 만들어 준다.
+2. state는 읽기 전용: state를 변경할 수 있는 방법은 단한가지로, 객체가 어떤 일이 일어났는지 묘사하는 액션을 보내는 것이다. 이는 views나 네트워크 콜백이 직접 state를 수정하지 않도록 한다.
+3. 변화는 순수 함수로만 이루어진다: 액션별로 state 트리가 어떻게 변화하는지 명세하기 위해, reducer를 사용해야 한다.
+
 [👆](#table-of-contents)
 
 ### What are the downsides of Redux compared to Flux?
+
+Flux와 비교했을 때, Redux는 몇가지 단점을 가지고 있다.
+
+1. 변이를 피하는 법을 배워야 한다: Flux는 데이터 변이에 대해 특별한 의견이 없지만, Redux는 데이터 변이를 선호하지 않으며, 다른 추가 보완 패키지를 활용하여 이를 유지한다. dev-only 패지지인 `redux-immutable-state-invariant`나 `Immutable.js`를 활용하거나, 팀원들에게 변이 없는 코드에 대해 방법론을 확산해야 한다.
+2. 패키지를 고를때 신중해진다: Flux는 undo/redo, 지속성, 폼 관련 문제에 대해 무관심하지만, Redux 는 미들웨어 및 Store 개선 등 확장된 포인트들을 가지고 풍부한 생태계를 만들어 냈기 때문에, 패키지 선택에 주의가 필요하다.
+3. 타입체크: Flux는 정적 타입 체크를 할 수 있는 방법이 있지만, Redux는 아직 지원하고 있지 않다.
 
 [👆](#table-of-contents)
 
 ### What is the difference between `mapStateToProps()` and `mapDispatchToProps()`?
 
+`mapStateToProps()`는 컴포넌트에서 다른 컴포넌트에 의해 업데이트된 state를 가져올수 있도록 도와주는 유틸리티다.
+
+```javascript
+const mapStateToProps = state => {
+  return {
+    todos: getVisibleTodos(state.todos, state.visibilityFilter)
+  };
+};
+```
+
+`mapDispatchToProps()`는 컴포넌트가 이벤트를 발생시킬 수 있도록 도와주는 유틸리티다. (이 이벤트는 어플리케이션의 state에 변화를 가져올 수 있음)
+
+```javascript
+const mapDispatchToProps = dispatch => {
+  return {
+    onTodoClick: id => {
+      dispatch(toggleTodo(id));
+    }
+  };
+};
+```
+
+`mapDispatchToProps`에서는 항상 객체를 파라미터로 보내기를 권장한다.
+
+Redux는 `(…args) => dispatch(onTodoClick(…args))`와 같은 형태의 다른 함수로 감싸고, 이렇게 감싼 함수를 컴포넌트의 prop로 전달한다.
+
+```javascript
+const mapDispatchToProps = {
+  onTodoClick
+};
+```
+
 [👆](#table-of-contents)
 
 ### Can I dispatch an action in reducer?
+
+Reducer안에서 액션을 보내는 것은 안티패턴이다. Reducer는 사이드이펙트를 최소화 하기 위하여, 단순히 액션에 대한 처리와 새로운 state를 가진 object를 반환하기만 해야 한다. Reducer내에서 리스너를 달고, 액션을 보내는 것은 다른 액션과 연쇄작용을 일으킬 수도 있으며, 사이드 이펙트를 야기할 수도 있다.
 
 [👆](#table-of-contents)
 
 ### How to access Redux store outside a component?
 
+`createStore()`로 만들어진 모듈을 export 하면 된다. 그리고 global 객체인 window를 사용해서는 안된다.
+
+```javascript
+store = createStore(myReducer);
+
+export default store;
+```
+
 [👆](#table-of-contents)
 
 ### What are the drawbacks of MVW pattern?
+
+1. DOM 조작은, 많은 비용을 지불해야 하고, 어플리케이션을 느리고 비효율적으로 만든다.
+2. 순환 참조로 인해, 복잡한 모델이 모델과 뷰주변에 만들어질 수 있다.
+3. 구글 docs와 같은 협업 어플리케이션에서는 많은 양의 데이터 변경이 일어날 수 있다.
+4. 추가적으로 많은 코드를 쓰지 않고 undo를 쉽게 할 수 없다.
 
 [👆](#table-of-contents)
 
 ### Are there any similarities between Redux and RxJS?
 
+두 라이브러리는 목적부터 완전히 다르지만, 약간의 비슷한점을 가지고있다.
+
+Redux는 어플리케이션 전반에서 state를 관리할 수 있게 도와주는 툴이다. 이는 보통 UI 아키텍쳐에서 ㅁ낳이 사용된다. Angular의 대체재라고 볼 수 있다. 반면 Rxjs는 반응형 프로그래밍 라이브러리다. RxJS는 자바스크립트에서 비동기 작업을 수행하기 위해 사용된다. Promise의 대체재라고 볼 수있다. Redux는 Store가 반응형이기 때문에 반응형 패러다임을 사용한다. Store는 액션을 어느정도 거리에서 관찰하다가, 스스로 변화한다. RxJS 또한 반응형 패러다임을 사용하는 반면, 아키텍쳐를 제공하지 않고 Observable 과 같은 블록을 제공한다.
+
 [👆](#table-of-contents)
 
 ### How to dispatch an action on load?
 
+`componentDidMount()`와 `render()`메서드에서 데이터를 확인하는 액션을 전닥ㄹ할 수 있고 데이터를 확인할 수 있다.
+
+```jsx harmony
+class App extends Component {
+  componentDidMount() {
+    this.props.fetchData();
+  }
+
+  render() {
+    return this.props.isLoaded ? (
+      <div>{"Loaded"}</div>
+    ) : (
+      <div>{"Not Loaded"}</div>
+    );
+  }
+}
+
+const mapStateToProps = state => ({
+  isLoaded: state.isLoaded
+});
+
+const mapDispatchToProps = { fetchData };
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
+```
+
 [👆](#table-of-contents)
 
 ### How to use `connect()` from React Redux?
+
+container에서 store를 사용하기 위해서는 아래 두단계를 따라야 한다.
+
+1. `mapStateToProps()`를 사용: state의 값을 props에서 지정한 store에 맵핑시킨다.
+2. 위 props를 Container 와 연결: `mapStateToProps()`에 의해 리턴되는 객체들은 컨테이너와 연결된다. 이를 `react-redux`의 `connect`로 import 할 수 있다.
+
+```jsx harmony
+import React from "react";
+import { connect } from "react-redux";
+
+class App extends React.Component {
+  render() {
+    return <div>{this.props.containerData}</div>;
+  }
+}
+
+function mapStateToProps(state) {
+  return { containerData: state.data };
+}
+
+export default connect(mapStateToProps)(App);
+```
 
 [👆](#table-of-contents)
 
@@ -600,3 +888,7 @@ export default class LoginComponent extends Component {
 ### How to use TypeScript in `create-react-app` application?
 
 [👆](#table-of-contents)
+
+```
+
+```

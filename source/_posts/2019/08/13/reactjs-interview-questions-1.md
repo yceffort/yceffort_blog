@@ -1778,7 +1778,7 @@ import MyComponent from "./MyComponent";
 
 ### What is the difference between constructor and getInitialState?
 
-es6 클래스에서는 `constructor`로 state를 초기화 하고, `React.createClass`를 사용할 떄는 `getInitialState()`으로 초기화 한다.
+es6 클래스에서는 `constructor`로 state를 초기화 하고, `React.createClass`를 사용할 때는 `getInitialState()`으로 초기화 한다.
 
 es6
 
@@ -2013,7 +2013,7 @@ class WindowDimensions extends React.Component {
 
 ### How to listen to state changes?
 
-아래 라이프사이클 메서드는 state으 ㅣ변화가 있을 떄 호출된다. 여기에서 이전 state와 props과 현재 state/props 값을 비교하여 의미있는 변화가 있었는지 추적할 수 있다.
+아래 라이프사이클 메서드는 state의 변화가 있을 때 호출된다. 여기에서 이전 state와 props과 현재 state/props 값을 비교하여 의미있는 변화가 있었는지 추적할 수 있다.
 
 ```javascript
 componentWillUpdate(object nextProps, object nextState)
