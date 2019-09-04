@@ -717,45 +717,253 @@ export default connect(mapStateToProps)(App);
 
 ### How to reset state in Redux?
 
+`combineReducers()`로 생성된 reducer 에게 action 을 위임하도록 application 단에서 root reducer 를 작성해야 한다.
+
+예를 들어, `USER_LOGOUT` 액션에 초기 state값을 리턴하는 `rootReducer()`를 예로 들어보자. 알다시피, reducer는 action에 상관없이 첫 번째 매개변수가 undefined로 호출된다면, 초기 상태값을 반환한다.
+
+```javascript
+const appReducer = combineReducers({
+  /* your app's top-level reducers */
+});
+
+const rootReducer = (state, action) => {
+  if (action.type === "USER_LOGOUT") {
+    state = undefined;
+  }
+
+  return appReducer(state, action);
+};
+```
+
+`redux-persist`를 사용하는 경우, 스토리지를 비워야 할 수도 있다. `redux-persist`에서는 스토리지 안진에 있는 state의 사본을 보관해둔다. 먼저, 적절한 스토리지 엔진을 임포트 한다음, 상태를 undefined로 설정하기 전에 storage state key를 비워주어야 한다.
+
 [👆](#table-of-contents)
 
 ### Whats the purpose of `at` symbol in the Redux connect decorator?
+
+`@`는 자바스크립트에서 데코레이터를 나타낼 떄 쓰는 표현식이다. 데코레이터는 class와 속성에 주석을 달고, 이를 수정할 수 있게 해준다.
+
+데코레이터가 없는 redux를 예로 들어보자.
+
+```javascript
+import React from "react";
+import * as actionCreators from "./actionCreators";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+
+function mapStateToProps(state) {
+  return { todos: state.todos };
+}
+
+function mapDispatchToProps(dispatch) {
+  return { actions: bindActionCreators(actionCreators, dispatch) };
+}
+
+class MyApp extends React.Component {
+  // ...define your main app here
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MyApp);
+```
+
+```javascript
+import React from "react";
+import * as actionCreators from "./actionCreators";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+
+function mapStateToProps(state) {
+  return { todos: state.todos };
+}
+
+function mapDispatchToProps(dispatch) {
+  return { actions: bindActionCreators(actionCreators, dispatch) };
+}
+
+@connect(
+  mapStateToProps,
+  mapDispatchToProps
+)
+export default class MyApp extends React.Component {
+  // ...define your main app here
+}
+```
+
+위 예제는 데코레이터를 사용한 것을 제외하고는 비슷하다. 데코레이터는 아직 자바스크립트 런타임에 구현되어 있지 않다. 여전히 실험적인 내용이기 때문에 수정될 여지가 있다. 바벨을 사용하면 이 데코레이터를 쓸 수 있다.
 
 [👆](#table-of-contents)
 
 ### What is the difference between React context and React Redux?
 
+Context는 어플리케이션에서 다이렉트로 사용할 수 있으며, 깊게 중첩된 컴포넌트에 데이터를 전달하는데 유용하다. 반면 Redux는 훨씬 더 강력하며, Context API가 제공하지 않는 기능을 제공한다. 또한, React Redux 는 내부적으로 context를 활용하지만, public api에 공개하지는 않는다.
+
 [👆](#table-of-contents)
 
 ### Why are Redux state functions called reducers?
+
+Reducers 는 항상 모든 이전과 현재의 action을 기반으로한 상태값을 반환한다. Redux reducer 가 호출 될 때 마다 상태와 액션이 파라미터로 전달된다. 상태는 action 에 따라 감소되거나 누적되어 다음 상태를 반환한다. 최종 상태를 얻기 위한 action을 실행하는데 action 단위와 store 의 초기 상태 값을 줄일 수 있다.
 
 [👆](#table-of-contents)
 
 ### How to make AJAX request in Redux?
 
+비동기 액션을 허용하는 미들웨어인 `redux-thunk`를 사용하면 가능하다.
+
+```javascript
+export function fetchAccount(id) {
+  return dispatch => {
+    dispatch(setLoadingAccountState()); // Show a loading spinner
+    fetch(`/account/${id}`, response => {
+      dispatch(doneFetchingAccount()); // Hide loading spinner
+      if (response.status === 200) {
+        dispatch(setAccount(response.json)); // Use a normal function to set the received state
+      } else {
+        dispatch(someError);
+      }
+    });
+  };
+}
+
+function setAccount(data) {
+  return { type: "SET_Account", data: data };
+}
+```
+
 [👆](#table-of-contents)
 
 ### Should I keep all component's state in Redux store?
+
+Redux Store 에서는 Data를 저장하고, 컴포넌트 내부에서는 UI 에 관련된 상태들을 저장한다.
 
 [👆](#table-of-contents)
 
 ### What is the proper way to access Redux store?
 
+컴포넌트에서 스토어에 접근하는 좋은 방법은 `connect()`함수를 이용하는 것이다. 이 함수는 이미 존재하는 컴포넌트를 감싸 새로운 컴포넌트를 만든다. 이러한 방식을 HOC(Higher Order Component)라고 하는데, 이는 리액트에서 컴포넌트의 기능을 확장할 때 주로 사용한다. 이 방법은 상태와 action 생성자를 컴포넌트에 매핑하고, store가 업데이트 되면 자동적으로 컴포넌트에 state와 action 생성자를 전달 할 수 있도록 해준다.
+
+conenct를 사용한 `<FilterLink>` component예제를 아래에서 살펴보자.
+
+```javascript
+import { connect } from "react-redux";
+import { setVisibilityFilter } from "../actions";
+import Link from "../components/Link";
+
+const mapStateToProps = (state, ownProps) => ({
+  active: ownProps.filter === state.visibilityFilter
+});
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  onClick: () => dispatch(setVisibilityFilter(ownProps.filter))
+});
+
+const FilterLink = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Link);
+
+export default FilterLink;
+```
+
+이미 성능최적화가 되어 있고, 버그를 발생할 여지도 적기 때문에 개발자들은 context api로 바로 스토어에 접근하는 것 보다는 `connect()`를 사용하는 것을 더 선호한다.
+
 [👆](#table-of-contents)
 
 ### What is the difference between component and container in React Redux?
+
+`Component`는 어플리케이션의 일부분을 표시하는 함수 또는 클래스 컴포넌트를 의미한다.
+
+`Container`는 비공식적인 용어로, Redux Store와 연결된 컴포넌트를 지칭한다. Container 는 Redux 의 state update 와 action 을 구독하며, DOM element 를 렌더링하지 않는다. 이러한 rendering응ㄴ 하위 component 들에게 위임한다.
 
 [👆](#table-of-contents)
 
 ### What is the purpose of the constants in Redux?
 
+상수를 사용하면 IDE를 사용할 때 프로젝트 전체에서 특정한 기능의 모든 사용내역을 쉽게 찾을 수 있다. 또한 오타로 인한 버그도 방지할 수 있다. 오타가 난다면 즉시 `ReferenceError`를 낸다.
+
+일반적으로 `constant.js`또는 `actionTypes.js`에 저장한다.
+
+```javascript
+export const ADD_TODO = "ADD_TODO";
+export const DELETE_TODO = "DELETE_TODO";
+export const EDIT_TODO = "EDIT_TODO";
+export const COMPLETE_TODO = "COMPLETE_TODO";
+export const COMPLETE_ALL = "COMPLETE_ALL";
+export const CLEAR_COMPLETED = "CLEAR_COMPLETED";
+```
+
+이 파일은 두 군데에서 사용된다.
+
+1. 액션 생성시
+
+```javascript
+import { ADD_TODO } from "./actionTypes";
+
+export function addTodo(text) {
+  return { type: ADD_TODO, text };
+}
+```
+
+2. 리듀서
+
+```javascript
+import { ADD_TODO } from "./actionTypes";
+
+export default (state = [], action) => {
+  switch (action.type) {
+    case ADD_TODO:
+      return [
+        ...state,
+        {
+          text: action.text,
+          completed: false
+        }
+      ];
+    default:
+      return state;
+  }
+};
+```
+
 [👆](#table-of-contents)
 
 ### What are the different ways to write `mapDispatchToProps()`?
 
+`mapDispatchToProps()` 안에서 dispatch() 를 사용하여 action creators를 바인딩하는 방법은 몇가지가 있다.
+
+```javascript
+const mapDispatchToProps = dispatch => ({
+  action: () => dispatch(action())
+});
+
+const mapDispatchToProps = dispatch => ({
+  action: bindActionCreators(action, dispatch)
+});
+
+const mapDispatchToProps = { action };
+```
+
 [👆](#table-of-contents)
 
 ### What is the use of the `ownProps` parameter in `mapStateToProps()` and `mapDispatchToProps()`?
+
+`ownProps` 파라미터가 명시되어 있다면, React Redux는 component로 전달된 props를 연결된 함수로 전달한다. 그래서 만약 connected component를 사용한다면,
+
+```javascript
+import ConnectedComponent from "./containers/ConnectedComponent";
+
+<ConnectedComponent user={"john"} />;
+```
+
+`mapStateToProps()`와 `mapDispatchToProps()`안의 `ownProps`는 객체가 될 것이다.
+
+```json
+{ "user": "john" }
+```
+
+이 객체를 활용하여 함수에서 무엇을 반환할지 결정할 수 있다.
 
 [👆](#table-of-contents)
 
