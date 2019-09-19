@@ -969,134 +969,175 @@ import ConnectedComponent from "./containers/ConnectedComponent";
 
 ### How to structure Redux top level directories?
 
+대부분의 어플리케이션이 아래와 같은 상위구조 레벨을 가지고 있다.
+
+1. Components: Redux를 모르는 컴포넌트
+2. Container: Redux와 연결된 컴포넌트
+3. Actions: 파일의 이름이 앱의 일부와 일치하는 액션을 생성하는 모든 것
+4. Reducer: 상태 키와 일치파는 파일명을 가진 모든 리듀서
+5. Store: 스토어 초기화를 위해 사용
+
+이러한 구조는 중소규모의 어플리케이션에 적합하다.
+
 [👆](#table-of-contents)
 
 ### What is redux-saga?
+
+redux-saga 는 side effects (데이터를 가져오는 비동기적인 작업이나 browser cache 에 접근하는 것등)를 React/Redux applications에서 더 쉽게 만들도록 도와주는 라이브러리다.
 
 [👆](#table-of-contents)
 
 ### What is the mental model of redux-saga?
 
+`Saga`는 어플리케이션과 분리된 스레드와 같은것으로, 부수적인 역할을 담당하기 위한 책임을 가지고 있다. redux-saga는 redux의 미들웨어로, 메인 application 에서 Redux actions 과 함께 쓰레드를 시작, 중지, 취소 할 수 있으며 전체의 Redux application 상태에 접근할 수 있으며 Redux actions 도 전달할 수 있다.
+
 [👆](#table-of-contents)
 
 ### What are the differences between `call()` and `put()` in redux-saga?
+
+`call()` `put()` 모두 effect creator 함수다. `call()`은 함수는 middleware 가 promise 를 어떻게 호출할지를 설명하는 effect 을 생성하는데 사용된다. `put()` 함수는 store 에 action 을 통하여 전달하도록 미들웨어에게 가르치는 effect 를 생성한다.
+
+사용자의 데이터를 가져오는 예제를 보고 effects 가 어떻게 동작하는지 살펴보자.
+
+```javascript
+function* fetchUserSaga(action) {
+  // `call` function accepts rest arguments, which will be passed to `api.fetchUser` function.
+  // Instructing middleware to call promise, it resolved value will be assigned to `userData` variable
+  const userData = yield call(api.fetchUser, action.userId);
+
+  // Instructing middleware to dispatch corresponding action.
+  yield put({
+    type: "FETCH_USER_SUCCESS",
+    userData
+  });
+}
+```
 
 [👆](#table-of-contents)
 
 ### What is Redux Thunk?
 
+Redux Thunk 는 action 대신 함수를 반환하는 action 생성자를 작성 할 수 있는 미들웨어다. Thunk 는 action dispatch 를 지연 시키거나, 특정한 조건이 성립되는 경우에만 dispatch 하도록 할 수 있다. 내부 함수는 파라미터로로 `dispatch()` `getState()`를 받는다.
+
 [👆](#table-of-contents)
 
 ### What are the differences between `redux-saga` and `redux-thunk`?
+
+Redux Thunk 와 Redux Saga 는 모두 side effect 를 다룬다. 대부분의 시나리오에서 Thunk 는 Promise 를 사용하여 처리하고 Saga 는 Generators 를 사용한다. Promise 는 많은 개발자들에게 친숙하기 때문에 Thunk 는 비교적 다루기 쉽고, Sagas와 Generator 는 기능은 강력한 반면에 러닝커브가 존재한다. 두 미들웨어 모두 공존 할 수 있다. Thunk 로 시작하여도 만약 Saga 가 필요하다면 도입 할 수 있다.
 
 [👆](#table-of-contents)
 
 ### What is Redux DevTools?
 
+Redux DevTools 은 Redux 를 위한 hot reload 기능을 가진 실시간 편집이 가능한 툴이다. 액션을 다시 재현하거나 UI 를 사용자 정의에 맞게 만들 수 있다. Redux DevTools 을 프로젝트에 설치하여 사용하고 싶지 않다면 Chrome 또는 Firefox 용 Extension 사용을 고려해 볼 수 있다.
+
 [👆](#table-of-contents)
 
 ### What are the features of Redux DevTools?
+
+1. 모든 상태와 액션을 검사
+2. action 을 취소하여 작업을 되돌리기
+3. reducer 의 코드를 변경 시 staged된 액션을 재평가
+4. action 에서 어떤 일이 일어났는지, 오류가 발생하였는지 확인
+5. `persistState()` store enhancer 을 사용하면 page reload 에서 debug session을 유지할 수 있음
 
 [👆](#table-of-contents)
 
 ### What are Redux selectors and why to use them?
 
+Selectors 는 Redux state 를 인수로받고 데이터를 반환하여 component 로 전달하는 함수다.
+
+예를 들어, state에서 유저 상태정보를 받는다면 아래와 같이 처리할 수 있다.
+
+```javascript
+const getUserData = state => state.user.data;
+```
+
 [👆](#table-of-contents)
 
 ### What is Redux Form?
+
+Redux Form은 React와 Redux와 동시에 작동하며, React 폼 내에서 Redux의 모든 상태를 저장할 수 있다. Redux Form은 HTML5 input요소들과 사용가능하며, Material UI, React Widget, React bootstrap 과 같은 UI 프레임워크와도 동작이 가능하다.
 
 [👆](#table-of-contents)
 
 ### What are the main features of Redux Form?
 
+1. Redux store를 통한 필드 값 유지
+2. 값 유효성 검사 (동기, 비동기)
+3. 포맷팅, 파싱, 정규화
+
 [👆](#table-of-contents)
 
 ### How to add multiple middlewares to Redux?
+
+`applyMiddleware()`를 사용하면 된다. 예를 들어, `applyMiddleware()`를 사용하여 `redux-thunk`와 `logger`를 추가할 수 있다.
+
+```javascript
+import { createStore, applyMiddleware } from "redux";
+const createStoreWithMiddleware = applyMiddleware(ReduxThunk, logger)(
+  createStore
+);
+```
 
 [👆](#table-of-contents)
 
 ### How to set initial state in Redux?
 
+`createStore`에 두번째 인자로 초기 state값을 넘겨주면 된다.
+
+```javascript
+const rootReducer = combineReducers({
+  todos: todos,
+  visibilityFilter: visibilityFilter
+});
+
+const initialState = {
+  todos: [{ id: 123, name: "example", completed: false }]
+};
+
+const store = createStore(rootReducer, initialState);
+```
+
 [👆](#table-of-contents)
 
 ### How Relay is different from Redux?
+
+Relay와 Redux모두 하나의 스토어를 쓴다는 점에서 같다. 가장 큰 차이점은, 서버로 붙어 받은 메시지만 릴레이 한다는 점, 그리고 상태값을 모두 GraphQL 쿼리로 받는다는 것이다. Relay는 변경된 데이터만 가져온다는 점에서 데이터를 캐싱하거나 최적화할 수 있다.
 
 ## React Native
 
 ### What is the difference between React Native and React?
 
+React는 자바스크립트 라이브러리로, 프론트엔드와 서버에서 동작하며, 유저인터페이스나 웹 어플리케이션을 만들기 위해 사용된다.
+
+React Native는 네이티브 앱 컴포넌트를 컴파일하기 위한 모바일 프레임워크로, 자바스크립트 기반 React로 iOS, Android와 같은 네이티브 어플리케이션을 만들 수 있게 해준다.
+
 [👆](#table-of-contents)
 
 ### How to test React Native apps?
+
+React Native는 iOS나 안드로이드와 같은 시뮬레이터로만 테스트가 가능하다. [expo app](https://expo.io)를 활용한다면, qr코드를 활용하여 무선 네트워크 상에서도 모바일과 컴퓨터로 싱크를 맞출 수 있다.
 
 [👆](#table-of-contents)
 
 ### How to do logging in React Native?
 
+`console.log` `console.warn`을 사용할 수 있다. React Native v0.29에서는 아래 명령어로도 가능하다.
+
+```
+$ react-native log-ios
+$ react-native log-android
+```
+
 [👆](#table-of-contents)
 
 ### How to debug your React Native?
 
-[👆](#table-of-contents)
-
-## React supported libraries & Integration
-
-### What is reselect and how it works?
-
-[👆](#table-of-contents)
-
-### What is Flow?
+1. iOS 시뮬레이터로 어플리케이션을 실행한다.
+2. `Command + D`를 눌러서 웹페이지가 `http://localhost:8081/debugger-ui`에서 실행되게 한다.
+3. Pause On Caught Exceptions을 활성화 하면 원활하게 디버그가 가능하다.
+4. `Command + Option + I` 또는 `View` -> `Developer` -> `Developer Tools`로 크롬 개발자 도구를 띄운다.
+5. 디버그가 가능하다.
 
 [👆](#table-of-contents)
-
-### What is the difference between Flow and PropTypes?
-
-[👆](#table-of-contents)
-
-### How to use Font Awesome icons in React?
-
-[👆](#table-of-contents)
-
-### What is React Dev Tools?
-
-[👆](#table-of-contents)
-
-### Why is DevTools not loading in Chrome for local files?
-
-[👆](#table-of-contents)
-
-### How to use Polymer in React?
-
-[👆](#table-of-contents)
-
-### What are the advantages of React over Vue.js?
-
-[👆](#table-of-contents)
-
-### What is the difference between React and Angular?
-
-[👆](#table-of-contents)
-
-### Why React tab is not showing up in DevTools?
-
-[👆](#table-of-contents)
-
-### What are Styled Components?
-
-[👆](#table-of-contents)
-
-### Give an example of Styled Components?
-
-[👆](#table-of-contents)
-
-### What is Relay?
-
-[👆](#table-of-contents)
-
-### How to use TypeScript in `create-react-app` application?
-
-[👆](#table-of-contents)
-
-```
-
-```
