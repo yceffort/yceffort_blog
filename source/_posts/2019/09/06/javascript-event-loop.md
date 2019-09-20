@@ -42,11 +42,7 @@ hi3();
 
 이 함수들이 실행되는 순서를 살펴보자.
 
-{% raw %}
-
-<iframe style="width: 100%; height: 75vh" src="http://latentflip.com/loupe/?code=ZnVuY3Rpb24gZGVsYXkoKSB7CiAgZm9yICh2YXIgaSA9IDA7IGkgPCAxMDAwMDsgaSsrKTsKfQpmdW5jdGlvbiBoaTMoKSB7CiAgZGVsYXkoKTsKICBoaTIoKTsKICBjb25zb2xlLmxvZygiaGkzISIpOyAvLyAoMykKfQpmdW5jdGlvbiBoaTIoKSB7CiAgZGVsYXkoKTsKICBjb25zb2xlLmxvZygiaGkyISIpOyAvLyAoMikKfQpmdW5jdGlvbiBoaTEoKSB7CiAgY29uc29sZS5sb2coImhpMSEiKTsgLy8gKDQpCn0KCnNldFRpbWVvdXQoaGkxLCAxMCk7IC8vICgxKQpoaTMoKTs%3D!!!PGJ1dHRvbj5DbGljayBtZSE8L2J1dHRvbj4%3D"></iframe>
-
-{% endraw %}
+[여기](http://latentflip.com/loupe/?code=ZnVuY3Rpb24gZGVsYXkoKSB7CiAgZm9yICh2YXIgaSA9IDA7IGkgPCAxMDAwMDsgaSsrKTsKfQpmdW5jdGlvbiBoaTMoKSB7CiAgZGVsYXkoKTsKICBoaTIoKTsKICBjb25zb2xlLmxvZygiaGkzISIpOyAvLyAoMykKfQpmdW5jdGlvbiBoaTIoKSB7CiAgZGVsYXkoKTsKICBjb25zb2xlLmxvZygiaGkyISIpOyAvLyAoMikKfQpmdW5jdGlvbiBoaTEoKSB7CiAgY29uc29sZS5sb2coImhpMSEiKTsgLy8gKDQpCn0KCnNldFRpbWVvdXQoaGkxLCAxMCk7IC8vICgxKQpoaTMoKTs%3D!!!PGJ1dHRvbj5DbGljayBtZSE8L2J1dHRvbj4%3D)를 살펴보세용 .
 
 setTimeout이 얼마나 일찍 끝났건 간에, 다른 작업들이 먼저 콜 스택에 들어갔으므로, `hi1`은 절대 먼저 실행되지 않는다. 근데 어디서 이 setTimout에 있는 `hi1()`를 잡아다가 다시 실행해줬을까? 이를 도와주는 것이 태스크 큐와 이벤트 루프다. 태스크 큐는 콜백 함수들이 대기하는 큐(FIFO) 형태의 배열이고, 이벤트 루프는 콜 스택이 비워질 때 마다 콜백함수에서 꺼내와서 실행하는 역할을 한다.
 
