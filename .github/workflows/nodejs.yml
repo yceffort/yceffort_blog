@@ -22,6 +22,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: deploy blog
       run: |
+        git config --global user.email "root@yceffort.kr"
+        git config --global user.name "yceffort"
         npm ci
         npm run deploy
       env:
