@@ -4,42 +4,45 @@ updated: 2018-07-03 15:00:48
 layout: post
 ---
 
-[여기](/2018/07/03/ethereum-create-private-blockchain-1.html)에서 이어집니다.
+[여기](/2018/07/03/ethereum-create-private-blockchain-1/)에서 이어집니다.
 
-자바스크립트 기반의 콘솔입니다. 
+자바스크립트 기반의 콘솔입니다.
 
 ### 1. 어카운트 확인하기
-~~~
+
+```
 > eth.accounts
 ["0x44e74080949320292839b9a0df55e4459dd51434"]
-~~~
+```
 
 아까 생성한 한계의 어카운트가 보입니다.
 
 ### 2. 잔고 확인하기
 
-~~~
+```
 > eth.getBalance(eth.accounts[0])
 300000
-~~~
+```
 
 첫 제네시스 블록을 만들때 alloc 했던 양 만큼 할당이 되어 있네요.
 
 ### 3. 단위 변경하기
 
 그런데 저 단위는 사실 ether가 아니고 wei입니다. 아래 처럼 변환하면 됩니다. [참고](https://github.com/ethereum/wiki/wiki/JavaScript-API#web3fromwei)
-~~~
+
+```
 >  web3.fromWei(eth.getBalance(eth.accounts[0], "ether"));
 "0"
-~~~
+```
 
 ### 4. 채굴 시작하기
-~~~
+
+```
 > miner.start()
 INFO [07-03|15:33:29] Updated mining threads                   threads=0
 INFO [07-03|15:33:29] Transaction pool price threshold updated price=18000000000
 null
-> INFO [07-03|15:33:29] Starting mining operation 
+> INFO [07-03|15:33:29] Starting mining operation
 INFO [07-03|15:33:29] Commit new mining work                   number=1 txs=0 uncles=0 elapsed=597.603µs
 INFO [07-03|15:33:31] Generating DAG in progress               epoch=0 percentage=0 elapsed=413.009ms
 INFO [07-03|15:33:31] Generating DAG in progress               epoch=0 percentage=1 elapsed=751.934ms
@@ -87,11 +90,11 @@ INFO [07-03|15:34:16] 🔨 mined potential block                  number=6 hash=
 INFO [07-03|15:34:16] Commit new mining work                   number=7 txs=0 uncles=0 elapsed=141.75µs
 INFO [07-03|15:34:16] Successfully sealed new block            number=7 hash=3a22b7…e4e015
 INFO [07-03|15:34:16] 🔗 block reached canonical chain          number=2 hash=c5c768…b1e445
-~~~
+```
 
 ### 5. 외부에서 접속하기
 
-~~~
+```
 deploy@jayg-blockchain2:~$ geth attach http://1.1.1.1:8123
 Welcome to the Geth JavaScript console!
 
@@ -99,4 +102,4 @@ instance: Geth/PrivateNetwork/v1.8.11-stable-dea1ce05/linux-amd64/go1.10
 coinbase: 0x44e74080949320292839b9a0df55e4459dd51434
 at block: 25 (Tue, 03 Jul 2018 15:34:38 KST)
  modules: eth:1.0 miner:1.0 net:1.0 rpc:1.0 web3:1.0
-~~~
+```
