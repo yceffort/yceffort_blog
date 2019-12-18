@@ -2,7 +2,7 @@
 title: "npm 'event-stream' 패키지, 비트코인 지갑을 노리는 악성코드에 감염"
 updated: 2018-11-30 19:44:01
 layout: post
-tags: [machine-learning, scikit-learn]
+tags: [bitcoin]
 ---
 
 Malicious code in npm ‘event-stream’ package targets a bitcoin wallet and causes 8 million downloads in two months
