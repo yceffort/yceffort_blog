@@ -1,0 +1,794 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>Bitcoin) 비트코인 마이닝의 취약점 - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"다수로는 부족하다. 비트코인 마이닝의 취약점\n원문\n비트코인 프로토콜은 대부분의 Miner들이 정직하게 행동하는 것을 필요로 한다. 이는 비트코인 프로토콜에서 요구되는 사항이다. 만약 일련의 Miner들이 다수의 마이닝 파워를 네트워크에서 형성하게 된다면, 통화는 더 이상 탈중앙화를 할수 없게 되고 이런 다수의 지배를 받게 되고 말 것이다. 이렇게 되면, 이 그룹은 특정 혹은 모든 트랜잭션을 통제할 수 있게 된다. 그러므로, miner들 다수가 조직적으로 움직이는 것에 대해서 인센티브가 없게 끔 설게가 되어야 한다.\n이러한 실증적인 예로 비트코인 Miner들이 전략적으로 뭉쳐 마이닝 풀을 형성한 것을 들 수 있다. 비트코인 시스템 내에서 보상은 랜덤한 간격으로 드물게 주어지기 때문에, Miner들은 각각의 암호화 퍼즐을 풀기위해 뭉치고, 이로 인해 생성된 보상을 적절하게 나눠갖게 된다. 아직까지, 이러한 마이닝 풀은 프로토콜을 잘 따르며 온건하다.\n이러한 전통적인 사실은 비트코인은 인센티브 하에서 경쟁적이라고 이야기 하며, 이성적인 소수의 마이닝 풀은 정직하게 행동하는 것이 최선의 전략이고, 이는 소수의 마이너들이 프로토콜을 어긴다면 이득을 얻을 수 없다는 것다고 말한다. 프로토콜은 마이너들이 그의 채광력의 비례하여 Miner들에게 동일하게 보상을 주는 것으로 믿기 때문에, 큰 마이닝 풀은 작은 마이닝 풀과 같은 비율로 이득을 얻는다고 생각한다. 결과적으로 Miner들을 더 응집시켜 큰 마이닝 풀로 만드는데에 이점이 없다. 따라서 정직하고 합리적인 Miner들의 풀 형성은 시스템에 아무런 위협이 되지 않는다는 결론을 내린다.\n그러나 이 논문에서는, 비트코인은 인센티브하에서 경쟁적이지 못하다는 것을 보여준다. 비주류 마이닝 풀이 그들이 가질 수 있는 비율 보다 더 많은 이득을 얻는 것이 가능하며, 이러한 이들은 그들이 가진 컴퓨팅 파워의 이상을 창출해 낼 것이다.\n이 전략을 Selfish-mining이라고 한다. Selfish Mining 이란 마이닝 풀이 블록을 발견하면 이를 알리는 것이 아니라 개인적으로 소유하여, 내부 체인에 포킹을 하는 전략을 말한다. 정직한 노드는 퍼블릭 체인에서 계속 채굴할 것이며, 이 동안 Selfish mining에서는 프라이빗 브랜치에서 소유하고 있는다. 그리고 이들은 새로운 프라이빗 블록을 계속해서 채굴하면서 퍼블릭 체인 보다 더 긴 체인을 만든다. 이 과정에서, 퍼블릭 체인이 가짜 체인의 길이와 같아진다면, selfish miner들은 이 블록을 퍼블릭체인에 공개한다.\n이 전략은 정직한 비트코인 프로토콜을 따르는 Miner로 하여금 암호화 퍼즐을 푸는데 자원을 낭비하게 함으로써 종국에는 이러한 작업이 아무런 의미가 없게 되어 버린다. 이 논문에서는, 정직하고 selfish한 miner 모두 어느정도 자원을 낭비하지만, selfish 풀의 보상은 네트워크에서 재공할 수 있는 양보다 초과하여 받을 수 있다. 결국 이는 모두 이성적인 Miner들이 모두 selfish mining에 참여하게 되는 유인이 된다.\n이는 곧 블록체인 시스템에 치명적인 부분으로 작용할 것이다. Selfish miner들이 일정 한계점에 도달하게 되면, 이성적인 Miner들은 모두 selfish 마이닝 풀에 참여하게 될 것이고, 이들은 곧 비트코인 네트워크에서 주류로 자리잡게 될 것이다. 그리고 이들이 유일한 블록 채굴자들이 되는 순간, 화폐의 탈중앙화 성격은 무너질 것이고 특정 시점에서는 결국 이들이 시스템을 통제하게 될 것이다.\n이러한 Selfish miner들이 전체네트워크의 1/3을 차지 하면 이 시스템이 더이상 안전하지 않게 된다. 그렇기 때문에, 이 논문에서는 비트코인 프로토콜이 전체대비 1/4의 threshold를 달성하도록 수정을 제안한다. 이러한 변경은 소급적용 가능하며 점진적이다. 현재 클라이언트에 큰 변화 없이 적용하며, 부분적으로 threshold를 증가시킬 수도 있다.\n¶문제점\n비트코인 프로토콜은 만약 채굴자들이 같은 길이의 여러 브랜치를 인지하게 되면, 마이너들은 전달받은 마인중 가장 첫번째 브랜치에서 채굴하고 전파하도록 정해져 있다. Selfish Mining 전략은 정직한 채굴자들이 블록 X를 발견했다는 사실을 인지하면, 그둘 중 하나는 미리 발견하고 숨겨놓았던 블록 P를 공개한다. 만약 블록 P 가 다른 마이너들에게 블록 X보다 먼저 도달하게 된다면, 다른 채굴자들은 P를 채굴하기 시작할 것이다. 이렇듯 Selfish mining전략은 다른 정직한 노드가 블록 X를 발견한 뒤에만 반응할 수 있기 때문에 비효율적으로 보일 수 있다. 그러나 이러한 공격자들은 비트코인 채굴 네트워크에 제로파워인 수많은 마이너들을 추가하여 정직한 채굴자들에게 sybil-attack을 가하라 수 있다. 이런 가상의 채굴자들은 데이터를 네트워크에 전송하는 일만 할 뿐, 채굴은 전혀 실행하지 않는다. 이러한 가상의 채굴자들이 블록 X를 발견했다는 사실을 인지하게 되면, 그것을 무시하고 새롭게 블록 P를 전파하기 시작한다. 비트코인 네트워크는 랜덤한 P2P구조를 가지고 있기 때문에, X의 전파속도는 다수의 가짜 채굴자를 보유한 P의 전파속도보다 느릴 수 밖에 없다. 가상의 노드를 추가함으로써, Selfish miner 들은 이득을 취할 수 있게 된다.\n\nγ (정직한 노드의 비율) threshold 알파는 프로토콜을 따르는 정직한 노드들을 이기는데 필요한 최소 컴퓨팅 파워를 의미한다. 비트코인의 경우 이에 따른 제한이 없으므로, 항상 selfish mining이 우세할 수 있는 구조를 가지고 있다. 물론 현실적으로 이는 가능하지 않겠지만, (모두가 selfish 채굴자가 되는것) selfish-miner 절반이 이득을 보기 위해서는 1/4의 컴퓨팅 파워만 있으면 된다.\n¶해결책\n프로토콜단에서 마이너가 데이터를 전파하는 것을 통제함으로써 selfish mining의 능력을 감소시킬 수 있다. 이러한 개선은 다른 채굴자들과의 변화와는 독립적이므로, 별다른 하드포크를 필요로 하지 않는다. 이러한 프로토콜의 변경은 프로토콜에 새로운 취약점을 가져오지 않는다. 현재 길이가 같은 두가지 분기가 있을 경우 miner의 선택은 임의적이며, 이는 네트워크 구조와 레이턴시에 영향을 받는다. 논문에서 제안하는 변화는, 이러한 임의의 선택을 명확하게 무작위화 하므로, 또다른 취약점이 발견 되지 않는다.\n","dateCreated":"2018-06-20T00:00:00+09:00","dateModified":"2018-06-20T07:39:57+09:00","datePublished":"2018-06-20T00:00:00+09:00","description":"다수로는 부족하다. 비트코인 마이닝의 취약점\n\n원문\n\n비트코인 프로토콜은 대부분의 Miner들이 정직하게 행동하는 것을 필요로 한다. 이는 비트코인 프로토콜에서 요구되는 사항이다. 만약 일련의 Miner들이 다수의 마이닝 파워를 네트워크에서 형성하게 된다면, 통화는 더 이상 탈중앙화를 할수 없게 되고 이런 다수의 지배를 받게 되고 말 것이다. 이렇게 되면, 이 그룹은 특정 혹은 모든 트랜잭션을 통제할 수 있게 된다. 그러므로, miner들 다수가 조직적으로 움직이는 것에 대해서 인센티브가 없게 끔 설게가 되어야 한다.\n\n이러한 실증","headline":"Bitcoin) 비트코인 마이닝의 취약점","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/06/20/majority-is-not-enough-bitcoin-mining-is-vulnerable/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/06/20/majority-is-not-enough-bitcoin-mining-is-vulnerable/","keywords":"bitcoin"}</script>
+    <meta name="description" content="다수로는 부족하다. 비트코인 마이닝의 취약점  원문  비트코인 프로토콜은 대부분의 Miner들이 정직하게 행동하는 것을 필요로 한다. 이는 비트코인 프로토콜에서 요구되는 사항이다. 만약 일련의 Miner들이 다수의 마이닝 파워를 네트워크에서 형성하게 된다면, 통화는 더 이상 탈중앙화를 할수 없게 되고 이런 다수의 지배를 받게 되고 말 것이다. 이렇게 되면,">
+<meta name="keywords" content="bitcoin">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Bitcoin) 비트코인 마이닝의 취약점">
+<meta property="og:url" content="https://www.yceffort.kr/2018/06/20/majority-is-not-enough-bitcoin-mining-is-vulnerable/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="다수로는 부족하다. 비트코인 마이닝의 취약점  원문  비트코인 프로토콜은 대부분의 Miner들이 정직하게 행동하는 것을 필요로 한다. 이는 비트코인 프로토콜에서 요구되는 사항이다. 만약 일련의 Miner들이 다수의 마이닝 파워를 네트워크에서 형성하게 된다면, 통화는 더 이상 탈중앙화를 할수 없게 되고 이런 다수의 지배를 받게 되고 말 것이다. 이렇게 되면,">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://www.yceffort.kr/images/2018/06/selfish-mining-threshold.png">
+<meta property="og:updated_time" content="2018-06-19T22:39:57.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Bitcoin) 비트코인 마이닝의 취약점">
+<meta name="twitter:description" content="다수로는 부족하다. 비트코인 마이닝의 취약점  원문  비트코인 프로토콜은 대부분의 Miner들이 정직하게 행동하는 것을 필요로 한다. 이는 비트코인 프로토콜에서 요구되는 사항이다. 만약 일련의 Miner들이 다수의 마이닝 파워를 네트워크에서 형성하게 된다면, 통화는 더 이상 탈중앙화를 할수 없게 되고 이런 다수의 지배를 받게 되고 말 것이다. 이렇게 되면,">
+<meta name="twitter:image" content="https://www.yceffort.kr/images/2018/06/selfish-mining-threshold.png">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Bitcoin) 비트코인 마이닝의 취약점
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2018-06-20T00:00:00+09:00">
+	
+		    Jun 20, 2018
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>다수로는 부족하다. 비트코인 마이닝의 취약점</p>
+<p><a href="https://arxiv.org/pdf/1311.0243.pdf" target="_blank" rel="noopener">원문</a></p>
+<p>비트코인 프로토콜은 대부분의 Miner들이 정직하게 행동하는 것을 필요로 한다. 이는 비트코인 프로토콜에서 요구되는 사항이다. 만약 일련의 Miner들이 다수의 마이닝 파워를 네트워크에서 형성하게 된다면, 통화는 더 이상 탈중앙화를 할수 없게 되고 이런 다수의 지배를 받게 되고 말 것이다. 이렇게 되면, 이 그룹은 특정 혹은 모든 트랜잭션을 통제할 수 있게 된다. 그러므로, miner들 다수가 조직적으로 움직이는 것에 대해서 인센티브가 없게 끔 설게가 되어야 한다.</p>
+<p>이러한 실증적인 예로 비트코인 Miner들이 전략적으로 뭉쳐 마이닝 풀을 형성한 것을 들 수 있다. 비트코인 시스템 내에서 보상은 랜덤한 간격으로 드물게 주어지기 때문에, Miner들은 각각의 암호화 퍼즐을 풀기위해 뭉치고, 이로 인해 생성된 보상을 적절하게 나눠갖게 된다. 아직까지, 이러한 마이닝 풀은 프로토콜을 잘 따르며 온건하다.</p>
+<p>이러한 전통적인 사실은 비트코인은 인센티브 하에서 경쟁적이라고 이야기 하며, 이성적인 소수의 마이닝 풀은 정직하게 행동하는 것이 최선의 전략이고, 이는 소수의 마이너들이 프로토콜을 어긴다면 이득을 얻을 수 없다는 것다고 말한다. 프로토콜은 마이너들이 그의 채광력의 비례하여 Miner들에게 동일하게 보상을 주는 것으로 믿기 때문에, 큰 마이닝 풀은 작은 마이닝 풀과 같은 비율로 이득을 얻는다고 생각한다. 결과적으로 Miner들을 더 응집시켜 큰 마이닝 풀로 만드는데에 이점이 없다. 따라서 정직하고 합리적인 Miner들의 풀 형성은 시스템에 아무런 위협이 되지 않는다는 결론을 내린다.</p>
+<p>그러나 이 논문에서는, 비트코인은 인센티브하에서 경쟁적이지 못하다는 것을 보여준다. 비주류 마이닝 풀이 그들이 가질 수 있는 비율 보다 더 많은 이득을 얻는 것이 가능하며, 이러한 이들은 그들이 가진 컴퓨팅 파워의 이상을 창출해 낼 것이다.</p>
+<p>이 전략을 Selfish-mining이라고 한다. Selfish Mining 이란 마이닝 풀이 블록을 발견하면 이를 알리는 것이 아니라 개인적으로 소유하여, 내부 체인에 포킹을 하는 전략을 말한다. 정직한 노드는 퍼블릭 체인에서 계속 채굴할 것이며, 이 동안 Selfish mining에서는 프라이빗 브랜치에서 소유하고 있는다. 그리고 이들은 새로운 프라이빗 블록을 계속해서 채굴하면서 퍼블릭 체인 보다 더 긴 체인을 만든다. 이 과정에서, 퍼블릭 체인이 가짜 체인의 길이와 같아진다면, selfish miner들은 이 블록을 퍼블릭체인에 공개한다.</p>
+<p>이 전략은 정직한 비트코인 프로토콜을 따르는 Miner로 하여금 암호화 퍼즐을 푸는데 자원을 낭비하게 함으로써 종국에는 이러한 작업이 아무런 의미가 없게 되어 버린다. 이 논문에서는, 정직하고 selfish한 miner 모두 어느정도 자원을 낭비하지만, selfish 풀의 보상은 네트워크에서 재공할 수 있는 양보다 초과하여 받을 수 있다. 결국 이는 모두 이성적인 Miner들이 모두 selfish mining에 참여하게 되는 유인이 된다.</p>
+<p>이는 곧 블록체인 시스템에 치명적인 부분으로 작용할 것이다. Selfish miner들이 일정 한계점에 도달하게 되면, 이성적인 Miner들은 모두 selfish 마이닝 풀에 참여하게 될 것이고, 이들은 곧 비트코인 네트워크에서 주류로 자리잡게 될 것이다. 그리고 이들이 유일한 블록 채굴자들이 되는 순간, 화폐의 탈중앙화 성격은 무너질 것이고 특정 시점에서는 결국 이들이 시스템을 통제하게 될 것이다.</p>
+<p>이러한 Selfish miner들이 전체네트워크의 1/3을 차지 하면 이 시스템이 더이상 안전하지 않게 된다. 그렇기 때문에, 이 논문에서는 비트코인 프로토콜이 전체대비 1/4의 threshold를 달성하도록 수정을 제안한다. 이러한 변경은 소급적용 가능하며 점진적이다. 현재 클라이언트에 큰 변화 없이 적용하며, 부분적으로 threshold를 증가시킬 수도 있다.</p>
+<h3 id="문제점"><a class="header-anchor" href="#문제점">¶</a>문제점</h3>
+<p>비트코인 프로토콜은 만약 채굴자들이 같은 길이의 여러 브랜치를 인지하게 되면, 마이너들은 전달받은 마인중 가장 첫번째 브랜치에서 채굴하고 전파하도록 정해져 있다. Selfish Mining 전략은 정직한 채굴자들이 블록 X를 발견했다는 사실을 인지하면, 그둘 중 하나는 미리 발견하고 숨겨놓았던 블록 P를 공개한다. 만약 블록 P 가 다른 마이너들에게 블록 X보다 먼저 도달하게 된다면, 다른 채굴자들은 P를 채굴하기 시작할 것이다. 이렇듯 Selfish mining전략은 다른 정직한 노드가 블록 X를 발견한 뒤에만 반응할 수 있기 때문에 비효율적으로 보일 수 있다. 그러나 이러한 공격자들은 비트코인 채굴 네트워크에 제로파워인 수많은 마이너들을 추가하여 정직한 채굴자들에게 sybil-attack을 가하라 수 있다. 이런 가상의 채굴자들은 데이터를 네트워크에 전송하는 일만 할 뿐, 채굴은 전혀 실행하지 않는다. 이러한 가상의 채굴자들이 블록 X를 발견했다는 사실을 인지하게 되면, 그것을 무시하고 새롭게 블록 P를 전파하기 시작한다. 비트코인 네트워크는 랜덤한 P2P구조를 가지고 있기 때문에, X의 전파속도는 다수의 가짜 채굴자를 보유한 P의 전파속도보다 느릴 수 밖에 없다. 가상의 노드를 추가함으로써, Selfish miner 들은 이득을 취할 수 있게 된다.</p>
+<p><img src="/images/2018/06/selfish-mining-threshold.png" alt="Figure"></p>
+<p>γ (정직한 노드의 비율) threshold 알파는 프로토콜을 따르는 정직한 노드들을 이기는데 필요한 최소 컴퓨팅 파워를 의미한다. 비트코인의 경우 이에 따른 제한이 없으므로, 항상 selfish mining이 우세할 수 있는 구조를 가지고 있다. 물론 현실적으로 이는 가능하지 않겠지만, (모두가 selfish 채굴자가 되는것) selfish-miner 절반이 이득을 보기 위해서는 1/4의 컴퓨팅 파워만 있으면 된다.</p>
+<h3 id="해결책"><a class="header-anchor" href="#해결책">¶</a>해결책</h3>
+<p>프로토콜단에서 마이너가 데이터를 전파하는 것을 통제함으로써 selfish mining의 능력을 감소시킬 수 있다. 이러한 개선은 다른 채굴자들과의 변화와는 독립적이므로, 별다른 하드포크를 필요로 하지 않는다. 이러한 프로토콜의 변경은 프로토콜에 새로운 취약점을 가져오지 않는다. 현재 길이가 같은 두가지 분기가 있을 경우 miner의 선택은 임의적이며, 이는 네트워크 구조와 레이턴시에 영향을 받는다. 논문에서 제안하는 변화는, 이러한 임의의 선택을 명확하게 무작위화 하므로, 또다른 취약점이 발견 되지 않는다.</p>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/bitcoin/">bitcoin</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/20/bitcoin-cold-wallet/" data-tooltip="Bitcoin) Cold Wallet" aria-label="PREVIOUS: Bitcoin) Cold Wallet">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/19/bitcoin-backbone-protocol/" data-tooltip="Bitcoin) 비트코인 백본 프로토콜, 분석과 어플리케이션" aria-label="NEXT: Bitcoin) 비트코인 백본 프로토콜, 분석과 어플리케이션">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/06/20/majority-is-not-enough-bitcoin-mining-is-vulnerable/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/06/20/majority-is-not-enough-bitcoin-mining-is-vulnerable/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/20/bitcoin-cold-wallet/" data-tooltip="Bitcoin) Cold Wallet" aria-label="PREVIOUS: Bitcoin) Cold Wallet">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/19/bitcoin-backbone-protocol/" data-tooltip="Bitcoin) 비트코인 백본 프로토콜, 분석과 어플리케이션" aria-label="NEXT: Bitcoin) 비트코인 백본 프로토콜, 분석과 어플리케이션">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/06/20/majority-is-not-enough-bitcoin-mining-is-vulnerable/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/06/20/majority-is-not-enough-bitcoin-mining-is-vulnerable/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/06/20/majority-is-not-enough-bitcoin-mining-is-vulnerable/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/06/20/majority-is-not-enough-bitcoin-mining-is-vulnerable/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2018/06/20/majority-is-not-enough-bitcoin-mining-is-vulnerable/';
+                 
+                    this.page.identifier = '2018/06/20/majority-is-not-enough-bitcoin-mining-is-vulnerable/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

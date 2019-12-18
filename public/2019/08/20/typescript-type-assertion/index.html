@@ -1,0 +1,806 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>타입스크립트 타입 단언 - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"¶문제의 시작\n문제의 시작은 여기 였다.\n내가 사용하는 코드는 아래와 같았다.\n123456789101112131415type GlobalColors = \"Red\" | \"Blue\" | \"Green\" | \"Black\";// 기본값으로 색상을 선언한다.const enum ConstGlobalColorSet &#123;  Red = \"11, 11, 11\",  Blue = \"22, 22, 22\",  Green = \"33, 33, 33\",  Black = \"44, 44, 44\"&#125;// red, blue, green, black에 대해서는 글로벌하게 지정해둔 컬러를 사용하되,// 그밖의 string이 오면 그냥 그 string을 리턴한다function GetGlobalColor(colorString: GlobalColors | string) &#123;  return GlobalColorSet[colorString] || colorString;&#125;\n그러나 다른 프로젝트에서 아래와 같은 에러가 발생했다.\n12// Element implicitly has an 'any' type because index expression is not of type 'number'.return GlobalColorSet[colorString] || colorString;\n파라미터로오는 colorString 이 enum의 키가 아닐 수도 있기 때문에 발생하는 에러 였다. 기존 lint 룰에서는 any를 accept했기 때문에 에러가 발생하지 않았던 것이다.\n¶해결\nas 키워드를 써서 문제를 해결했다.\n123function GetGlobalColor(colorString: GlobalColors | string) &#123;  return GlobalColorSet[colorString as GlobalColors] || colorString;&#125;\n¶타입 단언\n타입스크립트의 타입 추론은 매우 좋고 강력한 기능이지만, 어쩔수 없이 한계가 존재하는 경우가 더러 있다. 이를 보완하기 위해, 타입 단언은 컴파일러가 실제 런타임에 존재할 변수와 다르게 추론하거나, 너무 보수적으로 추론하는 경우에 개발자가 수동으로 컴파일러에 대해 타입의 힌트를 주는 것이다.\n위의 코드로 돌아와 보자.\n123456enum ConstGlobalColorSet &#123;  Red = \"11, 11, 11\",  Blue = \"22, 22, 22\",  Green = \"33, 33, 33\",  Black = \"44, 44, 44\"&#125;\n위코드는 컴파일을 거치고 나면 다음과 같이 해석된다.\n123456789var ConstGlobalColorSet;(function(ConstGlobalColorSet) &#123;  ConstGlobalColorSet[\"Red\"] = \"11, 11, 11\";  ConstGlobalColorSet[\"Blue\"] = \"22, 22, 22\";  ConstGlobalColorSet[\"Green\"] = \"33, 33, 33\";  ConstGlobalColorSet[\"Black\"] = \"44, 44, 44\";&#125;)(ConstGlobalColorSet || (ConstGlobalColorSet = &#123;&#125;));// &#123;Red: \"11, 11, 11\", Blue: \"22, 22, 22\", Green: \"33, 33, 33\", Black: \"44, 44, 44\"&#125;\n당연하지만 Red Blue Green Black에 대해서는 올바르게 리턴할테지만, 다른 string에 대해서는 null을 리턴할 것이다. 즉, 컴파일 에러가 날 일은 없을 것이다. 이런 경우, as 키워드를 통해서 타입단언을 해주면 컴파일 에러 없이 사용할 수 있다.\n대부분의 경우 as any와 같은 치트키로 컴파일 문제를 해결할 수 있다. 그러나 이런 키워드가 득실 거릴수록 타입스크립트로 얻을 수 있는 장점이 사라지기 때문에, 가능한 적게 사용해야 한다.\n¶타입선언과 타입 캐스팅의 차이\n타입 단언은 런타임에 영향을 미치지 않는다. 그러나 타입 캐스팅은 컴파일 타임과 런타임 모두 타입을 변경 시킨다. 타입 단언은 컴파일러에서만 타입을 변경 시킨다\n타입 단언은 두가지로 사용될 수 있다.\n12colorString as GlobalColors;&lt;GlobalColors&gt;colorString;\n&lt;Type&gt;은 리액트의 JSX 문법과 겹치는 느낌이 있어서 보통 as type을 더 많이 쓴다.\n¶타입 가드\n타입 가드는 타입스크립트 컴파일러에 타입 체크를 알려주는 기능이다. 자바스크립트에서는 이런 느낌으로 처리했을 것이다.\n1234567891011121314151617181920212223242526272829303132333435function doSomething(x: number | string) &#123;  if (typeof x === \"string\") &#123;    // string 만 들어오게 처리 해줬기 때문에 에러가 날 수 없음    console.log(x.substr(1));  &#125;  x.substr(1); // 에러 날 수도 있음&#125;class Foo &#123;  foo = 123;  common = \"123\";&#125;class Bar &#123;  bar = 123;  common = \"123\";&#125;function doStuff(arg) &#123;  if (arg instanceof Foo) &#123;    console.log(arg.foo); // OK    console.log(arg.bar); // undefined  &#125;  if (arg instanceof Bar) &#123;    console.log(arg.foo); // undefined    console.log(arg.bar); // OK  &#125;  console.log(arg.common); // OK  console.log(arg.foo); // undefined?  console.log(arg.bar); // undefined?&#125;doStuff(new Foo());doStuff(new Bar());\n이를 타입스크립트에서 처리하려면 어떻게 해야할까?\n1234567891011121314interface A &#123;  x: number;&#125;interface B &#123;  y: string;&#125;function doStuff(q: A | B) &#123;  if (\"x\" in q) &#123;    // q: A  &#125; else &#123;    // q: B  &#125;&#125;\nin키워드를 사용하거나 아래 처럼 is키워드를 사용할 수도 있다.\n1234567891011121314151617181920212223242526272829interface Foo &#123;  foo: number;  common: string;&#125;interface Bar &#123;  bar: number;  common: string;&#125;/** * arg를 Foo라고 타입 가드를 선언 */function isFoo(arg: any): arg is Foo &#123;  return arg.foo !== undefined;&#125;function doStuff(arg: Foo | Bar) &#123;  if (isFoo(arg)) &#123;    console.log(arg.foo); // OK    console.log(arg.bar); // Error!  &#125; else &#123;    console.log(arg.foo); // Error!    console.log(arg.bar); // OK  &#125;&#125;doStuff(&#123; foo: 123, common: \"123\" &#125;);doStuff(&#123; bar: 123, common: \"123\" &#125;);\n","dateCreated":"2019-08-20T09:30:52+09:00","dateModified":"2019-08-20T10:45:44+09:00","datePublished":"2019-08-20T09:30:52+09:00","description":"¶문제의 시작\n문제의 시작은 여기 였다.\n\n내가 사용하는 코드는 아래와 같았다.\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n\n\ntype GlobalColors = \"Red\" | \"Blue\" | \"Green\" | \"Black\";\n\n// 기본값으로 색상을 선언한다.\nconst enum ConstGlobalColorSet {\n  Red = \"11, 11, 11\",\n  Blue = \"22, 22, 22\",\n  Green = \"33, 33, 33\",\n  Black = \"44, 44, 44\"\n}\n\n// red, blue","headline":"타입스크립트 타입 단언","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/08/20/typescript-type-assertion/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/08/20/typescript-type-assertion/","keywords":"react, javascript"}</script>
+    <meta name="description" content="¶문제의 시작 문제의 시작은 여기 였다.  내가 사용하는 코드는 아래와 같았다.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15   type GlobalColors = &quot;Red&quot; | &quot;Blue&quot; | &quot;Green&quot; | &quot;Black&quot;;  // 기본값으로 색상을 선언한다. const enum ConstGlobalColorSet {   Red =">
+<meta name="keywords" content="react,javascript">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="타입스크립트 타입 단언">
+<meta property="og:url" content="https://www.yceffort.kr/2019/08/20/typescript-type-assertion/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="¶문제의 시작 문제의 시작은 여기 였다.  내가 사용하는 코드는 아래와 같았다.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15   type GlobalColors = &quot;Red&quot; | &quot;Blue&quot; | &quot;Green&quot; | &quot;Black&quot;;  // 기본값으로 색상을 선언한다. const enum ConstGlobalColorSet {   Red =">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-08-20T01:45:44.780Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="타입스크립트 타입 단언">
+<meta name="twitter:description" content="¶문제의 시작 문제의 시작은 여기 였다.  내가 사용하는 코드는 아래와 같았다.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15   type GlobalColors = &quot;Red&quot; | &quot;Blue&quot; | &quot;Green&quot; | &quot;Black&quot;;  // 기본값으로 색상을 선언한다. const enum ConstGlobalColorSet {   Red =">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            타입스크립트 타입 단언
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-08-20T09:30:52+09:00">
+	
+		    Aug 20, 2019
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h2 id="문제의-시작"><a class="header-anchor" href="#문제의-시작">¶</a>문제의 시작</h2>
+<p>문제의 시작은 <a href="/2019/06/17/typescript-type-enum-partial-record/">여기</a> 였다.</p>
+<p>내가 사용하는 코드는 아래와 같았다.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> GlobalColors = <span class="string">"Red"</span> | <span class="string">"Blue"</span> | <span class="string">"Green"</span> | <span class="string">"Black"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 기본값으로 색상을 선언한다.</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">enum</span> ConstGlobalColorSet &#123;</span><br><span class="line">  Red = <span class="string">"11, 11, 11"</span>,</span><br><span class="line">  Blue = <span class="string">"22, 22, 22"</span>,</span><br><span class="line">  Green = <span class="string">"33, 33, 33"</span>,</span><br><span class="line">  Black = <span class="string">"44, 44, 44"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// red, blue, green, black에 대해서는 글로벌하게 지정해둔 컬러를 사용하되,</span></span><br><span class="line"><span class="comment">// 그밖의 string이 오면 그냥 그 string을 리턴한다</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">GetGlobalColor</span>(<span class="params">colorString: GlobalColors | <span class="built_in">string</span></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> GlobalColorSet[colorString] || colorString;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>그러나 다른 프로젝트에서 아래와 같은 에러가 발생했다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Element implicitly has an 'any' type because index expression is not of type 'number'.</span></span><br><span class="line"><span class="keyword">return</span> GlobalColorSet[colorString] || colorString;</span><br></pre></td></tr></table></figure>
+<p>파라미터로오는 <code>colorString</code> 이 enum의 키가 아닐 수도 있기 때문에 발생하는 에러 였다. 기존 lint 룰에서는 any를 accept했기 때문에 에러가 발생하지 않았던 것이다.</p>
+<h2 id="해결"><a class="header-anchor" href="#해결">¶</a>해결</h2>
+<p><code>as</code> 키워드를 써서 문제를 해결했다.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">GetGlobalColor</span>(<span class="params">colorString: GlobalColors | <span class="built_in">string</span></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> GlobalColorSet[colorString <span class="keyword">as</span> GlobalColors] || colorString;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="타입-단언"><a class="header-anchor" href="#타입-단언">¶</a>타입 단언</h2>
+<p>타입스크립트의 타입 추론은 매우 좋고 강력한 기능이지만, 어쩔수 없이 한계가 존재하는 경우가 더러 있다. 이를 보완하기 위해, 타입 단언은 컴파일러가 실제 런타임에 존재할 변수와 다르게 추론하거나, 너무 보수적으로 추론하는 경우에 개발자가 수동으로 컴파일러에 대해 타입의 힌트를 주는 것이다.</p>
+<p>위의 코드로 돌아와 보자.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> ConstGlobalColorSet &#123;</span><br><span class="line">  Red = <span class="string">"11, 11, 11"</span>,</span><br><span class="line">  Blue = <span class="string">"22, 22, 22"</span>,</span><br><span class="line">  Green = <span class="string">"33, 33, 33"</span>,</span><br><span class="line">  Black = <span class="string">"44, 44, 44"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>위코드는 컴파일을 거치고 나면 다음과 같이 해석된다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ConstGlobalColorSet;</span><br><span class="line">(<span class="function"><span class="keyword">function</span>(<span class="params">ConstGlobalColorSet</span>) </span>&#123;</span><br><span class="line">  ConstGlobalColorSet[<span class="string">"Red"</span>] = <span class="string">"11, 11, 11"</span>;</span><br><span class="line">  ConstGlobalColorSet[<span class="string">"Blue"</span>] = <span class="string">"22, 22, 22"</span>;</span><br><span class="line">  ConstGlobalColorSet[<span class="string">"Green"</span>] = <span class="string">"33, 33, 33"</span>;</span><br><span class="line">  ConstGlobalColorSet[<span class="string">"Black"</span>] = <span class="string">"44, 44, 44"</span>;</span><br><span class="line">&#125;)(ConstGlobalColorSet || (ConstGlobalColorSet = &#123;&#125;));</span><br><span class="line"></span><br><span class="line"><span class="comment">// &#123;Red: "11, 11, 11", Blue: "22, 22, 22", Green: "33, 33, 33", Black: "44, 44, 44"&#125;</span></span><br></pre></td></tr></table></figure>
+<p>당연하지만 <code>Red</code> <code>Blue</code> <code>Green</code> <code>Black</code>에 대해서는 올바르게 리턴할테지만, 다른 string에 대해서는 null을 리턴할 것이다. 즉, 컴파일 에러가 날 일은 없을 것이다. 이런 경우, <code>as</code> 키워드를 통해서 타입단언을 해주면 컴파일 에러 없이 사용할 수 있다.</p>
+<p>대부분의 경우 <code>as any</code>와 같은 치트키로 컴파일 문제를 해결할 수 있다. 그러나 이런 키워드가 득실 거릴수록 타입스크립트로 얻을 수 있는 장점이 사라지기 때문에, 가능한 적게 사용해야 한다.</p>
+<h2 id="타입선언과-타입-캐스팅의-차이"><a class="header-anchor" href="#타입선언과-타입-캐스팅의-차이">¶</a>타입선언과 타입 캐스팅의 차이</h2>
+<p><strong>타입 단언은 런타임에 영향을 미치지 않는다. 그러나 타입 캐스팅은 컴파일 타임과 런타임 모두 타입을 변경 시킨다. 타입 단언은 컴파일러에서만 타입을 변경 시킨다</strong></p>
+<p>타입 단언은 두가지로 사용될 수 있다.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">colorString <span class="keyword">as</span> GlobalColors;</span><br><span class="line">&lt;GlobalColors&gt;colorString;</span><br></pre></td></tr></table></figure>
+<p><code>&lt;Type&gt;</code>은 리액트의 JSX 문법과 겹치는 느낌이 있어서 보통 <code>as type</code>을 더 많이 쓴다.</p>
+<h2 id="타입-가드"><a class="header-anchor" href="#타입-가드">¶</a>타입 가드</h2>
+<p>타입 가드는 타입스크립트 컴파일러에 타입 체크를 알려주는 기능이다. 자바스크립트에서는 이런 느낌으로 처리했을 것이다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">doSomething</span>(<span class="params">x: number | string</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> x === <span class="string">"string"</span>) &#123;</span><br><span class="line">    <span class="comment">// string 만 들어오게 처리 해줬기 때문에 에러가 날 수 없음</span></span><br><span class="line">    <span class="built_in">console</span>.log(x.substr(<span class="number">1</span>));</span><br><span class="line">  &#125;</span><br><span class="line">  x.substr(<span class="number">1</span>); <span class="comment">// 에러 날 수도 있음</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span> </span>&#123;</span><br><span class="line">  foo = <span class="number">123</span>;</span><br><span class="line">  common = <span class="string">"123"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Bar</span> </span>&#123;</span><br><span class="line">  bar = <span class="number">123</span>;</span><br><span class="line">  common = <span class="string">"123"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">doStuff</span>(<span class="params">arg</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (arg <span class="keyword">instanceof</span> Foo) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(arg.foo); <span class="comment">// OK</span></span><br><span class="line">    <span class="built_in">console</span>.log(arg.bar); <span class="comment">// undefined</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (arg <span class="keyword">instanceof</span> Bar) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(arg.foo); <span class="comment">// undefined</span></span><br><span class="line">    <span class="built_in">console</span>.log(arg.bar); <span class="comment">// OK</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">console</span>.log(arg.common); <span class="comment">// OK</span></span><br><span class="line">  <span class="built_in">console</span>.log(arg.foo); <span class="comment">// undefined?</span></span><br><span class="line">  <span class="built_in">console</span>.log(arg.bar); <span class="comment">// undefined?</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">doStuff(<span class="keyword">new</span> Foo());</span><br><span class="line">doStuff(<span class="keyword">new</span> Bar());</span><br></pre></td></tr></table></figure>
+<p>이를 타입스크립트에서 처리하려면 어떻게 해야할까?</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> A &#123;</span><br><span class="line">  x: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> B &#123;</span><br><span class="line">  y: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">doStuff</span>(<span class="params">q: A | B</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (<span class="string">"x"</span> <span class="keyword">in</span> q) &#123;</span><br><span class="line">    <span class="comment">// q: A</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// q: B</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>in</code>키워드를 사용하거나 아래 처럼 <code>is</code>키워드를 사용할 수도 있다.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> Foo &#123;</span><br><span class="line">  foo: <span class="built_in">number</span>;</span><br><span class="line">  common: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> Bar &#123;</span><br><span class="line">  bar: <span class="built_in">number</span>;</span><br><span class="line">  common: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * arg를 Foo라고 타입 가드를 선언</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isFoo</span>(<span class="params">arg: <span class="built_in">any</span></span>): <span class="title">arg</span> <span class="title">is</span> <span class="title">Foo</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> arg.foo !== <span class="literal">undefined</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">doStuff</span>(<span class="params">arg: Foo | Bar</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (isFoo(arg)) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(arg.foo); <span class="comment">// OK</span></span><br><span class="line">    <span class="built_in">console</span>.log(arg.bar); <span class="comment">// Error!</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(arg.foo); <span class="comment">// Error!</span></span><br><span class="line">    <span class="built_in">console</span>.log(arg.bar); <span class="comment">// OK</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">doStuff(&#123; foo: <span class="number">123</span>, common: <span class="string">"123"</span> &#125;);</span><br><span class="line">doStuff(&#123; bar: <span class="number">123</span>, common: <span class="string">"123"</span> &#125;);</span><br></pre></td></tr></table></figure>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/">javascript</a> <a class="tag tag--primary tag--small t-link" href="/tags/react/">react</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/08/20/reactjs-interview-questions-1/" data-tooltip="리액트 인터뷰 질문 &amp; 답 (1)" aria-label="PREVIOUS: 리액트 인터뷰 질문 &amp; 답 (1)">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/08/13/reactjs-interview-questions/" data-tooltip="리액트 인터뷰 질문 &amp; 답" aria-label="NEXT: 리액트 인터뷰 질문 &amp; 답">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/08/20/typescript-type-assertion/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/08/20/typescript-type-assertion/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/08/20/reactjs-interview-questions-1/" data-tooltip="리액트 인터뷰 질문 &amp; 답 (1)" aria-label="PREVIOUS: 리액트 인터뷰 질문 &amp; 답 (1)">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/08/13/reactjs-interview-questions/" data-tooltip="리액트 인터뷰 질문 &amp; 답" aria-label="NEXT: 리액트 인터뷰 질문 &amp; 답">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/08/20/typescript-type-assertion/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/08/20/typescript-type-assertion/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/08/20/typescript-type-assertion/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/08/20/typescript-type-assertion/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2019/08/20/typescript-type-assertion/';
+                 
+                    this.page.identifier = '2019/08/20/typescript-type-assertion/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

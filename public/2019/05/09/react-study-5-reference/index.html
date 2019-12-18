@@ -1,0 +1,788 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>React 공부하기 5 - Reference - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"¶Reference (Ref)\n특정 DOM요소에 작업을 하기 위해서 id를 부여하는 것 처럼, React에서 DOM에 이름을 다는 방식이 있는데 이것이 바로 ref (Reference)다. 반드시, DOM에 직접적으로 접근하여 조작이 필요할 때 만 이용해야 한다.\n¶컴퍼넌트 내부에서 사용\n123456789101112131415161718192021222324252627282930313233343536373839404142434445import React, &#123;Component&#125; from 'react';import './ValidationSample.css';class ValidationSample extends Component &#123;    state = &#123;        password: '',        clicked: false,        validated: false,    &#125;    handleChange = (e) =&gt; &#123;        this.setState(&#123;            password: e.target.value,        &#125;);    &#125;    handleButtonClick = () =&gt; &#123;        this.setState(&#123;            clicked: true,            validated: this.state.password === '0000'        &#125;);        this.input.focus();    &#125;    render() &#123;        return (            &lt;div&gt;                &lt;input                 ref=&#123;(ref) =&gt; this.input=ref&#125;                type=\"password\"                value=&#123;this.state.password&#125;                onChange=&#123;this.handleChange&#125;                className=&#123;this.state.clicked ? (this.state.validated ? 'success' : 'failure') : ''&#125;                &gt;                &lt;/input&gt;                &lt;button onClick=&#123;this.handleButtonClick&#125;&gt;Validation&lt;/button&gt;            &lt;/div&gt;        )    &#125;&#125;export default ValidationSample;\n중요하게 봐야할 부분은 바로 여기\n1&lt;input ref=&#123;(ref) =&gt; this.input=ref&#125;/&gt;\nref 속성을 추가할 때는 props를 설정하듯이 하면 된다. ref 값으로는 콜백 함수를 전달하는데, 이 콜백함수는 ref를 파라미터로 가지며 함수 내부에서 멤버변수에 ref를 담으면 된다. 여기에서는 this.input에 담았다.\nthis.input.focus()를 통해서 input 태그에 포커스를 달았다.\n¶컴포넌트에 Ref 달기\n1234567891011121314151617181920212223242526272829303132333435import React, &#123; Component &#125; from 'react';class ScrollBox extends Component &#123;    scrollToBottom = () =&gt; &#123;        const &#123; scrollHeight, clientHeight, width &#125; = this.box;            this.box.scrollTop = scrollHeight - clientHeight;    &#125;    render() &#123;        const style = &#123;            border: '1px solid black',            height: '300px',            width: '300px',            overflow: 'auto',            position: 'relative',        &#125;        const innerStyle = &#123;            width: '100%',            height: '650px',            background: 'linear-gradient(white, black)'        &#125;        return (            &lt;div            style=&#123;style&#125;            ref=&#123;(ref) =&gt; &#123;this.box=ref&#125;&#125;&gt;                &lt;div style=&#123;innerStyle&#125;/&gt;            &lt;/div&gt;        )    &#125;&#125;export default ScrollBox;\n12345678910111213141516import React, &#123;Component&#125; from 'react';import ScrollBox from './ScrollBox';class App extends Component &#123;  render() &#123;    return (      &lt;div&gt;        &lt;ScrollBox ref=&#123;(ref) =&gt; &#123;this.scrollBox=ref&#125;&#125; /&gt;        &lt;button onClick=&#123;() =&gt; &#123;this.scrollBox.scrollToBottom()&#125;&#125;&gt;맨밑으로&lt;/button&gt;      &lt;/div&gt;    )  &#125;&#125;export default App;\nScrollBox에서 scrollToBottom 함수를 정의했다. 그리고 ScrollBox 컴포넌트를 this.scrollBox로 ref를 부여하여 다른 DOM에서 해당 함수를 호출 할 수 있었다.\n","dateCreated":"2019-05-09T09:22:14+09:00","dateModified":"2019-05-20T11:50:56+09:00","datePublished":"2019-05-09T09:22:14+09:00","description":"¶Reference (Ref)\n특정 DOM요소에 작업을 하기 위해서 id를 부여하는 것 처럼, React에서 DOM에 이름을 다는 방식이 있는데 이것이 바로 ref (Reference)다. 반드시, DOM에 직접적으로 접근하여 조작이 필요할 때 만 이용해야 한다.\n\n¶컴퍼넌트 내부에서 사용\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31\n32\n33\n34\n35\n36\n37\n38\n39\n40\n41\n42\n43\n44\n45\n\n\nimport Re","headline":"React 공부하기 5 - Reference","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/05/09/react-study-5-reference/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/05/09/react-study-5-reference/","keywords":"react, javascript"}</script>
+    <meta name="description" content="¶Reference (Ref) 특정 DOM요소에 작업을 하기 위해서 id를 부여하는 것 처럼, React에서 DOM에 이름을 다는 방식이 있는데 이것이 바로 ref (Reference)다. 반드시, DOM에 직접적으로 접근하여 조작이 필요할 때 만 이용해야 한다.  ¶컴퍼넌트 내부에서 사용 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 1">
+<meta name="keywords" content="react,javascript">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="React 공부하기 5 - Reference">
+<meta property="og:url" content="https://www.yceffort.kr/2019/05/09/react-study-5-reference/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="¶Reference (Ref) 특정 DOM요소에 작업을 하기 위해서 id를 부여하는 것 처럼, React에서 DOM에 이름을 다는 방식이 있는데 이것이 바로 ref (Reference)다. 반드시, DOM에 직접적으로 접근하여 조작이 필요할 때 만 이용해야 한다.  ¶컴퍼넌트 내부에서 사용 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 1">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-05-20T02:50:56.476Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="React 공부하기 5 - Reference">
+<meta name="twitter:description" content="¶Reference (Ref) 특정 DOM요소에 작업을 하기 위해서 id를 부여하는 것 처럼, React에서 DOM에 이름을 다는 방식이 있는데 이것이 바로 ref (Reference)다. 반드시, DOM에 직접적으로 접근하여 조작이 필요할 때 만 이용해야 한다.  ¶컴퍼넌트 내부에서 사용 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 1">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            React 공부하기 5 - Reference
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-05-09T09:22:14+09:00">
+	
+		    May 09, 2019
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h2 id="reference-ref"><a class="header-anchor" href="#reference-ref">¶</a>Reference (Ref)</h2>
+<p>특정 DOM요소에 작업을 하기 위해서 id를 부여하는 것 처럼, React에서 DOM에 이름을 다는 방식이 있는데 이것이 바로 ref (Reference)다. 반드시, <code>DOM에 직접적으로 접근하여 조작이 필요할 때 만 이용해야 한다.</code></p>
+<h3 id="컴퍼넌트-내부에서-사용"><a class="header-anchor" href="#컴퍼넌트-내부에서-사용">¶</a>컴퍼넌트 내부에서 사용</h3>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123;Component&#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> <span class="string">'./ValidationSample.css'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ValidationSample</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    state = &#123;</span><br><span class="line">        password: <span class="string">''</span>,</span><br><span class="line">        clicked: <span class="literal">false</span>,</span><br><span class="line">        validated: <span class="literal">false</span>,</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    handleChange = <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">            password: e.target.value,</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    handleButtonClick = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">            clicked: <span class="literal">true</span>,</span><br><span class="line">            validated: <span class="keyword">this</span>.state.password === <span class="string">'0000'</span></span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">this</span>.input.focus();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            &lt;div&gt;</span><br><span class="line">                &lt;input </span><br><span class="line">                ref=&#123;(ref) =&gt; <span class="keyword">this</span>.input=ref&#125;</span><br><span class="line">                type=<span class="string">"password"</span></span><br><span class="line">                value=&#123;<span class="keyword">this</span>.state.password&#125;</span><br><span class="line">                onChange=&#123;<span class="keyword">this</span>.handleChange&#125;</span><br><span class="line">                className=&#123;<span class="keyword">this</span>.state.clicked ? (<span class="keyword">this</span>.state.validated ? <span class="string">'success'</span> : <span class="string">'failure'</span>) : <span class="string">''</span>&#125;</span><br><span class="line">                &gt;</span><br><span class="line">                &lt;<span class="regexp">/input&gt;</span></span><br><span class="line"><span class="regexp">                &lt;button onClick=&#123;this.handleButtonClick&#125;&gt;Validation&lt;/</span>button&gt;</span><br><span class="line">            &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">        )</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default ValidationSample;</span></span><br></pre></td></tr></table></figure>
+<p>중요하게 봐야할 부분은 바로 여기</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">ref</span>=<span class="string">&#123;(ref)</span> =&gt;</span> this.input=ref&#125;/&gt;</span><br></pre></td></tr></table></figure>
+<p>ref 속성을 추가할 때는 props를 설정하듯이 하면 된다. ref 값으로는 콜백 함수를 전달하는데, 이 콜백함수는 ref를 파라미터로 가지며 함수 내부에서 멤버변수에 ref를 담으면 된다. 여기에서는 <code>this.input</code>에 담았다.</p>
+<p><code>this.input.focus()</code>를 통해서 input 태그에 포커스를 달았다.</p>
+<h3 id="컴포넌트에-ref-달기"><a class="header-anchor" href="#컴포넌트에-ref-달기">¶</a>컴포넌트에 Ref 달기</h3>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ScrollBox</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    scrollToBottom = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> &#123; scrollHeight, clientHeight, width &#125; = <span class="keyword">this</span>.box;    </span><br><span class="line">        <span class="keyword">this</span>.box.scrollTop = scrollHeight - clientHeight;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">        <span class="keyword">const</span> style = &#123;</span><br><span class="line">            border: <span class="string">'1px solid black'</span>,</span><br><span class="line">            height: <span class="string">'300px'</span>,</span><br><span class="line">            width: <span class="string">'300px'</span>,</span><br><span class="line">            overflow: <span class="string">'auto'</span>,</span><br><span class="line">            position: <span class="string">'relative'</span>,</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">const</span> innerStyle = &#123;</span><br><span class="line">            width: <span class="string">'100%'</span>,</span><br><span class="line">            height: <span class="string">'650px'</span>,</span><br><span class="line">            background: <span class="string">'linear-gradient(white, black)'</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            &lt;div</span><br><span class="line">            style=&#123;style&#125;</span><br><span class="line">            ref=&#123;(ref) =&gt; &#123;<span class="keyword">this</span>.box=ref&#125;&#125;&gt;</span><br><span class="line">                &lt;div style=&#123;innerStyle&#125;/&gt;</span><br><span class="line">            &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">        )</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default ScrollBox;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123;Component&#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"><span class="keyword">import</span> ScrollBox <span class="keyword">from</span> <span class="string">'./ScrollBox'</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;ScrollBox ref=&#123;(ref) =&gt; &#123;<span class="keyword">this</span>.scrollBox=ref&#125;&#125; /&gt;</span><br><span class="line">        &lt;button onClick=&#123;() =&gt; &#123;<span class="keyword">this</span>.scrollBox.scrollToBottom()&#125;&#125;&gt;맨밑으로&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;/</span>div&gt;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> App;</span><br></pre></td></tr></table></figure>
+<p>ScrollBox에서 scrollToBottom 함수를 정의했다. 그리고 ScrollBox 컴포넌트를 <code>this.scrollBox</code>로 ref를 부여하여 다른 DOM에서 해당 함수를 호출 할 수 있었다.</p>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/">javascript</a> <a class="tag tag--primary tag--small t-link" href="/tags/react/">react</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/05/09/javascript-closure/" data-tooltip="Javascript - Closure" aria-label="PREVIOUS: Javascript - Closure">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/05/08/react-study-4-event/" data-tooltip="React 공부하기 4 - Event" aria-label="NEXT: React 공부하기 4 - Event">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/05/09/react-study-5-reference/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/05/09/react-study-5-reference/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/05/09/javascript-closure/" data-tooltip="Javascript - Closure" aria-label="PREVIOUS: Javascript - Closure">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/05/08/react-study-4-event/" data-tooltip="React 공부하기 4 - Event" aria-label="NEXT: React 공부하기 4 - Event">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/05/09/react-study-5-reference/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/05/09/react-study-5-reference/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/05/09/react-study-5-reference/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/05/09/react-study-5-reference/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2019/05/09/react-study-5-reference/';
+                 
+                    this.page.identifier = '2019/05/09/react-study-5-reference/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

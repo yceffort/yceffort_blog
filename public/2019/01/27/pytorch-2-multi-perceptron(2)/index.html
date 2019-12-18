@@ -1,0 +1,817 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>Pytorch (2-2) - 손 글씨 분류하기 - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"¶손글씨 분류하기 (MNIST)\n머신러닝의 단골 주제다. 손글씨를 분류해보자. 이전 데이터와 다른 점이라고 한다면, 이전 데이터는 표 형식이었지만, 이제는 이미지 형식으로 구성되어 있다.\n12345678910111213141516import torchfrom torch.autograd import Variableimport torch.nn as nnimport torch.nn.functional as Fimport torch.optim as optimfrom torch.utils.data import DataLoader, TensorDatasetfrom sklearn.datasets import load_digitsfrom sklearn import datasets, model_selectionfrom matplotlib import pyplot as pltfrom matplotlib import cmimport pandas as pd%matplotlib inline\n데이터를 가져오자. 근데 어찌된 일인지, MINST original데이터를 가져오는데 계속해서 여룽밍 있어서 다른 방법을 사용하였다.\n123456789101112131415from scipy.io import loadmatmnist_alternative_url = \"https://github.com/amplab/datascience-sp14/raw/master/lab7/mldata/mnist-original.mat\"mnist_path = \"./mnist-original.mat\"response = urllib.request.urlopen(mnist_alternative_url)with open(mnist_path, \"wb\") as f:    content = response.read()    f.write(content)mnist_raw = loadmat(mnist_path)mnist = &#123;    \"data\": mnist_raw[\"data\"].T,    \"target\": mnist_raw[\"label\"][0],    \"COL_NAMES\": [\"label\", \"data\"],    \"DESCR\": \"mldata.org dataset: mnist-original\",&#125;print(\"Success!\")\n1mnist\n여기에는 다음과 같은 필드가 있다.\n\nCOL_NAMES: 데이터 집합의 각 컬럼명\nDESCR: 데이터 집합의 설명\ndata: 손글시 이미지 픽셀값\ntarget: 손글씨 이미지 숫자 레이블 (0~9)\n\n1234# 데이터 정규화mnist_data = mnist['data'] / 255pd.DataFrame(mnist_data)\n첫번째 이미지 출력\n12plt.imshow(mnist_data[0].reshape(28, 28), cmap=cm.gray_r)plt.show()\n\n12mnist_label = mnist['target']mnist_label\n테스트 데이터와 훈련 데이터 분리\n1234567train_size = 50000test_size = 500train_X, test_X, train_Y, test_Y = model_selection.train_test_split(mnist_data,                                                                     mnist_label,                                                                     train_size=train_size,                                                                     test_size=test_size                                                                   )\n이번에는 gpu를 사용해 보고자 한다. 데이터의 크기도 그렇고, 훈련할게 많아서 좀더 빠르지 않을까…?\n1234567891011device = torch.device(\"cuda:0\" if torch.cuda.is_available() else \"cpu\")train_X = torch.from_numpy(train_X).float().to(device)train_Y = torch.from_numpy(train_Y).long().to(device)test_X = torch.from_numpy(test_X).float().to(device)test_Y = torch.from_numpy(test_Y).long().to(device)print(train_X.shape)print(train_Y.shape)\ngpu를 사용하기 위해선 위와 같이 변수 부터 cuda로 지정해주어야 한다.\n데이터셋을 만들고 100개 짜리 미니 배치로 만들자.\n12train = TensorDataset(train_X, train_Y)train_loader = DataLoader(train, batch_size=100, shuffle=True)\n신경망을 만든다. 이번에 만들 신경망은 다음과 같다.\n입력층, 출력층이 각 1개씩 이고, 중간층이 5개다. 입력층의 노드는 784개 이고 (28x28픽셀 이미지라 784개의 입력변수가 있다.) 중간층 노드는 256개와 128개, 출력층 노드의 개수는 10개 (0~9 구별)다.\n1234567891011121314151617181920212223class Net(nn.Module):  def __init__(self):    super(Net, self).__init__()    self.fc1 = nn.Linear(784, 256)    self.fc2 = nn.Linear(256, 256)    self.fc3 = nn.Linear(256, 256)    self.fc4 = nn.Linear(256, 128)    self.fc5 = nn.Linear(128, 128)    self.fc6 = nn.Linear(128, 10)          def forward(self, x):    x = F.relu(self.fc1(x))    x = F.relu(self.fc2(x))    x = F.relu(self.fc3(x))    x = F.relu(self.fc4(x))    x = F.relu(self.fc5(x))    x = F.dropout(x, training=self.training)    x = self.fc6(x)    return F.log_softmax(x)    model = Net()model.cuda()\n이전 예제와 다른게 있다.\n¶Dropout\n드롭아웃은 Overfitting을 방지하기 위한 방법이다.\n\n일부 노드들을 훈련에 참여시키지 않고 몇개의 노드를 끊어서, 남은 노드들을 통해서만 훈련시키는 방식이다. 이 때 끊어버리는 노드는 랜덤으로 선택한다. pytorch에서는 기본값이 0.5 다. 즉 절반의 노드를 dropout하고 계산한다. 이렇게 함으로써, training하는 과정에서 Overfitting이 발생하지 않게 할 수 있다.\n이제 훈련을 시키자.\n123456789101112131415161718192021222324252627criterion = nn.CrossEntropyLoss()optimizer = optim.SGD(model.parameters(), lr=0.01)for epoch in range(1000):    total_loss = 0    for train_x, train_y in train_loader:        train_x, train_y = Variable(train_x), Variable(train_y)        optimizer.zero_grad()        output = model(train_x)            loss = criterion(output, train_y)        loss.backward()        optimizer.step()        total_loss += loss.data.item()      if (epoch+1) % 100 == 0:    print(epoch+1, total_loss)\n훈련 시키는 과정은 크게 다를게 없다. 다만 cuda를 사용했음에도 엄청 느리다.\n12345test_x, test_y = Variable(test_X), Variable(test_Y)result = torch.max(model(test_x).data, 1)[1]accuracy = sum(test_y.cpu().data.numpy() == result.cpu().numpy()) / len(test_y.cpu().data.numpy())accuracy\n97.4%의 정확성을 보였다.\n","dateCreated":"2019-01-27T00:00:00+09:00","dateModified":"2019-01-27T12:32:01+09:00","datePublished":"2019-01-27T00:00:00+09:00","description":"¶손글씨 분류하기 (MNIST)\n머신러닝의 단골 주제다. 손글씨를 분류해보자. 이전 데이터와 다른 점이라고 한다면, 이전 데이터는 표 형식이었지만, 이제는 이미지 형식으로 구성되어 있다.\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n\n\nimport torch\nfrom torch.autograd import Variable\nimport torch.nn as nn\nimport torch.nn.functional as F\nimport torch.optim as optim\nfrom torch.utils.data ","headline":"Pytorch (2-2) - 손 글씨 분류하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/01/27/pytorch-2-multi-perceptron(2)/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/01/27/pytorch-2-multi-perceptron(2)/","keywords":"pytorch"}</script>
+    <meta name="description" content="¶손글씨 분류하기 (MNIST) 머신러닝의 단골 주제다. 손글씨를 분류해보자. 이전 데이터와 다른 점이라고 한다면, 이전 데이터는 표 형식이었지만, 이제는 이미지 형식으로 구성되어 있다.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16   import torch from torch.autograd import Variable impo">
+<meta name="keywords" content="pytorch">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Pytorch (2-2) - 손 글씨 분류하기">
+<meta property="og:url" content="https://www.yceffort.kr/2019/01/27/pytorch-2-multi-perceptron(2)/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="¶손글씨 분류하기 (MNIST) 머신러닝의 단골 주제다. 손글씨를 분류해보자. 이전 데이터와 다른 점이라고 한다면, 이전 데이터는 표 형식이었지만, 이제는 이미지 형식으로 구성되어 있다.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16   import torch from torch.autograd import Variable impo">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/01/minist-0-image.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1200/1*iWQzxhVlvadk6VAJjsgXgg.png">
+<meta property="og:updated_time" content="2019-01-27T03:32:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pytorch (2-2) - 손 글씨 분류하기">
+<meta name="twitter:description" content="¶손글씨 분류하기 (MNIST) 머신러닝의 단골 주제다. 손글씨를 분류해보자. 이전 데이터와 다른 점이라고 한다면, 이전 데이터는 표 형식이었지만, 이제는 이미지 형식으로 구성되어 있다.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16   import torch from torch.autograd import Variable impo">
+<meta name="twitter:image" content="https://www.yceffort.kr/images/2019/01/minist-0-image.png">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Pytorch (2-2) - 손 글씨 분류하기
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-01-27T00:00:00+09:00">
+	
+		    Jan 27, 2019
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h2 id="손글씨-분류하기-mnist"><a class="header-anchor" href="#손글씨-분류하기-mnist">¶</a>손글씨 분류하기 (MNIST)</h2>
+<p>머신러닝의 단골 주제다. 손글씨를 분류해보자. 이전 데이터와 다른 점이라고 한다면, 이전 데이터는 표 형식이었지만, 이제는 이미지 형식으로 구성되어 있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> DataLoader, TensorDataset</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_digits</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets, model_selection</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> matplotlib <span class="keyword">import</span> pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> matplotlib <span class="keyword">import</span> cm</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">%matplotlib inline</span><br></pre></td></tr></table></figure>
+<p>데이터를 가져오자. 근데 어찌된 일인지, <code>MINST original</code>데이터를 가져오는데 계속해서 여룽밍 있어서 다른 방법을 사용하였다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> scipy.io <span class="keyword">import</span> loadmat</span><br><span class="line">mnist_alternative_url = <span class="string">"https://github.com/amplab/datascience-sp14/raw/master/lab7/mldata/mnist-original.mat"</span></span><br><span class="line">mnist_path = <span class="string">"./mnist-original.mat"</span></span><br><span class="line">response = urllib.request.urlopen(mnist_alternative_url)</span><br><span class="line"><span class="keyword">with</span> open(mnist_path, <span class="string">"wb"</span>) <span class="keyword">as</span> f:</span><br><span class="line">    content = response.read()</span><br><span class="line">    f.write(content)</span><br><span class="line">mnist_raw = loadmat(mnist_path)</span><br><span class="line">mnist = &#123;</span><br><span class="line">    <span class="string">"data"</span>: mnist_raw[<span class="string">"data"</span>].T,</span><br><span class="line">    <span class="string">"target"</span>: mnist_raw[<span class="string">"label"</span>][<span class="number">0</span>],</span><br><span class="line">    <span class="string">"COL_NAMES"</span>: [<span class="string">"label"</span>, <span class="string">"data"</span>],</span><br><span class="line">    <span class="string">"DESCR"</span>: <span class="string">"mldata.org dataset: mnist-original"</span>,</span><br><span class="line">&#125;</span><br><span class="line">print(<span class="string">"Success!"</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mnist</span><br></pre></td></tr></table></figure>
+<p>여기에는 다음과 같은 필드가 있다.</p>
+<ul>
+<li>COL_NAMES: 데이터 집합의 각 컬럼명</li>
+<li>DESCR: 데이터 집합의 설명</li>
+<li>data: 손글시 이미지 픽셀값</li>
+<li>target: 손글씨 이미지 숫자 레이블 (0~9)</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 데이터 정규화</span></span><br><span class="line">mnist_data = mnist[<span class="string">'data'</span>] / <span class="number">255</span></span><br><span class="line"></span><br><span class="line">pd.DataFrame(mnist_data)</span><br></pre></td></tr></table></figure>
+<p>첫번째 이미지 출력</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">plt.imshow(mnist_data[<span class="number">0</span>].reshape(<span class="number">28</span>, <span class="number">28</span>), cmap=cm.gray_r)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2019/01/minist-0-image.png" alt="minst-0-image"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mnist_label = mnist[<span class="string">'target'</span>]</span><br><span class="line">mnist_label</span><br></pre></td></tr></table></figure>
+<p>테스트 데이터와 훈련 데이터 분리</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">train_size = <span class="number">50000</span></span><br><span class="line">test_size = <span class="number">500</span></span><br><span class="line">train_X, test_X, train_Y, test_Y = model_selection.train_test_split(mnist_data, </span><br><span class="line">                                                                    mnist_label, </span><br><span class="line">                                                                    train_size=train_size, </span><br><span class="line">                                                                    test_size=test_size</span><br><span class="line">                                                                   )</span><br></pre></td></tr></table></figure>
+<p>이번에는 gpu를 사용해 보고자 한다. 데이터의 크기도 그렇고, 훈련할게 많아서 좀더 빠르지 않을까…?</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">device = torch.device(<span class="string">"cuda:0"</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">"cpu"</span>)</span><br><span class="line"></span><br><span class="line">train_X = torch.from_numpy(train_X).float().to(device)</span><br><span class="line">train_Y = torch.from_numpy(train_Y).long().to(device)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">test_X = torch.from_numpy(test_X).float().to(device)</span><br><span class="line">test_Y = torch.from_numpy(test_Y).long().to(device)</span><br><span class="line"></span><br><span class="line">print(train_X.shape)</span><br><span class="line">print(train_Y.shape)</span><br></pre></td></tr></table></figure>
+<p>gpu를 사용하기 위해선 위와 같이 변수 부터 <code>cuda</code>로 지정해주어야 한다.</p>
+<p>데이터셋을 만들고 100개 짜리 미니 배치로 만들자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">train = TensorDataset(train_X, train_Y)</span><br><span class="line">train_loader = DataLoader(train, batch_size=<span class="number">100</span>, shuffle=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<p>신경망을 만든다. 이번에 만들 신경망은 다음과 같다.</p>
+<p>입력층, 출력층이 각 1개씩 이고, 중간층이 5개다. 입력층의 노드는 784개 이고 (28x28픽셀 이미지라 784개의 입력변수가 있다.) 중간층 노드는 256개와 128개, 출력층 노드의 개수는 10개 (0~9 구별)다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Net</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">    super(Net, self).__init__()</span><br><span class="line">    self.fc1 = nn.Linear(<span class="number">784</span>, <span class="number">256</span>)</span><br><span class="line">    self.fc2 = nn.Linear(<span class="number">256</span>, <span class="number">256</span>)</span><br><span class="line">    self.fc3 = nn.Linear(<span class="number">256</span>, <span class="number">256</span>)</span><br><span class="line">    self.fc4 = nn.Linear(<span class="number">256</span>, <span class="number">128</span>)</span><br><span class="line">    self.fc5 = nn.Linear(<span class="number">128</span>, <span class="number">128</span>)</span><br><span class="line">    self.fc6 = nn.Linear(<span class="number">128</span>, <span class="number">10</span>)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">    x = F.relu(self.fc1(x))</span><br><span class="line">    x = F.relu(self.fc2(x))</span><br><span class="line">    x = F.relu(self.fc3(x))</span><br><span class="line">    x = F.relu(self.fc4(x))</span><br><span class="line">    x = F.relu(self.fc5(x))</span><br><span class="line">    x = F.dropout(x, training=self.training)</span><br><span class="line">    x = self.fc6(x)</span><br><span class="line">    <span class="keyword">return</span> F.log_softmax(x)</span><br><span class="line">    </span><br><span class="line">model = Net()</span><br><span class="line">model.cuda()</span><br></pre></td></tr></table></figure>
+<p>이전 예제와 다른게 있다.</p>
+<h3 id="dropout"><a class="header-anchor" href="#dropout">¶</a>Dropout</h3>
+<p>드롭아웃은 Overfitting을 방지하기 위한 방법이다.</p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*iWQzxhVlvadk6VAJjsgXgg.png" alt="drop-out"></p>
+<p>일부 노드들을 훈련에 참여시키지 않고 몇개의 노드를 끊어서, 남은 노드들을 통해서만 훈련시키는 방식이다. 이 때 끊어버리는 노드는 랜덤으로 선택한다. pytorch에서는 기본값이 0.5 다. 즉 절반의 노드를 dropout하고 계산한다. 이렇게 함으로써, training하는 과정에서 Overfitting이 발생하지 않게 할 수 있다.</p>
+<p>이제 훈련을 시키자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">criterion = nn.CrossEntropyLoss()</span><br><span class="line"></span><br><span class="line">optimizer = optim.SGD(model.parameters(), lr=<span class="number">0.01</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(<span class="number">1000</span>):</span><br><span class="line">  </span><br><span class="line">  total_loss = <span class="number">0</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> train_x, train_y <span class="keyword">in</span> train_loader:</span><br><span class="line">    </span><br><span class="line">    train_x, train_y = Variable(train_x), Variable(train_y)</span><br><span class="line">    </span><br><span class="line">    optimizer.zero_grad()</span><br><span class="line">    </span><br><span class="line">    output = model(train_x)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    loss = criterion(output, train_y)</span><br><span class="line">    </span><br><span class="line">    loss.backward()</span><br><span class="line">    </span><br><span class="line">    optimizer.step()</span><br><span class="line">    </span><br><span class="line">    total_loss += loss.data.item()</span><br><span class="line">    </span><br><span class="line">  <span class="keyword">if</span> (epoch+<span class="number">1</span>) % <span class="number">100</span> == <span class="number">0</span>:</span><br><span class="line">    print(epoch+<span class="number">1</span>, total_loss)</span><br></pre></td></tr></table></figure>
+<p>훈련 시키는 과정은 크게 다를게 없다. 다만 cuda를 사용했음에도 엄청 느리다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">test_x, test_y = Variable(test_X), Variable(test_Y)</span><br><span class="line">result = torch.max(model(test_x).data, <span class="number">1</span>)[<span class="number">1</span>]</span><br><span class="line">accuracy = sum(test_y.cpu().data.numpy() == result.cpu().numpy()) / len(test_y.cpu().data.numpy())</span><br><span class="line"></span><br><span class="line">accuracy</span><br></pre></td></tr></table></figure>
+<p>97.4%의 정확성을 보였다.</p>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/">pytorch</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/01/27/pytorch-2-multi-perceptron(1)/" data-tooltip="Pytorch (2-1) - 다층 퍼셉트론" aria-label="PREVIOUS: Pytorch (2-1) - 다층 퍼셉트론">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/12/17/step-by-step-machine-learning-05/" data-tooltip="Step by Step machine laerning - 05" aria-label="NEXT: Step by Step machine laerning - 05">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/01/27/pytorch-2-multi-perceptron(2)/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/01/27/pytorch-2-multi-perceptron(2)/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/01/27/pytorch-2-multi-perceptron(1)/" data-tooltip="Pytorch (2-1) - 다층 퍼셉트론" aria-label="PREVIOUS: Pytorch (2-1) - 다층 퍼셉트론">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/12/17/step-by-step-machine-learning-05/" data-tooltip="Step by Step machine laerning - 05" aria-label="NEXT: Step by Step machine laerning - 05">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/01/27/pytorch-2-multi-perceptron(2)/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/01/27/pytorch-2-multi-perceptron(2)/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/01/27/pytorch-2-multi-perceptron(2)/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/01/27/pytorch-2-multi-perceptron(2)/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2019/01/27/pytorch-2-multi-perceptron(2)/';
+                 
+                    this.page.identifier = '2019/01/27/pytorch-2-multi-perceptron(2)/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

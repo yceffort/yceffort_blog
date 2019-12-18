@@ -1,0 +1,826 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>Step by Step machine laerning - 03 - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Classification 2\n¶ROC 커브\nROC 커브는 Binary Classification에서 가장 잘 사용하는 검증기다. 왼쪽 위로 그래프가 상승해 있을 수록 (우하단 면적이 넓을 수록) 좋은 분류기라고 할 수 있다.\n12345678910111213141516# ROC 커브는 binary classifiers에서 잘 사용하는 검증기다.# 왼쪽 위로 그래프로 올라갈 수록 좋은 분류기다.from sklearn.metrics import roc_curvefpr, tpr, thresholds = roc_curve(y_train_5, y_scores)def plot_roc_curve(fpr, tpr, label=None):    plt.plot(fpr, tpr, linewidth=2, label=label)    plt.plot([0, 1], [0, 1], 'k--')    plt.axis([0, 1, 0, 1])    plt.xlabel('False Positive Rate')    plt.ylabel('True Positive Rate')    plot_roc_curve(fpr, tpr)plt.show()\n\n이런 그래프가 아니고, 점수를 보고 싶다면\n123# 점수로 보고 싶다면, from sklearn.metrics import roc_auc_scoreroc_auc_score(y_train_5, y_scores)\n10.963161488618153\n이 ROC 커브를 활용하여 RandomForestClassifier와 비교해보자.\n1234567891011from sklearn.ensemble import RandomForestClassifierforest_clf = RandomForestClassifier(random_state=42)y_probas_forest = cross_val_predict(forest_clf, X_train, y_train_5, cv=3, method='predict_proba')y_scores_forest = y_probas_forest[:, 1]fpr_forest, tpr_forest, thresholds_forest = roc_curve(y_train_5, y_scores_forest)plt.plot(fpr, tpr, 'b:', label=\"SGD\")plot_roc_curve(fpr_forest, tpr_forest, \"Random Forest\")plt.legend(loc=\"lower right\")plt.show()\n\n1roc_auc_score(y_train_5, y_scores_forest)\n10.9922948905208268\nRandomForestClassifier가 더 낫다는 것을 알 수 있다.\n¶Multiple Class Classifier\n이런 다양한 클래스를 구분하는 Classifier에는 RandomForestClassifier와 BayesClassifier가 있다. 그리고 Binary Clasifier에는 SupportVectorMachine과 LinearClassifier가 있다.앞서서는 5인지 아닌지만 확인했다. 만약 1~10까지를\n구별해야 한다면 어떻게 해야할까?\n\nMultipleClassifier 를 사용하는 법\nOne Versus All: OVA) 0~9를 구별하는 binary 분류기 10개를 만들기. 즉 이것이 무슨 숫자인지 10개의 분류기를 모두 거치는 방법이다.\nOne Versus One: OVO) 이름 그대로, 각각 맞짱(?) 뜨는 방법이다. 0과 1분류기를 거치고, 0과 2분류기를 거치고, 0과 3분류기를 거치고… 이런식으로 가지수가 나올 수 있는 모든 분류기를 만드는 방법이다. 이 방법은 $$N\\times(N-1)$$ 개의 분류기가 필요할 것이다. OVO는 시간은 물론 오래걸리지만, (45개) 트레이닝세트가 적게 필요하므로 더 이점이 있다.\n\nSVM과 같은 일부 알고리즘은 트레이닝 세트의 크기에 민감해서, 크기가 커질 경우 성능이 뚝뚝 떨어지는데, OVO를 사용하면 더 빠르게 구별할 수 있다. 그러나, 이 외의 경우에는 OVA를 보통 선호 한다고 한다.\nscikit-learn의 경우, 다중 클래스 분류에 binary-classification를 사용할 경우, 알아서 자동으로 OvA (SVM은 OVO)를 사용한다. 아래의 예제를 보자.\n12sgd_clf.fit(X_train, y_train)sgd_clf.predict([some_digit])\n1array([5.])\n이 코드에서는, 5만 구별한 y_train_5대신 원래 타겟을 사용하여 SGDClassifier를 훈련시켰다. 그런다음 예측을 하나 만들어 냈는데, 내부에서는 scikit-learn이 실제로 10개의 이진 분류기를 훈련시키고 각각의 결정점수를 얻어서 가장 높은 클래스 (5) 를  호출해 낸것이다.\n12some_digit_scores = sgd_clf.decision_function([some_digit])some_digit_scores\n1234array([[-210257.90046371, -417036.80313781, -405317.41607626,         -81007.86225196, -357657.92769475,   32836.21879306,        -743346.95995739, -210459.08988114, -826317.66173769,        -523922.97081691]])\n1np.argmax(some_digit_scores)\n15\n이번에는 OvO 와 OvA를 수동으로 사용하게 해보자.\n12345# OVOfrom sklearn.multiclass import OneVsOneClassifierovo_clf = OneVsOneClassifier(SGDClassifier(random_state=42, max_iter=5, tol=None))ovo_clf.fit(X_train, y_train)ovo_clf.predict([some_digit])\n1array([5.])\n5를 잘 예측하였다. RaondomForestClassifier의 경우는 더 쉽다.\n12forest_clf.fit(X_train, y_train)forest_clf.predict([some_digit])\n1array([5.])\n각각에 대해서 확률을 보고 싶다면\n1forest_clf.predict_proba([some_digit])\n1array([[0. , 0. , 0. , 0.1, 0. , 0.9, 0. , 0. , 0. , 0. ]])\n90%의 확률로 5임을 예측했다는 것을 알 수 있다. 이제 한번 테스트를 해보자.\n1cross_val_score(sgd_clf, X_train, y_train, cv=3, scoring='accuracy')\n1array([0.84953009, 0.84259213, 0.82712407])\n대략 85%의 확률로 맞추고 있는 것을 볼 수 있다. 여기서 성능을 더 향상 시키기 위해서는, input값을 조절해보면 될 것이다.\n12345from sklearn.preprocessing import StandardScalerscaler = StandardScaler()X_train_scaled = scaler.fit_transform(X_train.astype(np.float64))cross_val_score(sgd_clf, X_train_scaled, y_train, cv=3, scoring='accuracy')\n1array([0.90586883, 0.91309565, 0.91003651])\n정확도가 약 90%까지 향상한 것을 알 수 있다.\n","dateCreated":"2018-11-23T00:00:00+09:00","dateModified":"2018-11-23T19:44:01+09:00","datePublished":"2018-11-23T00:00:00+09:00","description":"Classification 2\n\n¶ROC 커브\nROC 커브는 Binary Classification에서 가장 잘 사용하는 검증기다. 왼쪽 위로 그래프가 상승해 있을 수록 (우하단 면적이 넓을 수록) 좋은 분류기라고 할 수 있다.\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n\n\n# ROC 커브는 binary classifiers에서 잘 사용하는 검증기다.\n# 왼쪽 위로 그래프로 올라갈 수록 좋은 분류기다.\n\nfrom sklearn.metrics import roc_curve\n\nfpr, tpr, thresho","headline":"Step by Step machine laerning - 03","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/11/23/step-by-step-machine-learning-03/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/11/23/step-by-step-machine-learning-03/","keywords":"machine-learning, scikit-learn"}</script>
+    <meta name="description" content="Classification 2  ¶ROC 커브 ROC 커브는 Binary Classification에서 가장 잘 사용하는 검증기다. 왼쪽 위로 그래프가 상승해 있을 수록 (우하단 면적이 넓을 수록) 좋은 분류기라고 할 수 있다.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16   # ROC 커브는 binary classifiers에서">
+<meta name="keywords" content="machine-learning,scikit-learn">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Step by Step machine laerning - 03">
+<meta property="og:url" content="https://www.yceffort.kr/2018/11/23/step-by-step-machine-learning-03/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="Classification 2  ¶ROC 커브 ROC 커브는 Binary Classification에서 가장 잘 사용하는 검증기다. 왼쪽 위로 그래프가 상승해 있을 수록 (우하단 면적이 넓을 수록) 좋은 분류기라고 할 수 있다.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16   # ROC 커브는 binary classifiers에서">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://www.yceffort.kr/images/2018/11/ml-2-3.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2018/11/ml-2-4.png">
+<meta property="og:updated_time" content="2018-11-23T10:44:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Step by Step machine laerning - 03">
+<meta name="twitter:description" content="Classification 2  ¶ROC 커브 ROC 커브는 Binary Classification에서 가장 잘 사용하는 검증기다. 왼쪽 위로 그래프가 상승해 있을 수록 (우하단 면적이 넓을 수록) 좋은 분류기라고 할 수 있다.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16   # ROC 커브는 binary classifiers에서">
+<meta name="twitter:image" content="https://www.yceffort.kr/images/2018/11/ml-2-3.png">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Step by Step machine laerning - 03
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2018-11-23T00:00:00+09:00">
+	
+		    Nov 23, 2018
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>Classification 2</p>
+<h2 id="roc-커브"><a class="header-anchor" href="#roc-커브">¶</a>ROC 커브</h2>
+<p>ROC 커브는 Binary Classification에서 가장 잘 사용하는 검증기다. 왼쪽 위로 그래프가 상승해 있을 수록 (우하단 면적이 넓을 수록) 좋은 분류기라고 할 수 있다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ROC 커브는 binary classifiers에서 잘 사용하는 검증기다.</span></span><br><span class="line"><span class="comment"># 왼쪽 위로 그래프로 올라갈 수록 좋은 분류기다.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> roc_curve</span><br><span class="line"></span><br><span class="line">fpr, tpr, thresholds = roc_curve(y_train_5, y_scores)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_roc_curve</span><span class="params">(fpr, tpr, label=None)</span>:</span></span><br><span class="line">    plt.plot(fpr, tpr, linewidth=<span class="number">2</span>, label=label)</span><br><span class="line">    plt.plot([<span class="number">0</span>, <span class="number">1</span>], [<span class="number">0</span>, <span class="number">1</span>], <span class="string">'k--'</span>)</span><br><span class="line">    plt.axis([<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">    plt.xlabel(<span class="string">'False Positive Rate'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'True Positive Rate'</span>)</span><br><span class="line">    </span><br><span class="line">plot_roc_curve(fpr, tpr)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2018/11/ml-2-3.png" alt="ml-2-3.png"></p>
+<p>이런 그래프가 아니고, 점수를 보고 싶다면</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 점수로 보고 싶다면, </span></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> roc_auc_score</span><br><span class="line">roc_auc_score(y_train_5, y_scores)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0.963161488618153</span><br></pre></td></tr></table></figure>
+<p>이 ROC 커브를 활용하여 <code>RandomForestClassifier</code>와 비교해보자.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier</span><br><span class="line"></span><br><span class="line">forest_clf = RandomForestClassifier(random_state=<span class="number">42</span>)</span><br><span class="line">y_probas_forest = cross_val_predict(forest_clf, X_train, y_train_5, cv=<span class="number">3</span>, method=<span class="string">'predict_proba'</span>)</span><br><span class="line">y_scores_forest = y_probas_forest[:, <span class="number">1</span>]</span><br><span class="line">fpr_forest, tpr_forest, thresholds_forest = roc_curve(y_train_5, y_scores_forest)</span><br><span class="line"></span><br><span class="line">plt.plot(fpr, tpr, <span class="string">'b:'</span>, label=<span class="string">"SGD"</span>)</span><br><span class="line">plot_roc_curve(fpr_forest, tpr_forest, <span class="string">"Random Forest"</span>)</span><br><span class="line">plt.legend(loc=<span class="string">"lower right"</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2018/11/ml-2-4.png" alt="ml-2-4.png"></p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">roc_auc_score(y_train_5, y_scores_forest)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0.9922948905208268</span><br></pre></td></tr></table></figure>
+<p>RandomForestClassifier가 더 낫다는 것을 알 수 있다.</p>
+<h2 id="multiple-class-classifier"><a class="header-anchor" href="#multiple-class-classifier">¶</a>Multiple Class Classifier</h2>
+<p>이런 다양한 클래스를 구분하는 Classifier에는 <code>RandomForestClassifier</code>와 <code>BayesClassifier</code>가 있다. 그리고 Binary Clasifier에는 <code>SupportVectorMachine</code>과 <code>LinearClassifier</code>가 있다.앞서서는 5인지 아닌지만 확인했다. 만약 1~10까지를<br>
+구별해야 한다면 어떻게 해야할까?</p>
+<ol>
+<li>MultipleClassifier 를 사용하는 법</li>
+<li>One Versus All: OVA) 0~9를 구별하는 binary 분류기 10개를 만들기. 즉 이것이 무슨 숫자인지 10개의 분류기를 모두 거치는 방법이다.</li>
+<li>One Versus One: OVO) 이름 그대로, 각각 맞짱(?) 뜨는 방법이다. 0과 1분류기를 거치고, 0과 2분류기를 거치고, 0과 3분류기를 거치고… 이런식으로 가지수가 나올 수 있는 모든 분류기를 만드는 방법이다. 이 방법은 $$N\times(N-1)$$ 개의 분류기가 필요할 것이다. OVO는 시간은 물론 오래걸리지만, (45개) 트레이닝세트가 적게 필요하므로 더 이점이 있다.</li>
+</ol>
+<p>SVM과 같은 일부 알고리즘은 트레이닝 세트의 크기에 민감해서, 크기가 커질 경우 성능이 뚝뚝 떨어지는데, OVO를 사용하면 더 빠르게 구별할 수 있다. 그러나, 이 외의 경우에는 OVA를 보통 선호 한다고 한다.</p>
+<p>scikit-learn의 경우, 다중 클래스 분류에 binary-classification를 사용할 경우, 알아서 자동으로 OvA (SVM은 OVO)를 사용한다. 아래의 예제를 보자.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sgd_clf.fit(X_train, y_train)</span><br><span class="line">sgd_clf.predict([some_digit])</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array([5.])</span><br></pre></td></tr></table></figure>
+<p>이 코드에서는, 5만 구별한 <code>y_train_5</code>대신 원래 타겟을 사용하여 <code>SGDClassifier</code>를 훈련시켰다. 그런다음 예측을 하나 만들어 냈는데, 내부에서는 scikit-learn이 실제로 10개의 이진 분류기를 훈련시키고 각각의 결정점수를 얻어서 가장 높은 클래스 (5) 를  호출해 낸것이다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">some_digit_scores = sgd_clf.decision_function([some_digit])</span><br><span class="line">some_digit_scores</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">array([[-210257.90046371, -417036.80313781, -405317.41607626,</span><br><span class="line">         -81007.86225196, -357657.92769475,   32836.21879306,</span><br><span class="line">        -743346.95995739, -210459.08988114, -826317.66173769,</span><br><span class="line">        -523922.97081691]])</span><br></pre></td></tr></table></figure>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">np.argmax(some_digit_scores)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">5</span><br></pre></td></tr></table></figure>
+<p>이번에는 OvO 와 OvA를 수동으로 사용하게 해보자.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># OVO</span></span><br><span class="line"><span class="keyword">from</span> sklearn.multiclass <span class="keyword">import</span> OneVsOneClassifier</span><br><span class="line">ovo_clf = OneVsOneClassifier(SGDClassifier(random_state=<span class="number">42</span>, max_iter=<span class="number">5</span>, tol=<span class="literal">None</span>))</span><br><span class="line">ovo_clf.fit(X_train, y_train)</span><br><span class="line">ovo_clf.predict([some_digit])</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array([5.])</span><br></pre></td></tr></table></figure>
+<p>5를 잘 예측하였다. <code>RaondomForestClassifier</code>의 경우는 더 쉽다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">forest_clf.fit(X_train, y_train)</span><br><span class="line">forest_clf.predict([some_digit])</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array([5.])</span><br></pre></td></tr></table></figure>
+<p>각각에 대해서 확률을 보고 싶다면</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">forest_clf.predict_proba([some_digit])</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array([[0. , 0. , 0. , 0.1, 0. , 0.9, 0. , 0. , 0. , 0. ]])</span><br></pre></td></tr></table></figure>
+<p>90%의 확률로 5임을 예측했다는 것을 알 수 있다. 이제 한번 테스트를 해보자.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cross_val_score(sgd_clf, X_train, y_train, cv=<span class="number">3</span>, scoring=<span class="string">'accuracy'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array([0.84953009, 0.84259213, 0.82712407])</span><br></pre></td></tr></table></figure>
+<p>대략 85%의 확률로 맞추고 있는 것을 볼 수 있다. 여기서 성능을 더 향상 시키기 위해서는, input값을 조절해보면 될 것이다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line"></span><br><span class="line">scaler = StandardScaler()</span><br><span class="line">X_train_scaled = scaler.fit_transform(X_train.astype(np.float64))</span><br><span class="line">cross_val_score(sgd_clf, X_train_scaled, y_train, cv=<span class="number">3</span>, scoring=<span class="string">'accuracy'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array([0.90586883, 0.91309565, 0.91003651])</span><br></pre></td></tr></table></figure>
+<p>정확도가 약 90%까지 향상한 것을 알 수 있다.</p>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/machine-learning/">machine-learning</a> <a class="tag tag--primary tag--small t-link" href="/tags/scikit-learn/">scikit-learn</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/23/decentralized-ai-benefits/" data-tooltip="탈중앙화된 AI: 블록체인의 미래" aria-label="PREVIOUS: 탈중앙화된 AI: 블록체인의 미래">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/22/us-crypto-currencies-payments-analysis:bitcoin-for-payments-a-distant-dream-as-usage-dries-up/" data-tooltip="결제 수단으로서 비트코인 사용이 지속적으로 감소 중" aria-label="NEXT: 결제 수단으로서 비트코인 사용이 지속적으로 감소 중">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/11/23/step-by-step-machine-learning-03/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/11/23/step-by-step-machine-learning-03/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/23/decentralized-ai-benefits/" data-tooltip="탈중앙화된 AI: 블록체인의 미래" aria-label="PREVIOUS: 탈중앙화된 AI: 블록체인의 미래">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/22/us-crypto-currencies-payments-analysis:bitcoin-for-payments-a-distant-dream-as-usage-dries-up/" data-tooltip="결제 수단으로서 비트코인 사용이 지속적으로 감소 중" aria-label="NEXT: 결제 수단으로서 비트코인 사용이 지속적으로 감소 중">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/11/23/step-by-step-machine-learning-03/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/11/23/step-by-step-machine-learning-03/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/11/23/step-by-step-machine-learning-03/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/11/23/step-by-step-machine-learning-03/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2018/11/23/step-by-step-machine-learning-03/';
+                 
+                    this.page.identifier = '2018/11/23/step-by-step-machine-learning-03/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

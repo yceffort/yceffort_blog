@@ -1,0 +1,810 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>블록보상이 없어질 경우 발생하는 비트코인의 불안정성 - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"On the Instability of Bitcoin Without the Block Reward\n원문\n비트코인 컨센서스 프로토콜의 보안은 채굴자들이 모두 정직하게 행동한다는 것에 의존한다. 그리고 그들은 합리적으로 이성적으로 행동한다는 주체라는 가정하에 채굴 수입을 받을 수 있도록 설계되어 있다. 따라서 이러한 기본적인 행동을 이탈하는 채굴자의 행위는 비트코인 보안에 심각한 위협이 된다.\n채굴자는 두 가지 유형의 수입, 블록 발견 보상과 거래 수수료를 받게 된다. 블록 보상은 시스템 초기에 채굴자 보상의 대부분을 차지하지만, 블록보상이 점차 감소함에 따라, 채굴자의 수익은 거래 수수료로 전환 될 것으로 보인다. (4년에 한번 이 보상은 절반으로 감소한다.) 채굴자들이 각 블록에서 25개의 비트코인을 보상으로 받던지, 거래 수수료로 25개의 비트코인을 받던지는 블록체인의 보상에 별다른 영향이 없다는 것이 일반적인 생각이다.\n\n\n\n\n\n\n\n\n블록 상태에 따른 채굴자가 취할 수 있는 두 가지 양상\n\n\n\n합리적이고 이기적인 채굴자를 가정해보자. 그리고 고정된 블록 보상이 다 떨어져, 기하급수적으로 분산된 보상 블록이 있는 블록체인이 존재한고 상상해보자. 여기서는 위 그림 처럼, 채굴자가 선택할 수 있는 두 가지 옵션이 있다.\n\n적어도 더 많은 트랜잭션이 도착할 때 까지 가장 긴 블록체인을 연장하여 5의 보상을 받고, 다음 채굴자를 위해 0의 보상을 남겨둔다.\n가장 긴 블록체인을 연장하는 대신, 이를 포킹하여 50개의 비트코인은 남긴채 나머지 55개를 자신의 보상으로 가져간다.\n\n비트코인 프로토콜은 1번 옵션을 따르 도록 지시하지만, 2번의 옵션이 더 채굴자에게 매력적인 선택지로 보이게 된다.\n이에 대해 정확히 추론하기 위해서는, 다른 채굴자들이 어떤 전략을 선택할지도 고려해야 한다. 만약 다른 모든 채굴자들이 경험적인 방법에 따라, 네트워크 지연 없이 기존 행동을 고수할 경우 포킹하는 전략은 효과가 없고 명확하게 다른 모든 채굴자들은 옵션 1을 선택하게 될 것이다. 반면에, 블록 보상이 없는 시스템 하에서 다른 모든 채굴자들이 합리적이라면 이전 블록 대신 포킹을 하기로 선택할 것이고, 옵션2를 통해서 더 많은 이익을 취하게 될 것이다.\n\n고정된 블록 보상이 사라지게 되면, 블록보상에 집착하는 대신, 합리적인 채굴자들은 거래수수료를 통해 자신의 이득을 극대화 하려 할 것이다. 이는 곧 정직한 블록을 만들어 현격히 감소한 블록 보상을 받는 것 보다 마구잡이로 포킹하여 이득을 취하는 것이 더 효율적이라는 의미가 된다.\n\n이는 블록 보상이 고정되지 않았을 때 발생하는 새로운 인센티브 문제를 나타낸다. 이는 블록 보상이 채굴자 입장에서 무시할 수 있는 정도로 감소하고, 거래수수료가 채굴보상을 지배하는 상태에서 비트코인의 안정성에 대한 잠재적인 영향을 이해할 필요가 있다.\n이러한 예는 블록 보상이 고정 값으로 존재하지 않을 때 일어나는 새로운 인센티브 문제다. 블록 보상이 무시할 수 있는 수준으로 줄어들고, 거래수수료만 존재하는 비트코인 시스템 내에서는, 안정성에 영향을 받을 수 있다. 이는 거래 수수료가 불규칙하기 때문이 아니라, 거래 슈슈료가 시간에 따라 변하는 특성으로 인해 전략적으로 다양한 접근을 할 수 있는 편차가 발생하기 때문이다. 이는 마이닝 풀의 참여자들이 실시간으로 자신의 보상을 극대화 할 수 있는 마이닝 풀로 'hopping’하는 pool hopping 처럼 참고, 채굴자들이 더 많은 거래 수수료를 제공하는 암호화폐로 'hopping’하는 사례가 발생할 수도 있다.\n이러한 불량 채굴전략이 시작되면, 비트코인의 보안에 미치는 영향은 심각할 것이다. 블록체인은 포킹으로 인해 오래된 블록이 고립된 블록이 상당부분을 차지하여 51%공격을 쉽게 하고, 거래 확인 시간이 늘어날 수도 있다. 최악의 경우, 블록 보류 또는 점점 더 공격적인 undercutting으로 합의 프로토콜 전체가 깨져 버릴 수도 있다.\n이는 암호화폐 설계에서 블록보상의 근본적인 재고를 하게 만든다. 나카모토는 중앙이 없는 상태에서 비트코인의 초기 할당을 위해, 블록 보상이 필요하지만 이를 일시적인 악으로 보고, 거래 수수료 제도를 이상향으로 보고 있다. 그러나 이는 거래수수료 내에서 채굴자들의 행동을 인센티브 화 하는 것이 블록 보상 제도 보다 더욱 힘든 일이라는 것을 보여준다. 아마도, 이러한 인플레이션의 불가피함을 인지하고 블록 보상을 영구적으로 만들어야 할지도 모른다. 거래 수수료는 마이너들이 자신의 블록에 거래를 포함시키기 위한 동기로 존재할 것이다.\n¶결론\n블록 규모에 대한 논쟁에서, 블록체인 상에서의 공간은 희소한 자원이며, 사용자들이 충분히 많은 거래 수수료를 지불함으로써 거래 확인을 가속화 시킬 수 있는 시장이 나타날 것이라고 주장한다. 하지만 만약 채굴자들이 블록을 해결할때 의도적으로 ‘비트코인을 남겨두고 오는 경우’ (Undercutting Attack)에는 이러한 가정을 깨트린다. 이는 채굴자들이 채굴자들이 거래 수수료를 최대화할 필요가 없고, 높은 수수료로 거래 우선순의를 정할 이유가 없기 때문이다. 다시 말하면, 블록의 거래 규모에 제약이 가해지고, 이와 같은 undercut을 당할 경우 총 수수료에 또다른 제약이 생기게 된다. 이는 복잡한 방식으로 상호작용하게 된다.\n사카시 나카모토는 그의 비트코인 백서에서 아래와 같이 언급했다.\n\n채굴자들을 위한 유인책은 채굴 뿐만 아니라 거래수수료가 될수도 있다. … 사전에 결정된 수 만큼의 화폐가 유통되면, 인센티브는 전적으로 거래수수료로 전환되어, 완전히 인플레이션으로 부터 자유로울 수 있습니다.\n\n이 논문에서는 블록 보상이 채굴의 안정성을 위해 필수적이라고 본다. 최소한의 거래수수료로 체제에서 평행을 유지하는 것은 블록 보상 체계보다 극도로 어려워보이는데, 이 자체만으로 문제가 될 수도 있다. 이더리움이 하는 것처럼, 블록 보상을 영구적으로 유지함으로써 발생하는 통화 인플레이션은, 암호화폐의 안정성을 유지하기 위해 지불하는 작은 대가일 수도 있다.\n\n현재 비트코인의 블록 보상을 보려면 여기를 참고하세요 =)\n","dateCreated":"2018-06-27T00:00:00+09:00","dateModified":"2018-06-27T09:51:37+09:00","datePublished":"2018-06-27T00:00:00+09:00","description":"On the Instability of Bitcoin Without the Block Reward\n\n원문\n\n비트코인 컨센서스 프로토콜의 보안은 채굴자들이 모두 정직하게 행동한다는 것에 의존한다. 그리고 그들은 합리적으로 이성적으로 행동한다는 주체라는 가정하에 채굴 수입을 받을 수 있도록 설계되어 있다. 따라서 이러한 기본적인 행동을 이탈하는 채굴자의 행위는 비트코인 보안에 심각한 위협이 된다.\n\n채굴자는 두 가지 유형의 수입, 블록 발견 보상과 거래 수수료를 받게 된다. 블록 보상은 시스템 초기에 채굴자 보상의 대부분을 차지하지만,","headline":"블록보상이 없어질 경우 발생하는 비트코인의 불안정성","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/06/27/Instability-of-Bitcoin-Without-the-Block-Reward/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/06/27/Instability-of-Bitcoin-Without-the-Block-Reward/"}</script>
+    <meta name="description" content="On the Instability of Bitcoin Without the Block Reward  원문  비트코인 컨센서스 프로토콜의 보안은 채굴자들이 모두 정직하게 행동한다는 것에 의존한다. 그리고 그들은 합리적으로 이성적으로 행동한다는 주체라는 가정하에 채굴 수입을 받을 수 있도록 설계되어 있다. 따라서 이러한 기본적인 행동을 이탈하는 채굴자의 행위는">
+<meta name="keywords" content="programming,innovation,technology">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="블록보상이 없어질 경우 발생하는 비트코인의 불안정성">
+<meta property="og:url" content="https://www.yceffort.kr/2018/06/27/Instability-of-Bitcoin-Without-the-Block-Reward/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="On the Instability of Bitcoin Without the Block Reward  원문  비트코인 컨센서스 프로토콜의 보안은 채굴자들이 모두 정직하게 행동한다는 것에 의존한다. 그리고 그들은 합리적으로 이성적으로 행동한다는 주체라는 가정하에 채굴 수입을 받을 수 있도록 설계되어 있다. 따라서 이러한 기본적인 행동을 이탈하는 채굴자의 행위는">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://www.yceffort.kr/images/2018/06/two-possible-action.png">
+<meta property="og:updated_time" content="2018-06-27T00:51:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="블록보상이 없어질 경우 발생하는 비트코인의 불안정성">
+<meta name="twitter:description" content="On the Instability of Bitcoin Without the Block Reward  원문  비트코인 컨센서스 프로토콜의 보안은 채굴자들이 모두 정직하게 행동한다는 것에 의존한다. 그리고 그들은 합리적으로 이성적으로 행동한다는 주체라는 가정하에 채굴 수입을 받을 수 있도록 설계되어 있다. 따라서 이러한 기본적인 행동을 이탈하는 채굴자의 행위는">
+<meta name="twitter:image" content="https://www.yceffort.kr/images/2018/06/two-possible-action.png">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            블록보상이 없어질 경우 발생하는 비트코인의 불안정성
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2018-06-27T00:00:00+09:00">
+	
+		    Jun 27, 2018
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>On the Instability of Bitcoin Without the Block Reward</p>
+<p><a href="http://www.cs.princeton.edu/~smattw/CKWN-CCS16.pdf" target="_blank" rel="noopener">원문</a></p>
+<p>비트코인 컨센서스 프로토콜의 보안은 채굴자들이 모두 정직하게 행동한다는 것에 의존한다. 그리고 그들은 합리적으로 이성적으로 행동한다는 주체라는 가정하에 채굴 수입을 받을 수 있도록 설계되어 있다. 따라서 이러한 기본적인 행동을 이탈하는 채굴자의 행위는 비트코인 보안에 심각한 위협이 된다.</p>
+<p>채굴자는 두 가지 유형의 수입, 블록 발견 보상과 거래 수수료를 받게 된다. 블록 보상은 시스템 초기에 채굴자 보상의 대부분을 차지하지만, 블록보상이 점차 감소함에 따라, 채굴자의 수익은 거래 수수료로 전환 될 것으로 보인다. (4년에 한번 이 보상은 절반으로 감소한다.) 채굴자들이 각 블록에서 25개의 비트코인을 보상으로 받던지, 거래 수수료로 25개의 비트코인을 받던지는 블록체인의 보상에 별다른 영향이 없다는 것이 일반적인 생각이다.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><img src="/images/2018/06/two-possible-action.png" alt="two-possible-action"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><em>블록 상태에 따른 채굴자가 취할 수 있는 두 가지 양상</em></td>
+</tr>
+</tbody>
+</table>
+<p>합리적이고 이기적인 채굴자를 가정해보자. 그리고 고정된 블록 보상이 다 떨어져, 기하급수적으로 분산된 보상 블록이 있는 블록체인이 존재한고 상상해보자. 여기서는 위 그림 처럼, 채굴자가 선택할 수 있는 두 가지 옵션이 있다.</p>
+<ol>
+<li>적어도 더 많은 트랜잭션이 도착할 때 까지 가장 긴 블록체인을 연장하여 5의 보상을 받고, 다음 채굴자를 위해 0의 보상을 남겨둔다.</li>
+<li>가장 긴 블록체인을 연장하는 대신, 이를 포킹하여 50개의 비트코인은 남긴채 나머지 55개를 자신의 보상으로 가져간다.</li>
+</ol>
+<p>비트코인 프로토콜은 1번 옵션을 따르 도록 지시하지만, 2번의 옵션이 더 채굴자에게 매력적인 선택지로 보이게 된다.</p>
+<p>이에 대해 정확히 추론하기 위해서는, 다른 채굴자들이 어떤 전략을 선택할지도 고려해야 한다. 만약 다른 모든 채굴자들이 경험적인 방법에 따라, 네트워크 지연 없이 기존 행동을 고수할 경우 포킹하는 전략은 효과가 없고 명확하게 다른 모든 채굴자들은 옵션 1을 선택하게 될 것이다. 반면에, 블록 보상이 없는 시스템 하에서 다른 모든 채굴자들이 합리적이라면 이전 블록 대신 포킹을 하기로 선택할 것이고, 옵션2를 통해서 더 많은 이익을 취하게 될 것이다.</p>
+<blockquote>
+<p>고정된 블록 보상이 사라지게 되면, 블록보상에 집착하는 대신, 합리적인 채굴자들은 거래수수료를 통해 자신의 이득을 극대화 하려 할 것이다. 이는 곧 정직한 블록을 만들어 현격히 감소한 블록 보상을 받는 것 보다 마구잡이로 포킹하여 이득을 취하는 것이 더 효율적이라는 의미가 된다.</p>
+</blockquote>
+<p>이는 블록 보상이 고정되지 않았을 때 발생하는 새로운 인센티브 문제를 나타낸다. 이는 블록 보상이 채굴자 입장에서 무시할 수 있는 정도로 감소하고, 거래수수료가 채굴보상을 지배하는 상태에서 비트코인의 안정성에 대한 잠재적인 영향을 이해할 필요가 있다.</p>
+<p>이러한 예는 블록 보상이 고정 값으로 존재하지 않을 때 일어나는 새로운 인센티브 문제다. 블록 보상이 무시할 수 있는 수준으로 줄어들고, 거래수수료만 존재하는 비트코인 시스템 내에서는, 안정성에 영향을 받을 수 있다. 이는 거래 수수료가 불규칙하기 때문이 아니라, 거래 슈슈료가 시간에 따라 변하는 특성으로 인해 전략적으로 다양한 접근을 할 수 있는 편차가 발생하기 때문이다. 이는 마이닝 풀의 참여자들이 실시간으로 자신의 보상을 극대화 할 수 있는 마이닝 풀로 'hopping’하는 pool hopping 처럼 <a href="https://arxiv.org/pdf/1112.4980.pdf" target="_blank" rel="noopener">참고</a>, 채굴자들이 더 많은 거래 수수료를 제공하는 암호화폐로 'hopping’하는 사례가 발생할 수도 있다.</p>
+<p>이러한 불량 채굴전략이 시작되면, 비트코인의 보안에 미치는 영향은 심각할 것이다. 블록체인은 포킹으로 인해 오래된 블록이 고립된 블록이 상당부분을 차지하여 51%공격을 쉽게 하고, 거래 확인 시간이 늘어날 수도 있다. 최악의 경우, 블록 보류 또는 점점 더 공격적인 undercutting으로 합의 프로토콜 전체가 깨져 버릴 수도 있다.</p>
+<p>이는 암호화폐 설계에서 블록보상의 근본적인 재고를 하게 만든다. 나카모토는 중앙이 없는 상태에서 비트코인의 초기 할당을 위해, 블록 보상이 필요하지만 이를 일시적인 악으로 보고, 거래 수수료 제도를 이상향으로 보고 있다. 그러나 이는 거래수수료 내에서 채굴자들의 행동을 인센티브 화 하는 것이 블록 보상 제도 보다 더욱 힘든 일이라는 것을 보여준다. 아마도, 이러한 인플레이션의 불가피함을 인지하고 블록 보상을 영구적으로 만들어야 할지도 모른다. 거래 수수료는 마이너들이 자신의 블록에 거래를 포함시키기 위한 동기로 존재할 것이다.</p>
+<h3 id="결론"><a class="header-anchor" href="#결론">¶</a>결론</h3>
+<p>블록 규모에 대한 논쟁에서, 블록체인 상에서의 공간은 희소한 자원이며, 사용자들이 충분히 많은 거래 수수료를 지불함으로써 거래 확인을 가속화 시킬 수 있는 시장이 나타날 것이라고 주장한다. 하지만 만약 채굴자들이 블록을 해결할때 의도적으로 ‘비트코인을 남겨두고 오는 경우’ (Undercutting Attack)에는 이러한 가정을 깨트린다. 이는 채굴자들이 채굴자들이 거래 수수료를 최대화할 필요가 없고, 높은 수수료로 거래 우선순의를 정할 이유가 없기 때문이다. 다시 말하면, 블록의 거래 규모에 제약이 가해지고, 이와 같은 undercut을 당할 경우 총 수수료에 또다른 제약이 생기게 된다. 이는 복잡한 방식으로 상호작용하게 된다.</p>
+<p>사카시 나카모토는 그의 비트코인 백서에서 아래와 같이 언급했다.</p>
+<blockquote>
+<p>채굴자들을 위한 유인책은 채굴 뿐만 아니라 거래수수료가 될수도 있다. … 사전에 결정된 수 만큼의 화폐가 유통되면, 인센티브는 전적으로 거래수수료로 전환되어, 완전히 인플레이션으로 부터 자유로울 수 있습니다.</p>
+</blockquote>
+<p>이 논문에서는 블록 보상이 채굴의 안정성을 위해 필수적이라고 본다. 최소한의 거래수수료로 체제에서 평행을 유지하는 것은 블록 보상 체계보다 극도로 어려워보이는데, 이 자체만으로 문제가 될 수도 있다. 이더리움이 하는 것처럼, 블록 보상을 영구적으로 유지함으로써 발생하는 통화 인플레이션은, 암호화폐의 안정성을 유지하기 위해 지불하는 작은 대가일 수도 있다.</p>
+<hr>
+<p>현재 비트코인의 블록 보상을 보려면 <a href="https://www.bitcoinblockhalf.com/" target="_blank" rel="noopener">여기</a>를 참고하세요 =)</p>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/27/blockchain-white-paper/" data-tooltip="블록체인 백서" aria-label="PREVIOUS: 블록체인 백서">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/26/Zerocash-Decentralized-Anonymous-Payments-from-Bitcoin/" data-tooltip="Zerocash) 비트코인 기반의 익명 분산 결제 시스템" aria-label="NEXT: Zerocash) 비트코인 기반의 익명 분산 결제 시스템">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/06/27/Instability-of-Bitcoin-Without-the-Block-Reward/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/06/27/Instability-of-Bitcoin-Without-the-Block-Reward/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/27/blockchain-white-paper/" data-tooltip="블록체인 백서" aria-label="PREVIOUS: 블록체인 백서">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/26/Zerocash-Decentralized-Anonymous-Payments-from-Bitcoin/" data-tooltip="Zerocash) 비트코인 기반의 익명 분산 결제 시스템" aria-label="NEXT: Zerocash) 비트코인 기반의 익명 분산 결제 시스템">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/06/27/Instability-of-Bitcoin-Without-the-Block-Reward/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/06/27/Instability-of-Bitcoin-Without-the-Block-Reward/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/06/27/Instability-of-Bitcoin-Without-the-Block-Reward/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/06/27/Instability-of-Bitcoin-Without-the-Block-Reward/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2018/06/27/Instability-of-Bitcoin-Without-the-Block-Reward/';
+                 
+                    this.page.identifier = '2018/06/27/Instability-of-Bitcoin-Without-the-Block-Reward/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

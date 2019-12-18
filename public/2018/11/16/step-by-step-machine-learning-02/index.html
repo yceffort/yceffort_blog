@@ -1,0 +1,856 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>Step by Step machine laerning - 02 - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"¶Classification\nMNIST는 각 숫자를 손으로 쓴 이미지를 모아놓은 데이터 셋입니다. 이 데이터 셋을 학습시켜서, 이 손글씨가 과연 숫자 몇을 의미하는지 판별 할 수 있도록 학습시켜 보겠습니다.\n¶1. 데이터 불러오기\n원래대로 라면, sklearn에서 데이터를 잘 가져와야 하지만, 왠지 잘 안될 때가 있습니다. 그 때까지 고려해서 아래와 같은 코드를 작성했습니다.\n1234567891011121314151617181920212223from six.moves import urllibfrom sklearn.datasets import fetch_mldatatry:    mnist = fetch_mldata('MNIST original')except urllib.error.HTTPError as ex:    print(\"Could not download MNIST data from mldata.org, trying alternative...\")    # Alternative method to load MNIST, if mldata.org is down    from scipy.io import loadmat    mnist_alternative_url = \"https://github.com/amplab/datascience-sp14/raw/master/lab7/mldata/mnist-original.mat\"    mnist_path = \"./mnist-original.mat\"    response = urllib.request.urlopen(mnist_alternative_url)    with open(mnist_path, \"wb\") as f:        content = response.read()        f.write(content)    mnist_raw = loadmat(mnist_path)    mnist = &#123;        \"data\": mnist_raw[\"data\"].T,        \"target\": mnist_raw[\"label\"][0],        \"COL_NAMES\": [\"label\", \"data\"],        \"DESCR\": \"mldata.org dataset: mnist-original\",    &#125;    print(\"Success!\")\n1mnist\n12345678910&#123;&apos;COL_NAMES&apos;: [&apos;label&apos;, &apos;data&apos;], &apos;DESCR&apos;: &apos;mldata.org dataset: mnist-original&apos;, &apos;data&apos;: array([[0, 0, 0, ..., 0, 0, 0],        [0, 0, 0, ..., 0, 0, 0],        [0, 0, 0, ..., 0, 0, 0],        ...,        [0, 0, 0, ..., 0, 0, 0],        [0, 0, 0, ..., 0, 0, 0],        [0, 0, 0, ..., 0, 0, 0]], dtype=uint8), &apos;target&apos;: array([0., 0., 0., ..., 9., 9., 9.])&#125;\n12X, y = mnist['data'], mnist['target']X.shape, y.shape\n1((70000, 784), (70000,))\n한번 손글씨를 보도록 하겠습니다.\n12345678910# 36000 번의 그림을 찍어보자.%matplotlib inlineimport matplotlibimport matplotlib.pyplot as pltsome_digit = X[36000]some_digit_image = some_digit.reshape(28, 28)plt.imshow(some_digit_image, cmap=matplotlib.cm.binary, interpolation=\"nearest\")plt.axis('off')plt.show()\n\n1y[36000]\ny는 5가 나오는 것을 알수 있다.\n¶2. 간단하게 학습시켜 보기\n1234567891011121314# train 과 test 을 나누었다.X_train, X_test, y_train, y_test = X[:60000], X[60000:], y[:60000], y[60000:]# 무작위로 섞어버린다.import numpy as npshuffle_index = np.random.permutation(60000)X_train, y_train = X_train[shuffle_index], y_train[shuffle_index]# y값이 5인 것들만 y_train_5 = (y_train == 5)# y값이 5인 것들만 (true, false)로y_test_5 = (y_test == 5)\n경사하강법, SGDClassifier를 사용해 보겠습니다.\n¶경사하강법\n경사하강법은, 초기값(Initial Weight)부터 경사를 따라 내려가서 최저값을 찾는 방법입니다.\n\n초기값에서 서서히 내려가다보면, 손실이 최소화되는 부분을 찾는 방법입니다. 여기를 참조하시면 잘 설명되어있습니다.\n12345# 경사하강법을 활용하여 손실점이 가장 적은 기울기를 찾아보겠습니다.from sklearn.linear_model import SGDClassifiersgd_clf = SGDClassifier(random_state=42)sgd_clf.fit(X_train, y_train_5)\n정확도를 구해보겠습니다.\n123# 정확도를 구해보자.from sklearn.model_selection import cross_val_scorecross_val_score(sgd_clf, X_train, y_train_5, cv=3, scoring=\"accuracy\")\n1array([0.9661 , 0.95445, 0.96365])\n정확도가 무려 96%에 육박하고 있네요. 정말 대단합니다. 근데 과연 이게 정확하게 측정한걸까?\n12345678910# 흠터레스팅.. 과연 근데 이게 맞는 정확도일까?# 무조건 5가 아니라고 하는 Classifier를 만들어서 한번 예측을 하게 해보자.from sklearn.base import BaseEstimatorclass Never5Classifier(BaseEstimator):    def fit(self, Y, y=None):        pass    def predict(self, X):        # X 만큼 데이터가 들어오면 모두 false로 예측을 한다.        return np.zeros((len(X), 1), dtype=bool)\n12never_5_clf = Never5Classifier()cross_val_score(never_5_clf, X_train, y_train_5, cv=3, scoring=\"accuracy\")\n1array([0.90725, 0.90865, 0.91305])\n그렇다. 숫자가 10개니까, 대충 90%가 결과가 나온 것이다.\n¶3. Confusion Matrix\n\n\nTN (True Negative): 실제 값이 false인데 예측을 false로 했다. (오류)\nFP (False Positive): 실제 값이 false인데 예측을 true로 했다. (정답)\nFN (False Negative): 실제 값이 true인데 예측을 false로 했다. (오류)\nTP (True Positive): 실제 값이 true인데 예측을 true로 헀다. (정답)\n\n12345from sklearn.model_selection import cross_val_predictfrom sklearn.metrics import confusion_matrixy_train_pred = cross_val_predict(sgd_clf, X_train, y_train_5, cv=3)confusion_matrix(y_train_5, y_train_pred)\n12array([[53884,   695],       [ 1621,  3800]])\n이 Confusion Matrix를 평가하는 방법은 여러가지가 있다.\n¶1) Precision (정밀도)\n$$precision = \\frac{TP}{TP+FP}$$\n실제 이게 맞다라고 예측했을때, 정말로 정답일 확률이다.\n¶2) Recall (재현율)\n$$recall = \\frac{TP}{TP+FN}$$\n실제로 이게 정답일때, 이것을 정답으로 잘 맞출 수 있는 확률이다.\n123from sklearn.metrics import precision_score, recall_score, f1_scoreprecision_score(y_train_5, y_train_pred)recall_score(y_train_5, y_train_pred)\n10.8453837597330367, 0.7664380798709157\n즉, 정확히 5라고 예측할 확률은 84%, 실제로 5를 5라고 판단할 확률은 76%가 되는 것이다. ㅠ.ㅠ\n¶3) F1 Score\n정밀도와 재현도를 바탕으로 각각의 가중치를 두어서 평균을 구하는 방식이다.\n$$F_1 = \\frac{2}{ \\frac{1}{precision} + \\frac{1}{recall}  }$$\n$$\\frac{TP}{TP + \\frac{FN+FP}{2}}$$\n1f1_score(y_train_5, y_train_pred)\n10.7664380798709157\n우리가 해야 할일은, Precision과 Recall을 적절히 올려주는 것이지만, 불행하게도, 이 둘 사이에는 Trade off가 존재한다.\n¶4. Precision/Recall Tradeoff\n둘 사이의 Tradeoff를 알기 위해서, SGDClassifer가 어떻게 classification을 만들어 내는지 알아보자. 각 인스턴스마다, SGDClassifier는 decision function(결정함수)를 사용하여 점수를 매기는데, 이 스코어가 threshold 보다 높으면 true로 그렇지 않으면 negative로 분류하게 된다.\n{:width=“400px”}\n왼쪽에는 낮은 점수를 기록한 negative, 오른쪽에는 높은 점수를 기록한 positive가 존재한다. threshold가 가운데에 있다고 가정했을 때, 그리고 이 threshold가 어느정도이냐에 따라서 Precision 과 Recall값이 달라지게 된다. 즉 5라고 일단 예측해버리면, Recall은 성공하겠지만, 모두 5가 아니라고 판단하면, Precision이 높아지게 될 것이다.\n실제 어떤지 살펴보자. 앞서 숫자 5짜리 이미지를 가지고 판단해본다.\n12y_scores = sgd_clf.decision_function([some_digit])y_scores\n1array([236922.67347034])\n점수가 20만점이 넘게 나왔다. 이제 threshold를 높여보자.\n123threshold = 250000y_some_digit_pred = (y_scores &gt; threshold)y_some_digit_pred\n1array([False])\nthreshold를 내려보자.\n123threshold = 0y_some_digit_pred = (y_scores &gt; threshold)y_some_digit_pred\n1array([True])\n예측이 달라지는 것을 확인할 수 있다. 이제 threshold에 따라 recall과 precision이 어떻게 달라지는지 그래프로 확인해보자.\n1234567891011121314from sklearn.metrics import precision_recall_curvey_scores = cross_val_predict(sgd_clf, X_train, y_train_5, cv=3, method='decision_function')precisions, recalls, thresholds = precision_recall_curve(y_train_5, y_scores)def plot_precision_recall_vs_threshold(precisions, recalls, thresholds):    plt.plot(thresholds, precisions[:-1], \"b--\", label='Precision')    plt.plot(thresholds, recalls[:-1], \"g-\", label='Recall')    plt.xlabel(\"Threshold\")    plt.legend(loc=\"center left\")    plt.ylim([0, 1])plot_precision_recall_vs_threshold(precisions, recalls, thresholds)plt.show()\n\n이 Tradeoff를 감안해서 , 적절한 값을 찾아야 할 것이다.\n","dateCreated":"2018-11-16T00:00:00+09:00","dateModified":"2018-11-16T19:44:01+09:00","datePublished":"2018-11-16T00:00:00+09:00","description":"¶Classification\nMNIST는 각 숫자를 손으로 쓴 이미지를 모아놓은 데이터 셋입니다. 이 데이터 셋을 학습시켜서, 이 손글씨가 과연 숫자 몇을 의미하는지 판별 할 수 있도록 학습시켜 보겠습니다.\n\n¶1. 데이터 불러오기\n원래대로 라면, sklearn에서 데이터를 잘 가져와야 하지만, 왠지 잘 안될 때가 있습니다. 그 때까지 고려해서 아래와 같은 코드를 작성했습니다.\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n\n\nfrom six.moves import ur","headline":"Step by Step machine laerning - 02","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/11/16/step-by-step-machine-learning-02/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/11/16/step-by-step-machine-learning-02/","keywords":"machine-learning, scikit-learn"}</script>
+    <meta name="description" content="¶Classification MNIST는 각 숫자를 손으로 쓴 이미지를 모아놓은 데이터 셋입니다. 이 데이터 셋을 학습시켜서, 이 손글씨가 과연 숫자 몇을 의미하는지 판별 할 수 있도록 학습시켜 보겠습니다.  ¶1. 데이터 불러오기 원래대로 라면, sklearn에서 데이터를 잘 가져와야 하지만, 왠지 잘 안될 때가 있습니다. 그 때까지 고려해서 아래와 같은">
+<meta name="keywords" content="machine-learning,scikit-learn">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Step by Step machine laerning - 02">
+<meta property="og:url" content="https://www.yceffort.kr/2018/11/16/step-by-step-machine-learning-02/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="¶Classification MNIST는 각 숫자를 손으로 쓴 이미지를 모아놓은 데이터 셋입니다. 이 데이터 셋을 학습시켜서, 이 손글씨가 과연 숫자 몇을 의미하는지 판별 할 수 있도록 학습시켜 보겠습니다.  ¶1. 데이터 불러오기 원래대로 라면, sklearn에서 데이터를 잘 가져와야 하지만, 왠지 잘 안될 때가 있습니다. 그 때까지 고려해서 아래와 같은">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://www.yceffort.kr/images/2018/11/ml-2-1.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1600/0*rBQI7uBhBKE8KT-X.png">
+<meta property="og:image" content="https://www.dataschool.io/content/images/2015/01/confusion_matrix2.png">
+<meta property="og:image" content="https://lh3.googleusercontent.com/HtSa0QJBxFJv1yCenDFzKRsraMzIx03ksh0NKVEdttMtc7ogrkU-tCF7TzathDnyV0xvGw=s170">
+<meta property="og:image" content="https://www.yceffort.kr/images/2018/11/ml-2-2.png">
+<meta property="og:updated_time" content="2018-11-16T10:44:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Step by Step machine laerning - 02">
+<meta name="twitter:description" content="¶Classification MNIST는 각 숫자를 손으로 쓴 이미지를 모아놓은 데이터 셋입니다. 이 데이터 셋을 학습시켜서, 이 손글씨가 과연 숫자 몇을 의미하는지 판별 할 수 있도록 학습시켜 보겠습니다.  ¶1. 데이터 불러오기 원래대로 라면, sklearn에서 데이터를 잘 가져와야 하지만, 왠지 잘 안될 때가 있습니다. 그 때까지 고려해서 아래와 같은">
+<meta name="twitter:image" content="https://www.yceffort.kr/images/2018/11/ml-2-1.png">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Step by Step machine laerning - 02
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2018-11-16T00:00:00+09:00">
+	
+		    Nov 16, 2018
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h2 id="classification"><a class="header-anchor" href="#classification">¶</a>Classification</h2>
+<p><a href="http://yann.lecun.com/exdb/mnist/" target="_blank" rel="noopener">MNIST</a>는 각 숫자를 손으로 쓴 이미지를 모아놓은 데이터 셋입니다. 이 데이터 셋을 학습시켜서, 이 손글씨가 과연 숫자 몇을 의미하는지 판별 할 수 있도록 학습시켜 보겠습니다.</p>
+<h3 id="1-데이터-불러오기"><a class="header-anchor" href="#1-데이터-불러오기">¶</a>1. 데이터 불러오기</h3>
+<p>원래대로 라면, sklearn에서 데이터를 잘 가져와야 하지만, 왠지 잘 안될 때가 있습니다. 그 때까지 고려해서 아래와 같은 코드를 작성했습니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> six.moves <span class="keyword">import</span> urllib</span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> fetch_mldata</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    mnist = fetch_mldata(<span class="string">'MNIST original'</span>)</span><br><span class="line"><span class="keyword">except</span> urllib.error.HTTPError <span class="keyword">as</span> ex:</span><br><span class="line">    print(<span class="string">"Could not download MNIST data from mldata.org, trying alternative..."</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># Alternative method to load MNIST, if mldata.org is down</span></span><br><span class="line">    <span class="keyword">from</span> scipy.io <span class="keyword">import</span> loadmat</span><br><span class="line">    mnist_alternative_url = <span class="string">"https://github.com/amplab/datascience-sp14/raw/master/lab7/mldata/mnist-original.mat"</span></span><br><span class="line">    mnist_path = <span class="string">"./mnist-original.mat"</span></span><br><span class="line">    response = urllib.request.urlopen(mnist_alternative_url)</span><br><span class="line">    <span class="keyword">with</span> open(mnist_path, <span class="string">"wb"</span>) <span class="keyword">as</span> f:</span><br><span class="line">        content = response.read()</span><br><span class="line">        f.write(content)</span><br><span class="line">    mnist_raw = loadmat(mnist_path)</span><br><span class="line">    mnist = &#123;</span><br><span class="line">        <span class="string">"data"</span>: mnist_raw[<span class="string">"data"</span>].T,</span><br><span class="line">        <span class="string">"target"</span>: mnist_raw[<span class="string">"label"</span>][<span class="number">0</span>],</span><br><span class="line">        <span class="string">"COL_NAMES"</span>: [<span class="string">"label"</span>, <span class="string">"data"</span>],</span><br><span class="line">        <span class="string">"DESCR"</span>: <span class="string">"mldata.org dataset: mnist-original"</span>,</span><br><span class="line">    &#125;</span><br><span class="line">    print(<span class="string">"Success!"</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mnist</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;&apos;COL_NAMES&apos;: [&apos;label&apos;, &apos;data&apos;],</span><br><span class="line"> &apos;DESCR&apos;: &apos;mldata.org dataset: mnist-original&apos;,</span><br><span class="line"> &apos;data&apos;: array([[0, 0, 0, ..., 0, 0, 0],</span><br><span class="line">        [0, 0, 0, ..., 0, 0, 0],</span><br><span class="line">        [0, 0, 0, ..., 0, 0, 0],</span><br><span class="line">        ...,</span><br><span class="line">        [0, 0, 0, ..., 0, 0, 0],</span><br><span class="line">        [0, 0, 0, ..., 0, 0, 0],</span><br><span class="line">        [0, 0, 0, ..., 0, 0, 0]], dtype=uint8),</span><br><span class="line"> &apos;target&apos;: array([0., 0., 0., ..., 9., 9., 9.])&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">X, y = mnist[<span class="string">'data'</span>], mnist[<span class="string">'target'</span>]</span><br><span class="line">X.shape, y.shape</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">((70000, 784), (70000,))</span><br></pre></td></tr></table></figure>
+<p>한번 손글씨를 보도록 하겠습니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 36000 번의 그림을 찍어보자.</span></span><br><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> matplotlib</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">some_digit = X[<span class="number">36000</span>]</span><br><span class="line">some_digit_image = some_digit.reshape(<span class="number">28</span>, <span class="number">28</span>)</span><br><span class="line">plt.imshow(some_digit_image, cmap=matplotlib.cm.binary, interpolation=<span class="string">"nearest"</span>)</span><br><span class="line">plt.axis(<span class="string">'off'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2018/11/ml-2-1.png" alt="ml-2-1.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">y[<span class="number">36000</span>]</span><br></pre></td></tr></table></figure>
+<p>y는 5가 나오는 것을 알수 있다.</p>
+<h3 id="2-간단하게-학습시켜-보기"><a class="header-anchor" href="#2-간단하게-학습시켜-보기">¶</a>2. 간단하게 학습시켜 보기</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># train 과 test 을 나누었다.</span></span><br><span class="line">X_train, X_test, y_train, y_test = X[:<span class="number">60000</span>], X[<span class="number">60000</span>:], y[:<span class="number">60000</span>], y[<span class="number">60000</span>:]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 무작위로 섞어버린다.</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">shuffle_index = np.random.permutation(<span class="number">60000</span>)</span><br><span class="line">X_train, y_train = X_train[shuffle_index], y_train[shuffle_index]</span><br><span class="line"></span><br><span class="line"><span class="comment"># y값이 5인 것들만 </span></span><br><span class="line">y_train_5 = (y_train == <span class="number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># y값이 5인 것들만 (true, false)로</span></span><br><span class="line">y_test_5 = (y_test == <span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+<p>경사하강법, <code>SGDClassifier</code>를 사용해 보겠습니다.</p>
+<h4 id="경사하강법"><a class="header-anchor" href="#경사하강법">¶</a>경사하강법</h4>
+<p>경사하강법은, 초기값(Initial Weight)부터 경사를 따라 내려가서 최저값을 찾는 방법입니다.</p>
+<p><img src="https://cdn-images-1.medium.com/max/1600/0*rBQI7uBhBKE8KT-X.png" alt="SGDClassifier"></p>
+<p>초기값에서 서서히 내려가다보면, 손실이 최소화되는 부분을 찾는 방법입니다. <a href="https://blog.naver.com/phj8498/221351582162" target="_blank" rel="noopener">여기</a>를 참조하시면 잘 설명되어있습니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 경사하강법을 활용하여 손실점이 가장 적은 기울기를 찾아보겠습니다.</span></span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> SGDClassifier</span><br><span class="line"></span><br><span class="line">sgd_clf = SGDClassifier(random_state=<span class="number">42</span>)</span><br><span class="line">sgd_clf.fit(X_train, y_train_5)</span><br></pre></td></tr></table></figure>
+<p>정확도를 구해보겠습니다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 정확도를 구해보자.</span></span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> cross_val_score</span><br><span class="line">cross_val_score(sgd_clf, X_train, y_train_5, cv=<span class="number">3</span>, scoring=<span class="string">"accuracy"</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array([0.9661 , 0.95445, 0.96365])</span><br></pre></td></tr></table></figure>
+<p>정확도가 무려 96%에 육박하고 있네요. 정말 대단합니다. 근데 과연 이게 정확하게 측정한걸까?</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 흠터레스팅.. 과연 근데 이게 맞는 정확도일까?</span></span><br><span class="line"><span class="comment"># 무조건 5가 아니라고 하는 Classifier를 만들어서 한번 예측을 하게 해보자.</span></span><br><span class="line"><span class="keyword">from</span> sklearn.base <span class="keyword">import</span> BaseEstimator</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Never5Classifier</span><span class="params">(BaseEstimator)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fit</span><span class="params">(self, Y, y=None)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self, X)</span>:</span></span><br><span class="line">        <span class="comment"># X 만큼 데이터가 들어오면 모두 false로 예측을 한다.</span></span><br><span class="line">        <span class="keyword">return</span> np.zeros((len(X), <span class="number">1</span>), dtype=bool)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">never_5_clf = Never5Classifier()</span><br><span class="line">cross_val_score(never_5_clf, X_train, y_train_5, cv=<span class="number">3</span>, scoring=<span class="string">"accuracy"</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array([0.90725, 0.90865, 0.91305])</span><br></pre></td></tr></table></figure>
+<p>그렇다. 숫자가 10개니까, 대충 90%가 결과가 나온 것이다.</p>
+<h3 id="3-confusion-matrix"><a class="header-anchor" href="#3-confusion-matrix">¶</a>3. Confusion Matrix</h3>
+<p><img src="https://www.dataschool.io/content/images/2015/01/confusion_matrix2.png" alt="confusion-matrix"></p>
+<ul>
+<li>TN (True Negative): 실제 값이 false인데 예측을 false로 했다. (오류)</li>
+<li>FP (False Positive): 실제 값이 false인데 예측을 true로 했다. (정답)</li>
+<li>FN (False Negative): 실제 값이 true인데 예측을 false로 했다. (오류)</li>
+<li>TP (True Positive): 실제 값이 true인데 예측을 true로 헀다. (정답)</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> cross_val_predict</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> confusion_matrix</span><br><span class="line"></span><br><span class="line">y_train_pred = cross_val_predict(sgd_clf, X_train, y_train_5, cv=<span class="number">3</span>)</span><br><span class="line">confusion_matrix(y_train_5, y_train_pred)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">array([[53884,   695],</span><br><span class="line">       [ 1621,  3800]])</span><br></pre></td></tr></table></figure>
+<p>이 Confusion Matrix를 평가하는 방법은 여러가지가 있다.</p>
+<h4 id="1-precision-정밀도"><a class="header-anchor" href="#1-precision-정밀도">¶</a>1) Precision (정밀도)</h4>
+<p>$$precision = \frac{TP}{TP+FP}$$</p>
+<p>실제 이게 맞다라고 예측했을때, 정말로 정답일 확률이다.</p>
+<h4 id="2-recall-재현율"><a class="header-anchor" href="#2-recall-재현율">¶</a>2) Recall (재현율)</h4>
+<p>$$recall = \frac{TP}{TP+FN}$$</p>
+<p>실제로 이게 정답일때, 이것을 정답으로 잘 맞출 수 있는 확률이다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> precision_score, recall_score, f1_score</span><br><span class="line">precision_score(y_train_5, y_train_pred)</span><br><span class="line">recall_score(y_train_5, y_train_pred)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0.8453837597330367, 0.7664380798709157</span><br></pre></td></tr></table></figure>
+<p>즉, 정확히 5라고 예측할 확률은 84%, 실제로 5를 5라고 판단할 확률은 76%가 되는 것이다. ㅠ.ㅠ</p>
+<h4 id="3-f1-score"><a class="header-anchor" href="#3-f1-score">¶</a>3) F1 Score</h4>
+<p>정밀도와 재현도를 바탕으로 각각의 가중치를 두어서 평균을 구하는 방식이다.</p>
+<p>$$F_1 = \frac{2}{ \frac{1}{precision} + \frac{1}{recall}  }$$</p>
+<p>$$\frac{TP}{TP + \frac{FN+FP}{2}}$$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f1_score(y_train_5, y_train_pred)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0.7664380798709157</span><br></pre></td></tr></table></figure>
+<p>우리가 해야 할일은, Precision과 Recall을 적절히 올려주는 것이지만, 불행하게도, 이 둘 사이에는 Trade off가 존재한다.</p>
+<h3 id="4-precision-recall-tradeoff"><a class="header-anchor" href="#4-precision-recall-tradeoff">¶</a>4. Precision/Recall Tradeoff</h3>
+<p>둘 사이의 Tradeoff를 알기 위해서, <code>SGDClassifer</code>가 어떻게 classification을 만들어 내는지 알아보자. 각 인스턴스마다, <code>SGDClassifier</code>는 <code>decision function</code>(결정함수)를 사용하여 점수를 매기는데, 이 스코어가 <code>threshold</code> 보다 높으면 true로 그렇지 않으면 negative로 분류하게 된다.</p>
+<p><img src="https://lh3.googleusercontent.com/HtSa0QJBxFJv1yCenDFzKRsraMzIx03ksh0NKVEdttMtc7ogrkU-tCF7TzathDnyV0xvGw=s170" alt="decision threshold and precision recall trade off">{:width=“400px”}</p>
+<p>왼쪽에는 낮은 점수를 기록한 negative, 오른쪽에는 높은 점수를 기록한 positive가 존재한다. <code>threshold</code>가 가운데에 있다고 가정했을 때, 그리고 이 <code>threshold</code>가 어느정도이냐에 따라서 Precision 과 Recall값이 달라지게 된다. 즉 5라고 일단 예측해버리면, Recall은 성공하겠지만, 모두 5가 아니라고 판단하면, Precision이 높아지게 될 것이다.</p>
+<p>실제 어떤지 살펴보자. 앞서 숫자 5짜리 이미지를 가지고 판단해본다.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">y_scores = sgd_clf.decision_function([some_digit])</span><br><span class="line">y_scores</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array([236922.67347034])</span><br></pre></td></tr></table></figure>
+<p>점수가 20만점이 넘게 나왔다. 이제 threshold를 높여보자.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">threshold = <span class="number">250000</span></span><br><span class="line">y_some_digit_pred = (y_scores &gt; threshold)</span><br><span class="line">y_some_digit_pred</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array([False])</span><br></pre></td></tr></table></figure>
+<p>threshold를 내려보자.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">threshold = <span class="number">0</span></span><br><span class="line">y_some_digit_pred = (y_scores &gt; threshold)</span><br><span class="line">y_some_digit_pred</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array([True])</span><br></pre></td></tr></table></figure>
+<p>예측이 달라지는 것을 확인할 수 있다. 이제 threshold에 따라 recall과 precision이 어떻게 달라지는지 그래프로 확인해보자.</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> precision_recall_curve</span><br><span class="line"></span><br><span class="line">y_scores = cross_val_predict(sgd_clf, X_train, y_train_5, cv=<span class="number">3</span>, method=<span class="string">'decision_function'</span>)</span><br><span class="line">precisions, recalls, thresholds = precision_recall_curve(y_train_5, y_scores)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_precision_recall_vs_threshold</span><span class="params">(precisions, recalls, thresholds)</span>:</span></span><br><span class="line">    plt.plot(thresholds, precisions[:<span class="number">-1</span>], <span class="string">"b--"</span>, label=<span class="string">'Precision'</span>)</span><br><span class="line">    plt.plot(thresholds, recalls[:<span class="number">-1</span>], <span class="string">"g-"</span>, label=<span class="string">'Recall'</span>)</span><br><span class="line">    plt.xlabel(<span class="string">"Threshold"</span>)</span><br><span class="line">    plt.legend(loc=<span class="string">"center left"</span>)</span><br><span class="line">    plt.ylim([<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line"></span><br><span class="line">plot_precision_recall_vs_threshold(precisions, recalls, thresholds)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2018/11/ml-2-2.png" alt="ml-2-2.png"></p>
+<p>이 Tradeoff를 감안해서 , 적절한 값을 찾아야 할 것이다.</p>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/machine-learning/">machine-learning</a> <a class="tag tag--primary tag--small t-link" href="/tags/scikit-learn/">scikit-learn</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/16/bitcoin-cash-hard-fork/" data-tooltip="비트코인 캐쉬 하드 포크에 관한 논쟁" aria-label="PREVIOUS: 비트코인 캐쉬 하드 포크에 관한 논쟁">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/15/major-challenges-to-blockchain-mainstream-adoption-industry-view/" data-tooltip="산업 관점에서 본 블록체인 적용의 어려움" aria-label="NEXT: 산업 관점에서 본 블록체인 적용의 어려움">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/11/16/step-by-step-machine-learning-02/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/11/16/step-by-step-machine-learning-02/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/16/bitcoin-cash-hard-fork/" data-tooltip="비트코인 캐쉬 하드 포크에 관한 논쟁" aria-label="PREVIOUS: 비트코인 캐쉬 하드 포크에 관한 논쟁">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/15/major-challenges-to-blockchain-mainstream-adoption-industry-view/" data-tooltip="산업 관점에서 본 블록체인 적용의 어려움" aria-label="NEXT: 산업 관점에서 본 블록체인 적용의 어려움">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/11/16/step-by-step-machine-learning-02/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/11/16/step-by-step-machine-learning-02/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/11/16/step-by-step-machine-learning-02/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/11/16/step-by-step-machine-learning-02/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2018/11/16/step-by-step-machine-learning-02/';
+                 
+                    this.page.identifier = '2018/11/16/step-by-step-machine-learning-02/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

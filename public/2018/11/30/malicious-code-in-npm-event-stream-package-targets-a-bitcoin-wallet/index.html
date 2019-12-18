@@ -1,0 +1,795 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>npm &#39;event-stream&#39; 패키지, 비트코인 지갑을 노리는 악성코드에 감염 - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Malicious code in npm ‘event-stream’ package targets a bitcoin wallet and causes 8 million downloads in two months\n원문\n지난주 캘리포니아 주 CSUF 대학의 컴퓨터 사이언스 전공인 Ayrton Sparling는, 인기있는 npm 패키지인 event-stream에 스트림이라는 악의적인 패키지가 포함되어 있다고 발표했다. 그는 EventStream의 repository 에 이 문제를 공개했다.\nevent stream npm 패키지는 원래 Dominic Tarr라는 개발자가 제작하여 유지 관리했다. 그러나 이 인기있는 패키지는 오랫동안 업데이트되지 않았다. 토머스 헌터의 포스팅에 따르면, “event stream의 소유권은 악의적인 사용자인 right9ctrl에게 이관되었다. 악의적인 사용자는 패키지에 일련의 의미있는 기여를함으로써 원본 저자의 신뢰를 얻을 수 있었다.\n악의적인 소유자는 flatmap stream이라는 악의적인 라이브러리를 이벤트 스트림 패키지에 종속성으로 추가했다. 이로 인해 모든 사용자가 이벤트 스트림 패키지 (3.3.6 버전 사용)를 다운로드하고 해당 기능을 호출했다. 악의적인 라이브러리의 다운로드는 2018년 9 월에 포함된 이후 약 8 백만 건의 다운로드가 이뤄졌다.\n악의적인 패키지는 지정된 공격을 목표로 수행되었으며, bitpay/copay라는 오픈 소스 앱에 영향을 미친다. Copay는 데스크톱과 모바일 장치 모두를 위한 안전한 비트코인 지갑 플랫폼이다. 해당 모듈의 package.json (모듈에서 의존하고 있는 패키지 목록)에서 AES256 (암호화)를 디크립트 하는 패키지가 발견되었으며, 이는 copay앱을 타겟으로 하고 있는 것으로 보였다.\n\n\nHey internet,Here is my statement on the event-stream issue: https://t.co/OmvlVuECHLThanks to everyone who sent me friendly emoji ;) I&#39;m okay. But this is really a much bigger issue (the viability of open source). I&#39;m glad that this incidence is raising awareness!&mdash; Dominic Tarr (@dominictarr) 2018년 11월 26일\n\n\nMy comment on this incident, since Dominic is getting a lot of blame and I work closely with him.1/ Yes he did a mistake (with huge proportions), but you have to understand Dominic has 700+ packages and this one is just one more. Each package has several issues and comments. https://t.co/XgYBBS7Ypb&mdash; André Staltz (@andrestaltz) 2018년 11월 26일\n\n\n\n이 악의적인 코드의 영향을받는 사용자는 이벤트 스트림의 버전 3.3.4를 사용하거나, 제거하는 것이 좋다.\n사용자 응용 프로그램이 Bitcoin을 처리하면 지난 3 개월 동안 채굴되거나 이전된 비트 코인이 지갑에 들어 가지 않았는지 확인해야 한다.\n그러나 응용 프로그램이 비트 코인을 다루지 않지만 확인이 필요한 경우, 의심스러운 활동에 대한 지난 3 개월 동안의 활동을 검사하는 것이 좋다. 이는 네트워크에서 의도하지 않은 대상으로 전송된 데이터를 분석하는 것이 필요할 것이다.\n참고\n","dateCreated":"2018-11-30T00:00:00+09:00","dateModified":"2018-11-30T19:44:01+09:00","datePublished":"2018-11-30T00:00:00+09:00","description":"Malicious code in npm ‘event-stream’ package targets a bitcoin wallet and causes 8 million downloads in two months\n\n원문\n\n지난주 캘리포니아 주 CSUF 대학의 컴퓨터 사이언스 전공인 Ayrton Sparling는, 인기있는 npm 패키지인 event-stream에 스트림이라는 악의적인 패키지가 포함되어 있다고 발표했다. 그는 EventStream의 repository 에 이 문제를 공개했다.\n\nevent stream npm 패키지는 원래 D","headline":"npm 'event-stream' 패키지, 비트코인 지갑을 노리는 악성코드에 감염","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/11/30/malicious-code-in-npm-event-stream-package-targets-a-bitcoin-wallet/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/11/30/malicious-code-in-npm-event-stream-package-targets-a-bitcoin-wallet/","keywords":"bitcoin"}</script>
+    <meta name="description" content="Malicious code in npm ‘event-stream’ package targets a bitcoin wallet and causes 8 million downloads in two months  원문  지난주 캘리포니아 주 CSUF 대학의 컴퓨터 사이언스 전공인 Ayrton Sparling는, 인기있는 npm 패키지인 event-stream에">
+<meta name="keywords" content="bitcoin">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="npm &#39;event-stream&#39; 패키지, 비트코인 지갑을 노리는 악성코드에 감염">
+<meta property="og:url" content="https://www.yceffort.kr/2018/11/30/malicious-code-in-npm-event-stream-package-targets-a-bitcoin-wallet/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="Malicious code in npm ‘event-stream’ package targets a bitcoin wallet and causes 8 million downloads in two months  원문  지난주 캘리포니아 주 CSUF 대학의 컴퓨터 사이언스 전공인 Ayrton Sparling는, 인기있는 npm 패키지인 event-stream에">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-11-30T10:44:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="npm &#39;event-stream&#39; 패키지, 비트코인 지갑을 노리는 악성코드에 감염">
+<meta name="twitter:description" content="Malicious code in npm ‘event-stream’ package targets a bitcoin wallet and causes 8 million downloads in two months  원문  지난주 캘리포니아 주 CSUF 대학의 컴퓨터 사이언스 전공인 Ayrton Sparling는, 인기있는 npm 패키지인 event-stream에">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            npm &#39;event-stream&#39; 패키지, 비트코인 지갑을 노리는 악성코드에 감염
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2018-11-30T00:00:00+09:00">
+	
+		    Nov 30, 2018
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>Malicious code in npm ‘event-stream’ package targets a bitcoin wallet and causes 8 million downloads in two months</p>
+<p><a href="https://hub.packtpub.com/malicious-code-in-npm-event-stream-package-targets-a-bitcoin-wallet-and-causes-8-million-downloads-in-two-months/" target="_blank" rel="noopener">원문</a></p>
+<p>지난주 캘리포니아 주 CSUF 대학의 컴퓨터 사이언스 전공인 Ayrton Sparling는, 인기있는 npm 패키지인 <a href="https://github.com/dominictarr/event-stream" target="_blank" rel="noopener">event-stream</a>에 스트림이라는 악의적인 패키지가 포함되어 있다고 발표했다. 그는 EventStream의 repository 에 이 문제를 <a href="https://github.com/dominictarr/event-stream/issues/116" target="_blank" rel="noopener">공개했다.</a></p>
+<p>event stream npm 패키지는 원래 <a href="https://github.com/dominictarr" target="_blank" rel="noopener">Dominic Tarr</a>라는 개발자가 제작하여 유지 관리했다. 그러나 이 인기있는 패키지는 오랫동안 업데이트되지 않았다. 토머스 헌터의 포스팅에 따르면, “event stream의 소유권은 악의적인 사용자인 <a href="https://github.com/right9ctrl" target="_blank" rel="noopener">right9ctrl</a>에게 이관되었다. 악의적인 사용자는 패키지에 일련의 의미있는 기여를함으로써 원본 저자의 신뢰를 얻을 수 있었다.</p>
+<p>악의적인 소유자는 flatmap stream이라는 악의적인 라이브러리를 이벤트 스트림 패키지에 종속성으로 추가했다. 이로 인해 모든 사용자가 이벤트 스트림 패키지 (3.3.6 버전 사용)를 다운로드하고 해당 기능을 호출했다. 악의적인 라이브러리의 다운로드는 2018년 9 월에 포함된 이후 약 8 백만 건의 다운로드가 이뤄졌다.</p>
+<p>악의적인 패키지는 지정된 공격을 목표로 수행되었으며, <a href="https://github.com/bitpay/copay" target="_blank" rel="noopener">bitpay/copay</a>라는 오픈 소스 앱에 영향을 미친다. Copay는 데스크톱과 모바일 장치 모두를 위한 안전한 비트코인 지갑 플랫폼이다. 해당 모듈의 package.json (모듈에서 의존하고 있는 패키지 목록)에서 AES256 (암호화)를 디크립트 하는 패키지가 발견되었으며, 이는 copay앱을 타겟으로 하고 있는 것으로 보였다.</p>
+
+
+<blockquote class="twitter-tweet" data-lang="ko"><p lang="en" dir="ltr">Hey internet,<br><br>Here is my statement on the event-stream issue: <a href="https://t.co/OmvlVuECHL" target="_blank" rel="noopener">https://t.co/OmvlVuECHL</a><br><br>Thanks to everyone who sent me friendly emoji ;) I&#39;m okay. But this is really a much bigger issue (the viability of open source). I&#39;m glad that this incidence is raising awareness!</p>&mdash; Dominic Tarr (@dominictarr) <a href="https://twitter.com/dominictarr/status/1067186943304159233?ref_src=twsrc%5Etfw" target="_blank" rel="noopener">2018년 11월 26일</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<blockquote class="twitter-tweet" data-lang="ko"><p lang="en" dir="ltr">My comment on this incident, since Dominic is getting a lot of blame and I work closely with him.<br><br>1/ Yes he did a mistake (with huge proportions), but you have to understand Dominic has 700+ packages and this one is just one more. Each package has several issues and comments. <a href="https://t.co/XgYBBS7Ypb" target="_blank" rel="noopener">https://t.co/XgYBBS7Ypb</a></p>&mdash; André Staltz (@andrestaltz) <a href="https://twitter.com/andrestaltz/status/1067157915398746114?ref_src=twsrc%5Etfw" target="_blank" rel="noopener">2018년 11월 26일</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>이 악의적인 코드의 영향을받는 사용자는 이벤트 스트림의 버전 3.3.4를 사용하거나, 제거하는 것이 좋다.</p>
+<p>사용자 응용 프로그램이 Bitcoin을 처리하면 지난 3 개월 동안 채굴되거나 이전된 비트 코인이 지갑에 들어 가지 않았는지 확인해야 한다.</p>
+<p>그러나 응용 프로그램이 비트 코인을 다루지 않지만 확인이 필요한 경우, 의심스러운 활동에 대한 지난 3 개월 동안의 활동을 검사하는 것이 좋다. 이는 네트워크에서 의도하지 않은 대상으로 전송된 데이터를 분석하는 것이 필요할 것이다.</p>
+<p><a href="https://github.com/dominictarr/event-stream/issues/116" target="_blank" rel="noopener">참고</a></p>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/bitcoin/">bitcoin</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/12/15/ibm-blockchain-maersk-shipping-struggling/" data-tooltip="IBM과 maersk가 글로벌 운송용 블록체인 파트너를 찾는데 어려움을 겪고 있어" aria-label="PREVIOUS: IBM과 maersk가 글로벌 운송용 블록체인 파트너를 찾는데 어려움을 겪고 있어">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/23/decentralized-ai-benefits/" data-tooltip="탈중앙화된 AI: 블록체인의 미래" aria-label="NEXT: 탈중앙화된 AI: 블록체인의 미래">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/11/30/malicious-code-in-npm-event-stream-package-targets-a-bitcoin-wallet/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/11/30/malicious-code-in-npm-event-stream-package-targets-a-bitcoin-wallet/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/12/15/ibm-blockchain-maersk-shipping-struggling/" data-tooltip="IBM과 maersk가 글로벌 운송용 블록체인 파트너를 찾는데 어려움을 겪고 있어" aria-label="PREVIOUS: IBM과 maersk가 글로벌 운송용 블록체인 파트너를 찾는데 어려움을 겪고 있어">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/23/decentralized-ai-benefits/" data-tooltip="탈중앙화된 AI: 블록체인의 미래" aria-label="NEXT: 탈중앙화된 AI: 블록체인의 미래">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/11/30/malicious-code-in-npm-event-stream-package-targets-a-bitcoin-wallet/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/11/30/malicious-code-in-npm-event-stream-package-targets-a-bitcoin-wallet/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/11/30/malicious-code-in-npm-event-stream-package-targets-a-bitcoin-wallet/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/11/30/malicious-code-in-npm-event-stream-package-targets-a-bitcoin-wallet/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2018/11/30/malicious-code-in-npm-event-stream-package-targets-a-bitcoin-wallet/';
+                 
+                    this.page.identifier = '2018/11/30/malicious-code-in-npm-event-stream-package-targets-a-bitcoin-wallet/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

@@ -1,0 +1,799 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>Bitcoin) 비트코인과 빨간풍선 - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"비트코인과 빨간풍선\n출처\n2009년 국방부는 미국 전역에 흩어진 10개의 빨간 풍선을 10개를 먼저 찾으면, 4만달러를 준다는 이벤트를 한 적이 있다. 이는 방위고등연구계획국(이하 DARPA)에서 인터넷의 정보 확산의 속도와 정확도를 측정하기에 한 실험이었다. 참고로 이곳은 인터넷을 만든 곳이기도 하다.\n최초에 DARPA는 모든 풍선을 다 찾는데 9일 정도를 예상헀지만, MIT의 팀은 겨우 9시간만에 모든 풍선의 위치를 찾는데 성공하였다.\n그들이 이용한 방법은 아래와 같다.\n\n풍선을 찾은 사람에게는 $2000를, 풍선을 찾은 사실을 전한 다음 사람에게는 $1000을, 그 사실을 전달하는 다음 사람에게는 $500 형식으로, 풍선에 대한 정보가 한단계 씩 넘어 갈 때 마다 2000에서 절반의 보을 준 것이다. 이 방법을 활용할 경우, 최초 보상 n의 두배를 넘지 않는다. 이 전략은 유효했고, MIT팀은 승리할 수 있었다.\n비트코인으로 돌아가보자.\n비트코인은 P2P네트워크를 사용하므로, 모든 거래내역을 노드가 인지하기 위해서 네트워크로 해당 거래 내역을 전파해야 한다. 그러나 현재 비트코인 구조에서는, 거래내역을 전파한다고 해서 특별한 인센티브가 부여되지 않는다. 오로지 block을 만드는 Miner에게만 인센티브가 제공되는 것이다. 만약 MIT의 빨간 풍선처럼, 해당 정보를 전파한 사람들에게도 인센티브가 부여된다면 보다 효과적으로 블록체인 네트워크가 동작할 수 있지 않을까? 이 논문에서는 이러한 전략을 Sybil-proofness라고 한다. 이 논문에서는 아주작은 payment overhead만 있다면, 반복적으로 우월전략을 제거함으로서 이러한 전략을 달성할 수 있다고 주장한다.\n다시 빨간풍선 찾기로 돌아와보자.\n만약 빨간풍선이 나타났다라고 속이는 사용자가 있고, 그 속인 사실을 전파하는 사용자가 반복해서 발생한다면 이 전략은 유용하지 않게 된다. 비트코인도 마찬가지이기 때문에 정보를 올바르게 전파하는 노드에게는 인센티브를, 그리고 이러한 경쟁에서 발생하는 인센티브를 상쇄해야 한다.\n비트코인은 P2P 네트워크에 의존하여 모든 거래를 확인하고 승인한다. 앨리스가 호텔에 30 비트코인을 지불한다고 가정해보자. 그녀는 암호로 30비트코인을 주는 거래에 사인한다. 네트워크의 노드들은 이 거래 내역을 다른 노드에게 알린다. 트랜잭션을 수신한 노드는 해당 거래가 정말 앨리스가 사인했는지 확인할 것인하고, 실제로 해당 거래에서 그 금액이 그녀의 소유인지 확인한다. 그리고 노드는 그 거래를 승인하기 위하여 컴퓨터 퍼즐을 풀 것이다. (hash function 으로 암호화 되어 있으므로) 만약 이 노드가 성공적으로 거래를 승인했다면 (hash의 원래값을 찾았다면) 다른 모든 노드에 전파할 것이다. 결국 네트워크 상의 모든 노드들은 해당 거래 내역에 대해 동의할 것이다.\n이런 거래 승인 과정을 장려하기 위해, 거래를 성공적으로 승인한 노드에게는 미리 주어진 양의 비트코인이 보상으로 주어진다. 그리고 이는 비트코인의 공급으로 작용한다. 그러나 비트코인 프로토콜은 총 비트코인의 양에 제한을 두기위해 화폐 창출속도가 기하급수적으로 감소 하도록 설계하였다. 노드에서 이런 지불이 서서히 작아지기 때문에, 비트코인 소유자들은 이러한 거래를 승인하기 위해서 승인 노드에 수수료를 지불해야 한다.\n바로 이 지점이 문제다.\n노드는 가장 먼저 이 거래내역을 알아내고 승인함으로써 거래 수수료를 취할 수 있기 때문에, 네트워크에서 전파되는 정보를 알 수 있는 동기가 부여되는 것이다. 그런데 만약, 단하나의 노드가 트랜잭션을 인지하고 있다면, 이 거래를 전파하지 않음으로서 경쟁자들을 제거하는 효과를 가져올 수 있다. 경쟁이 없다면, 해당 노드는 결국 수수료를 챙기는데 성공하게 될 것이다. 그리고 이는 결과적으로 승인에 오랜기간이 소요되게 할 것이다.\n이를 해결하기 위해서\n\n첫번째로, 정보를 전파하는 것과 중복이 없는 것에 인센티브를 부여한다. 이렇게 한다면, 노드가 스스로 정보를 복제하지 않고 거래내역을 전파하는 것에 인센티브를 갖게 될 것이고, 또한 거래가 승인이 될때까지 복제하지 않을 동기도 갖게 될 것이다.\n두번째로, 거래내역이 전파되는 마지막 단계에서 대부분의 노드가 해당 트랜잭션을 알수 있도록 한다.\n마지막으로, 이를 구현하고 initial distribution 단계에서 부담을 줄이기 위해, 작은 양의 reward만을 사용한다.\n\n","dateCreated":"2018-06-19T00:00:00+09:00","dateModified":"2018-06-19T12:00:23+09:00","datePublished":"2018-06-19T00:00:00+09:00","description":"비트코인과 빨간풍선\n\n출처\n\n2009년 국방부는 미국 전역에 흩어진 10개의 빨간 풍선을 10개를 먼저 찾으면, 4만달러를 준다는 이벤트를 한 적이 있다. 이는 방위고등연구계획국(이하 DARPA)에서 인터넷의 정보 확산의 속도와 정확도를 측정하기에 한 실험이었다. 참고로 이곳은 인터넷을 만든 곳이기도 하다.\n\n최초에 DARPA는 모든 풍선을 다 찾는데 9일 정도를 예상헀지만, MIT의 팀은 겨우 9시간만에 모든 풍선의 위치를 찾는데 성공하였다.\n그들이 이용한 방법은 아래와 같다.\n\n\n\n풍선을 찾은 사람에게는 $2000를, 풍선을 찾","headline":"Bitcoin) 비트코인과 빨간풍선","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/06/19/on-bitcoin-and-red-balloons/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/06/19/on-bitcoin-and-red-balloons/","keywords":"bitcoin"}</script>
+    <meta name="description" content="비트코인과 빨간풍선  출처  2009년 국방부는 미국 전역에 흩어진 10개의 빨간 풍선을 10개를 먼저 찾으면, 4만달러를 준다는 이벤트를 한 적이 있다. 이는 방위고등연구계획국(이하 DARPA)에서 인터넷의 정보 확산의 속도와 정확도를 측정하기에 한 실험이었다. 참고로 이곳은 인터넷을 만든 곳이기도 하다.  최초에 DARPA는 모든 풍선을 다 찾는데 9일">
+<meta name="keywords" content="bitcoin">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Bitcoin) 비트코인과 빨간풍선">
+<meta property="og:url" content="https://www.yceffort.kr/2018/06/19/on-bitcoin-and-red-balloons/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="비트코인과 빨간풍선  출처  2009년 국방부는 미국 전역에 흩어진 10개의 빨간 풍선을 10개를 먼저 찾으면, 4만달러를 준다는 이벤트를 한 적이 있다. 이는 방위고등연구계획국(이하 DARPA)에서 인터넷의 정보 확산의 속도와 정확도를 측정하기에 한 실험이었다. 참고로 이곳은 인터넷을 만든 곳이기도 하다.  최초에 DARPA는 모든 풍선을 다 찾는데 9일">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://deliveryimages.acm.org/10.1145/1930000/1924441/figs/f2.jpg">
+<meta property="og:updated_time" content="2018-06-19T03:00:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Bitcoin) 비트코인과 빨간풍선">
+<meta name="twitter:description" content="비트코인과 빨간풍선  출처  2009년 국방부는 미국 전역에 흩어진 10개의 빨간 풍선을 10개를 먼저 찾으면, 4만달러를 준다는 이벤트를 한 적이 있다. 이는 방위고등연구계획국(이하 DARPA)에서 인터넷의 정보 확산의 속도와 정확도를 측정하기에 한 실험이었다. 참고로 이곳은 인터넷을 만든 곳이기도 하다.  최초에 DARPA는 모든 풍선을 다 찾는데 9일">
+<meta name="twitter:image" content="http://deliveryimages.acm.org/10.1145/1930000/1924441/figs/f2.jpg">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Bitcoin) 비트코인과 빨간풍선
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2018-06-19T00:00:00+09:00">
+	
+		    Jun 19, 2018
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>비트코인과 빨간풍선</p>
+<p><a href="https://arxiv.org/pdf/1111.2626.pdf" target="_blank" rel="noopener">출처</a></p>
+<p>2009년 국방부는 미국 전역에 흩어진 10개의 빨간 풍선을 10개를 먼저 찾으면, 4만달러를 준다는 이벤트를 한 적이 있다. 이는 방위고등연구계획국(이하 DARPA)에서 인터넷의 정보 확산의 속도와 정확도를 측정하기에 한 실험이었다. 참고로 이곳은 인터넷을 만든 곳이기도 하다.</p>
+<p>최초에 DARPA는 모든 풍선을 다 찾는데 9일 정도를 예상헀지만, MIT의 팀은 겨우 9시간만에 모든 풍선의 위치를 찾는데 성공하였다.<br>
+그들이 이용한 방법은 아래와 같다.</p>
+<p><img src="http://deliveryimages.acm.org/10.1145/1930000/1924441/figs/f2.jpg" alt="find-red-baloon"></p>
+<p>풍선을 찾은 사람에게는 $2000를, 풍선을 찾은 사실을 전한 다음 사람에게는 $1000을, 그 사실을 전달하는 다음 사람에게는 $500 형식으로, 풍선에 대한 정보가 한단계 씩 넘어 갈 때 마다 2000에서 절반의 보을 준 것이다. 이 방법을 활용할 경우, 최초 보상 n의 두배를 넘지 않는다. 이 전략은 유효했고, MIT팀은 승리할 수 있었다.</p>
+<p>비트코인으로 돌아가보자.</p>
+<p>비트코인은 P2P네트워크를 사용하므로, 모든 거래내역을 노드가 인지하기 위해서 네트워크로 해당 거래 내역을 전파해야 한다. 그러나 현재 비트코인 구조에서는, 거래내역을 전파한다고 해서 특별한 인센티브가 부여되지 않는다. 오로지 block을 만드는 Miner에게만 인센티브가 제공되는 것이다. 만약 MIT의 빨간 풍선처럼, 해당 정보를 전파한 사람들에게도 인센티브가 부여된다면 보다 효과적으로 블록체인 네트워크가 동작할 수 있지 않을까? 이 논문에서는 이러한 전략을 <code>Sybil-proofness</code>라고 한다. 이 논문에서는 아주작은 payment overhead만 있다면, 반복적으로 우월전략을 제거함으로서 이러한 전략을 달성할 수 있다고 주장한다.</p>
+<p>다시 빨간풍선 찾기로 돌아와보자.<br>
+만약 빨간풍선이 나타났다라고 속이는 사용자가 있고, 그 속인 사실을 전파하는 사용자가 반복해서 발생한다면 이 전략은 유용하지 않게 된다. 비트코인도 마찬가지이기 때문에 정보를 올바르게 전파하는 노드에게는 인센티브를, 그리고 이러한 경쟁에서 발생하는 인센티브를 상쇄해야 한다.</p>
+<p>비트코인은 P2P 네트워크에 의존하여 모든 거래를 확인하고 승인한다. 앨리스가 호텔에 30 비트코인을 지불한다고 가정해보자. 그녀는 암호로 30비트코인을 주는 거래에 사인한다. 네트워크의 노드들은 이 거래 내역을 다른 노드에게 알린다. 트랜잭션을 수신한 노드는 해당 거래가 정말 앨리스가 사인했는지 확인할 것인하고, 실제로 해당 거래에서 그 금액이 그녀의 소유인지 확인한다. 그리고 노드는 그 거래를 승인하기 위하여 컴퓨터 퍼즐을 풀 것이다. (hash function 으로 암호화 되어 있으므로) 만약 이 노드가 성공적으로 거래를 승인했다면 (hash의 원래값을 찾았다면) 다른 모든 노드에 전파할 것이다. 결국 네트워크 상의 모든 노드들은 해당 거래 내역에 대해 동의할 것이다.</p>
+<p>이런 거래 승인 과정을 장려하기 위해, 거래를 성공적으로 승인한 노드에게는 미리 주어진 양의 비트코인이 보상으로 주어진다. 그리고 이는 비트코인의 공급으로 작용한다. 그러나 비트코인 프로토콜은 총 비트코인의 양에 제한을 두기위해 화폐 창출속도가 기하급수적으로 감소 하도록 설계하였다. 노드에서 이런 지불이 서서히 작아지기 때문에, 비트코인 소유자들은 이러한 거래를 승인하기 위해서 승인 노드에 수수료를 지불해야 한다.</p>
+<p>바로 이 지점이 문제다.</p>
+<p>노드는 가장 먼저 이 거래내역을 알아내고 승인함으로써 거래 수수료를 취할 수 있기 때문에, 네트워크에서 전파되는 정보를 알 수 있는 동기가 부여되는 것이다. 그런데 만약, 단하나의 노드가 트랜잭션을 인지하고 있다면, 이 거래를 전파하지 않음으로서 경쟁자들을 제거하는 효과를 가져올 수 있다. 경쟁이 없다면, 해당 노드는 결국 수수료를 챙기는데 성공하게 될 것이다. 그리고 이는 결과적으로 승인에 오랜기간이 소요되게 할 것이다.</p>
+<p>이를 해결하기 위해서</p>
+<ul>
+<li>첫번째로, 정보를 전파하는 것과 중복이 없는 것에 인센티브를 부여한다. 이렇게 한다면, 노드가 스스로 정보를 복제하지 않고 거래내역을 전파하는 것에 인센티브를 갖게 될 것이고, 또한 거래가 승인이 될때까지 복제하지 않을 동기도 갖게 될 것이다.</li>
+<li>두번째로, 거래내역이 전파되는 마지막 단계에서 대부분의 노드가 해당 트랜잭션을 알수 있도록 한다.</li>
+<li>마지막으로, 이를 구현하고 initial distribution 단계에서 부담을 줄이기 위해, 작은 양의 reward만을 사용한다.</li>
+</ul>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/bitcoin/">bitcoin</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/19/bitcoin-backbone-protocol/" data-tooltip="Bitcoin) 비트코인 백본 프로토콜, 분석과 어플리케이션" aria-label="PREVIOUS: Bitcoin) 비트코인 백본 프로토콜, 분석과 어플리케이션">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/18/research-perspectives-and-challenges-for-bitcoin-and-cryptocurrencies/" data-tooltip="Blockchain) 비트코인과 암호화폐의 연구관점 및 과제" aria-label="NEXT: Blockchain) 비트코인과 암호화폐의 연구관점 및 과제">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/06/19/on-bitcoin-and-red-balloons/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/06/19/on-bitcoin-and-red-balloons/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/19/bitcoin-backbone-protocol/" data-tooltip="Bitcoin) 비트코인 백본 프로토콜, 분석과 어플리케이션" aria-label="PREVIOUS: Bitcoin) 비트코인 백본 프로토콜, 분석과 어플리케이션">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/18/research-perspectives-and-challenges-for-bitcoin-and-cryptocurrencies/" data-tooltip="Blockchain) 비트코인과 암호화폐의 연구관점 및 과제" aria-label="NEXT: Blockchain) 비트코인과 암호화폐의 연구관점 및 과제">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/06/19/on-bitcoin-and-red-balloons/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/06/19/on-bitcoin-and-red-balloons/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/06/19/on-bitcoin-and-red-balloons/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/06/19/on-bitcoin-and-red-balloons/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2018/06/19/on-bitcoin-and-red-balloons/';
+                 
+                    this.page.identifier = '2018/06/19/on-bitcoin-and-red-balloons/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

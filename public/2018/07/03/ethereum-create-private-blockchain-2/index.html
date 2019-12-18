@@ -1,0 +1,784 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>이더리움 - 프라이빗 블록체인 만들기 (2) - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"여기에서 이어집니다.\n자바스크립트 기반의 콘솔입니다.\n¶1. 어카운트 확인하기\n12&gt; eth.accounts[&quot;0x44e74080949320292839b9a0df55e4459dd51434&quot;]\n아까 생성한 한계의 어카운트가 보입니다.\n¶2. 잔고 확인하기\n12&gt; eth.getBalance(eth.accounts[0])300000\n첫 제네시스 블록을 만들때 alloc 했던 양 만큼 할당이 되어 있네요.\n¶3. 단위 변경하기\n그런데 저 단위는 사실 ether가 아니고 wei입니다. 아래 처럼 변환하면 됩니다. 참고\n12&gt;  web3.fromWei(eth.getBalance(eth.accounts[0], &quot;ether&quot;));&quot;0&quot;\n¶4. 채굴 시작하기\n12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152&gt; miner.start()INFO [07-03|15:33:29] Updated mining threads                   threads=0INFO [07-03|15:33:29] Transaction pool price threshold updated price=18000000000null&gt; INFO [07-03|15:33:29] Starting mining operationINFO [07-03|15:33:29] Commit new mining work                   number=1 txs=0 uncles=0 elapsed=597.603µsINFO [07-03|15:33:31] Generating DAG in progress               epoch=0 percentage=0 elapsed=413.009msINFO [07-03|15:33:31] Generating DAG in progress               epoch=0 percentage=1 elapsed=751.934msINFO [07-03|15:33:31] Generating DAG in progress               epoch=0 percentage=2 elapsed=1.091sINFO [07-03|15:33:32] Generating DAG in progress               epoch=0 percentage=3 elapsed=1.437sINFO [07-03|15:33:32] Generating DAG in progress               epoch=0 percentage=4 elapsed=1.769sINFO [07-03|15:33:32] Generating DAG in progress               epoch=0 percentage=5 elapsed=2.142sINFO [07-03|15:33:33] Generating DAG in progress               epoch=0 percentage=6 elapsed=2.480s...INFO elapsed=36.298sINFO [07-03|15:34:07] Generating DAG in progress               epoch=0 percentage=94 elapsed=36.666sINFO [07-03|15:34:07] Generating DAG in progress               epoch=0 percentage=95 elapsed=37.058sINFO [07-03|15:34:08] Generating DAG in progress               epoch=0 percentage=96 elapsed=37.432sINFO [07-03|15:34:08] Generating DAG in progress               epoch=0 percentage=97 elapsed=37.796sINFO [07-03|15:34:08] Generating DAG in progress               epoch=0 percentage=98 elapsed=38.208sINFO [07-03|15:34:10] Generating DAG in progress               epoch=0 percentage=99 elapsed=39.469sINFO [07-03|15:34:10] Generated ethash verification cache      epoch=0 elapsed=39.471sINFO [07-03|15:34:11] Successfully sealed new block            number=1 hash=48f248…d2232eINFO [07-03|15:34:11] 🔨 mined potential block                  number=1 hash=48f248…d2232eINFO [07-03|15:34:11] Commit new mining work                   number=2 txs=0 uncles=0 elapsed=597.26µsINFO [07-03|15:34:11] Successfully sealed new block            number=2 hash=c5c768…b1e445INFO [07-03|15:34:11] 🔨 mined potential block                  number=2 hash=c5c768…b1e445INFO [07-03|15:34:11] Commit new mining work                   number=3 txs=0 uncles=0 elapsed=192.809µsINFO [07-03|15:34:12] Successfully sealed new block            number=3 hash=163387…646389INFO [07-03|15:34:12] 🔨 mined potential block                  number=3 hash=163387…646389INFO [07-03|15:34:12] Commit new mining work                   number=4 txs=0 uncles=0 elapsed=163.111µsINFO [07-03|15:34:12] Generating DAG in progress               epoch=1 percentage=0  elapsed=955.391msINFO [07-03|15:34:12] Successfully sealed new block            number=4 hash=cee703…d4001cINFO [07-03|15:34:12] 🔨 mined potential block                  number=4 hash=cee703…d4001cINFO [07-03|15:34:12] Mining too far in the future             wait=2sINFO [07-03|15:34:12] Generating DAG in progress               epoch=1 percentage=1  elapsed=1.478sINFO [07-03|15:34:13] Generating DAG in progress               epoch=1 percentage=2  elapsed=1.855sINFO [07-03|15:34:13] Generating DAG in progress               epoch=1 percentage=3  elapsed=2.250sINFO [07-03|15:34:14] Generating DAG in progress               epoch=1 percentage=4  elapsed=2.631sINFO [07-03|15:34:14] Generating DAG in progress               epoch=1 percentage=5  elapsed=3.005sINFO [07-03|15:34:14] Commit new mining work                   number=5 txs=0 uncles=0 elapsed=2.003sINFO [07-03|15:34:14] Generating DAG in progress               epoch=1 percentage=6  elapsed=3.558sINFO [07-03|15:34:15] Successfully sealed new block            number=5 hash=c7111e…cabeefINFO [07-03|15:34:15] 🔨 mined potential block                  number=5 hash=c7111e…cabeefINFO [07-03|15:34:15] Commit new mining work                   number=6 txs=0 uncles=0 elapsed=170.026µsINFO [07-03|15:34:15] Generating DAG in progress               epoch=1 percentage=7  elapsed=4.427sINFO [07-03|15:34:16] Successfully sealed new block            number=6 hash=230787…ba48a2INFO [07-03|15:34:16] 🔗 block reached canonical chain          number=1 hash=48f248…d2232eINFO [07-03|15:34:16] 🔨 mined potential block                  number=6 hash=230787…ba48a2INFO [07-03|15:34:16] Commit new mining work                   number=7 txs=0 uncles=0 elapsed=141.75µsINFO [07-03|15:34:16] Successfully sealed new block            number=7 hash=3a22b7…e4e015INFO [07-03|15:34:16] 🔗 block reached canonical chain          number=2 hash=c5c768…b1e445\n¶5. 외부에서 접속하기\n1234567deploy@jayg-blockchain2:~$ geth attach http://1.1.1.1:8123Welcome to the Geth JavaScript console!instance: Geth/PrivateNetwork/v1.8.11-stable-dea1ce05/linux-amd64/go1.10coinbase: 0x44e74080949320292839b9a0df55e4459dd51434at block: 25 (Tue, 03 Jul 2018 15:34:38 KST) modules: eth:1.0 miner:1.0 net:1.0 rpc:1.0 web3:1.0\n","dateCreated":"2018-07-03T00:00:00+09:00","dateModified":"2018-07-03T15:00:48+09:00","datePublished":"2018-07-03T00:00:00+09:00","description":"여기에서 이어집니다.\n\n자바스크립트 기반의 콘솔입니다.\n\n¶1. 어카운트 확인하기\n1\n2\n\n\n> eth.accounts\n[\"0x44e74080949320292839b9a0df55e4459dd51434\"]\n\n\n아까 생성한 한계의 어카운트가 보입니다.\n\n¶2. 잔고 확인하기\n1\n2\n\n\n> eth.getBalance(eth.accounts[0])\n300000\n\n\n첫 제네시스 블록을 만들때 alloc 했던 양 만큼 할당이 되어 있네요.\n\n¶3. 단위 변경하기\n그런데 저 단위는 사실 ether가 아니고 wei입니다. 아래 처럼 변환하면 됩니","headline":"이더리움 - 프라이빗 블록체인 만들기 (2)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/07/03/ethereum-create-private-blockchain-2/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/07/03/ethereum-create-private-blockchain-2/"}</script>
+    <meta name="description" content="여기에서 이어집니다.  자바스크립트 기반의 콘솔입니다.  ¶1. 어카운트 확인하기 1 2   &amp;gt; eth.accounts [&quot;0x44e74080949320292839b9a0df55e4459dd51434&quot;]   아까 생성한 한계의 어카운트가 보입니다.  ¶2. 잔고 확인하기 1 2   &amp;gt; eth.getBalance(eth.accounts[0]) 300000">
+<meta name="keywords" content="programming,innovation,technology">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="이더리움 - 프라이빗 블록체인 만들기 (2)">
+<meta property="og:url" content="https://www.yceffort.kr/2018/07/03/ethereum-create-private-blockchain-2/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="여기에서 이어집니다.  자바스크립트 기반의 콘솔입니다.  ¶1. 어카운트 확인하기 1 2   &amp;gt; eth.accounts [&quot;0x44e74080949320292839b9a0df55e4459dd51434&quot;]   아까 생성한 한계의 어카운트가 보입니다.  ¶2. 잔고 확인하기 1 2   &amp;gt; eth.getBalance(eth.accounts[0]) 300000">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-07-03T06:00:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="이더리움 - 프라이빗 블록체인 만들기 (2)">
+<meta name="twitter:description" content="여기에서 이어집니다.  자바스크립트 기반의 콘솔입니다.  ¶1. 어카운트 확인하기 1 2   &amp;gt; eth.accounts [&quot;0x44e74080949320292839b9a0df55e4459dd51434&quot;]   아까 생성한 한계의 어카운트가 보입니다.  ¶2. 잔고 확인하기 1 2   &amp;gt; eth.getBalance(eth.accounts[0]) 300000">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            이더리움 - 프라이빗 블록체인 만들기 (2)
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2018-07-03T00:00:00+09:00">
+	
+		    Jul 03, 2018
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p><a href="/2018/07/03/ethereum-create-private-blockchain-1/">여기</a>에서 이어집니다.</p>
+<p>자바스크립트 기반의 콘솔입니다.</p>
+<h3 id="1-어카운트-확인하기"><a class="header-anchor" href="#1-어카운트-확인하기">¶</a>1. 어카운트 확인하기</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; eth.accounts</span><br><span class="line">[&quot;0x44e74080949320292839b9a0df55e4459dd51434&quot;]</span><br></pre></td></tr></table></figure>
+<p>아까 생성한 한계의 어카운트가 보입니다.</p>
+<h3 id="2-잔고-확인하기"><a class="header-anchor" href="#2-잔고-확인하기">¶</a>2. 잔고 확인하기</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; eth.getBalance(eth.accounts[0])</span><br><span class="line">300000</span><br></pre></td></tr></table></figure>
+<p>첫 제네시스 블록을 만들때 alloc 했던 양 만큼 할당이 되어 있네요.</p>
+<h3 id="3-단위-변경하기"><a class="header-anchor" href="#3-단위-변경하기">¶</a>3. 단위 변경하기</h3>
+<p>그런데 저 단위는 사실 ether가 아니고 wei입니다. 아래 처럼 변환하면 됩니다. <a href="https://github.com/ethereum/wiki/wiki/JavaScript-API#web3fromwei" target="_blank" rel="noopener">참고</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt;  web3.fromWei(eth.getBalance(eth.accounts[0], &quot;ether&quot;));</span><br><span class="line">&quot;0&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="4-채굴-시작하기"><a class="header-anchor" href="#4-채굴-시작하기">¶</a>4. 채굴 시작하기</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">&gt; miner.start()</span><br><span class="line">INFO [07-03|15:33:29] Updated mining threads                   threads=0</span><br><span class="line">INFO [07-03|15:33:29] Transaction pool price threshold updated price=18000000000</span><br><span class="line">null</span><br><span class="line">&gt; INFO [07-03|15:33:29] Starting mining operation</span><br><span class="line">INFO [07-03|15:33:29] Commit new mining work                   number=1 txs=0 uncles=0 elapsed=597.603µs</span><br><span class="line">INFO [07-03|15:33:31] Generating DAG in progress               epoch=0 percentage=0 elapsed=413.009ms</span><br><span class="line">INFO [07-03|15:33:31] Generating DAG in progress               epoch=0 percentage=1 elapsed=751.934ms</span><br><span class="line">INFO [07-03|15:33:31] Generating DAG in progress               epoch=0 percentage=2 elapsed=1.091s</span><br><span class="line">INFO [07-03|15:33:32] Generating DAG in progress               epoch=0 percentage=3 elapsed=1.437s</span><br><span class="line">INFO [07-03|15:33:32] Generating DAG in progress               epoch=0 percentage=4 elapsed=1.769s</span><br><span class="line">INFO [07-03|15:33:32] Generating DAG in progress               epoch=0 percentage=5 elapsed=2.142s</span><br><span class="line">INFO [07-03|15:33:33] Generating DAG in progress               epoch=0 percentage=6 elapsed=2.480s</span><br><span class="line">...</span><br><span class="line">INFO elapsed=36.298s</span><br><span class="line">INFO [07-03|15:34:07] Generating DAG in progress               epoch=0 percentage=94 elapsed=36.666s</span><br><span class="line">INFO [07-03|15:34:07] Generating DAG in progress               epoch=0 percentage=95 elapsed=37.058s</span><br><span class="line">INFO [07-03|15:34:08] Generating DAG in progress               epoch=0 percentage=96 elapsed=37.432s</span><br><span class="line">INFO [07-03|15:34:08] Generating DAG in progress               epoch=0 percentage=97 elapsed=37.796s</span><br><span class="line">INFO [07-03|15:34:08] Generating DAG in progress               epoch=0 percentage=98 elapsed=38.208s</span><br><span class="line">INFO [07-03|15:34:10] Generating DAG in progress               epoch=0 percentage=99 elapsed=39.469s</span><br><span class="line">INFO [07-03|15:34:10] Generated ethash verification cache      epoch=0 elapsed=39.471s</span><br><span class="line">INFO [07-03|15:34:11] Successfully sealed new block            number=1 hash=48f248…d2232e</span><br><span class="line">INFO [07-03|15:34:11] 🔨 mined potential block                  number=1 hash=48f248…d2232e</span><br><span class="line">INFO [07-03|15:34:11] Commit new mining work                   number=2 txs=0 uncles=0 elapsed=597.26µs</span><br><span class="line">INFO [07-03|15:34:11] Successfully sealed new block            number=2 hash=c5c768…b1e445</span><br><span class="line">INFO [07-03|15:34:11] 🔨 mined potential block                  number=2 hash=c5c768…b1e445</span><br><span class="line">INFO [07-03|15:34:11] Commit new mining work                   number=3 txs=0 uncles=0 elapsed=192.809µs</span><br><span class="line">INFO [07-03|15:34:12] Successfully sealed new block            number=3 hash=163387…646389</span><br><span class="line">INFO [07-03|15:34:12] 🔨 mined potential block                  number=3 hash=163387…646389</span><br><span class="line">INFO [07-03|15:34:12] Commit new mining work                   number=4 txs=0 uncles=0 elapsed=163.111µs</span><br><span class="line">INFO [07-03|15:34:12] Generating DAG in progress               epoch=1 percentage=0  elapsed=955.391ms</span><br><span class="line">INFO [07-03|15:34:12] Successfully sealed new block            number=4 hash=cee703…d4001c</span><br><span class="line">INFO [07-03|15:34:12] 🔨 mined potential block                  number=4 hash=cee703…d4001c</span><br><span class="line">INFO [07-03|15:34:12] Mining too far in the future             wait=2s</span><br><span class="line">INFO [07-03|15:34:12] Generating DAG in progress               epoch=1 percentage=1  elapsed=1.478s</span><br><span class="line">INFO [07-03|15:34:13] Generating DAG in progress               epoch=1 percentage=2  elapsed=1.855s</span><br><span class="line">INFO [07-03|15:34:13] Generating DAG in progress               epoch=1 percentage=3  elapsed=2.250s</span><br><span class="line">INFO [07-03|15:34:14] Generating DAG in progress               epoch=1 percentage=4  elapsed=2.631s</span><br><span class="line">INFO [07-03|15:34:14] Generating DAG in progress               epoch=1 percentage=5  elapsed=3.005s</span><br><span class="line">INFO [07-03|15:34:14] Commit new mining work                   number=5 txs=0 uncles=0 elapsed=2.003s</span><br><span class="line">INFO [07-03|15:34:14] Generating DAG in progress               epoch=1 percentage=6  elapsed=3.558s</span><br><span class="line">INFO [07-03|15:34:15] Successfully sealed new block            number=5 hash=c7111e…cabeef</span><br><span class="line">INFO [07-03|15:34:15] 🔨 mined potential block                  number=5 hash=c7111e…cabeef</span><br><span class="line">INFO [07-03|15:34:15] Commit new mining work                   number=6 txs=0 uncles=0 elapsed=170.026µs</span><br><span class="line">INFO [07-03|15:34:15] Generating DAG in progress               epoch=1 percentage=7  elapsed=4.427s</span><br><span class="line">INFO [07-03|15:34:16] Successfully sealed new block            number=6 hash=230787…ba48a2</span><br><span class="line">INFO [07-03|15:34:16] 🔗 block reached canonical chain          number=1 hash=48f248…d2232e</span><br><span class="line">INFO [07-03|15:34:16] 🔨 mined potential block                  number=6 hash=230787…ba48a2</span><br><span class="line">INFO [07-03|15:34:16] Commit new mining work                   number=7 txs=0 uncles=0 elapsed=141.75µs</span><br><span class="line">INFO [07-03|15:34:16] Successfully sealed new block            number=7 hash=3a22b7…e4e015</span><br><span class="line">INFO [07-03|15:34:16] 🔗 block reached canonical chain          number=2 hash=c5c768…b1e445</span><br></pre></td></tr></table></figure>
+<h3 id="5-외부에서-접속하기"><a class="header-anchor" href="#5-외부에서-접속하기">¶</a>5. 외부에서 접속하기</h3>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">deploy@jayg-blockchain2:~$ geth attach http://1.1.1.1:8123</span><br><span class="line">Welcome to the Geth JavaScript console!</span><br><span class="line"></span><br><span class="line">instance: Geth/PrivateNetwork/v1.8.11-stable-dea1ce05/linux-amd64/go1.10</span><br><span class="line">coinbase: 0x44e74080949320292839b9a0df55e4459dd51434</span><br><span class="line">at block: 25 (Tue, 03 Jul 2018 15:34:38 KST)</span><br><span class="line"> modules: eth:1.0 miner:1.0 net:1.0 rpc:1.0 web3:1.0</span><br></pre></td></tr></table></figure>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/07/03/ethereum-create-private-blockchain-1/" data-tooltip="이더리움 - 프라이빗 블록체인 만들기 (1)" aria-label="PREVIOUS: 이더리움 - 프라이빗 블록체인 만들기 (1)">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/07/02/user-expriences-with-bitcoin-security-and-privacy/" data-tooltip="암호화폐의 다른면 - 비트코인의 보안 및 개인정보 보호를 통한 사용자 경험" aria-label="NEXT: 암호화폐의 다른면 - 비트코인의 보안 및 개인정보 보호를 통한 사용자 경험">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/07/03/ethereum-create-private-blockchain-2/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/07/03/ethereum-create-private-blockchain-2/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/07/03/ethereum-create-private-blockchain-1/" data-tooltip="이더리움 - 프라이빗 블록체인 만들기 (1)" aria-label="PREVIOUS: 이더리움 - 프라이빗 블록체인 만들기 (1)">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/07/02/user-expriences-with-bitcoin-security-and-privacy/" data-tooltip="암호화폐의 다른면 - 비트코인의 보안 및 개인정보 보호를 통한 사용자 경험" aria-label="NEXT: 암호화폐의 다른면 - 비트코인의 보안 및 개인정보 보호를 통한 사용자 경험">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/07/03/ethereum-create-private-blockchain-2/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/07/03/ethereum-create-private-blockchain-2/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/07/03/ethereum-create-private-blockchain-2/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/07/03/ethereum-create-private-blockchain-2/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2018/07/03/ethereum-create-private-blockchain-2/';
+                 
+                    this.page.identifier = '2018/07/03/ethereum-create-private-blockchain-2/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

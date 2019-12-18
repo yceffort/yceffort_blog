@@ -1,0 +1,928 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>리플 컨센서스 알고리즘 - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"The XRP Ledger Consensus Process\n원문\n¶소개\nP2P XRP 원장 네트워크는 응용프로그램에 콘텐츠의 상태에 대한 정보를 저장하고 있는 공유 원장을 전세계적으로 저장한다. 이러한 상태 정보에는 아래와 같은 정보가 포함되어 있다.\n\n각 계정의 설정정보\n계정 간 잔고\n분산 거래\n네트워크 설정. 예) 거래 비용, 유보 금액 등\n타임스탬프\n\n원장에 대한 전체적인 기술 설명은 여기에서 확인할 수 있다.\n\nXRP 원장은 몇 초마다 새로운 버전을 갖게 된다. 그 이전의 원장버전은 원장의 기록으로 남게된다. 가장 최근에 검증된 원장 조차도 짧은 시간전의 네트워크 상태를 나타내기 때문에 이력의 일부로 남게 된다. 현재 네트워크는 다음 원장버전에서 적영되고 완료 될 수 있는 일부 거래를 검증하게 된다.\n\n원장 인스턴스는, 원장 인덱스라고도 불리는 시퀀스 번호로 (원장 인스턴스는 컨텐츠의 디지털 지문인 해시에 의해 고유하게 식별될 수 있다.) 식별될 수 있다. 원장은 번호 순으로 증가하게 된다. 마지막으로 유효한 원장이 N이면, 이전은 N-1, 그 다음은 N+1이다. N+1원장은 원장 N에 일련의 트랜잭션을 적용하여 생성된다.\n원장이 사용자 수준에서 변경된다는 것은 트랜잭션의 결과로 이루어진다. 이 트랜잭션의 예로는 지불, 계정 설정, 거래 제안 등이 있다. 각 트랜잭션은 원장 변경을 승인하고, 계정 소유자가 암호화하여 서명한다. 트랜잭션은 계정 변경을 승인하는 유일한 방법이다.\n또한 원장 인스턴스에는 해당 트랜잭션에 대한 일련의 트랜잭션 및 메타 데이터가 포함되어 있다. 트랜잭션은 이전 원장에 적용되어 새 인스턴스를 만든 트랜잭션이다. 메타데이터는 트랜잭션이 원장에 미치는 영향을 정확하게 기록한다.\n\n원장 인스턴스에 포함된 트랜잭션 세트 (위 그림에서 여러개의 네모, 트랜잭션)는 해당 원장에 기록되며, XRP Ledger 이력에서 확인 될 수 있다.\n검증된 원장에 나타나는 트랜잭션이 원장을 변경하는데 성공했거나, 요청된 작업을 수행하지 않고 처리되었을 수도 있다. 성공적인 트랜잭션에는 요청된 변경사항이 원장에 적용되고, 수수료가 청구되었음을 나타내는 tesSUCCESS 결과 코드를 가지고 있다. 원장의 다른 트랜잭션에는 tec 클래스 결과 코드가 있다. 이 코드는 수수료를 청구하고, 다른 변경사항을 수행하지 않는 트랜잭션을 나타낸다.\ntec 클래스의 트랜잭션은 수수료를 청구할때, 계정잔액을 변경하기 때문에 원장에 포함된다.\ntes 및 tec 클래스 결과 코드 외에도, ter, tef, tem 클래스 코드가 있다. 후자 3가지는 API에 호출에 의해 반환되는 잠정적인 실패를 나타난다. 원장에는 test와 tec 코드만 남게 된다.\n리플 API로 작업할때, 어플리케이션은 반드시 원장에 포함되도록 제안된 후보 트랜잭션과 검증된 원장에 포함된 검증된 트랜잭션을 구분해야 한다. 검증된 원장에서 발견된 트랜잭션 결과만 변경이 불가능하다. 후보 트랜잭션은 검증된 원장에 포함될 수 있거나, 포함되지 않을 수도 있다.\n중요: 일부 리플 API는 후보 트랜잭션을 기반으로 잠정적인 결과를 제공한다. 어플리케이션은 트랜잭션의 최종결과를 결정하기 위해 이러한 잠정적인 결과에 의존해서는 안된다. 트랜잭션이 마침내 완전하게 성공했다는 것을 확실하게 알 수 있는 유일한 방법은 유효성있는 원장에 포함될때까지 트랜잭션 상태를 확인하고 결과코드 tesSUCCESS를 갖는 것이다. 트랜잭션이 다른 결과 코드가 있는 유효한 원장에 있으면, 해당 트랜잭션은 실패한 것이다. 트랜잭션의 마지막 원장 시퀀스에 지정된 원장이 유효성 검증을 받았지만, 거래가 원장 또는 그 원장 이전에 나타나지 않는다면, 해당 트랜잭션은 실패하여 어떠한 원장에도 나타나지 않을 것이다. 검증된 원장에 나타나거나 나중에 라스트 원장 시퀀스 제한으로 인해 표시될 수 없는 트랜잭션에서만 최종결과로 볼수 있다. (하단 참조)\n¶XRP 원장 프로토콜의 컨센서스와 검증\nP2P XRP 원장 네트워크는 트랜잭션을 수용하고 처리하는 '노드’라고 불리우는 많은 분산 서버로 구성된다. 클라이언트 어플리케이션은 트랜잭션에 서명하고 전송하는 처리를 위해, 네트워크 전체에서 이러한 서명된 후보 트랜잭션을 릴레이한다. 클라이언트 어플리케이션의 예로는 모바일/웹 지갑, 금융기관의 게이트웨이 및 전자 거래 플랫폼이 있다.\n\n트랜잭션을 수신, 릴레이 및 처리하는 노드는 노드를 추적하거나 노드를 검증할 수 있다. 노드의 주요기능을 추적하는 것에는 클라이언트로부터 트랜잭션을 배포하고, 원장에 대한 쿼리에 응답하는 것도 포함된다. 검증 노드는 노드 추적과 동일한 기능을 수행하고, 원장 시퀀스를 발전시키는 데 추가로 기여하게 된다.\n클라이언트 어플리케이션에서 제출한 트랜잭션을 수락하는 동안, 각 추적노드는 마지막으로 검사된 원장을 시발점으로 사용한다. 승인된 거래는 각각 후보로 남게 된다. 노드는 이러한 후보 트랜잭션을 피어에게 릴레이하여, 후보 트랜잭션이 모든 네트워크 전체에 전파되도록 한다. 이상적으로 각 후보 트랜잭션은 모든 노드에게 전파되며, 각 노드는 동일한 트랜잭션 세트가 마지막으로 검사된 원장에 적용될 수 있다고 간주할 수 있다. 그러나 트랜잭션이 전파되는데에는 시간이 꽤 소모되기 때문에 노드는 항상 동일한 후보트랜잭션 세트로 작동하지 않는다. 이를 설명하기 위해 XRP 원장은 컨센서스라고 하는 프로세스를 활용, 동일하나 트랜잭션이 처리되고 검증된 원장이 P2P XRP 원장 네트워크에서 일관성을 유지하도록 한다.\n¶Consensus\n네트워크 노드는 후보 트랜잭션에 대한 정보를 공유한다. 합의 프로세스를 통해, 검증 노드는 후보거래의 특정 합위 집합에 대해 다음 원장에 대해 고려하도록 동의 한다. 이러한 합의는 노드가 제안 또는 후보 트랜잭션 세트를 중계하는 반복적인 프로세스다. 노드는 대다수의 피어가 동일한 후보 트랜잭션 세트에 동의할때까지 계속해서 업데이트 한다.\n컨센서스 과정에서 각 노드는 선택된 검증자라고 불리는 특정 피어세트의 컨센서스 제안을 평가한다. 선택된 검증자들은 이러한 컨센서스 제안 들에 대해 사기를 방지하고, 신뢰를 얻기 위해 평가하게 된다. 여기서 말하는 '신뢰’의 의미는 각 개별 검증자를 신뢰할 필요가 없다는 것이다. 오히려, 검증자는 네트워크에 중계된 데이터를 위조하기 위한 노력을 하지 않을 것이라는 기대에 따라 선택된다.\n\n\n\n\n\n\n\n\n합의가 시작될때 노드는 서로 다른 트랜잭션 세트로 작동한다. 수많은 제안이 원장에 적용할 거래와 향후 컨센서스를 기다려야 할 거래를 결정한다.\n\n\n\n합의된 제안에 포함되지 못한 후보들은 후보로 남게 된다. 이들은 다음 합의에서 고려 될 수 있다.\n\n\n\n\n\n\n\n\n노드는 합의된 트랜잭션 세트 (녹색)를 마지막으로 유효성있는 원장에 적용한다. 세트에 없는 거래 (빨간색) 은 다음 라운드에서 합의 될 수 있다.\n\n\n\n일반적으로, 컨센서스를 통과하지 못한 거래는 다음 라운드에서 성공한다. 그러나 어떤 상황에서는 거래가 무기한 컨센서스를 통과하지 못할 수도 있다. 이러한 상황은, 네트워크가 기본수수료를 트랜잭션이 제공하는 것보다 높은 값으로 증가시키는 경우다. 향후 수수료가 낮아지면 거래가 성공할 수 있다.\n마지막 원장 시퀀스(LastLedgerSequence) 트랜잭션 필드는 합리적인 시간내에 실행되지 않으면, 이러한 트랜잭션을 만료시키는 매커니즘이다. 어플리케이션은 각 트랜잭션에 이 매개변수를 포함시켜야 한다. 이렇게 하면 트랜잭션이 지정된 원장 시퀀스 번호, 또는 그 이전에 성공하거나 실패하게 되므로 최종 트랜잭션 결과를 얻기 전에 응용 프로그램이 기다려야 하는 시간이 제한된다. 자세한 내용은 [여기](Reliable Transaction Submission)를 참조.\n¶검증\n합의 라운드가 완료 되면 각 노드는 최종 유효성있는 원장에 합의된 트랜잭션 세트에, 후보 트랜잭션을 적용하여 새로운 원장을 만들어 낸다.\n\n\n\n\n\n\n\n\n각 추적 노드는 마지막으로 유효한 원장에 동의한 트랜잭션을 적용한다. 노드를 확인하면 전체 네트워크에 결과를 보낸다.\n\n\n\n검증 노드는 원장의 새버전을 만들어내고, 그 결과를 네트워크에 릴레이하며, 각 합의 중에 제안된 후보 트랜잭션을 기반으로 계산된 원장의 서명된 해시를 보낸다. 검증이라고 하는 이러한 서명 된 해시는 각 노드가 계산한 원장을 피어 원장과 비교할 수 있도록 한다.\n\n\n\n\n\n\n\n\n노드는 계산된 원장을, 선택한 검증 노드에서 수신한 해시와 비교한다. 동의하지 않으면 노드가 올바른 원장을 다시 계산하거나 검색해야 한다.\n\n\n\n네트워크의 노드는 피어의 대다수가 동일한 검증 해시에 서명하고 브로드 캐스트 될때, 유효성이 확인 된 것으로 잉ㄴ식한다. 앞으로 트랜잭션은 시퀀스 번호 N+1이 업데이트되고 현재 유요한 원장에 적용된다.\n소수에 속하는 노드가 피어와 다른 원장을 계산한 경우에는, 노드는 계산된 원장을 무시한다. 올바른 원장을 다시 계산하거나, 필요에 따라서는 올바른 원장을 검색한다.\n네트워크가 유효성 검사에 대한 초 대다수 합의를 달성하지 못한다는 것은, 거래량이 너무 많거나 컨센서스 프로세스가 일관된 제안을 하기에는 네트워크 대기 시간이 너무 컸다는 것을 의미한다. 이 경우 노드는 컨센서스 프로토콜을 반복한다. 컨센서스가 시작된 이래로 시간이 지남에 따라, 각 컨센서스 라운드가 의견차이를 줄임에 따라 대다수의 노드가 동일한 후보트랜잭션을 받을 가능성이 커진다. XRP 원장은 이러한 조건에 대한 응답으로 거래비용과 컨센서스를 기다리는 시간을 동적으로 조정한다.\n\n\n\n\n\n\n\n\n결국 컨센서스 프로세스의 마지막라운드에는, 노드가 검증된 노드로 업데이트 하게 된다.\n\n\n\n검증에 대한 초 대다수 합의에 도달하게 되면, 노드는 새로운 검증된 원장인 시퀀스 번호 N+1과 동작하게 된다. 컨센서스 및 검증 프로세스는 지난 라운드에 포함 되지 않은 후보 트랜잭션과, 그동안 제출된 새로운 거래를 고려하여 반복한다.\n¶요약\nXRP 원장에 제출된 트랜잭션은 즉시 처리되지 않는다. 일정기간 각 거래는 후보로 남아있게 된다.\n단일 트랜잭션의 라이프 사이클은 아래와 같다.\n\n계정 소유자가 트랜잭션을 작성하고 서명한다.\n트랜잭션이 네트워크에 제출된다.\n\n\n잘못 생성된 거래는 즉시 거부 될 수 있다.\n올바르게 생성된 거래는 임시적으로 성공할 수도 있고, 나중에 실패할 수 있다.\n올바르게 생성된 거래는 임시적으로 실패할 수도 있고, 나중에 성공할 수 있다.\n\n\n컨센서스 과정 중에, 각 거래는 원장에 포함된다.\n\n\n성공적인 컨센서스 라운드의 결과로 검증된 원장이 나오게 된다.\n컨센서스 라운드가 실패하게 되면 컨센서스 프로세스가 성공할 때까지 반복한다.\n\n\n검증된 원장에는 트랜잭션과 원장 상태에 미치는 것들이 포함된다.\n\n어플리케이션은 잠정 결과가 아닌 유효성 있는 원장의 정보에만 의존해야 한다. 일부 리플 API는 잠정적인 (임시) 결과를 반환한다. 이 트랜잭션의 결과는 해당 트랜잭션이 검증된 원장에 포함되거나, 트랜잭션에 마지막 원장 시퀀스 (Last Ledger Sequence)가 포함되며, 해당 시퀀스 번호 이하에서 검증된 원장에 나타나지 않을때만 변경할 수 없게 된다.\n트랜잭션을 제출하는 어플리케이션의 모범사례는 아래와 같다.\n\nLastLedgerSequnce 매개변수를 활용하여 트랜잭션이 결정적이고, 신속한 방식으로 검증 또는 실패하는지 확인한다.\n검증된 원장에서 트랜잭션 결과를 확인한다.\n\n트랜잭션을 포함하는 원장이 검증되거나, LastLedgerSequnce에 통과되기 전까지의 결과는 잠정적 (임시) 이다.\n결과코드 tesSUCCESS 및 validated: true 외의 결과는 모두 영구적으로 실패를 의미한다.\n트랜잭션 LastLedgerSequence에서 확인한 검증된 원장까지, 검증된 원장에서 나타나지 않는 트랜잭션은 영구적으로 실패를 의미한다.\n\n이 경우를 탐지하기 위해 연속성있는 원장 이력을 보유한 노드를 활용해야 한다.\n\n\nLastLedgerSequence에서 확인한 원장이 유효성을 검사할 때까지 반복적으로 트랜잭션 상태를 확인해야할 수도 있다.\n\n\n\n","dateCreated":"2018-09-20T00:00:00+09:00","dateModified":"2018-09-20T06:45:40+09:00","datePublished":"2018-09-20T00:00:00+09:00","description":"The XRP Ledger Consensus Process\n\n원문\n\n¶소개\nP2P XRP 원장 네트워크는 응용프로그램에 콘텐츠의 상태에 대한 정보를 저장하고 있는 공유 원장을 전세계적으로 저장한다. 이러한 상태 정보에는 아래와 같은 정보가 포함되어 있다.\n\n * 각 계정의 설정정보\n * 계정 간 잔고\n * 분산 거래\n * 네트워크 설정. 예) 거래 비용, 유보 금액 등\n * 타임스탬프\n\n원장에 대한 전체적인 기술 설명은 여기에서 확인할 수 있다.\n\n\n\nXRP 원장은 몇 초마다 새로운 버전을 갖게 된다. 그 이전의 원장버전은 원장의 ","headline":"리플 컨센서스 알고리즘","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/09/20/the-XRP-ledger-consensus-process/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/09/20/the-XRP-ledger-consensus-process/","keywords":"cryptocurrency, blockchain, ripple"}</script>
+    <meta name="description" content="The XRP Ledger Consensus Process  원문  ¶소개 P2P XRP 원장 네트워크는 응용프로그램에 콘텐츠의 상태에 대한 정보를 저장하고 있는 공유 원장을 전세계적으로 저장한다. 이러한 상태 정보에는 아래와 같은 정보가 포함되어 있다.   * 각 계정의 설정정보  * 계정 간 잔고  * 분산 거래  * 네트워크 설정. 예) 거래 비용,">
+<meta name="keywords" content="cryptocurrency,blockchain,ripple">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="리플 컨센서스 알고리즘">
+<meta property="og:url" content="https://www.yceffort.kr/2018/09/20/the-XRP-ledger-consensus-process/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="The XRP Ledger Consensus Process  원문  ¶소개 P2P XRP 원장 네트워크는 응용프로그램에 콘텐츠의 상태에 대한 정보를 저장하고 있는 공유 원장을 전세계적으로 저장한다. 이러한 상태 정보에는 아래와 같은 정보가 포함되어 있다.   * 각 계정의 설정정보  * 계정 간 잔고  * 분산 거래  * 네트워크 설정. 예) 거래 비용,">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://ripple.com/wp-content/themes/ripple-beta/assets/img/ledger-components.png">
+<meta property="og:image" content="https://cdn.ripple.com/wp-content/uploads/2014/12/Overview-of-Ripple-Ledger-Consensus-and-Validation-12_12-02.png">
+<meta property="og:image" content="https://cdn.ripple.com/wp-content/uploads/2014/12/Overview-of-Ripple-Ledger-Consensus-and-Validation-12_12-03.png">
+<meta property="og:image" content="https://cdn.ripple.com/wp-content/uploads/2014/12/Overview-of-Ripple-Ledger-Consensus-and-Validation-12_12-04.png">
+<meta property="og:image" content="https://cdn.ripple.com/wp-content/uploads/2014/12/Overview-of-Ripple-Ledger-Consensus-and-Validation-12_12-05.png">
+<meta property="og:image" content="https://cdn.ripple.com/wp-content/uploads/2014/12/Overview-of-Ripple-Ledger-Consensus-and-Validation-12_12-06.png">
+<meta property="og:image" content="https://cdn.ripple.com/wp-content/uploads/2014/12/Overview-of-Ripple-Ledger-Consensus-and-Validation-12_12-07.png">
+<meta property="og:image" content="https://cdn.ripple.com/wp-content/uploads/2014/12/Overview-of-Ripple-Ledger-Consensus-and-Validation-12_12-08.png">
+<meta property="og:image" content="https://cdn.ripple.com/wp-content/uploads/2014/12/Overview-of-Ripple-Ledger-Consensus-and-Validation-12_12-09.png">
+<meta property="og:updated_time" content="2018-09-19T21:45:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="리플 컨센서스 알고리즘">
+<meta name="twitter:description" content="The XRP Ledger Consensus Process  원문  ¶소개 P2P XRP 원장 네트워크는 응용프로그램에 콘텐츠의 상태에 대한 정보를 저장하고 있는 공유 원장을 전세계적으로 저장한다. 이러한 상태 정보에는 아래와 같은 정보가 포함되어 있다.   * 각 계정의 설정정보  * 계정 간 잔고  * 분산 거래  * 네트워크 설정. 예) 거래 비용,">
+<meta name="twitter:image" content="https://ripple.com/wp-content/themes/ripple-beta/assets/img/ledger-components.png">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            리플 컨센서스 알고리즘
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2018-09-20T00:00:00+09:00">
+	
+		    Sep 20, 2018
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>The XRP Ledger Consensus Process</p>
+<p><a href="https://ripple.com/build/xrp-ledger-consensus-process/#consensus" target="_blank" rel="noopener">원문</a></p>
+<h2 id="소개"><a class="header-anchor" href="#소개">¶</a>소개</h2>
+<p>P2P XRP 원장 네트워크는 응용프로그램에 콘텐츠의 상태에 대한 정보를 저장하고 있는 공유 원장을 전세계적으로 저장한다. 이러한 상태 정보에는 아래와 같은 정보가 포함되어 있다.</p>
+<ul>
+<li>각 <a href="https://ripple.com/build/accounts/" target="_blank" rel="noopener">계정</a>의 설정정보</li>
+<li>계정 간 잔고</li>
+<li>분산 거래</li>
+<li>네트워크 설정. 예) <a href="https://ripple.com/build/transaction-cost/" target="_blank" rel="noopener">거래 비용</a>, <a href="https://ripple.com/build/reserves/" target="_blank" rel="noopener">유보 금액</a> 등</li>
+<li>타임스탬프</li>
+</ul>
+<p>원장에 대한 전체적인 기술 설명은 <a href="https://ripple.com/build/ledger-format/" target="_blank" rel="noopener">여기</a>에서 확인할 수 있다.</p>
+<p><img src="https://ripple.com/wp-content/themes/ripple-beta/assets/img/ledger-components.png" alt="XRP Ledger Elements"></p>
+<p>XRP 원장은 몇 초마다 새로운 버전을 갖게 된다. 그 이전의 원장버전은 원장의 기록으로 남게된다. 가장 최근에 검증된 원장 조차도 짧은 시간전의 네트워크 상태를 나타내기 때문에 이력의 일부로 남게 된다. 현재 네트워크는 다음 원장버전에서 적영되고 완료 될 수 있는 일부 거래를 검증하게 된다.</p>
+<p><img src="https://cdn.ripple.com/wp-content/uploads/2014/12/Overview-of-Ripple-Ledger-Consensus-and-Validation-12_12-02.png" alt="XRP Ledger Sequence and History"></p>
+<p>원장 인스턴스는, 원장 인덱스라고도 불리는 시퀀스 번호로 (원장 인스턴스는 컨텐츠의 디지털 지문인 해시에 의해 고유하게 식별될 수 있다.) 식별될 수 있다. 원장은 번호 순으로 증가하게 된다. 마지막으로 유효한 원장이 N이면, 이전은 N-1, 그 다음은 N+1이다. N+1원장은 원장 N에 일련의 트랜잭션을 적용하여 생성된다.</p>
+<p>원장이 사용자 수준에서 변경된다는 것은 트랜잭션의 결과로 이루어진다. 이 트랜잭션의 예로는 지불, 계정 설정, 거래 제안 등이 있다. 각 트랜잭션은 원장 변경을 승인하고, 계정 소유자가 암호화하여 서명한다. 트랜잭션은 계정 변경을 승인하는 유일한 방법이다.</p>
+<p>또한 원장 인스턴스에는 해당 트랜잭션에 대한 일련의 트랜잭션 및 메타 데이터가 포함되어 있다. 트랜잭션은 이전 원장에 적용되어 새 인스턴스를 만든 트랜잭션이다. 메타데이터는 트랜잭션이 원장에 미치는 영향을 정확하게 기록한다.</p>
+<p><img src="https://cdn.ripple.com/wp-content/uploads/2014/12/Overview-of-Ripple-Ledger-Consensus-and-Validation-12_12-03.png" alt="Transactions Applied to Ledger Version"></p>
+<p>원장 인스턴스에 포함된 트랜잭션 세트 (위 그림에서 여러개의 네모, 트랜잭션)는 해당 원장에 기록되며, XRP Ledger 이력에서 확인 될 수 있다.</p>
+<p>검증된 원장에 나타나는 트랜잭션이 원장을 변경하는데 성공했거나, 요청된 작업을 수행하지 않고 처리되었을 수도 있다. 성공적인 트랜잭션에는 요청된 변경사항이 원장에 적용되고, 수수료가 청구되었음을 나타내는 tesSUCCESS <a href="https://ripple.com/build/transactions/#transaction-results" target="_blank" rel="noopener">결과 코드</a>를 가지고 있다. 원장의 다른 트랜잭션에는 tec 클래스 결과 코드가 있다. 이 코드는 수수료를 청구하고, 다른 변경사항을 수행하지 않는 트랜잭션을 나타낸다.</p>
+<p>tec 클래스의 트랜잭션은 수수료를 청구할때, 계정잔액을 변경하기 때문에 원장에 포함된다.</p>
+<p>tes 및 tec 클래스 결과 코드 외에도, ter, tef, tem 클래스 코드가 있다. 후자 3가지는 API에 호출에 의해 반환되는 잠정적인 실패를 나타난다. 원장에는 test와 tec 코드만 남게 된다.</p>
+<p>리플 API로 작업할때, 어플리케이션은 반드시 원장에 포함되도록 제안된 후보 트랜잭션과 검증된 원장에 포함된 검증된 트랜잭션을 구분해야 한다. 검증된 원장에서 발견된 트랜잭션 결과만 변경이 불가능하다. 후보 트랜잭션은 검증된 원장에 포함될 수 있거나, 포함되지 않을 수도 있다.</p>
+<p>중요: 일부 리플 API는 후보 트랜잭션을 기반으로 잠정적인 결과를 제공한다. 어플리케이션은 트랜잭션의 최종결과를 결정하기 위해 이러한 잠정적인 결과에 의존해서는 안된다. 트랜잭션이 마침내 완전하게 성공했다는 것을 확실하게 알 수 있는 유일한 방법은 유효성있는 원장에 포함될때까지 트랜잭션 상태를 확인하고 결과코드 tesSUCCESS를 갖는 것이다. 트랜잭션이 다른 결과 코드가 있는 유효한 원장에 있으면, 해당 트랜잭션은 실패한 것이다. 트랜잭션의 마지막 원장 시퀀스에 지정된 원장이 유효성 검증을 받았지만, 거래가 원장 또는 그 원장 이전에 나타나지 않는다면, 해당 트랜잭션은 실패하여 어떠한 원장에도 나타나지 않을 것이다. 검증된 원장에 나타나거나 나중에 라스트 원장 시퀀스 제한으로 인해 표시될 수 없는 트랜잭션에서만 최종결과로 볼수 있다. (하단 참조)</p>
+<h2 id="xrp-원장-프로토콜의-컨센서스와-검증"><a class="header-anchor" href="#xrp-원장-프로토콜의-컨센서스와-검증">¶</a>XRP 원장 프로토콜의 컨센서스와 검증</h2>
+<p>P2P XRP 원장 네트워크는 트랜잭션을 수용하고 처리하는 '노드’라고 불리우는 많은 분산 서버로 구성된다. 클라이언트 어플리케이션은 트랜잭션에 서명하고 전송하는 처리를 위해, 네트워크 전체에서 이러한 서명된 후보 트랜잭션을 릴레이한다. 클라이언트 어플리케이션의 예로는 모바일/웹 지갑, 금융기관의 게이트웨이 및 전자 거래 플랫폼이 있다.</p>
+<p><img src="https://cdn.ripple.com/wp-content/uploads/2014/12/Overview-of-Ripple-Ledger-Consensus-and-Validation-12_12-04.png" alt="Participants in the XRP Ledger Protocol"></p>
+<p>트랜잭션을 수신, 릴레이 및 처리하는 노드는 노드를 추적하거나 노드를 검증할 수 있다. 노드의 주요기능을 추적하는 것에는 클라이언트로부터 트랜잭션을 배포하고, 원장에 대한 쿼리에 응답하는 것도 포함된다. 검증 노드는 노드 추적과 동일한 기능을 수행하고, 원장 시퀀스를 발전시키는 데 추가로 기여하게 된다.</p>
+<p>클라이언트 어플리케이션에서 제출한 트랜잭션을 수락하는 동안, 각 추적노드는 마지막으로 검사된 원장을 시발점으로 사용한다. 승인된 거래는 각각 후보로 남게 된다. 노드는 이러한 후보 트랜잭션을 피어에게 릴레이하여, 후보 트랜잭션이 모든 네트워크 전체에 전파되도록 한다. 이상적으로 각 후보 트랜잭션은 모든 노드에게 전파되며, 각 노드는 동일한 트랜잭션 세트가 마지막으로 검사된 원장에 적용될 수 있다고 간주할 수 있다. 그러나 트랜잭션이 전파되는데에는 시간이 꽤 소모되기 때문에 노드는 항상 동일한 후보트랜잭션 세트로 작동하지 않는다. 이를 설명하기 위해 XRP 원장은 컨센서스라고 하는 프로세스를 활용, 동일하나 트랜잭션이 처리되고 검증된 원장이 P2P XRP 원장 네트워크에서 일관성을 유지하도록 한다.</p>
+<h2 id="consensus"><a class="header-anchor" href="#consensus">¶</a>Consensus</h2>
+<p>네트워크 노드는 후보 트랜잭션에 대한 정보를 공유한다. 합의 프로세스를 통해, 검증 노드는 후보거래의 특정 합위 집합에 대해 다음 원장에 대해 고려하도록 동의 한다. 이러한 합의는 노드가 제안 또는 후보 트랜잭션 세트를 중계하는 반복적인 프로세스다. 노드는 대다수의 피어가 동일한 후보 트랜잭션 세트에 동의할때까지 계속해서 업데이트 한다.</p>
+<p>컨센서스 과정에서 각 노드는 선택된 검증자라고 불리는 특정 피어세트의 컨센서스 제안을 평가한다. 선택된 검증자들은 이러한 컨센서스 제안 들에 대해 사기를 방지하고, 신뢰를 얻기 위해 평가하게 된다. 여기서 말하는 '신뢰’의 의미는 각 개별 검증자를 신뢰할 필요가 없다는 것이다. 오히려, 검증자는 네트워크에 중계된 데이터를 위조하기 위한 노력을 하지 않을 것이라는 기대에 따라 선택된다.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"><img src="https://cdn.ripple.com/wp-content/uploads/2014/12/Overview-of-Ripple-Ledger-Consensus-and-Validation-12_12-05.png" alt="Validators Propose Transaction Sets"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">합의가 시작될때 노드는 서로 다른 트랜잭션 세트로 작동한다. 수많은 제안이 원장에 적용할 거래와 향후 컨센서스를 기다려야 할 거래를 결정한다.</td>
+</tr>
+</tbody>
+</table>
+<p>합의된 제안에 포함되지 못한 후보들은 후보로 남게 된다. 이들은 다음 합의에서 고려 될 수 있다.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"><img src="https://cdn.ripple.com/wp-content/uploads/2014/12/Overview-of-Ripple-Ledger-Consensus-and-Validation-12_12-06.png" alt="Through Consensus, Nodes Agree On Transaction Set"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">노드는 합의된 트랜잭션 세트 (녹색)를 마지막으로 유효성있는 원장에 적용한다. 세트에 없는 거래 (빨간색) 은 다음 라운드에서 합의 될 수 있다.</td>
+</tr>
+</tbody>
+</table>
+<p>일반적으로, 컨센서스를 통과하지 못한 거래는 다음 라운드에서 성공한다. 그러나 어떤 상황에서는 거래가 무기한 컨센서스를 통과하지 못할 수도 있다. 이러한 상황은, 네트워크가 기본수수료를 트랜잭션이 제공하는 것보다 높은 값으로 증가시키는 경우다. 향후 수수료가 낮아지면 거래가 성공할 수 있다.</p>
+<p><a href="https://ripple.com/build/transactions/#lastledgersequence" target="_blank" rel="noopener">마지막 원장 시퀀스(LastLedgerSequence)</a> 트랜잭션 필드는 합리적인 시간내에 실행되지 않으면, 이러한 트랜잭션을 만료시키는 매커니즘이다. 어플리케이션은 각 트랜잭션에 이 매개변수를 포함시켜야 한다. 이렇게 하면 트랜잭션이 지정된 원장 시퀀스 번호, 또는 그 이전에 성공하거나 실패하게 되므로 최종 트랜잭션 결과를 얻기 전에 응용 프로그램이 기다려야 하는 시간이 제한된다. 자세한 내용은 [여기](Reliable Transaction Submission)를 참조.</p>
+<h2 id="검증"><a class="header-anchor" href="#검증">¶</a>검증</h2>
+<p>합의 라운드가 완료 되면 각 노드는 최종 유효성있는 원장에 합의된 트랜잭션 세트에, 후보 트랜잭션을 적용하여 새로운 원장을 만들어 낸다.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"><img src="https://cdn.ripple.com/wp-content/uploads/2014/12/Overview-of-Ripple-Ledger-Consensus-and-Validation-12_12-07.png" alt="A Network Node Calculates a Ledger Validation"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">각 추적 노드는 마지막으로 유효한 원장에 동의한 트랜잭션을 적용한다. 노드를 확인하면 전체 네트워크에 결과를 보낸다.</td>
+</tr>
+</tbody>
+</table>
+<p>검증 노드는 원장의 새버전을 만들어내고, 그 결과를 네트워크에 릴레이하며, 각 합의 중에 제안된 후보 트랜잭션을 기반으로 계산된 원장의 서명된 해시를 보낸다. 검증이라고 하는 이러한 서명 된 해시는 각 노드가 계산한 원장을 피어 원장과 비교할 수 있도록 한다.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"><img src="https://cdn.ripple.com/wp-content/uploads/2014/12/Overview-of-Ripple-Ledger-Consensus-and-Validation-12_12-08.png" alt="Ledger is Validated When Supermajority of Peers Calculate the Same Result"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">노드는 계산된 원장을, 선택한 검증 노드에서 수신한 해시와 비교한다. 동의하지 않으면 노드가 올바른 원장을 다시 계산하거나 검색해야 한다.</td>
+</tr>
+</tbody>
+</table>
+<p>네트워크의 노드는 피어의 대다수가 동일한 검증 해시에 서명하고 브로드 캐스트 될때, 유효성이 확인 된 것으로 잉ㄴ식한다. 앞으로 트랜잭션은 시퀀스 번호 N+1이 업데이트되고 현재 유요한 원장에 적용된다.</p>
+<p>소수에 속하는 노드가 피어와 다른 원장을 계산한 경우에는, 노드는 계산된 원장을 무시한다. 올바른 원장을 다시 계산하거나, 필요에 따라서는 올바른 원장을 검색한다.</p>
+<p>네트워크가 유효성 검사에 대한 초 대다수 합의를 달성하지 못한다는 것은, 거래량이 너무 많거나 컨센서스 프로세스가 일관된 제안을 하기에는 네트워크 대기 시간이 너무 컸다는 것을 의미한다. 이 경우 노드는 컨센서스 프로토콜을 반복한다. 컨센서스가 시작된 이래로 시간이 지남에 따라, 각 컨센서스 라운드가 의견차이를 줄임에 따라 대다수의 노드가 동일한 후보트랜잭션을 받을 가능성이 커진다. XRP 원장은 이러한 조건에 대한 응답으로 거래비용과 컨센서스를 기다리는 시간을 동적으로 조정한다.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left"><img src="https://cdn.ripple.com/wp-content/uploads/2014/12/Overview-of-Ripple-Ledger-Consensus-and-Validation-12_12-09.png" alt="Network Recognises the New Validated Ledger Version"></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">결국 컨센서스 프로세스의 마지막라운드에는, 노드가 검증된 노드로 업데이트 하게 된다.</td>
+</tr>
+</tbody>
+</table>
+<p>검증에 대한 초 대다수 합의에 도달하게 되면, 노드는 새로운 검증된 원장인 시퀀스 번호 N+1과 동작하게 된다. 컨센서스 및 검증 프로세스는 지난 라운드에 포함 되지 않은 후보 트랜잭션과, 그동안 제출된 새로운 거래를 고려하여 반복한다.</p>
+<h2 id="요약"><a class="header-anchor" href="#요약">¶</a>요약</h2>
+<p>XRP 원장에 제출된 트랜잭션은 즉시 처리되지 않는다. 일정기간 각 거래는 후보로 남아있게 된다.</p>
+<p>단일 트랜잭션의 라이프 사이클은 아래와 같다.</p>
+<ol>
+<li>계정 소유자가 트랜잭션을 작성하고 서명한다.</li>
+<li>트랜잭션이 네트워크에 제출된다.</li>
+</ol>
+<ul>
+<li>잘못 생성된 거래는 즉시 거부 될 수 있다.</li>
+<li>올바르게 생성된 거래는 임시적으로 성공할 수도 있고, 나중에 실패할 수 있다.</li>
+<li>올바르게 생성된 거래는 임시적으로 실패할 수도 있고, 나중에 성공할 수 있다.</li>
+</ul>
+<ol start="3">
+<li>컨센서스 과정 중에, 각 거래는 원장에 포함된다.</li>
+</ol>
+<ul>
+<li>성공적인 컨센서스 라운드의 결과로 검증된 원장이 나오게 된다.</li>
+<li>컨센서스 라운드가 실패하게 되면 컨센서스 프로세스가 성공할 때까지 반복한다.</li>
+</ul>
+<ol start="4">
+<li>검증된 원장에는 트랜잭션과 원장 상태에 미치는 것들이 포함된다.</li>
+</ol>
+<p>어플리케이션은 잠정 결과가 아닌 유효성 있는 원장의 정보에만 의존해야 한다. 일부 리플 API는 잠정적인 (임시) 결과를 반환한다. 이 트랜잭션의 결과는 해당 트랜잭션이 검증된 원장에 포함되거나, 트랜잭션에 마지막 원장 시퀀스 (Last Ledger Sequence)가 포함되며, 해당 시퀀스 번호 이하에서 검증된 원장에 나타나지 않을때만 변경할 수 없게 된다.</p>
+<p>트랜잭션을 제출하는 어플리케이션의 모범사례는 아래와 같다.</p>
+<ul>
+<li>LastLedgerSequnce 매개변수를 활용하여 트랜잭션이 결정적이고, 신속한 방식으로 검증 또는 실패하는지 확인한다.</li>
+<li>검증된 원장에서 트랜잭션 결과를 확인한다.
+<ul>
+<li>트랜잭션을 포함하는 원장이 검증되거나, LastLedgerSequnce에 통과되기 전까지의 결과는 잠정적 (임시) 이다.</li>
+<li>결과코드 tesSUCCESS 및 <code>validated: true</code> 외의 결과는 모두 영구적으로 실패를 의미한다.</li>
+<li>트랜잭션 LastLedgerSequence에서 확인한 검증된 원장까지, 검증된 원장에서 나타나지 않는 트랜잭션은 영구적으로 실패를 의미한다.
+<ul>
+<li>이 경우를 탐지하기 위해 연속성있는 원장 이력을 보유한 노드를 활용해야 한다.</li>
+</ul>
+</li>
+<li>LastLedgerSequence에서 확인한 원장이 유효성을 검사할 때까지 반복적으로 트랜잭션 상태를 확인해야할 수도 있다.</li>
+</ul>
+</li>
+</ul>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/blockchain/">blockchain</a> <a class="tag tag--primary tag--small t-link" href="/tags/cryptocurrency/">cryptocurrency</a> <a class="tag tag--primary tag--small t-link" href="/tags/ripple/">ripple</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/09/20/how-blockchain-will-accelerate-business-performance-and-power-the-smart-economy/" data-tooltip="블록체인이 비즈니스를 향상시키고 스마트 경제를 만드는 방법" aria-label="PREVIOUS: 블록체인이 비즈니스를 향상시키고 스마트 경제를 만드는 방법">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/09/19/how-does-proof-of-authority-consensus-work/" data-tooltip="PoA(권한 증명)은 어떻게 작동하는가?" aria-label="NEXT: PoA(권한 증명)은 어떻게 작동하는가?">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/09/20/the-XRP-ledger-consensus-process/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/09/20/the-XRP-ledger-consensus-process/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/09/20/how-blockchain-will-accelerate-business-performance-and-power-the-smart-economy/" data-tooltip="블록체인이 비즈니스를 향상시키고 스마트 경제를 만드는 방법" aria-label="PREVIOUS: 블록체인이 비즈니스를 향상시키고 스마트 경제를 만드는 방법">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/09/19/how-does-proof-of-authority-consensus-work/" data-tooltip="PoA(권한 증명)은 어떻게 작동하는가?" aria-label="NEXT: PoA(권한 증명)은 어떻게 작동하는가?">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/09/20/the-XRP-ledger-consensus-process/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/09/20/the-XRP-ledger-consensus-process/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/09/20/the-XRP-ledger-consensus-process/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/09/20/the-XRP-ledger-consensus-process/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2018/09/20/the-XRP-ledger-consensus-process/';
+                 
+                    this.page.identifier = '2018/09/20/the-XRP-ledger-consensus-process/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

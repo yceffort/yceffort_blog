@@ -1,0 +1,1483 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>리액트 인터뷰 질문 &amp; 답 (2) - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"목차\n¶Table of Contents\n\n\n\nNo.\nQuestions\n\n\n\n\n\nReact Router\n\n\n129\nWhat is React Router?\n\n\n130\nHow React Router is different from history library?\n\n\n131\nWhat are the &lt;Router&gt; components of React Router v4?\n\n\n132\nWhat is the purpose of push and replace methods of history?\n\n\n133\nHow do you programmatically navigate using React router v4?\n\n\n134\nHow to get query parameters in React Router v4\n\n\n135\nWhy you get “Router may have only one child element” warning?\n\n\n136\nHow to pass params to history.push method in React Router v4?\n\n\n137\nHow to implement default or NotFound page?\n\n\n138\nHow to get history on React Router v4?\n\n\n139\nHow to perform automatic redirect after login?\n\n\n\nReact Internationalization\n\n\n140\nWhat is React-Intl?\n\n\n141\nWhat are the main features of React Intl?\n\n\n142\nWhat are the two ways of formatting in React Intl?\n\n\n143\nHow to use FormattedMessage as placeholder using React Intl?\n\n\n144\nHow to access current locale with React Intl\n\n\n145\nHow to format date using React Intl?\n\n\n\nReact Testing\n\n\n146\nWhat is Shallow Renderer in React testing?\n\n\n147\nWhat is TestRenderer package in React?\n\n\n148\nWhat is the purpose of ReactTestUtils package?\n\n\n149\nWhat is Jest?\n\n\n150\nWhat are the advantages of Jest over Jasmine?\n\n\n151\nGive a simple example of Jest test case\n\n\n\nReact Redux\n\n\n152\nWhat is Flux?\n\n\n153\nWhat is Redux?\n\n\n154\nWhat are the core principles of Redux?\n\n\n155\nWhat are the downsides of Redux compared to Flux?\n\n\n156\nWhat is the difference between mapStateToProps() and mapDispatchToProps()?\n\n\n157\nCan I dispatch an action in reducer?\n\n\n158\nHow to access Redux store outside a component?\n\n\n159\nWhat are the drawbacks of MVW pattern\n\n\n160\nAre there any similarities between Redux and RxJS?\n\n\n161\nHow to dispatch an action on load?\n\n\n162\nHow to use connect from React Redux?\n\n\n163\nHow to reset state in Redux?\n\n\n164\nWhats the purpose of at symbol in the redux connect decorator?\n\n\n165\nWhat is the difference between React context and React Redux?\n\n\n166\nWhy are Redux state functions called reducers?\n\n\n167\nHow to make AJAX request in Redux?\n\n\n168\nShould I keep all component’s state in Redux store?\n\n\n169\nWhat is the proper way to access Redux store?\n\n\n170\nWhat is the difference between component and container in React Redux?\n\n\n171\nWhat is the purpose of the constants in Redux? \n\n\n172\nWhat are the different ways to write mapDispatchToProps()?\n\n\n173\nWhat is the use of the ownProps parameter in mapStateToProps() and mapDispatchToProps()?\n\n\n174\nHow to structure Redux top level directories?\n\n\n175\nWhat is redux-saga?\n\n\n176\nWhat is the mental model of redux-saga?\n\n\n177\nWhat are the differences between call and put in redux-saga\n\n\n178\nWhat is Redux Thunk?\n\n\n179\nWhat are the differences between redux-saga and redux-thunk\n\n\n180\nWhat is Redux DevTools?\n\n\n181\nWhat are the features of Redux DevTools?\n\n\n182\nWhat are Redux selectors and Why to use them?\n\n\n183\nWhat is Redux Form?\n\n\n184\nWhat are the main features of Redux Form?\n\n\n185\nHow to add multiple middlewares to Redux?\n\n\n186\nHow to set initial state in Redux?\n\n\n187\nHow Relay is different from Redux?\n\n\n\nReact Native\n\n\n188\nWhat is the difference between React Native and React?\n\n\n189\nHow to test React Native apps?\n\n\n190\nHow to do logging in React Native?\n\n\n191\nHow to debug your React Native?\n\n\n\nReact supported libraries and Integration\n\n\n192\nWhat is reselect and how it works?\n\n\n193\nWhat is Flow?\n\n\n194\nWhat is the difference between Flow and PropTypes?\n\n\n195\nHow to use font-awesome icons in React?\n\n\n196\nWhat is React Dev Tools?\n\n\n197\nWhy is DevTools not loading in Chrome for local files?\n\n\n198\nHow to use Polymer in React?\n\n\n199\nWhat are the advantages of React over Vue.js?\n\n\n200\nWhat is the difference between React and Angular?\n\n\n201\nWhy React tab is not showing up in DevTools?\n\n\n202\nWhat are styled components?\n\n\n203\nGive an example of Styled Components?\n\n\n204\nWhat is Relay?\n\n\n205\nHow to use TypeScript in create-react-app application?\n\n\n\n¶React Router\n¶What is React Router?\nReact Router는 리액트 최상단에 있는 강력한 라우팅 라이브러리로, 페이지에 보여주는 내용과 URL사이에 동기화를 유지해주고, 어플리케이션에 새로운 화면과 흐름을 추가할 수 있도록 도와준다.\n👆\n¶How React Router is different from history library?\nReact router는 history라이브러리를 감싼 래퍼로, 브라우저의 window.history와 상호작용하고, 브라우저 및 해쉬의 히스토리를 다룬다. 또한 모바일 앱 개발 (React Native) 및 Node의 unit testing처럼 global histroy가 없는 환경에 유용한 메모리 히스토리를 제공한다.\n👆\n¶What are the &lt;Router&gt; components of React Router v4?\nv4는 새로운 3개의 &lt;Router&gt; 컴포넌트를 제공한다.\n\n&lt;BrowserRouter&gt;\n&lt;HashRouter&gt;\n&lt;MemoryRouter&gt;\n\n위 컴포넌트는 각각 브라우저, 해쉬, 메모리 히스토리 인스턴스를 만들어준다. React Router v4는 Router Object의 context를 통해, history 인스턴스의 속성과 메소드를 활용할 수 있게 해준다.\n👆\n¶What is the purpose of push() and replace() methods of history?\n히스토리 인스턴스에는 네비게이션 목적으로 두개의 메소드를 제공한다.\n\npush()\nreplace()\n\n만약 히스토리가 방문했던 곳들의 배열이라고 생각한다면, push()가 그 역할을 할 것이고, 현재 위치를 덮어쓰는 느낌을 원한다면 replace()가 맞을 것이다.\n👆\n¶How do you programmatically navigate using React Router v4?\nComponent 내에서 프로그래밍으로 라우팅/네비게이팅 하는 방법에는 3가지가 있다.\n\nHOF에서 withRouter()를 쓰는법\nHOF의 withRouter()는 컴포넌트의 prop에 히스토리 오브젝트를 인젝트 한다. 이 오브젝트는 push() replace()를 제공하여 context의 사용을 피하게 해준다.\n\n123456789101112import &#123; withRouter &#125; from \"react-router-dom\"; // this also works with 'react-router-native'const Button = withRouter((&#123; history &#125;) =&gt; (  &lt;button    type=\"button\"    onClick=&#123;() =&gt; &#123;      history.push(\"/new-location\");    &#125;&#125;  &gt;    &#123;\"Click Me!\"&#125;  &lt;/button&gt;));\n\n&lt;Route&gt; 컴포넌트와 render props 패턴을 사용하는 법\n&lt;Route&gt;는 withRouter()와 같은 props를 넘기므로, history prop을 통해 histoy 메서드에 접근할 수 있을 것이다.\n\n12345678910111213141516import &#123; Route &#125; from \"react-router-dom\";const Button = () =&gt; (  &lt;Route    render=&#123;(&#123; history &#125;) =&gt; (      &lt;button        type=\"button\"        onClick=&#123;() =&gt; &#123;          history.push(\"/new-location\");        &#125;&#125;      &gt;        &#123;\"Click Me!\"&#125;      &lt;/button&gt;    )&#125;  /&gt;);\n\nContext\n이 방식은 딱히 추천되지 않고, 불안정한 API 활용으로 간주된다.\n\n12345678910111213141516const Button = (props, context) =&gt; (  &lt;button    type=\"button\"    onClick=&#123;() =&gt; &#123;      context.history.push(\"/new-location\");    &#125;&#125;  &gt;    &#123;\"Click Me!\"&#125;  &lt;/button&gt;);Button.contextTypes = &#123;  history: React.PropTypes.shape(&#123;    push: React.PropTypes.func.isRequired  &#125;)&#125;;\n👆\n¶How to get query parameters in React Router v4?\n수년간 다른 구현 지원에 대한 사용자들의 많은 요청 때문에, React Router v4에서는 query string을 parsing 하는 방법은 사라졌다. 이는 유저가 원하는 대로 구현할 수 있는 자유도를 주었다. 추천하는 방법은, query string 라이브러리를 사용하는 것이다.\n12const queryString = require(\"query-string\");const parsed = queryString.parse(props.location.search);\nnative 방식을 선호한다면 URLSearchParam을 사용할 수도 있다.\n12const params = new URLSearchParams(props.location.search);const foo = params.get(\"name\");\n다만 IE11에서는 폴리필이 필요하다.\n👆\n¶Why you get “Router may have only one child element” warning?\nRoute는 &lt;Switch&gt; 블록으로 감싸줘야 하는데, 왜냐하면 &lt;Switch&gt;는 라우트를 베타적으로 감싸기 때문이다. 먼저 Switch를 임포트 해야 한다.\n1import &#123; Switch, Router, Route &#125; from \"react-router\";\n그리고 route를 &lt;Switch&gt; 블록에 넣어햐 한다.\n12345&lt;Router&gt;  &lt;Switch&gt;    &lt;Route &#123;/* ... */&#125; /&gt; &lt;Route &#123;/* ... */&#125; /&gt;  &lt;/Switch&gt;&lt;/Router&gt;\n👆\n¶How to pass params to history.push method in React Router v4?\nhistory 객체에 props를 보낼 수 있다.\n12345this.props.history.push(&#123;  pathname: \"/template\",  search: \"?name=sudheer\",  state: &#123; detail: response.data &#125;&#125;);\nsearch 속성은 push()에서 query param을 보낼 때 사용된다.\n👆\n¶How to implement default or NotFound page?\n&lt;Switch&gt;는 첫번째로 일치하는 &lt;Route&gt;를 렌더링한다. path가 없는 route는 항상 매치하게 되어 있다. 따라서, path를 제거한 route를 하나 추가하면 된다.\n12345&lt;Switch&gt;  &lt;Route exact path=\"/\" component=&#123;Home&#125; /&gt;  &lt;Route path=\"/user\" component=&#123;User&#125; /&gt;  &lt;Route component=&#123;NotFound&#125; /&gt;&lt;/Switch&gt;\n👆\n¶How to get history on React Router v4?\n\nhistory 오브젝트를 익스포트 하는 모듈을 만들고, 프로젝트 전체에서 해당 모듈을 임포트 한다. 예를들어,\n\n12345import &#123; createBrowserHistory &#125; from \"history\";export default createBrowserHistory(&#123;  /* pass a configuration object here if needed */&#125;);\n\n빌트인 라우터 대신에, &lt;Router&gt; 컴포넌트를 쓴다. 위에서 만든 history.js를 index.js에 임포트 한다.\n\n12345678910import &#123; Router &#125; from \"react-router-dom\";import history from \"./history\";import App from \"./App\";ReactDOM.render(  &lt;Router history=&#123;history&#125;&gt;    &lt;App /&gt;  &lt;/Router&gt;,  holder);\n\n빌트인 히스토리 오브젝트와 비슷하게, history의 push메소드를 쓸수도 있다.\n\n1234// some-other-file.jsimport history from \"./history\";history.push(\"/go-here\");\n👆\n¶How to perform automatic redirect after login?\nreact-routersms &lt;Redirect&gt; 컴포넌트를 제공한다. &lt;Redirect&gt;를 렌더링 하면 새로운 위치로 이동하게 된다. 서버사이드 리다이렉트와 마찬가지로, 새로운 위치는 현재 히스토리 스택에 있는 현재 위치를 덮어쓰게 된다.\n123456789101112import React, &#123; Component &#125; from \"react\";import &#123; Redirect &#125; from \"react-router\";export default class LoginComponent extends Component &#123;  render() &#123;    if (this.state.isLoggedIn === true) &#123;      return &lt;Redirect to=\"/your/redirect/page\" /&gt;;    &#125; else &#123;      return &lt;div&gt;&#123;\"Login Please\"&#125;&lt;/div&gt;;    &#125;  &#125;&#125;\n👆\n¶React Internationalization\n¶What is React Intl?\nReact Intl string, dates, numbers, 복수 표현 등을 다국어로 포맷팅할 수 있는 컴포넌트와 API를 제공한다. React Intl는 components 와 API 를 바탕으로 Reac를 바인딩하는 FormatJS 의 일부분이다.\n👆\n¶What are the main features of React Intl?\n\n숫자를 , 와 함께 표현\n날짜와 시간을 올바르게 표현\n현재시간을 기준으로 날자를 표현\nstring의 복수표현\n150+개의 언어 지원\n브라우저와 노드에서 실행\n표준에 맞춰 제작\n\n👆\n¶What are the two ways of formatting in React Intl?\nstring, number, date를 포맷팅하는 방법은 react 컴포넌트 또는 api를 사용하는 두가지 방법이 있다.\nharmony1234&lt;FormattedMessage  id=&#123;\"account\"&#125;  defaultMessage=&#123;\"The amount is less than minimum balance.\"&#125;/&gt;\n12345678const messages = defineMessages(&#123;  accountMessage: &#123;    id: \"account\",    defaultMessage: \"The amount is less than minimum balance.\"  &#125;&#125;);formatMessage(messages.accountMessage);\n👆\n¶How to use &lt;FormattedMessage&gt; as placeholder using React Intl?\n&lt;Formatted... /&gt; 컴포넌트는 plain text가 아닌 elements를 반환하므로, placeholder, alt text처럼 string이 필요한 곳에는 쓸 수 없다. 따라서 여기에서는 formatMessage()를 사용해야한다. higher-order component인 injectIntl()을 사용하여, 컴포넌트에 intl 객체를 주입하고, 객체에서 사용할 수 있는 formatMessage()를 사용하여 message를 포맷팅할 수 있다.\nharmony12345678910111213import React from \"react\";import &#123; injectIntl, intlShape &#125; from \"react-intl\";const MyComponent = (&#123; intl &#125;) =&gt; &#123;  const placeholder = intl.formatMessage(&#123; id: \"messageId\" &#125;);  return &lt;input placeholder=&#123;placeholder&#125; /&gt;;&#125;;MyComponent.propTypes = &#123;  intl: intlShape.isRequired&#125;;export default injectIntl(MyComponent);\n👆\n¶How to access current locale with React Intl?\n어느 어플리케이션에서든 injectIntl()를 사용하면 현재 로케일을 얻을 수 있다.\n👆\n¶How to format date using React Intl?\nhigher-order 컴포넌트 injectIntl()는 컴포넌트의 props에 formatDate()메서드를 제공한다. 이 메서드는 내부적으로 FormattedDate인스턴스를 활용하고, 이는 포맷된 날짜를 string으로 제공한다.\nharmony1234567891011121314151617import &#123; injectIntl, intlShape &#125; from \"react-intl\";const stringDate = this.props.intl.formatDate(date, &#123;  year: \"numeric\",  month: \"numeric\",  day: \"numeric\"&#125;);const MyComponent = (&#123; intl &#125;) =&gt; (  &lt;div&gt;&#123;`The formatted date is $&#123;stringDate&#125;`&#125;&lt;/div&gt;);MyComponent.propTypes = &#123;  intl: intlShape.isRequired&#125;;export default injectIntl(MyComponent);\n👆\n¶React Testing\n¶What is Shallow Renderer in React testing?\nShallow rendering는 React에서 유닛테스트 케이스를 작성할 때 유용하다. 이는 컴포넌트를 한단계 더 깊이 렌더링하며, 렌더링되지 않은 하위 컴포넌트에 대한 고민 ㅇ벗이 렌더링 메서드가 반환하는 것에 대해 asset를 수행할 수 있다.\nharmony12345678function MyComponent() &#123;  return (    &lt;div&gt;      &lt;span className=&#123;\"heading\"&#125;&gt;&#123;\"Title\"&#125;&lt;/span&gt;      &lt;span className=&#123;\"description\"&#125;&gt;&#123;\"Description\"&#125;&lt;/span&gt;    &lt;/div&gt;  );&#125;\n123456789101112import ShallowRenderer from \"react-test-renderer/shallow\";const renderer = new ShallowRenderer();renderer.render(&lt;MyComponent /&gt;);const result = renderer.getRenderOutput();expect(result.type).toBe(\"div\");expect(result.props.children).toEqual([  &lt;span className=&#123;\"heading\"&#125;&gt;&#123;\"Title\"&#125;&lt;/span&gt;,  &lt;span className=&#123;\"description\"&#125;&gt;&#123;\"Description\"&#125;&lt;/span&gt;]);\n👆\n¶What is TestRenderer package in React?\nTestRenderer 패키지는 component 를 DOM 또는 Native mobile 환경에 의존없이 순수 Javascript Object 로 렌더링 할 수 있는 renderer 를 제공한다. 이 패키지를 사용하면 브라우저 또는 jsdom 의 사용없이 ReactDOM 또는 React Native 에서 렌더링 되는 플랫폼의 뷰 계층구조 (DOM 트리와 유사) 의 스냅샷을 쉽게 가져올 수 있다.\nharmony1234567891011121314import TestRenderer from \"react-test-renderer\";const Link = (&#123; page, children &#125;) =&gt; &lt;a href=&#123;page&#125;&gt;&#123;children&#125;&lt;/a&gt;;const testRenderer = TestRenderer.create(  &lt;Link page=&#123;\"https://www.facebook.com/\"&#125;&gt;&#123;\"Facebook\"&#125;&lt;/Link&gt;);console.log(testRenderer.toJSON());// &#123;//   type: 'a',//   props: &#123; href: 'https://www.facebook.com/' &#125;,//   children: [ 'Facebook' ]// &#125;\n👆\n¶What is the purpose of ReactTestUtils package?\nReactTestUtils는 유닛테스트를 목적으로 DOM을 조작할 수 있는 with-addons패키지를 제공한다.\n👆\n¶What is Jest?\nJest는 페이스북이 만든 자바스크립트 유닛테스트 프레임워크로, Jasmine을 기반으로 만들어 졌으며 자동 mock 생성, jsdom 환경 제공 등의 기능을 제공한다. 컴포넌트를 테스트 하는데 사용 된다.\n👆\n¶What are the advantages of Jest over Jasmine?\nJasmine보다 Jest가 더 좋은 점은\n\n소스코드에서 자동으로 테스트 코드를 찾아서 테스트\n테스트 시 자동으로 mock 의 존성 참고\n동기로 작성된 코드를 비동기로 테스트\nfake Dom implementation으로 테스트 하여, 명령줄에서도 테스트 가능\n병렬 프로세스로 테스트 하여 테스트가 더욱 빠르게 수행됨\n\n👆\n¶Give a simple example of Jest test case\n두 숫자를 더하는 sum.js를 작성한다.\n12const sum = (a, b) =&gt; a + b;export default sum;\n테스트를 수행하는 sum.test.js를 작성\n12345import sum from \"./sum\";test(\"adds 1 + 2 to equal 3\", () =&gt; &#123;  expect(sum(1, 2)).toBe(3);&#125;);\npackage.json에 테스트를 실행하는 코드 추가\n12345&#123;  \"scripts\": &#123;    \"test\": \"jest\"  &#125;&#125;\nyarn test npm test로 테스트 실행 및 결과 확인\n123$ yarn testPASS ./sum.test.js✓ adds 1 + 2 to equal 3 (2ms)\n👆\n¶React Redux\n¶What is flux?\nFlux는 어플리케이션 디자인 패러다임으로, 전통적인 모델인 MVC pattern을 대체하기 위해 나왔다. Flux는 프레임워크나 라이브러리가 아닌, React와 양방향 데이터 흐름을 기반으로 하는 새로운 아키텍쳐다. 페이스북이 React를 사용할 때 내부적으로 이 패턴을 활용한다.\ndispatcher, sotres, views 컴포넌트 사이 작업흐름은 아래처럼 input과 output이 구별되어 나타난다.\n\n👆\n¶What is Redux?\nRedux는 flux 디자인 패턴을 기반으로 한 자바스크립트 앱의 예측가능한 state container다. Redux는 React또는 다른 어떤 뷰 라이브러리와 함께 사용할 수 있다. Redux는 크기가 매우 작고 (2kb), 다른 디펜던시를 갖고 있지 않다.\n👆\n¶What are the core principles of Redux?\nRedux는 다음 세가지 기본 원칙을 가지고 있다.\n\n신뢰할 수 있는 단일 출처: 어플리케이션의 state는 단일 store에 객체트리 형태로 저장되어 있다. 단일 state tree는 변화를 쉽게 추적ㄷ할 수 있게 해주며, 어플리케이션을 디버그하고 검사하는 것을 쉽게 만들어 준다.\nstate는 읽기 전용: state를 변경할 수 있는 방법은 단한가지로, 객체가 어떤 일이 일어났는지 묘사하는 액션을 보내는 것이다. 이는 views나 네트워크 콜백이 직접 state를 수정하지 않도록 한다.\n변화는 순수 함수로만 이루어진다: 액션별로 state 트리가 어떻게 변화하는지 명세하기 위해, reducer를 사용해야 한다.\n\n👆\n¶What are the downsides of Redux compared to Flux?\nFlux와 비교했을 때, Redux는 몇가지 단점을 가지고 있다.\n\n변이를 피하는 법을 배워야 한다: Flux는 데이터 변이에 대해 특별한 의견이 없지만, Redux는 데이터 변이를 선호하지 않으며, 다른 추가 보완 패키지를 활용하여 이를 유지한다. dev-only 패지지인 redux-immutable-state-invariant나 Immutable.js를 활용하거나, 팀원들에게 변이 없는 코드에 대해 방법론을 확산해야 한다.\n패키지를 고를때 신중해진다: Flux는 undo/redo, 지속성, 폼 관련 문제에 대해 무관심하지만, Redux 는 미들웨어 및 Store 개선 등 확장된 포인트들을 가지고 풍부한 생태계를 만들어 냈기 때문에, 패키지 선택에 주의가 필요하다.\n타입체크: Flux는 정적 타입 체크를 할 수 있는 방법이 있지만, Redux는 아직 지원하고 있지 않다.\n\n👆\n¶What is the difference between mapStateToProps() and mapDispatchToProps()?\nmapStateToProps()는 컴포넌트에서 다른 컴포넌트에 의해 업데이트된 state를 가져올수 있도록 도와주는 유틸리티다.\n12345const mapStateToProps = state =&gt; &#123;  return &#123;    todos: getVisibleTodos(state.todos, state.visibilityFilter)  &#125;;&#125;;\nmapDispatchToProps()는 컴포넌트가 이벤트를 발생시킬 수 있도록 도와주는 유틸리티다. (이 이벤트는 어플리케이션의 state에 변화를 가져올 수 있음)\n1234567const mapDispatchToProps = dispatch =&gt; &#123;  return &#123;    onTodoClick: id =&gt; &#123;      dispatch(toggleTodo(id));    &#125;  &#125;;&#125;;\nmapDispatchToProps에서는 항상 객체를 파라미터로 보내기를 권장한다.\nRedux는 (…args) =&gt; dispatch(onTodoClick(…args))와 같은 형태의 다른 함수로 감싸고, 이렇게 감싼 함수를 컴포넌트의 prop로 전달한다.\n123const mapDispatchToProps = &#123;  onTodoClick&#125;;\n👆\n¶Can I dispatch an action in reducer?\nReducer안에서 액션을 보내는 것은 안티패턴이다. Reducer는 사이드이펙트를 최소화 하기 위하여, 단순히 액션에 대한 처리와 새로운 state를 가진 object를 반환하기만 해야 한다. Reducer내에서 리스너를 달고, 액션을 보내는 것은 다른 액션과 연쇄작용을 일으킬 수도 있으며, 사이드 이펙트를 야기할 수도 있다.\n👆\n¶How to access Redux store outside a component?\ncreateStore()로 만들어진 모듈을 export 하면 된다. 그리고 global 객체인 window를 사용해서는 안된다.\n123store = createStore(myReducer);export default store;\n👆\n¶What are the drawbacks of MVW pattern?\n\nDOM 조작은, 많은 비용을 지불해야 하고, 어플리케이션을 느리고 비효율적으로 만든다.\n순환 참조로 인해, 복잡한 모델이 모델과 뷰주변에 만들어질 수 있다.\n구글 docs와 같은 협업 어플리케이션에서는 많은 양의 데이터 변경이 일어날 수 있다.\n추가적으로 많은 코드를 쓰지 않고 undo를 쉽게 할 수 없다.\n\n👆\n¶Are there any similarities between Redux and RxJS?\n두 라이브러리는 목적부터 완전히 다르지만, 약간의 비슷한점을 가지고있다.\nRedux는 어플리케이션 전반에서 state를 관리할 수 있게 도와주는 툴이다. 이는 보통 UI 아키텍쳐에서 ㅁ낳이 사용된다. Angular의 대체재라고 볼 수 있다. 반면 Rxjs는 반응형 프로그래밍 라이브러리다. RxJS는 자바스크립트에서 비동기 작업을 수행하기 위해 사용된다. Promise의 대체재라고 볼 수있다. Redux는 Store가 반응형이기 때문에 반응형 패러다임을 사용한다. Store는 액션을 어느정도 거리에서 관찰하다가, 스스로 변화한다. RxJS 또한 반응형 패러다임을 사용하는 반면, 아키텍쳐를 제공하지 않고 Observable 과 같은 블록을 제공한다.\n👆\n¶How to dispatch an action on load?\ncomponentDidMount()와 render()메서드에서 데이터를 확인하는 액션을 전닥ㄹ할 수 있고 데이터를 확인할 수 있다.\nharmony123456789101112131415161718192021222324class App extends Component &#123;  componentDidMount() &#123;    this.props.fetchData();  &#125;  render() &#123;    return this.props.isLoaded ? (      &lt;div&gt;&#123;\"Loaded\"&#125;&lt;/div&gt;    ) : (      &lt;div&gt;&#123;\"Not Loaded\"&#125;&lt;/div&gt;    );  &#125;&#125;const mapStateToProps = state =&gt; (&#123;  isLoaded: state.isLoaded&#125;);const mapDispatchToProps = &#123; fetchData &#125;;export default connect(  mapStateToProps,  mapDispatchToProps)(App);\n👆\n¶How to use connect() from React Redux?\ncontainer에서 store를 사용하기 위해서는 아래 두단계를 따라야 한다.\n\nmapStateToProps()를 사용: state의 값을 props에서 지정한 store에 맵핑시킨다.\n위 props를 Container 와 연결: mapStateToProps()에 의해 리턴되는 객체들은 컨테이너와 연결된다. 이를 react-redux의 connect로 import 할 수 있다.\n\nharmony1234567891011121314import React from \"react\";import &#123; connect &#125; from \"react-redux\";class App extends React.Component &#123;  render() &#123;    return &lt;div&gt;&#123;this.props.containerData&#125;&lt;/div&gt;;  &#125;&#125;function mapStateToProps(state) &#123;  return &#123; containerData: state.data &#125;;&#125;export default connect(mapStateToProps)(App);\n👆\n¶How to reset state in Redux?\ncombineReducers()로 생성된 reducer 에게 action 을 위임하도록 application 단에서 root reducer 를 작성해야 한다.\n예를 들어, USER_LOGOUT 액션에 초기 state값을 리턴하는 rootReducer()를 예로 들어보자. 알다시피, reducer는 action에 상관없이 첫 번째 매개변수가 undefined로 호출된다면, 초기 상태값을 반환한다.\n1234567891011const appReducer = combineReducers(&#123;  /* your app's top-level reducers */&#125;);const rootReducer = (state, action) =&gt; &#123;  if (action.type === \"USER_LOGOUT\") &#123;    state = undefined;  &#125;  return appReducer(state, action);&#125;;\nredux-persist를 사용하는 경우, 스토리지를 비워야 할 수도 있다. redux-persist에서는 스토리지 안진에 있는 state의 사본을 보관해둔다. 먼저, 적절한 스토리지 엔진을 임포트 한다음, 상태를 undefined로 설정하기 전에 storage state key를 비워주어야 한다.\n👆\n¶Whats the purpose of at symbol in the Redux connect decorator?\n@는 자바스크립트에서 데코레이터를 나타낼 떄 쓰는 표현식이다. 데코레이터는 class와 속성에 주석을 달고, 이를 수정할 수 있게 해준다.\n데코레이터가 없는 redux를 예로 들어보자.\n123456789101112131415161718192021import React from \"react\";import * as actionCreators from \"./actionCreators\";import &#123; bindActionCreators &#125; from \"redux\";import &#123; connect &#125; from \"react-redux\";function mapStateToProps(state) &#123;  return &#123; todos: state.todos &#125;;&#125;function mapDispatchToProps(dispatch) &#123;  return &#123; actions: bindActionCreators(actionCreators, dispatch) &#125;;&#125;class MyApp extends React.Component &#123;  // ...define your main app here&#125;export default connect(  mapStateToProps,  mapDispatchToProps)(MyApp);\n1234567891011121314151617181920import React from \"react\";import * as actionCreators from \"./actionCreators\";import &#123; bindActionCreators &#125; from \"redux\";import &#123; connect &#125; from \"react-redux\";function mapStateToProps(state) &#123;  return &#123; todos: state.todos &#125;;&#125;function mapDispatchToProps(dispatch) &#123;  return &#123; actions: bindActionCreators(actionCreators, dispatch) &#125;;&#125;@connect(  mapStateToProps,  mapDispatchToProps)export default class MyApp extends React.Component &#123;  // ...define your main app here&#125;\n위 예제는 데코레이터를 사용한 것을 제외하고는 비슷하다. 데코레이터는 아직 자바스크립트 런타임에 구현되어 있지 않다. 여전히 실험적인 내용이기 때문에 수정될 여지가 있다. 바벨을 사용하면 이 데코레이터를 쓸 수 있다.\n👆\n¶What is the difference between React context and React Redux?\nContext는 어플리케이션에서 다이렉트로 사용할 수 있으며, 깊게 중첩된 컴포넌트에 데이터를 전달하는데 유용하다. 반면 Redux는 훨씬 더 강력하며, Context API가 제공하지 않는 기능을 제공한다. 또한, React Redux 는 내부적으로 context를 활용하지만, public api에 공개하지는 않는다.\n👆\n¶Why are Redux state functions called reducers?\nReducers 는 항상 모든 이전과 현재의 action을 기반으로한 상태값을 반환한다. Redux reducer 가 호출 될 때 마다 상태와 액션이 파라미터로 전달된다. 상태는 action 에 따라 감소되거나 누적되어 다음 상태를 반환한다. 최종 상태를 얻기 위한 action을 실행하는데 action 단위와 store 의 초기 상태 값을 줄일 수 있다.\n👆\n¶How to make AJAX request in Redux?\n비동기 액션을 허용하는 미들웨어인 redux-thunk를 사용하면 가능하다.\n1234567891011121314151617export function fetchAccount(id) &#123;  return dispatch =&gt; &#123;    dispatch(setLoadingAccountState()); // Show a loading spinner    fetch(`/account/$&#123;id&#125;`, response =&gt; &#123;      dispatch(doneFetchingAccount()); // Hide loading spinner      if (response.status === 200) &#123;        dispatch(setAccount(response.json)); // Use a normal function to set the received state      &#125; else &#123;        dispatch(someError);      &#125;    &#125;);  &#125;;&#125;function setAccount(data) &#123;  return &#123; type: \"SET_Account\", data: data &#125;;&#125;\n👆\n¶Should I keep all component’s state in Redux store?\nRedux Store 에서는 Data를 저장하고, 컴포넌트 내부에서는 UI 에 관련된 상태들을 저장한다.\n👆\n¶What is the proper way to access Redux store?\n컴포넌트에서 스토어에 접근하는 좋은 방법은 connect()함수를 이용하는 것이다. 이 함수는 이미 존재하는 컴포넌트를 감싸 새로운 컴포넌트를 만든다. 이러한 방식을 HOC(Higher Order Component)라고 하는데, 이는 리액트에서 컴포넌트의 기능을 확장할 때 주로 사용한다. 이 방법은 상태와 action 생성자를 컴포넌트에 매핑하고, store가 업데이트 되면 자동적으로 컴포넌트에 state와 action 생성자를 전달 할 수 있도록 해준다.\nconenct를 사용한 &lt;FilterLink&gt; component예제를 아래에서 살펴보자.\n123456789101112131415161718import &#123; connect &#125; from \"react-redux\";import &#123; setVisibilityFilter &#125; from \"../actions\";import Link from \"../components/Link\";const mapStateToProps = (state, ownProps) =&gt; (&#123;  active: ownProps.filter === state.visibilityFilter&#125;);const mapDispatchToProps = (dispatch, ownProps) =&gt; (&#123;  onClick: () =&gt; dispatch(setVisibilityFilter(ownProps.filter))&#125;);const FilterLink = connect(  mapStateToProps,  mapDispatchToProps)(Link);export default FilterLink;\n이미 성능최적화가 되어 있고, 버그를 발생할 여지도 적기 때문에 개발자들은 context api로 바로 스토어에 접근하는 것 보다는 connect()를 사용하는 것을 더 선호한다.\n👆\n¶What is the difference between component and container in React Redux?\nComponent는 어플리케이션의 일부분을 표시하는 함수 또는 클래스 컴포넌트를 의미한다.\nContainer는 비공식적인 용어로, Redux Store와 연결된 컴포넌트를 지칭한다. Container 는 Redux 의 state update 와 action 을 구독하며, DOM element 를 렌더링하지 않는다. 이러한 rendering응ㄴ 하위 component 들에게 위임한다.\n👆\n¶What is the purpose of the constants in Redux?\n상수를 사용하면 IDE를 사용할 때 프로젝트 전체에서 특정한 기능의 모든 사용내역을 쉽게 찾을 수 있다. 또한 오타로 인한 버그도 방지할 수 있다. 오타가 난다면 즉시 ReferenceError를 낸다.\n일반적으로 constant.js또는 actionTypes.js에 저장한다.\n123456export const ADD_TODO = \"ADD_TODO\";export const DELETE_TODO = \"DELETE_TODO\";export const EDIT_TODO = \"EDIT_TODO\";export const COMPLETE_TODO = \"COMPLETE_TODO\";export const COMPLETE_ALL = \"COMPLETE_ALL\";export const CLEAR_COMPLETED = \"CLEAR_COMPLETED\";\n이 파일은 두 군데에서 사용된다.\n\n액션 생성시\n\n12345import &#123; ADD_TODO &#125; from \"./actionTypes\";export function addTodo(text) &#123;  return &#123; type: ADD_TODO, text &#125;;&#125;\n\n리듀서\n\n12345678910111213141516import &#123; ADD_TODO &#125; from \"./actionTypes\";export default (state = [], action) =&gt; &#123;  switch (action.type) &#123;    case ADD_TODO:      return [        ...state,        &#123;          text: action.text,          completed: false        &#125;      ];    default:      return state;  &#125;&#125;;\n👆\n¶What are the different ways to write mapDispatchToProps()?\nmapDispatchToProps() 안에서 dispatch() 를 사용하여 action creators를 바인딩하는 방법은 몇가지가 있다.\n123456789const mapDispatchToProps = dispatch =&gt; (&#123;  action: () =&gt; dispatch(action())&#125;);const mapDispatchToProps = dispatch =&gt; (&#123;  action: bindActionCreators(action, dispatch)&#125;);const mapDispatchToProps = &#123; action &#125;;\n👆\n¶What is the use of the ownProps parameter in mapStateToProps() and mapDispatchToProps()?\nownProps 파라미터가 명시되어 있다면, React Redux는 component로 전달된 props를 연결된 함수로 전달한다. 그래서 만약 connected component를 사용한다면,\n123import ConnectedComponent from \"./containers/ConnectedComponent\";&lt;ConnectedComponent user=&#123;\"john\"&#125; /&gt;;\nmapStateToProps()와 mapDispatchToProps()안의 ownProps는 객체가 될 것이다.\n1&#123; \"user\": \"john\" &#125;\n이 객체를 활용하여 함수에서 무엇을 반환할지 결정할 수 있다.\n👆\n¶How to structure Redux top level directories?\n대부분의 어플리케이션이 아래와 같은 상위구조 레벨을 가지고 있다.\n\nComponents: Redux를 모르는 컴포넌트\nContainer: Redux와 연결된 컴포넌트\nActions: 파일의 이름이 앱의 일부와 일치하는 액션을 생성하는 모든 것\nReducer: 상태 키와 일치파는 파일명을 가진 모든 리듀서\nStore: 스토어 초기화를 위해 사용\n\n이러한 구조는 중소규모의 어플리케이션에 적합하다.\n👆\n¶What is redux-saga?\nredux-saga 는 side effects (데이터를 가져오는 비동기적인 작업이나 browser cache 에 접근하는 것등)를 React/Redux applications에서 더 쉽게 만들도록 도와주는 라이브러리다.\n👆\n¶What is the mental model of redux-saga?\nSaga는 어플리케이션과 분리된 스레드와 같은것으로, 부수적인 역할을 담당하기 위한 책임을 가지고 있다. redux-saga는 redux의 미들웨어로, 메인 application 에서 Redux actions 과 함께 쓰레드를 시작, 중지, 취소 할 수 있으며 전체의 Redux application 상태에 접근할 수 있으며 Redux actions 도 전달할 수 있다.\n👆\n¶What are the differences between call() and put() in redux-saga?\ncall() put() 모두 effect creator 함수다. call()은 함수는 middleware 가 promise 를 어떻게 호출할지를 설명하는 effect 을 생성하는데 사용된다. put() 함수는 store 에 action 을 통하여 전달하도록 미들웨어에게 가르치는 effect 를 생성한다.\n사용자의 데이터를 가져오는 예제를 보고 effects 가 어떻게 동작하는지 살펴보자.\n1234567891011function* fetchUserSaga(action) &#123;  // `call` function accepts rest arguments, which will be passed to `api.fetchUser` function.  // Instructing middleware to call promise, it resolved value will be assigned to `userData` variable  const userData = yield call(api.fetchUser, action.userId);  // Instructing middleware to dispatch corresponding action.  yield put(&#123;    type: \"FETCH_USER_SUCCESS\",    userData  &#125;);&#125;\n👆\n¶What is Redux Thunk?\nRedux Thunk 는 action 대신 함수를 반환하는 action 생성자를 작성 할 수 있는 미들웨어다. Thunk 는 action dispatch 를 지연 시키거나, 특정한 조건이 성립되는 경우에만 dispatch 하도록 할 수 있다. 내부 함수는 파라미터로로 dispatch() getState()를 받는다.\n👆\n¶What are the differences between redux-saga and redux-thunk?\nRedux Thunk 와 Redux Saga 는 모두 side effect 를 다룬다. 대부분의 시나리오에서 Thunk 는 Promise 를 사용하여 처리하고 Saga 는 Generators 를 사용한다. Promise 는 많은 개발자들에게 친숙하기 때문에 Thunk 는 비교적 다루기 쉽고, Sagas와 Generator 는 기능은 강력한 반면에 러닝커브가 존재한다. 두 미들웨어 모두 공존 할 수 있다. Thunk 로 시작하여도 만약 Saga 가 필요하다면 도입 할 수 있다.\n👆\n¶What is Redux DevTools?\nRedux DevTools 은 Redux 를 위한 hot reload 기능을 가진 실시간 편집이 가능한 툴이다. 액션을 다시 재현하거나 UI 를 사용자 정의에 맞게 만들 수 있다. Redux DevTools 을 프로젝트에 설치하여 사용하고 싶지 않다면 Chrome 또는 Firefox 용 Extension 사용을 고려해 볼 수 있다.\n👆\n¶What are the features of Redux DevTools?\n\n모든 상태와 액션을 검사\naction 을 취소하여 작업을 되돌리기\nreducer 의 코드를 변경 시 staged된 액션을 재평가\naction 에서 어떤 일이 일어났는지, 오류가 발생하였는지 확인\npersistState() store enhancer 을 사용하면 page reload 에서 debug session을 유지할 수 있음\n\n👆\n¶What are Redux selectors and why to use them?\nSelectors 는 Redux state 를 인수로받고 데이터를 반환하여 component 로 전달하는 함수다.\n예를 들어, state에서 유저 상태정보를 받는다면 아래와 같이 처리할 수 있다.\n1const getUserData = state =&gt; state.user.data;\n👆\n¶What is Redux Form?\nRedux Form은 React와 Redux와 동시에 작동하며, React 폼 내에서 Redux의 모든 상태를 저장할 수 있다. Redux Form은 HTML5 input요소들과 사용가능하며, Material UI, React Widget, React bootstrap 과 같은 UI 프레임워크와도 동작이 가능하다.\n👆\n¶What are the main features of Redux Form?\n\nRedux store를 통한 필드 값 유지\n값 유효성 검사 (동기, 비동기)\n포맷팅, 파싱, 정규화\n\n👆\n¶How to add multiple middlewares to Redux?\napplyMiddleware()를 사용하면 된다. 예를 들어, applyMiddleware()를 사용하여 redux-thunk와 logger를 추가할 수 있다.\n1234import &#123; createStore, applyMiddleware &#125; from \"redux\";const createStoreWithMiddleware = applyMiddleware(ReduxThunk, logger)(  createStore);\n👆\n¶How to set initial state in Redux?\ncreateStore에 두번째 인자로 초기 state값을 넘겨주면 된다.\n12345678910const rootReducer = combineReducers(&#123;  todos: todos,  visibilityFilter: visibilityFilter&#125;);const initialState = &#123;  todos: [&#123; id: 123, name: \"example\", completed: false &#125;]&#125;;const store = createStore(rootReducer, initialState);\n👆\n¶How Relay is different from Redux?\nRelay와 Redux모두 하나의 스토어를 쓴다는 점에서 같다. 가장 큰 차이점은, 서버로 붙어 받은 메시지만 릴레이 한다는 점, 그리고 상태값을 모두 GraphQL 쿼리로 받는다는 것이다. Relay는 변경된 데이터만 가져온다는 점에서 데이터를 캐싱하거나 최적화할 수 있다.\n¶React Native\n¶What is the difference between React Native and React?\nReact는 자바스크립트 라이브러리로, 프론트엔드와 서버에서 동작하며, 유저인터페이스나 웹 어플리케이션을 만들기 위해 사용된다.\nReact Native는 네이티브 앱 컴포넌트를 컴파일하기 위한 모바일 프레임워크로, 자바스크립트 기반 React로 iOS, Android와 같은 네이티브 어플리케이션을 만들 수 있게 해준다.\n👆\n¶How to test React Native apps?\nReact Native는 iOS나 안드로이드와 같은 시뮬레이터로만 테스트가 가능하다. expo app를 활용한다면, qr코드를 활용하여 무선 네트워크 상에서도 모바일과 컴퓨터로 싱크를 맞출 수 있다.\n👆\n¶How to do logging in React Native?\nconsole.log console.warn을 사용할 수 있다. React Native v0.29에서는 아래 명령어로도 가능하다.\n12$ react-native log-ios$ react-native log-android\n👆\n¶How to debug your React Native?\n\niOS 시뮬레이터로 어플리케이션을 실행한다.\nCommand + D를 눌러서 웹페이지가 http://localhost:8081/debugger-ui에서 실행되게 한다.\nPause On Caught Exceptions을 활성화 하면 원활하게 디버그가 가능하다.\nCommand + Option + I 또는 View -&gt; Developer -&gt; Developer Tools로 크롬 개발자 도구를 띄운다.\n디버그가 가능하다.\n\n👆\n","dateCreated":"2019-08-21T10:17:16+09:00","dateModified":"2019-09-06T09:30:06+09:00","datePublished":"2019-08-21T10:17:16+09:00","description":"목차\n\n¶Table of Contents\nNo.QuestionsReact Router129What is React Router?130How React Router is different from history library?131What are the  components of React Router v4?132What is the purpose of push and replace methods of history?133How do you programmatically navigate using React router","headline":"리액트 인터뷰 질문 & 답 (2)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/08/21/reactjs-interview-questions-2/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/08/21/reactjs-interview-questions-2/","keywords":"react, javascript"}</script>
+    <meta name="description" content="목차  ¶Table of Contents No.QuestionsReact Router129What is React Router?130How React Router is different from history library?131What are the  components of React Router v4?132What is the purpose of pu">
+<meta name="keywords" content="react,javascript">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="리액트 인터뷰 질문 &amp; 답 (2)">
+<meta property="og:url" content="https://www.yceffort.kr/2019/08/21/reactjs-interview-questions-2/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="목차  ¶Table of Contents No.QuestionsReact Router129What is React Router?130How React Router is different from history library?131What are the  components of React Router v4?132What is the purpose of pu">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://github.com/sudheerj/reactjs-interview-questions/raw/master/images/flux.png">
+<meta property="og:updated_time" content="2019-09-06T00:30:06.545Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="리액트 인터뷰 질문 &amp; 답 (2)">
+<meta name="twitter:description" content="목차  ¶Table of Contents No.QuestionsReact Router129What is React Router?130How React Router is different from history library?131What are the  components of React Router v4?132What is the purpose of pu">
+<meta name="twitter:image" content="https://github.com/sudheerj/reactjs-interview-questions/raw/master/images/flux.png">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            리액트 인터뷰 질문 &amp; 답 (2)
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-08-21T10:17:16+09:00">
+	
+		    Aug 21, 2019
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p><a href="/2019/08/13/reactjs-interview-questions/">목차</a></p>
+<h2 id="table-of-contents"><a class="header-anchor" href="#table-of-contents">¶</a>Table of Contents</h2>
+<table>
+<thead>
+<tr>
+<th>No.</th>
+<th>Questions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td><strong>React Router</strong></td>
+</tr>
+<tr>
+<td>129</td>
+<td><a href="#what-is-react-router">What is React Router?</a></td>
+</tr>
+<tr>
+<td>130</td>
+<td><a href="#how-react-router-is-different-from-history-library">How React Router is different from history library?</a></td>
+</tr>
+<tr>
+<td>131</td>
+<td><a href="#what-are-the-router-components-of-react-router-v4">What are the &lt;Router&gt; components of React Router v4?</a></td>
+</tr>
+<tr>
+<td>132</td>
+<td><a href="#what-is-the-purpose-of-push-and-replace-methods-of-history">What is the purpose of push and replace methods of history?</a></td>
+</tr>
+<tr>
+<td>133</td>
+<td><a href="#how-do-you-programmatically-navigate-using-react-router-v4">How do you programmatically navigate using React router v4?</a></td>
+</tr>
+<tr>
+<td>134</td>
+<td><a href="#how-to-get-query-parameters-in-react-router-v4">How to get query parameters in React Router v4</a></td>
+</tr>
+<tr>
+<td>135</td>
+<td><a href="#why-you-get-router-may-have-only-one-child-element-warning">Why you get “Router may have only one child element” warning?</a></td>
+</tr>
+<tr>
+<td>136</td>
+<td><a href="#how-to-pass-params-to-historypush-method-in-react-router-v4">How to pass params to history.push method in React Router v4?</a></td>
+</tr>
+<tr>
+<td>137</td>
+<td><a href="#how-to-implement-default-or-notfound-page">How to implement default or NotFound page?</a></td>
+</tr>
+<tr>
+<td>138</td>
+<td><a href="#how-to-get-history-on-react-router-v4">How to get history on React Router v4?</a></td>
+</tr>
+<tr>
+<td>139</td>
+<td><a href="#how-to-perform-automatic-redirect-after-login">How to perform automatic redirect after login?</a></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>React Internationalization</strong></td>
+</tr>
+<tr>
+<td>140</td>
+<td><a href="#what-is-react-intl">What is React-Intl?</a></td>
+</tr>
+<tr>
+<td>141</td>
+<td><a href="#what-are-the-main-features-of-react-intl">What are the main features of React Intl?</a></td>
+</tr>
+<tr>
+<td>142</td>
+<td><a href="#what-are-the-two-ways-of-formatting-in-react-intl">What are the two ways of formatting in React Intl?</a></td>
+</tr>
+<tr>
+<td>143</td>
+<td><a href="#how-to-use-formattedmessage-as-placeholder-using-react-intl">How to use FormattedMessage as placeholder using React Intl?</a></td>
+</tr>
+<tr>
+<td>144</td>
+<td><a href="#how-to-access-current-locale-with-react-intl">How to access current locale with React Intl</a></td>
+</tr>
+<tr>
+<td>145</td>
+<td><a href="#how-to-format-date-using-react-intl">How to format date using React Intl?</a></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>React Testing</strong></td>
+</tr>
+<tr>
+<td>146</td>
+<td><a href="#what-is-shallow-renderer-in-react-testing">What is Shallow Renderer in React testing?</a></td>
+</tr>
+<tr>
+<td>147</td>
+<td><a href="#what-is-testrenderer-package-in-react">What is TestRenderer package in React?</a></td>
+</tr>
+<tr>
+<td>148</td>
+<td><a href="#what-is-the-purpose-of-reacttestutils-package">What is the purpose of ReactTestUtils package?</a></td>
+</tr>
+<tr>
+<td>149</td>
+<td><a href="#what-is-jest">What is Jest?</a></td>
+</tr>
+<tr>
+<td>150</td>
+<td><a href="#what-are-the-advantages-of-jest-over-jasmine">What are the advantages of Jest over Jasmine?</a></td>
+</tr>
+<tr>
+<td>151</td>
+<td><a href="#give-a-simple-example-of-jest-test-case">Give a simple example of Jest test case</a></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>React Redux</strong></td>
+</tr>
+<tr>
+<td>152</td>
+<td><a href="#what-is-flux">What is Flux?</a></td>
+</tr>
+<tr>
+<td>153</td>
+<td><a href="#what-is-redux">What is Redux?</a></td>
+</tr>
+<tr>
+<td>154</td>
+<td><a href="#what-are-the-core-principles-of-redux">What are the core principles of Redux?</a></td>
+</tr>
+<tr>
+<td>155</td>
+<td><a href="#what-are-the-downsides-of-redux-compared-to-flux">What are the downsides of Redux compared to Flux?</a></td>
+</tr>
+<tr>
+<td>156</td>
+<td><a href="#what-is-the-difference-between-mapstatetoprops-and-mapdispatchtoprops">What is the difference between mapStateToProps() and mapDispatchToProps()?</a></td>
+</tr>
+<tr>
+<td>157</td>
+<td><a href="#can-i-dispatch-an-action-in-reducer">Can I dispatch an action in reducer?</a></td>
+</tr>
+<tr>
+<td>158</td>
+<td><a href="#how-to-access-redux-store-outside-a-component">How to access Redux store outside a component?</a></td>
+</tr>
+<tr>
+<td>159</td>
+<td><a href="#what-are-the-drawbacks-of-mvw-pattern">What are the drawbacks of MVW pattern</a></td>
+</tr>
+<tr>
+<td>160</td>
+<td><a href="#are-there-any-similarities-between-redux-and-rxjs">Are there any similarities between Redux and RxJS?</a></td>
+</tr>
+<tr>
+<td>161</td>
+<td><a href="#how-to-dispatch-an-action-on-load">How to dispatch an action on load?</a></td>
+</tr>
+<tr>
+<td>162</td>
+<td><a href="#how-to-use-connect-from-react-redux">How to use connect from React Redux?</a></td>
+</tr>
+<tr>
+<td>163</td>
+<td><a href="#how-to-reset-state-in-redux">How to reset state in Redux?</a></td>
+</tr>
+<tr>
+<td>164</td>
+<td><a href="#whats-the-purpose-of-at-symbol-in-the-redux-connect-decorator">Whats the purpose of at symbol in the redux connect decorator?</a></td>
+</tr>
+<tr>
+<td>165</td>
+<td><a href="#what-is-the-difference-between-react-context-and-react-redux">What is the difference between React context and React Redux?</a></td>
+</tr>
+<tr>
+<td>166</td>
+<td><a href="#why-are-redux-state-functions-called-reducers">Why are Redux state functions called reducers?</a></td>
+</tr>
+<tr>
+<td>167</td>
+<td><a href="#how-to-make-ajax-request-in-redux">How to make AJAX request in Redux?</a></td>
+</tr>
+<tr>
+<td>168</td>
+<td><a href="#should-i-keep-all-components-state-in-redux-store">Should I keep all component’s state in Redux store?</a></td>
+</tr>
+<tr>
+<td>169</td>
+<td><a href="#what-is-the-proper-way-to-access-redux-store">What is the proper way to access Redux store?</a></td>
+</tr>
+<tr>
+<td>170</td>
+<td><a href="#what-is-the-difference-between-component-and-container-in-react-redux">What is the difference between component and container in React Redux?</a></td>
+</tr>
+<tr>
+<td>171</td>
+<td><a href="#what-is-the-purpose-of-the-constants-in-redux">What is the purpose of the constants in Redux? </a></td>
+</tr>
+<tr>
+<td>172</td>
+<td><a href="#what-are-the-different-ways-to-write-mapdispatchtoprops">What are the different ways to write mapDispatchToProps()?</a></td>
+</tr>
+<tr>
+<td>173</td>
+<td><a href="#what-is-the-use-of-the-ownprops-parameter-in-mapstatetoprops-and-mapdispatchtoprops">What is the use of the ownProps parameter in mapStateToProps() and mapDispatchToProps()?</a></td>
+</tr>
+<tr>
+<td>174</td>
+<td><a href="#how-to-structure-redux-top-level-directories">How to structure Redux top level directories?</a></td>
+</tr>
+<tr>
+<td>175</td>
+<td><a href="#what-is-redux-saga">What is redux-saga?</a></td>
+</tr>
+<tr>
+<td>176</td>
+<td><a href="#what-is-the-mental-model-of-redux-saga">What is the mental model of redux-saga?</a></td>
+</tr>
+<tr>
+<td>177</td>
+<td><a href="#what-are-the-differences-between-call-and-put-in-redux-saga">What are the differences between call and put in redux-saga</a></td>
+</tr>
+<tr>
+<td>178</td>
+<td><a href="#what-is-redux-thunk">What is Redux Thunk?</a></td>
+</tr>
+<tr>
+<td>179</td>
+<td><a href="#what-are-the-differences-between-redux-saga-and-redux-thunk">What are the differences between redux-saga and redux-thunk</a></td>
+</tr>
+<tr>
+<td>180</td>
+<td><a href="#what-is-redux-devtools">What is Redux DevTools?</a></td>
+</tr>
+<tr>
+<td>181</td>
+<td><a href="#what-are-the-features-of-redux-devtools">What are the features of Redux DevTools?</a></td>
+</tr>
+<tr>
+<td>182</td>
+<td><a href="#what-are-redux-selectors-and-why-to-use-them">What are Redux selectors and Why to use them?</a></td>
+</tr>
+<tr>
+<td>183</td>
+<td><a href="#what-is-redux-form">What is Redux Form?</a></td>
+</tr>
+<tr>
+<td>184</td>
+<td><a href="#what-are-the-main-features-of-redux-form">What are the main features of Redux Form?</a></td>
+</tr>
+<tr>
+<td>185</td>
+<td><a href="#how-to-add-multiple-middlewares-to-redux">How to add multiple middlewares to Redux?</a></td>
+</tr>
+<tr>
+<td>186</td>
+<td><a href="#how-to-set-initial-state-in-redux">How to set initial state in Redux?</a></td>
+</tr>
+<tr>
+<td>187</td>
+<td><a href="#how-relay-is-different-from-redux">How Relay is different from Redux?</a></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>React Native</strong></td>
+</tr>
+<tr>
+<td>188</td>
+<td><a href="#what-is-the-difference-between-react-native-and-react">What is the difference between React Native and React?</a></td>
+</tr>
+<tr>
+<td>189</td>
+<td><a href="#how-to-test-react-native-apps">How to test React Native apps?</a></td>
+</tr>
+<tr>
+<td>190</td>
+<td><a href="#how-to-do-logging-in-react-native">How to do logging in React Native?</a></td>
+</tr>
+<tr>
+<td>191</td>
+<td><a href="#how-to-debug-your-react-native">How to debug your React Native?</a></td>
+</tr>
+<tr>
+<td></td>
+<td><strong>React supported libraries and Integration</strong></td>
+</tr>
+<tr>
+<td>192</td>
+<td><a href="#what-is-reselect-and-how-it-works">What is reselect and how it works?</a></td>
+</tr>
+<tr>
+<td>193</td>
+<td><a href="#what-is-flow">What is Flow?</a></td>
+</tr>
+<tr>
+<td>194</td>
+<td><a href="#what-is-the-difference-between-flow-and-proptypes">What is the difference between Flow and PropTypes?</a></td>
+</tr>
+<tr>
+<td>195</td>
+<td><a href="#how-to-use-font-awesome-icons-in-react">How to use font-awesome icons in React?</a></td>
+</tr>
+<tr>
+<td>196</td>
+<td><a href="#what-is-react-dev-tools">What is React Dev Tools?</a></td>
+</tr>
+<tr>
+<td>197</td>
+<td><a href="#why-is-devtools-not-loading-in-chrome-for-local-files">Why is DevTools not loading in Chrome for local files?</a></td>
+</tr>
+<tr>
+<td>198</td>
+<td><a href="#how-to-use-polymer-in-react">How to use Polymer in React?</a></td>
+</tr>
+<tr>
+<td>199</td>
+<td><a href="#what-are-the-advantages-of-react-over-vuejs">What are the advantages of React over Vue.js?</a></td>
+</tr>
+<tr>
+<td>200</td>
+<td><a href="#what-is-the-difference-between-react-and-angular">What is the difference between React and Angular?</a></td>
+</tr>
+<tr>
+<td>201</td>
+<td><a href="#why-react-tab-is-not-showing-up-in-devtools">Why React tab is not showing up in DevTools?</a></td>
+</tr>
+<tr>
+<td>202</td>
+<td><a href="#what-are-styled-components">What are styled components?</a></td>
+</tr>
+<tr>
+<td>203</td>
+<td><a href="#give-an-example-of-styled-components">Give an example of Styled Components?</a></td>
+</tr>
+<tr>
+<td>204</td>
+<td><a href="#what-is-relay">What is Relay?</a></td>
+</tr>
+<tr>
+<td>205</td>
+<td><a href="#how-to-use-typescript-in-create-react-app-application">How to use TypeScript in create-react-app application?</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="react-router"><a class="header-anchor" href="#react-router">¶</a>React Router</h2>
+<h3 id="what-is-react-router"><a class="header-anchor" href="#what-is-react-router">¶</a>What is React Router?</h3>
+<p>React Router는 리액트 최상단에 있는 강력한 라우팅 라이브러리로, 페이지에 보여주는 내용과 URL사이에 동기화를 유지해주고, 어플리케이션에 새로운 화면과 흐름을 추가할 수 있도록 도와준다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-react-router-is-different-from-history-library"><a class="header-anchor" href="#how-react-router-is-different-from-history-library">¶</a>How React Router is different from history library?</h3>
+<p>React router는 history라이브러리를 감싼 래퍼로, 브라우저의 <code>window.history</code>와 상호작용하고, 브라우저 및 해쉬의 히스토리를 다룬다. 또한 모바일 앱 개발 (React Native) 및 Node의 unit testing처럼 global histroy가 없는 환경에 유용한 메모리 히스토리를 제공한다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-are-the-router-components-of-react-router-v4"><a class="header-anchor" href="#what-are-the-router-components-of-react-router-v4">¶</a>What are the <code>&lt;Router&gt;</code> components of React Router v4?</h3>
+<p>v4는 새로운 3개의 <code>&lt;Router&gt;</code> 컴포넌트를 제공한다.</p>
+<ol>
+<li><code>&lt;BrowserRouter&gt;</code></li>
+<li><code>&lt;HashRouter&gt;</code></li>
+<li><code>&lt;MemoryRouter&gt;</code></li>
+</ol>
+<p>위 컴포넌트는 각각 브라우저, 해쉬, 메모리 히스토리 인스턴스를 만들어준다. React Router v4는 Router Object의 context를 통해, history 인스턴스의 속성과 메소드를 활용할 수 있게 해준다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-is-the-purpose-of-push-and-replace-methods-of-history"><a class="header-anchor" href="#what-is-the-purpose-of-push-and-replace-methods-of-history">¶</a>What is the purpose of <code>push()</code> and <code>replace()</code> methods of <code>history</code>?</h3>
+<p>히스토리 인스턴스에는 네비게이션 목적으로 두개의 메소드를 제공한다.</p>
+<ol>
+<li><code>push()</code></li>
+<li><code>replace()</code></li>
+</ol>
+<p>만약 히스토리가 방문했던 곳들의 배열이라고 생각한다면, <code>push()</code>가 그 역할을 할 것이고, 현재 위치를 덮어쓰는 느낌을 원한다면 <code>replace()</code>가 맞을 것이다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-do-you-programmatically-navigate-using-react-router-v4"><a class="header-anchor" href="#how-do-you-programmatically-navigate-using-react-router-v4">¶</a>How do you programmatically navigate using React Router v4?</h3>
+<p>Component 내에서 프로그래밍으로 라우팅/네비게이팅 하는 방법에는 3가지가 있다.</p>
+<ol>
+<li>HOF에서 <code>withRouter()</code>를 쓰는법<br>
+HOF의 <code>withRouter()</code>는 컴포넌트의 prop에 히스토리 오브젝트를 인젝트 한다. 이 오브젝트는 <code>push()</code> <code>replace()</code>를 제공하여 context의 사용을 피하게 해준다.</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; withRouter &#125; <span class="keyword">from</span> <span class="string">"react-router-dom"</span>; <span class="comment">// this also works with 'react-router-native'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Button = withRouter(<span class="function">(<span class="params">&#123; history &#125;</span>) =&gt;</span> (</span><br><span class="line">  &lt;button</span><br><span class="line">    type=<span class="string">"button"</span></span><br><span class="line">    onClick=&#123;() =&gt; &#123;</span><br><span class="line">      history.push(<span class="string">"/new-location"</span>);</span><br><span class="line">    &#125;&#125;</span><br><span class="line">  &gt;</span><br><span class="line">    &#123;<span class="string">"Click Me!"</span>&#125;</span><br><span class="line">  &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">));</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li><code>&lt;Route&gt;</code> 컴포넌트와 render props 패턴을 사용하는 법<br>
+<code>&lt;Route&gt;</code>는 <code>withRouter()</code>와 같은 props를 넘기므로, history prop을 통해 histoy 메서드에 접근할 수 있을 것이다.</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Route &#125; <span class="keyword">from</span> <span class="string">"react-router-dom"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Button = <span class="function"><span class="params">()</span> =&gt;</span> (</span><br><span class="line">  &lt;Route</span><br><span class="line">    render=&#123;(&#123; history &#125;) =&gt; (</span><br><span class="line">      &lt;button</span><br><span class="line">        type=<span class="string">"button"</span></span><br><span class="line">        onClick=&#123;() =&gt; &#123;</span><br><span class="line">          history.push(<span class="string">"/new-location"</span>);</span><br><span class="line">        &#125;&#125;</span><br><span class="line">      &gt;</span><br><span class="line">        &#123;<span class="string">"Click Me!"</span>&#125;</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">    )&#125;</span></span><br><span class="line"><span class="regexp">  /</span>&gt;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>Context<br>
+이 방식은 딱히 추천되지 않고, 불안정한 API 활용으로 간주된다.</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> Button = <span class="function">(<span class="params">props, context</span>) =&gt;</span> (</span><br><span class="line">  &lt;button</span><br><span class="line">    type=<span class="string">"button"</span></span><br><span class="line">    onClick=&#123;() =&gt; &#123;</span><br><span class="line">      context.history.push(<span class="string">"/new-location"</span>);</span><br><span class="line">    &#125;&#125;</span><br><span class="line">  &gt;</span><br><span class="line">    &#123;<span class="string">"Click Me!"</span>&#125;</span><br><span class="line">  &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">);</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">Button.contextTypes = &#123;</span></span><br><span class="line"><span class="regexp">  history: React.PropTypes.shape(&#123;</span></span><br><span class="line"><span class="regexp">    push: React.PropTypes.func.isRequired</span></span><br><span class="line"><span class="regexp">  &#125;)</span></span><br><span class="line"><span class="regexp">&#125;;</span></span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-to-get-query-parameters-in-react-router-v4"><a class="header-anchor" href="#how-to-get-query-parameters-in-react-router-v4">¶</a>How to get query parameters in React Router v4?</h3>
+<p>수년간 다른 구현 지원에 대한 사용자들의 많은 요청 때문에, React Router v4에서는 query string을 parsing 하는 방법은 사라졌다. 이는 유저가 원하는 대로 구현할 수 있는 자유도를 주었다. 추천하는 방법은, query string 라이브러리를 사용하는 것이다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> queryString = <span class="built_in">require</span>(<span class="string">"query-string"</span>);</span><br><span class="line"><span class="keyword">const</span> parsed = queryString.parse(props.location.search);</span><br></pre></td></tr></table></figure>
+<p>native 방식을 선호한다면 <code>URLSearchParam</code>을 사용할 수도 있다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> params = <span class="keyword">new</span> URLSearchParams(props.location.search);</span><br><span class="line"><span class="keyword">const</span> foo = params.get(<span class="string">"name"</span>);</span><br></pre></td></tr></table></figure>
+<p>다만 IE11에서는 폴리필이 필요하다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="why-you-get-router-may-have-only-one-child-element-warning"><a class="header-anchor" href="#why-you-get-router-may-have-only-one-child-element-warning">¶</a>Why you get “Router may have only one child element” warning?</h3>
+<p>Route는 <code>&lt;Switch&gt;</code> 블록으로 감싸줘야 하는데, 왜냐하면 <code>&lt;Switch&gt;</code>는 라우트를 베타적으로 감싸기 때문이다. 먼저 <code>Switch</code>를 임포트 해야 한다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Switch, Router, Route &#125; <span class="keyword">from</span> <span class="string">"react-router"</span>;</span><br></pre></td></tr></table></figure>
+<p>그리고 route를 <code>&lt;Switch&gt;</code> 블록에 넣어햐 한다.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Router</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">Switch</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Route</span> &#123;/* <span class="attr">...</span> */&#125; /&gt;</span> <span class="tag">&lt;<span class="name">Route</span> &#123;/* <span class="attr">...</span> */&#125; /&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">Switch</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Router</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-to-pass-params-to-history-push-method-in-react-router-v4"><a class="header-anchor" href="#how-to-pass-params-to-history-push-method-in-react-router-v4">¶</a>How to pass params to <code>history.push</code> method in React Router v4?</h3>
+<p>history 객체에 props를 보낼 수 있다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.props.history.push(&#123;</span><br><span class="line">  pathname: <span class="string">"/template"</span>,</span><br><span class="line">  search: <span class="string">"?name=sudheer"</span>,</span><br><span class="line">  state: &#123; <span class="attr">detail</span>: response.data &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><code>search</code> 속성은 <code>push()</code>에서 query param을 보낼 때 사용된다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-to-implement-default-or-notfound-page"><a class="header-anchor" href="#how-to-implement-default-or-notfound-page">¶</a>How to implement <em>default</em> or <em>NotFound</em> page?</h3>
+<p><code>&lt;Switch&gt;</code>는 첫번째로 일치하는 <code>&lt;Route&gt;</code>를 렌더링한다. path가 없는 route는 항상 매치하게 되어 있다. 따라서, path를 제거한 route를 하나 추가하면 된다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;Switch&gt;</span><br><span class="line">  &lt;Route exact path=<span class="string">"/"</span> component=&#123;Home&#125; /&gt;</span><br><span class="line">  &lt;Route path=<span class="string">"/user"</span> component=&#123;User&#125; /&gt;</span><br><span class="line">  &lt;Route component=&#123;NotFound&#125; /&gt;</span><br><span class="line">&lt;<span class="regexp">/Switch&gt;</span></span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-to-get-history-on-react-router-v4"><a class="header-anchor" href="#how-to-get-history-on-react-router-v4">¶</a>How to get history on React Router v4?</h3>
+<ol>
+<li>history 오브젝트를 익스포트 하는 모듈을 만들고, 프로젝트 전체에서 해당 모듈을 임포트 한다. 예를들어,</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createBrowserHistory &#125; <span class="keyword">from</span> <span class="string">"history"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> createBrowserHistory(&#123;</span><br><span class="line">  <span class="comment">/* pass a configuration object here if needed */</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>빌트인 라우터 대신에, <code>&lt;Router&gt;</code> 컴포넌트를 쓴다. 위에서 만든 <code>history.js</code>를 <code>index.js</code>에 임포트 한다.</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; Router &#125; <span class="keyword">from</span> <span class="string">"react-router-dom"</span>;</span><br><span class="line"><span class="keyword">import</span> history <span class="keyword">from</span> <span class="string">"./history"</span>;</span><br><span class="line"><span class="keyword">import</span> App <span class="keyword">from</span> <span class="string">"./App"</span>;</span><br><span class="line"></span><br><span class="line">ReactDOM.render(</span><br><span class="line">  &lt;Router history=&#123;history&#125;&gt;</span><br><span class="line">    &lt;App /&gt;</span><br><span class="line">  &lt;<span class="regexp">/Router&gt;,</span></span><br><span class="line"><span class="regexp">  holder</span></span><br><span class="line"><span class="regexp">);</span></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>빌트인 히스토리 오브젝트와 비슷하게, history의 push메소드를 쓸수도 있다.</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// some-other-file.js</span></span><br><span class="line"><span class="keyword">import</span> history <span class="keyword">from</span> <span class="string">"./history"</span>;</span><br><span class="line"></span><br><span class="line">history.push(<span class="string">"/go-here"</span>);</span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-to-perform-automatic-redirect-after-login"><a class="header-anchor" href="#how-to-perform-automatic-redirect-after-login">¶</a>How to perform automatic redirect after login?</h3>
+<p><code>react-router</code>sms <code>&lt;Redirect&gt;</code> 컴포넌트를 제공한다. <code>&lt;Redirect&gt;</code>를 렌더링 하면 새로운 위치로 이동하게 된다. 서버사이드 리다이렉트와 마찬가지로, 새로운 위치는 현재 히스토리 스택에 있는 현재 위치를 덮어쓰게 된다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123; Component &#125; <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Redirect &#125; <span class="keyword">from</span> <span class="string">"react-router"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">LoginComponent</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.state.isLoggedIn === <span class="literal">true</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">Redirect</span> <span class="attr">to</span>=<span class="string">"/your/redirect/page"</span> /&gt;</span>;</span></span><br><span class="line"><span class="xml">    &#125; else &#123;</span></span><br><span class="line"><span class="xml">      return <span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;"Login Please"&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span>;</span></span><br><span class="line"><span class="xml">    &#125;</span></span><br><span class="line"><span class="xml">  &#125;</span></span><br><span class="line"><span class="xml">&#125;</span></span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h2 id="react-internationalization"><a class="header-anchor" href="#react-internationalization">¶</a>React Internationalization</h2>
+<h3 id="what-is-react-intl"><a class="header-anchor" href="#what-is-react-intl">¶</a>What is React Intl?</h3>
+<p>React Intl string, dates, numbers, 복수 표현 등을 다국어로 포맷팅할 수 있는 컴포넌트와 API를 제공한다. React Intl는 components 와 API 를 바탕으로 Reac를 바인딩하는 FormatJS 의 일부분이다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-are-the-main-features-of-react-intl"><a class="header-anchor" href="#what-are-the-main-features-of-react-intl">¶</a>What are the main features of React Intl?</h3>
+<ol>
+<li>숫자를 , 와 함께 표현</li>
+<li>날짜와 시간을 올바르게 표현</li>
+<li>현재시간을 기준으로 날자를 표현</li>
+<li>string의 복수표현</li>
+<li>150+개의 언어 지원</li>
+<li>브라우저와 노드에서 실행</li>
+<li>표준에 맞춰 제작</li>
+</ol>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-are-the-two-ways-of-formatting-in-react-intl"><a class="header-anchor" href="#what-are-the-two-ways-of-formatting-in-react-intl">¶</a>What are the two ways of formatting in React Intl?</h3>
+<p>string, number, date를 포맷팅하는 방법은 react 컴포넌트 또는 api를 사용하는 두가지 방법이 있다.</p>
+<figure class="highlight jsx"><figcaption><span>harmony</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;FormattedMessage</span><br><span class="line">  id=&#123;<span class="string">"account"</span>&#125;</span><br><span class="line">  defaultMessage=&#123;<span class="string">"The amount is less than minimum balance."</span>&#125;</span><br><span class="line">/&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> messages = defineMessages(&#123;</span><br><span class="line">  accountMessage: &#123;</span><br><span class="line">    id: <span class="string">"account"</span>,</span><br><span class="line">    defaultMessage: <span class="string">"The amount is less than minimum balance."</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">formatMessage(messages.accountMessage);</span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-to-use-formattedmessage-as-placeholder-using-react-intl"><a class="header-anchor" href="#how-to-use-formattedmessage-as-placeholder-using-react-intl">¶</a>How to use <code>&lt;FormattedMessage&gt;</code> as placeholder using React Intl?</h3>
+<p><code>&lt;Formatted... /&gt;</code> 컴포넌트는 plain text가 아닌 elements를 반환하므로, placeholder, alt text처럼 string이 필요한 곳에는 쓸 수 없다. 따라서 여기에서는 <code>formatMessage()</code>를 사용해야한다. higher-order component인 injectIntl()을 사용하여, 컴포넌트에 intl 객체를 주입하고, 객체에서 사용할 수 있는 <code>formatMessage()</code>를 사용하여 message를 포맷팅할 수 있다.</p>
+<figure class="highlight jsx"><figcaption><span>harmony</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; injectIntl, intlShape &#125; <span class="keyword">from</span> <span class="string">"react-intl"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> MyComponent = <span class="function">(<span class="params">&#123; intl &#125;</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> placeholder = intl.formatMessage(&#123; <span class="attr">id</span>: <span class="string">"messageId"</span> &#125;);</span><br><span class="line">  <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">input</span> <span class="attr">placeholder</span>=<span class="string">&#123;placeholder&#125;</span> /&gt;</span>;</span></span><br><span class="line"><span class="xml">&#125;;</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">MyComponent.propTypes = &#123;</span></span><br><span class="line"><span class="xml">  intl: intlShape.isRequired</span></span><br><span class="line"><span class="xml">&#125;;</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">export default injectIntl(MyComponent);</span></span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-to-access-current-locale-with-react-intl"><a class="header-anchor" href="#how-to-access-current-locale-with-react-intl">¶</a>How to access current locale with React Intl?</h3>
+<p>어느 어플리케이션에서든 <code>injectIntl()</code>를 사용하면 현재 로케일을 얻을 수 있다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-to-format-date-using-react-intl"><a class="header-anchor" href="#how-to-format-date-using-react-intl">¶</a>How to format date using React Intl?</h3>
+<p>higher-order 컴포넌트 <code>injectIntl()</code>는 컴포넌트의 props에 <code>formatDate()</code>메서드를 제공한다. 이 메서드는 내부적으로 <code>FormattedDate</code>인스턴스를 활용하고, 이는 포맷된 날짜를 string으로 제공한다.</p>
+<figure class="highlight jsx"><figcaption><span>harmony</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; injectIntl, intlShape &#125; <span class="keyword">from</span> <span class="string">"react-intl"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> stringDate = <span class="keyword">this</span>.props.intl.formatDate(date, &#123;</span><br><span class="line">  year: <span class="string">"numeric"</span>,</span><br><span class="line">  month: <span class="string">"numeric"</span>,</span><br><span class="line">  day: <span class="string">"numeric"</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> MyComponent = <span class="function">(<span class="params">&#123; intl &#125;</span>) =&gt;</span> (</span><br><span class="line">  &lt;div&gt;&#123;<span class="string">`The formatted date is <span class="subst">$&#123;stringDate&#125;</span>`</span>&#125;&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">);</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">MyComponent.propTypes = &#123;</span></span><br><span class="line"><span class="regexp">  intl: intlShape.isRequired</span></span><br><span class="line"><span class="regexp">&#125;;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default injectIntl(MyComponent);</span></span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h2 id="react-testing"><a class="header-anchor" href="#react-testing">¶</a>React Testing</h2>
+<h3 id="what-is-shallow-renderer-in-react-testing"><a class="header-anchor" href="#what-is-shallow-renderer-in-react-testing">¶</a>What is Shallow Renderer in React testing?</h3>
+<p><code>Shallow rendering</code>는 React에서 유닛테스트 케이스를 작성할 때 유용하다. 이는 컴포넌트를 한단계 더 깊이 렌더링하며, 렌더링되지 않은 하위 컴포넌트에 대한 고민 ㅇ벗이 렌더링 메서드가 반환하는 것에 대해 asset를 수행할 수 있다.</p>
+<figure class="highlight jsx"><figcaption><span>harmony</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">MyComponent</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;span className=&#123;<span class="string">"heading"</span>&#125;&gt;&#123;<span class="string">"Title"</span>&#125;&lt;<span class="regexp">/span&gt;</span></span><br><span class="line"><span class="regexp">      &lt;span className=&#123;"description"&#125;&gt;&#123;"Description"&#125;&lt;/</span>span&gt;</span><br><span class="line">    &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> ShallowRenderer <span class="keyword">from</span> <span class="string">"react-test-renderer/shallow"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> renderer = <span class="keyword">new</span> ShallowRenderer();</span><br><span class="line">renderer.render(<span class="xml"><span class="tag">&lt;<span class="name">MyComponent</span> /&gt;</span>);</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">const result = renderer.getRenderOutput();</span></span><br><span class="line"><span class="xml"></span></span><br><span class="line"><span class="xml">expect(result.type).toBe("div");</span></span><br><span class="line"><span class="xml">expect(result.props.children).toEqual([</span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;<span class="name">span</span> <span class="attr">className</span>=<span class="string">&#123;</span>"<span class="attr">heading</span>"&#125;&gt;</span>&#123;"Title"&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span>,</span></span><br><span class="line"><span class="xml">  <span class="tag">&lt;<span class="name">span</span> <span class="attr">className</span>=<span class="string">&#123;</span>"<span class="attr">description</span>"&#125;&gt;</span>&#123;"Description"&#125;<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span></span><br><span class="line"><span class="xml">]);</span></span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-is-testrenderer-package-in-react"><a class="header-anchor" href="#what-is-testrenderer-package-in-react">¶</a>What is <code>TestRenderer</code> package in React?</h3>
+<p><code>TestRenderer</code> 패키지는 component 를 DOM 또는 Native mobile 환경에 의존없이 순수 Javascript Object 로 렌더링 할 수 있는 renderer 를 제공한다. 이 패키지를 사용하면 브라우저 또는 jsdom 의 사용없이 ReactDOM 또는 React Native 에서 렌더링 되는 플랫폼의 뷰 계층구조 (DOM 트리와 유사) 의 스냅샷을 쉽게 가져올 수 있다.</p>
+<figure class="highlight jsx"><figcaption><span>harmony</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> TestRenderer <span class="keyword">from</span> <span class="string">"react-test-renderer"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> Link = <span class="function">(<span class="params">&#123; page, children &#125;</span>) =&gt;</span> &lt;a href=&#123;page&#125;&gt;&#123;children&#125;&lt;<span class="regexp">/a&gt;;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">const testRenderer = TestRenderer.create(</span></span><br><span class="line"><span class="regexp">  &lt;Link page=&#123;"https:/</span><span class="regexp">/www.facebook.com/</span><span class="string">"&#125;&gt;&#123;"</span>Facebook<span class="string">"&#125;&lt;/Link&gt;</span></span><br><span class="line"><span class="string">);</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">console.log(testRenderer.toJSON());</span></span><br><span class="line"><span class="string">// &#123;</span></span><br><span class="line"><span class="string">//   type: 'a',</span></span><br><span class="line"><span class="string">//   props: &#123; href: 'https://www.facebook.com/' &#125;,</span></span><br><span class="line"><span class="string">//   children: [ 'Facebook' ]</span></span><br><span class="line"><span class="string">// &#125;</span></span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-is-the-purpose-of-reacttestutils-package"><a class="header-anchor" href="#what-is-the-purpose-of-reacttestutils-package">¶</a>What is the purpose of ReactTestUtils package?</h3>
+<p><code>ReactTestUtils</code>는 유닛테스트를 목적으로 DOM을 조작할 수 있는 <code>with-addons</code>패키지를 제공한다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-is-jest"><a class="header-anchor" href="#what-is-jest">¶</a>What is Jest?</h3>
+<p>Jest는 페이스북이 만든 자바스크립트 유닛테스트 프레임워크로, Jasmine을 기반으로 만들어 졌으며 자동 mock 생성, <code>jsdom</code> 환경 제공 등의 기능을 제공한다. 컴포넌트를 테스트 하는데 사용 된다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-are-the-advantages-of-jest-over-jasmine"><a class="header-anchor" href="#what-are-the-advantages-of-jest-over-jasmine">¶</a>What are the advantages of Jest over Jasmine?</h3>
+<p>Jasmine보다 Jest가 더 좋은 점은</p>
+<ul>
+<li>소스코드에서 자동으로 테스트 코드를 찾아서 테스트</li>
+<li>테스트 시 자동으로 mock 의 존성 참고</li>
+<li>동기로 작성된 코드를 비동기로 테스트</li>
+<li>fake Dom implementation으로 테스트 하여, 명령줄에서도 테스트 가능</li>
+<li>병렬 프로세스로 테스트 하여 테스트가 더욱 빠르게 수행됨</li>
+</ul>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="give-a-simple-example-of-jest-test-case"><a class="header-anchor" href="#give-a-simple-example-of-jest-test-case">¶</a>Give a simple example of Jest test case</h3>
+<p>두 숫자를 더하는 <code>sum.js</code>를 작성한다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> sum = <span class="function">(<span class="params">a, b</span>) =&gt;</span> a + b;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> sum;</span><br></pre></td></tr></table></figure>
+<p>테스트를 수행하는 <code>sum.test.js</code>를 작성</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sum <span class="keyword">from</span> <span class="string">"./sum"</span>;</span><br><span class="line"></span><br><span class="line">test(<span class="string">"adds 1 + 2 to equal 3"</span>, () =&gt; &#123;</span><br><span class="line">  expect(sum(<span class="number">1</span>, <span class="number">2</span>)).toBe(<span class="number">3</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><code>package.json</code>에 테스트를 실행하는 코드 추가</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="attr">"test"</span>: <span class="string">"jest"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>yarn test</code> <code>npm test</code>로 테스트 실행 및 결과 확인</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> yarn <span class="built_in">test</span></span></span><br><span class="line">PASS ./sum.test.js</span><br><span class="line">✓ adds 1 + 2 to equal 3 (2ms)</span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h2 id="react-redux"><a class="header-anchor" href="#react-redux">¶</a>React Redux</h2>
+<h3 id="what-is-flux"><a class="header-anchor" href="#what-is-flux">¶</a>What is flux?</h3>
+<p>Flux는 어플리케이션 디자인 패러다임으로, 전통적인 모델인 MVC pattern을 대체하기 위해 나왔다. Flux는 프레임워크나 라이브러리가 아닌, React와 양방향 데이터 흐름을 기반으로 하는 새로운 아키텍쳐다. 페이스북이 React를 사용할 때 내부적으로 이 패턴을 활용한다.</p>
+<p>dispatcher, sotres, views 컴포넌트 사이 작업흐름은 아래처럼 input과 output이 구별되어 나타난다.</p>
+<p><img src="https://github.com/sudheerj/reactjs-interview-questions/raw/master/images/flux.png" alt="flux-diagram"></p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-is-redux"><a class="header-anchor" href="#what-is-redux">¶</a>What is Redux?</h3>
+<p>Redux는 flux 디자인 패턴을 기반으로 한 자바스크립트 앱의 예측가능한 state container다. Redux는 React또는 다른 어떤 뷰 라이브러리와 함께 사용할 수 있다. Redux는 크기가 매우 작고 (2kb), 다른 디펜던시를 갖고 있지 않다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-are-the-core-principles-of-redux"><a class="header-anchor" href="#what-are-the-core-principles-of-redux">¶</a>What are the core principles of Redux?</h3>
+<p>Redux는 다음 세가지 기본 원칙을 가지고 있다.</p>
+<ol>
+<li>신뢰할 수 있는 단일 출처: 어플리케이션의 state는 단일 store에 객체트리 형태로 저장되어 있다. 단일 state tree는 변화를 쉽게 추적ㄷ할 수 있게 해주며, 어플리케이션을 디버그하고 검사하는 것을 쉽게 만들어 준다.</li>
+<li>state는 읽기 전용: state를 변경할 수 있는 방법은 단한가지로, 객체가 어떤 일이 일어났는지 묘사하는 액션을 보내는 것이다. 이는 views나 네트워크 콜백이 직접 state를 수정하지 않도록 한다.</li>
+<li>변화는 순수 함수로만 이루어진다: 액션별로 state 트리가 어떻게 변화하는지 명세하기 위해, reducer를 사용해야 한다.</li>
+</ol>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-are-the-downsides-of-redux-compared-to-flux"><a class="header-anchor" href="#what-are-the-downsides-of-redux-compared-to-flux">¶</a>What are the downsides of Redux compared to Flux?</h3>
+<p>Flux와 비교했을 때, Redux는 몇가지 단점을 가지고 있다.</p>
+<ol>
+<li>변이를 피하는 법을 배워야 한다: Flux는 데이터 변이에 대해 특별한 의견이 없지만, Redux는 데이터 변이를 선호하지 않으며, 다른 추가 보완 패키지를 활용하여 이를 유지한다. dev-only 패지지인 <code>redux-immutable-state-invariant</code>나 <code>Immutable.js</code>를 활용하거나, 팀원들에게 변이 없는 코드에 대해 방법론을 확산해야 한다.</li>
+<li>패키지를 고를때 신중해진다: Flux는 undo/redo, 지속성, 폼 관련 문제에 대해 무관심하지만, Redux 는 미들웨어 및 Store 개선 등 확장된 포인트들을 가지고 풍부한 생태계를 만들어 냈기 때문에, 패키지 선택에 주의가 필요하다.</li>
+<li>타입체크: Flux는 정적 타입 체크를 할 수 있는 방법이 있지만, Redux는 아직 지원하고 있지 않다.</li>
+</ol>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-is-the-difference-between-mapstatetoprops-and-mapdispatchtoprops"><a class="header-anchor" href="#what-is-the-difference-between-mapstatetoprops-and-mapdispatchtoprops">¶</a>What is the difference between <code>mapStateToProps()</code> and <code>mapDispatchToProps()</code>?</h3>
+<p><code>mapStateToProps()</code>는 컴포넌트에서 다른 컴포넌트에 의해 업데이트된 state를 가져올수 있도록 도와주는 유틸리티다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> mapStateToProps = <span class="function"><span class="params">state</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    todos: getVisibleTodos(state.todos, state.visibilityFilter)</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>mapDispatchToProps()</code>는 컴포넌트가 이벤트를 발생시킬 수 있도록 도와주는 유틸리티다. (이 이벤트는 어플리케이션의 state에 변화를 가져올 수 있음)</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> mapDispatchToProps = <span class="function"><span class="params">dispatch</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    onTodoClick: <span class="function"><span class="params">id</span> =&gt;</span> &#123;</span><br><span class="line">      dispatch(toggleTodo(id));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>mapDispatchToProps</code>에서는 항상 객체를 파라미터로 보내기를 권장한다.</p>
+<p>Redux는 <code>(…args) =&gt; dispatch(onTodoClick(…args))</code>와 같은 형태의 다른 함수로 감싸고, 이렇게 감싼 함수를 컴포넌트의 prop로 전달한다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> mapDispatchToProps = &#123;</span><br><span class="line">  onTodoClick</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="can-i-dispatch-an-action-in-reducer"><a class="header-anchor" href="#can-i-dispatch-an-action-in-reducer">¶</a>Can I dispatch an action in reducer?</h3>
+<p>Reducer안에서 액션을 보내는 것은 안티패턴이다. Reducer는 사이드이펙트를 최소화 하기 위하여, 단순히 액션에 대한 처리와 새로운 state를 가진 object를 반환하기만 해야 한다. Reducer내에서 리스너를 달고, 액션을 보내는 것은 다른 액션과 연쇄작용을 일으킬 수도 있으며, 사이드 이펙트를 야기할 수도 있다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-to-access-redux-store-outside-a-component"><a class="header-anchor" href="#how-to-access-redux-store-outside-a-component">¶</a>How to access Redux store outside a component?</h3>
+<p><code>createStore()</code>로 만들어진 모듈을 export 하면 된다. 그리고 global 객체인 window를 사용해서는 안된다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">store = createStore(myReducer);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> store;</span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-are-the-drawbacks-of-mvw-pattern"><a class="header-anchor" href="#what-are-the-drawbacks-of-mvw-pattern">¶</a>What are the drawbacks of MVW pattern?</h3>
+<ol>
+<li>DOM 조작은, 많은 비용을 지불해야 하고, 어플리케이션을 느리고 비효율적으로 만든다.</li>
+<li>순환 참조로 인해, 복잡한 모델이 모델과 뷰주변에 만들어질 수 있다.</li>
+<li>구글 docs와 같은 협업 어플리케이션에서는 많은 양의 데이터 변경이 일어날 수 있다.</li>
+<li>추가적으로 많은 코드를 쓰지 않고 undo를 쉽게 할 수 없다.</li>
+</ol>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="are-there-any-similarities-between-redux-and-rxjs"><a class="header-anchor" href="#are-there-any-similarities-between-redux-and-rxjs">¶</a>Are there any similarities between Redux and RxJS?</h3>
+<p>두 라이브러리는 목적부터 완전히 다르지만, 약간의 비슷한점을 가지고있다.</p>
+<p>Redux는 어플리케이션 전반에서 state를 관리할 수 있게 도와주는 툴이다. 이는 보통 UI 아키텍쳐에서 ㅁ낳이 사용된다. Angular의 대체재라고 볼 수 있다. 반면 Rxjs는 반응형 프로그래밍 라이브러리다. RxJS는 자바스크립트에서 비동기 작업을 수행하기 위해 사용된다. Promise의 대체재라고 볼 수있다. Redux는 Store가 반응형이기 때문에 반응형 패러다임을 사용한다. Store는 액션을 어느정도 거리에서 관찰하다가, 스스로 변화한다. RxJS 또한 반응형 패러다임을 사용하는 반면, 아키텍쳐를 제공하지 않고 Observable 과 같은 블록을 제공한다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-to-dispatch-an-action-on-load"><a class="header-anchor" href="#how-to-dispatch-an-action-on-load">¶</a>How to dispatch an action on load?</h3>
+<p><code>componentDidMount()</code>와 <code>render()</code>메서드에서 데이터를 확인하는 액션을 전닥ㄹ할 수 있고 데이터를 확인할 수 있다.</p>
+<figure class="highlight jsx"><figcaption><span>harmony</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  componentDidMount() &#123;</span><br><span class="line">    <span class="keyword">this</span>.props.fetchData();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.props.isLoaded ? (</span><br><span class="line">      &lt;div&gt;&#123;<span class="string">"Loaded"</span>&#125;&lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">    ) : (</span></span><br><span class="line"><span class="regexp">      &lt;div&gt;&#123;"Not Loaded"&#125;&lt;/</span>div&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mapStateToProps = <span class="function"><span class="params">state</span> =&gt;</span> (&#123;</span><br><span class="line">  isLoaded: state.isLoaded</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mapDispatchToProps = &#123; fetchData &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> connect(</span><br><span class="line">  mapStateToProps,</span><br><span class="line">  mapDispatchToProps</span><br><span class="line">)(App);</span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-to-use-connect-from-react-redux"><a class="header-anchor" href="#how-to-use-connect-from-react-redux">¶</a>How to use <code>connect()</code> from React Redux?</h3>
+<p>container에서 store를 사용하기 위해서는 아래 두단계를 따라야 한다.</p>
+<ol>
+<li><code>mapStateToProps()</code>를 사용: state의 값을 props에서 지정한 store에 맵핑시킨다.</li>
+<li>위 props를 Container 와 연결: <code>mapStateToProps()</code>에 의해 리턴되는 객체들은 컨테이너와 연결된다. 이를 <code>react-redux</code>의 <code>connect</code>로 import 할 수 있다.</li>
+</ol>
+<figure class="highlight jsx"><figcaption><span>harmony</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; connect &#125; <span class="keyword">from</span> <span class="string">"react-redux"</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="xml"><span class="tag">&lt;<span class="name">div</span>&gt;</span>&#123;this.props.containerData&#125;<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mapStateToProps</span>(<span class="params">state</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="attr">containerData</span>: state.data &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> connect(mapStateToProps)(App);</span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-to-reset-state-in-redux"><a class="header-anchor" href="#how-to-reset-state-in-redux">¶</a>How to reset state in Redux?</h3>
+<p><code>combineReducers()</code>로 생성된 reducer 에게 action 을 위임하도록 application 단에서 root reducer 를 작성해야 한다.</p>
+<p>예를 들어, <code>USER_LOGOUT</code> 액션에 초기 state값을 리턴하는 <code>rootReducer()</code>를 예로 들어보자. 알다시피, reducer는 action에 상관없이 첫 번째 매개변수가 undefined로 호출된다면, 초기 상태값을 반환한다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> appReducer = combineReducers(&#123;</span><br><span class="line">  <span class="comment">/* your app's top-level reducers */</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> rootReducer = <span class="function">(<span class="params">state, action</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (action.type === <span class="string">"USER_LOGOUT"</span>) &#123;</span><br><span class="line">    state = <span class="literal">undefined</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> appReducer(state, action);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>redux-persist</code>를 사용하는 경우, 스토리지를 비워야 할 수도 있다. <code>redux-persist</code>에서는 스토리지 안진에 있는 state의 사본을 보관해둔다. 먼저, 적절한 스토리지 엔진을 임포트 한다음, 상태를 undefined로 설정하기 전에 storage state key를 비워주어야 한다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="whats-the-purpose-of-at-symbol-in-the-redux-connect-decorator"><a class="header-anchor" href="#whats-the-purpose-of-at-symbol-in-the-redux-connect-decorator">¶</a>Whats the purpose of <code>at</code> symbol in the Redux connect decorator?</h3>
+<p><code>@</code>는 자바스크립트에서 데코레이터를 나타낼 떄 쓰는 표현식이다. 데코레이터는 class와 속성에 주석을 달고, 이를 수정할 수 있게 해준다.</p>
+<p>데코레이터가 없는 redux를 예로 들어보자.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> actionCreators <span class="keyword">from</span> <span class="string">"./actionCreators"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; bindActionCreators &#125; <span class="keyword">from</span> <span class="string">"redux"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; connect &#125; <span class="keyword">from</span> <span class="string">"react-redux"</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mapStateToProps</span>(<span class="params">state</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="attr">todos</span>: state.todos &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mapDispatchToProps</span>(<span class="params">dispatch</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="attr">actions</span>: bindActionCreators(actionCreators, dispatch) &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyApp</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="comment">// ...define your main app here</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> connect(</span><br><span class="line">  mapStateToProps,</span><br><span class="line">  mapDispatchToProps</span><br><span class="line">)(MyApp);</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> actionCreators <span class="keyword">from</span> <span class="string">"./actionCreators"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; bindActionCreators &#125; <span class="keyword">from</span> <span class="string">"redux"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; connect &#125; <span class="keyword">from</span> <span class="string">"react-redux"</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mapStateToProps</span>(<span class="params">state</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="attr">todos</span>: state.todos &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">mapDispatchToProps</span>(<span class="params">dispatch</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="attr">actions</span>: bindActionCreators(actionCreators, dispatch) &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@connect(</span><br><span class="line">  mapStateToProps,</span><br><span class="line">  mapDispatchToProps</span><br><span class="line">)</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">MyApp</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">  <span class="comment">// ...define your main app here</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>위 예제는 데코레이터를 사용한 것을 제외하고는 비슷하다. 데코레이터는 아직 자바스크립트 런타임에 구현되어 있지 않다. 여전히 실험적인 내용이기 때문에 수정될 여지가 있다. 바벨을 사용하면 이 데코레이터를 쓸 수 있다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-is-the-difference-between-react-context-and-react-redux"><a class="header-anchor" href="#what-is-the-difference-between-react-context-and-react-redux">¶</a>What is the difference between React context and React Redux?</h3>
+<p>Context는 어플리케이션에서 다이렉트로 사용할 수 있으며, 깊게 중첩된 컴포넌트에 데이터를 전달하는데 유용하다. 반면 Redux는 훨씬 더 강력하며, Context API가 제공하지 않는 기능을 제공한다. 또한, React Redux 는 내부적으로 context를 활용하지만, public api에 공개하지는 않는다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="why-are-redux-state-functions-called-reducers"><a class="header-anchor" href="#why-are-redux-state-functions-called-reducers">¶</a>Why are Redux state functions called reducers?</h3>
+<p>Reducers 는 항상 모든 이전과 현재의 action을 기반으로한 상태값을 반환한다. Redux reducer 가 호출 될 때 마다 상태와 액션이 파라미터로 전달된다. 상태는 action 에 따라 감소되거나 누적되어 다음 상태를 반환한다. 최종 상태를 얻기 위한 action을 실행하는데 action 단위와 store 의 초기 상태 값을 줄일 수 있다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-to-make-ajax-request-in-redux"><a class="header-anchor" href="#how-to-make-ajax-request-in-redux">¶</a>How to make AJAX request in Redux?</h3>
+<p>비동기 액션을 허용하는 미들웨어인 <code>redux-thunk</code>를 사용하면 가능하다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">fetchAccount</span>(<span class="params">id</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="params">dispatch</span> =&gt;</span> &#123;</span><br><span class="line">    dispatch(setLoadingAccountState()); <span class="comment">// Show a loading spinner</span></span><br><span class="line">    fetch(<span class="string">`/account/<span class="subst">$&#123;id&#125;</span>`</span>, response =&gt; &#123;</span><br><span class="line">      dispatch(doneFetchingAccount()); <span class="comment">// Hide loading spinner</span></span><br><span class="line">      <span class="keyword">if</span> (response.status === <span class="number">200</span>) &#123;</span><br><span class="line">        dispatch(setAccount(response.json)); <span class="comment">// Use a normal function to set the received state</span></span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        dispatch(someError);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">setAccount</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="attr">type</span>: <span class="string">"SET_Account"</span>, <span class="attr">data</span>: data &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="should-i-keep-all-component-s-state-in-redux-store"><a class="header-anchor" href="#should-i-keep-all-component-s-state-in-redux-store">¶</a>Should I keep all component’s state in Redux store?</h3>
+<p>Redux Store 에서는 Data를 저장하고, 컴포넌트 내부에서는 UI 에 관련된 상태들을 저장한다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-is-the-proper-way-to-access-redux-store"><a class="header-anchor" href="#what-is-the-proper-way-to-access-redux-store">¶</a>What is the proper way to access Redux store?</h3>
+<p>컴포넌트에서 스토어에 접근하는 좋은 방법은 <code>connect()</code>함수를 이용하는 것이다. 이 함수는 이미 존재하는 컴포넌트를 감싸 새로운 컴포넌트를 만든다. 이러한 방식을 HOC(Higher Order Component)라고 하는데, 이는 리액트에서 컴포넌트의 기능을 확장할 때 주로 사용한다. 이 방법은 상태와 action 생성자를 컴포넌트에 매핑하고, store가 업데이트 되면 자동적으로 컴포넌트에 state와 action 생성자를 전달 할 수 있도록 해준다.</p>
+<p>conenct를 사용한 <code>&lt;FilterLink&gt;</code> component예제를 아래에서 살펴보자.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; connect &#125; <span class="keyword">from</span> <span class="string">"react-redux"</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; setVisibilityFilter &#125; <span class="keyword">from</span> <span class="string">"../actions"</span>;</span><br><span class="line"><span class="keyword">import</span> Link <span class="keyword">from</span> <span class="string">"../components/Link"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mapStateToProps = <span class="function">(<span class="params">state, ownProps</span>) =&gt;</span> (&#123;</span><br><span class="line">  active: ownProps.filter === state.visibilityFilter</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mapDispatchToProps = <span class="function">(<span class="params">dispatch, ownProps</span>) =&gt;</span> (&#123;</span><br><span class="line">  onClick: <span class="function"><span class="params">()</span> =&gt;</span> dispatch(setVisibilityFilter(ownProps.filter))</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> FilterLink = connect(</span><br><span class="line">  mapStateToProps,</span><br><span class="line">  mapDispatchToProps</span><br><span class="line">)(Link);</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> FilterLink;</span><br></pre></td></tr></table></figure>
+<p>이미 성능최적화가 되어 있고, 버그를 발생할 여지도 적기 때문에 개발자들은 context api로 바로 스토어에 접근하는 것 보다는 <code>connect()</code>를 사용하는 것을 더 선호한다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-is-the-difference-between-component-and-container-in-react-redux"><a class="header-anchor" href="#what-is-the-difference-between-component-and-container-in-react-redux">¶</a>What is the difference between component and container in React Redux?</h3>
+<p><code>Component</code>는 어플리케이션의 일부분을 표시하는 함수 또는 클래스 컴포넌트를 의미한다.</p>
+<p><code>Container</code>는 비공식적인 용어로, Redux Store와 연결된 컴포넌트를 지칭한다. Container 는 Redux 의 state update 와 action 을 구독하며, DOM element 를 렌더링하지 않는다. 이러한 rendering응ㄴ 하위 component 들에게 위임한다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-is-the-purpose-of-the-constants-in-redux"><a class="header-anchor" href="#what-is-the-purpose-of-the-constants-in-redux">¶</a>What is the purpose of the constants in Redux?</h3>
+<p>상수를 사용하면 IDE를 사용할 때 프로젝트 전체에서 특정한 기능의 모든 사용내역을 쉽게 찾을 수 있다. 또한 오타로 인한 버그도 방지할 수 있다. 오타가 난다면 즉시 <code>ReferenceError</code>를 낸다.</p>
+<p>일반적으로 <code>constant.js</code>또는 <code>actionTypes.js</code>에 저장한다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> ADD_TODO = <span class="string">"ADD_TODO"</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> DELETE_TODO = <span class="string">"DELETE_TODO"</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> EDIT_TODO = <span class="string">"EDIT_TODO"</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> COMPLETE_TODO = <span class="string">"COMPLETE_TODO"</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> COMPLETE_ALL = <span class="string">"COMPLETE_ALL"</span>;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> CLEAR_COMPLETED = <span class="string">"CLEAR_COMPLETED"</span>;</span><br></pre></td></tr></table></figure>
+<p>이 파일은 두 군데에서 사용된다.</p>
+<ol>
+<li>액션 생성시</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; ADD_TODO &#125; <span class="keyword">from</span> <span class="string">"./actionTypes"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">addTodo</span>(<span class="params">text</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="attr">type</span>: ADD_TODO, text &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>리듀서</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; ADD_TODO &#125; <span class="keyword">from</span> <span class="string">"./actionTypes"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> (state = [], action) =&gt; &#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">    <span class="keyword">case</span> ADD_TODO:</span><br><span class="line">      <span class="keyword">return</span> [</span><br><span class="line">        ...state,</span><br><span class="line">        &#123;</span><br><span class="line">          text: action.text,</span><br><span class="line">          completed: <span class="literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">      ];</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">return</span> state;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-are-the-different-ways-to-write-mapdispatchtoprops"><a class="header-anchor" href="#what-are-the-different-ways-to-write-mapdispatchtoprops">¶</a>What are the different ways to write <code>mapDispatchToProps()</code>?</h3>
+<p><code>mapDispatchToProps()</code> 안에서 dispatch() 를 사용하여 action creators를 바인딩하는 방법은 몇가지가 있다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> mapDispatchToProps = <span class="function"><span class="params">dispatch</span> =&gt;</span> (&#123;</span><br><span class="line">  action: <span class="function"><span class="params">()</span> =&gt;</span> dispatch(action())</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mapDispatchToProps = <span class="function"><span class="params">dispatch</span> =&gt;</span> (&#123;</span><br><span class="line">  action: bindActionCreators(action, dispatch)</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mapDispatchToProps = &#123; action &#125;;</span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-is-the-use-of-the-ownprops-parameter-in-mapstatetoprops-and-mapdispatchtoprops"><a class="header-anchor" href="#what-is-the-use-of-the-ownprops-parameter-in-mapstatetoprops-and-mapdispatchtoprops">¶</a>What is the use of the <code>ownProps</code> parameter in <code>mapStateToProps()</code> and <code>mapDispatchToProps()</code>?</h3>
+<p><code>ownProps</code> 파라미터가 명시되어 있다면, React Redux는 component로 전달된 props를 연결된 함수로 전달한다. 그래서 만약 connected component를 사용한다면,</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> ConnectedComponent <span class="keyword">from</span> <span class="string">"./containers/ConnectedComponent"</span>;</span><br><span class="line"></span><br><span class="line">&lt;ConnectedComponent user=&#123;<span class="string">"john"</span>&#125; /&gt;;</span><br></pre></td></tr></table></figure>
+<p><code>mapStateToProps()</code>와 <code>mapDispatchToProps()</code>안의 <code>ownProps</code>는 객체가 될 것이다.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; <span class="attr">"user"</span>: <span class="string">"john"</span> &#125;</span><br></pre></td></tr></table></figure>
+<p>이 객체를 활용하여 함수에서 무엇을 반환할지 결정할 수 있다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-to-structure-redux-top-level-directories"><a class="header-anchor" href="#how-to-structure-redux-top-level-directories">¶</a>How to structure Redux top level directories?</h3>
+<p>대부분의 어플리케이션이 아래와 같은 상위구조 레벨을 가지고 있다.</p>
+<ol>
+<li>Components: Redux를 모르는 컴포넌트</li>
+<li>Container: Redux와 연결된 컴포넌트</li>
+<li>Actions: 파일의 이름이 앱의 일부와 일치하는 액션을 생성하는 모든 것</li>
+<li>Reducer: 상태 키와 일치파는 파일명을 가진 모든 리듀서</li>
+<li>Store: 스토어 초기화를 위해 사용</li>
+</ol>
+<p>이러한 구조는 중소규모의 어플리케이션에 적합하다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-is-redux-saga"><a class="header-anchor" href="#what-is-redux-saga">¶</a>What is redux-saga?</h3>
+<p>redux-saga 는 side effects (데이터를 가져오는 비동기적인 작업이나 browser cache 에 접근하는 것등)를 React/Redux applications에서 더 쉽게 만들도록 도와주는 라이브러리다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-is-the-mental-model-of-redux-saga"><a class="header-anchor" href="#what-is-the-mental-model-of-redux-saga">¶</a>What is the mental model of redux-saga?</h3>
+<p><code>Saga</code>는 어플리케이션과 분리된 스레드와 같은것으로, 부수적인 역할을 담당하기 위한 책임을 가지고 있다. redux-saga는 redux의 미들웨어로, 메인 application 에서 Redux actions 과 함께 쓰레드를 시작, 중지, 취소 할 수 있으며 전체의 Redux application 상태에 접근할 수 있으며 Redux actions 도 전달할 수 있다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-are-the-differences-between-call-and-put-in-redux-saga"><a class="header-anchor" href="#what-are-the-differences-between-call-and-put-in-redux-saga">¶</a>What are the differences between <code>call()</code> and <code>put()</code> in redux-saga?</h3>
+<p><code>call()</code> <code>put()</code> 모두 effect creator 함수다. <code>call()</code>은 함수는 middleware 가 promise 를 어떻게 호출할지를 설명하는 effect 을 생성하는데 사용된다. <code>put()</code> 함수는 store 에 action 을 통하여 전달하도록 미들웨어에게 가르치는 effect 를 생성한다.</p>
+<p>사용자의 데이터를 가져오는 예제를 보고 effects 가 어떻게 동작하는지 살펴보자.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span>* <span class="title">fetchUserSaga</span>(<span class="params">action</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// `call` function accepts rest arguments, which will be passed to `api.fetchUser` function.</span></span><br><span class="line">  <span class="comment">// Instructing middleware to call promise, it resolved value will be assigned to `userData` variable</span></span><br><span class="line">  <span class="keyword">const</span> userData = <span class="keyword">yield</span> call(api.fetchUser, action.userId);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Instructing middleware to dispatch corresponding action.</span></span><br><span class="line">  <span class="keyword">yield</span> put(&#123;</span><br><span class="line">    type: <span class="string">"FETCH_USER_SUCCESS"</span>,</span><br><span class="line">    userData</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-is-redux-thunk"><a class="header-anchor" href="#what-is-redux-thunk">¶</a>What is Redux Thunk?</h3>
+<p>Redux Thunk 는 action 대신 함수를 반환하는 action 생성자를 작성 할 수 있는 미들웨어다. Thunk 는 action dispatch 를 지연 시키거나, 특정한 조건이 성립되는 경우에만 dispatch 하도록 할 수 있다. 내부 함수는 파라미터로로 <code>dispatch()</code> <code>getState()</code>를 받는다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-are-the-differences-between-redux-saga-and-redux-thunk"><a class="header-anchor" href="#what-are-the-differences-between-redux-saga-and-redux-thunk">¶</a>What are the differences between <code>redux-saga</code> and <code>redux-thunk</code>?</h3>
+<p>Redux Thunk 와 Redux Saga 는 모두 side effect 를 다룬다. 대부분의 시나리오에서 Thunk 는 Promise 를 사용하여 처리하고 Saga 는 Generators 를 사용한다. Promise 는 많은 개발자들에게 친숙하기 때문에 Thunk 는 비교적 다루기 쉽고, Sagas와 Generator 는 기능은 강력한 반면에 러닝커브가 존재한다. 두 미들웨어 모두 공존 할 수 있다. Thunk 로 시작하여도 만약 Saga 가 필요하다면 도입 할 수 있다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-is-redux-devtools"><a class="header-anchor" href="#what-is-redux-devtools">¶</a>What is Redux DevTools?</h3>
+<p>Redux DevTools 은 Redux 를 위한 hot reload 기능을 가진 실시간 편집이 가능한 툴이다. 액션을 다시 재현하거나 UI 를 사용자 정의에 맞게 만들 수 있다. Redux DevTools 을 프로젝트에 설치하여 사용하고 싶지 않다면 Chrome 또는 Firefox 용 Extension 사용을 고려해 볼 수 있다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-are-the-features-of-redux-devtools"><a class="header-anchor" href="#what-are-the-features-of-redux-devtools">¶</a>What are the features of Redux DevTools?</h3>
+<ol>
+<li>모든 상태와 액션을 검사</li>
+<li>action 을 취소하여 작업을 되돌리기</li>
+<li>reducer 의 코드를 변경 시 staged된 액션을 재평가</li>
+<li>action 에서 어떤 일이 일어났는지, 오류가 발생하였는지 확인</li>
+<li><code>persistState()</code> store enhancer 을 사용하면 page reload 에서 debug session을 유지할 수 있음</li>
+</ol>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-are-redux-selectors-and-why-to-use-them"><a class="header-anchor" href="#what-are-redux-selectors-and-why-to-use-them">¶</a>What are Redux selectors and why to use them?</h3>
+<p>Selectors 는 Redux state 를 인수로받고 데이터를 반환하여 component 로 전달하는 함수다.</p>
+<p>예를 들어, state에서 유저 상태정보를 받는다면 아래와 같이 처리할 수 있다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> getUserData = <span class="function"><span class="params">state</span> =&gt;</span> state.user.data;</span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-is-redux-form"><a class="header-anchor" href="#what-is-redux-form">¶</a>What is Redux Form?</h3>
+<p>Redux Form은 React와 Redux와 동시에 작동하며, React 폼 내에서 Redux의 모든 상태를 저장할 수 있다. Redux Form은 HTML5 input요소들과 사용가능하며, Material UI, React Widget, React bootstrap 과 같은 UI 프레임워크와도 동작이 가능하다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="what-are-the-main-features-of-redux-form"><a class="header-anchor" href="#what-are-the-main-features-of-redux-form">¶</a>What are the main features of Redux Form?</h3>
+<ol>
+<li>Redux store를 통한 필드 값 유지</li>
+<li>값 유효성 검사 (동기, 비동기)</li>
+<li>포맷팅, 파싱, 정규화</li>
+</ol>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-to-add-multiple-middlewares-to-redux"><a class="header-anchor" href="#how-to-add-multiple-middlewares-to-redux">¶</a>How to add multiple middlewares to Redux?</h3>
+<p><code>applyMiddleware()</code>를 사용하면 된다. 예를 들어, <code>applyMiddleware()</code>를 사용하여 <code>redux-thunk</code>와 <code>logger</code>를 추가할 수 있다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createStore, applyMiddleware &#125; <span class="keyword">from</span> <span class="string">"redux"</span>;</span><br><span class="line"><span class="keyword">const</span> createStoreWithMiddleware = applyMiddleware(ReduxThunk, logger)(</span><br><span class="line">  createStore</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-to-set-initial-state-in-redux"><a class="header-anchor" href="#how-to-set-initial-state-in-redux">¶</a>How to set initial state in Redux?</h3>
+<p><code>createStore</code>에 두번째 인자로 초기 state값을 넘겨주면 된다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> rootReducer = combineReducers(&#123;</span><br><span class="line">  todos: todos,</span><br><span class="line">  visibilityFilter: visibilityFilter</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> initialState = &#123;</span><br><span class="line">  todos: [&#123; <span class="attr">id</span>: <span class="number">123</span>, <span class="attr">name</span>: <span class="string">"example"</span>, <span class="attr">completed</span>: <span class="literal">false</span> &#125;]</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> store = createStore(rootReducer, initialState);</span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-relay-is-different-from-redux"><a class="header-anchor" href="#how-relay-is-different-from-redux">¶</a>How Relay is different from Redux?</h3>
+<p>Relay와 Redux모두 하나의 스토어를 쓴다는 점에서 같다. 가장 큰 차이점은, 서버로 붙어 받은 메시지만 릴레이 한다는 점, 그리고 상태값을 모두 GraphQL 쿼리로 받는다는 것이다. Relay는 변경된 데이터만 가져온다는 점에서 데이터를 캐싱하거나 최적화할 수 있다.</p>
+<h2 id="react-native"><a class="header-anchor" href="#react-native">¶</a>React Native</h2>
+<h3 id="what-is-the-difference-between-react-native-and-react"><a class="header-anchor" href="#what-is-the-difference-between-react-native-and-react">¶</a>What is the difference between React Native and React?</h3>
+<p>React는 자바스크립트 라이브러리로, 프론트엔드와 서버에서 동작하며, 유저인터페이스나 웹 어플리케이션을 만들기 위해 사용된다.</p>
+<p>React Native는 네이티브 앱 컴포넌트를 컴파일하기 위한 모바일 프레임워크로, 자바스크립트 기반 React로 iOS, Android와 같은 네이티브 어플리케이션을 만들 수 있게 해준다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-to-test-react-native-apps"><a class="header-anchor" href="#how-to-test-react-native-apps">¶</a>How to test React Native apps?</h3>
+<p>React Native는 iOS나 안드로이드와 같은 시뮬레이터로만 테스트가 가능하다. <a href="https://expo.io" target="_blank" rel="noopener">expo app</a>를 활용한다면, qr코드를 활용하여 무선 네트워크 상에서도 모바일과 컴퓨터로 싱크를 맞출 수 있다.</p>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-to-do-logging-in-react-native"><a class="header-anchor" href="#how-to-do-logging-in-react-native">¶</a>How to do logging in React Native?</h3>
+<p><code>console.log</code> <code>console.warn</code>을 사용할 수 있다. React Native v0.29에서는 아래 명령어로도 가능하다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ react-native log-ios</span><br><span class="line">$ react-native log-android</span><br></pre></td></tr></table></figure>
+<p><a href="#table-of-contents">👆</a></p>
+<h3 id="how-to-debug-your-react-native"><a class="header-anchor" href="#how-to-debug-your-react-native">¶</a>How to debug your React Native?</h3>
+<ol>
+<li>iOS 시뮬레이터로 어플리케이션을 실행한다.</li>
+<li><code>Command + D</code>를 눌러서 웹페이지가 <code>http://localhost:8081/debugger-ui</code>에서 실행되게 한다.</li>
+<li>Pause On Caught Exceptions을 활성화 하면 원활하게 디버그가 가능하다.</li>
+<li><code>Command + Option + I</code> 또는 <code>View</code> -&gt; <code>Developer</code> -&gt; <code>Developer Tools</code>로 크롬 개발자 도구를 띄운다.</li>
+<li>디버그가 가능하다.</li>
+</ol>
+<p><a href="#table-of-contents">👆</a></p>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/">javascript</a> <a class="tag tag--primary tag--small t-link" href="/tags/react/">react</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/09/06/javascript-event-loop/" data-tooltip="자바스크립트의 이벤트루프, 태스크, 그리고 마이크로 태스크" aria-label="PREVIOUS: 자바스크립트의 이벤트루프, 태스크, 그리고 마이크로 태스크">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/08/20/reactjs-interview-questions-1/" data-tooltip="리액트 인터뷰 질문 &amp; 답 (1)" aria-label="NEXT: 리액트 인터뷰 질문 &amp; 답 (1)">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/08/21/reactjs-interview-questions-2/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/08/21/reactjs-interview-questions-2/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/09/06/javascript-event-loop/" data-tooltip="자바스크립트의 이벤트루프, 태스크, 그리고 마이크로 태스크" aria-label="PREVIOUS: 자바스크립트의 이벤트루프, 태스크, 그리고 마이크로 태스크">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/08/20/reactjs-interview-questions-1/" data-tooltip="리액트 인터뷰 질문 &amp; 답 (1)" aria-label="NEXT: 리액트 인터뷰 질문 &amp; 답 (1)">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/08/21/reactjs-interview-questions-2/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/08/21/reactjs-interview-questions-2/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/08/21/reactjs-interview-questions-2/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/08/21/reactjs-interview-questions-2/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2019/08/21/reactjs-interview-questions-2/';
+                 
+                    this.page.identifier = '2019/08/21/reactjs-interview-questions-2/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

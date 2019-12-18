@@ -1,0 +1,822 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>Intersection Observer - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"¶Intersection Observer\nIntersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여부를 확인해주는 API다. 간단히 말해 브라우저의 어떤 요소가 화면에 노출되고 있는지 안되고 있는지를 확인해주는 라이브러리라고 생각하면 될 것 같다. 이 라이브러리가 없이 엘리먼트가 노출중인지 확인하려면 어떻게 해야할까? 이전까지 주로 사용되던 API는 getBoundingClientRect다. 이 메서드는 해당 엘리먼트의 크기와 viewport에서의 상대적인 위치를 알려준다.\n123456789101112131415161718function isInViewport(element) &#123;  // viewport의 height, width  const viewportHeight = document.documentElement.clientHeight;  const viewportWidth = document.documentElement.clientWidth;  // 엘리먼트의 rect  const rect = element.getBoundingClientRect();  if (!rect.width || !rect.height) &#123;    return false;  &#125;  var top = rect.top &gt;= 0 &amp;&amp; rect.top &lt; viewportHeight;  var bottom = rect.bottom &gt;= 0 &amp;&amp; rect.bottom &lt; viewportHeight;  var left = rect.left &gt;= 0 &amp;&amp; rect.left &lt; viewportWidth;  var right = rect.right &gt;= 0 &amp;&amp; rect.right &lt; viewportWidth;  return (top || bottom) &amp;&amp; (left || right);&#125;\n물론 이 함수로도 충분히 확인이 가능하다. 그러나 문제는 이 함수를 시도 때도 없이 불러야 할것이다. 문서가 처음로딩 되었을때, 스크롤 이벤트가 발생했을때, 브라우저 크키가 변경되었을때, (모바일의 경우) 화면이 회전 됐을 때 등 고려해야할 사황이 너무나도 많다. 그리고 결정적으로 getBoudingClientRect()는 호출이 될 때 마다 레이아웃을 다시 그리기 때문에 성능에 매우 부담이 간다. 참고\n¶사용법\n1234567var options = &#123;  root: document.querySelector(\"#scrollArea\"),  rootMargin: \"0px\",  threshold: 1.0&#125;;var observer = new IntersectionObserver(callback, options);\nroot: 엘리먼트 노출을 감시할 viewport 영역이다. null이 기본값이고, null이라면 브라우저 전체를 감시하게 된다.\nrootMargin: css의 margin property와 사용법이 같다. root에 margin 값을 주는 것이다.\nthreshold: number, 또는 array of number가 가능하다. 여기서 숫자는 viewport의 n%가 되었을 때 이벤트를 호출할 것인지 결정하는 것이다. array라면 해당 숫자만큼 노출될때 마다 이벤트가 발생하게 된다. 기본값은 0 으로, 단 1픽셀이라도 노출될 경우 이벤트가 발생된다.\ncallback: 타겟이 노출될때 실행되는 콜백함수다. 여기서는 두개의 값을 반환한다.\nentries: IntersectionObserverEntry의 array이며, 각각 얼마나 노출되었는지 값이 나온다.\nobserver: callback을 호출한 IntersectionObserver\n12var target = document.querySelector(\"#listItem\");observer.observe(target);\n\n\n\n  See the Pen \n  basic intersect example by yceffort (@yceffort)\n  on CodePen.\n\n\n\n콘솔창을 보면, 50% 이상 나온 엘리먼트가 찍히는 것을 볼 수 있다.\n¶활용해보기\n¶무한스크롤\n\n\n\n  See the Pen \n  Infinite Scroll by Intersection Observer by yceffort (@yceffort)\n  on CodePen.\n\n\n\n문서의 맨 마지막에 height가 10px인 #watch_end_of_document를 넣어서, 이 엘리먼트가 브라우저에 노출되게 되면 스크롤의 마지막에 온것으로 간주하고 그 때마다 새로운 아이템들을 로딩하도록 명령을 내렸다.\n¶이미지 레이지 로딩\n\n\n\n  See the Pen \n  YoVvya by yceffort (@yceffort)\n  on CodePen.\n\n\n\n콘솔 - 네트워크 창으로 가보면 이미지가 동적으로 로딩되는 것을 알 수 있다. 각각의 엘리먼트들에 observer를 걸어두고, viewport에 걸칠때 마다 backgroundImage를 줘서 이미지가 로딩되도록 하였다.\n","dateCreated":"2019-06-24T09:01:35+09:00","dateModified":"2019-08-14T11:05:21+09:00","datePublished":"2019-06-24T09:01:35+09:00","description":"¶Intersection Observer\nIntersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여부를 확인해주는 API다. 간단히 말해 브라우저의 어떤 요소가 화면에 노출되고 있는지 안되고 있는지를 확인해주는 라이브러리라고 생각하면 될 것 같다. 이 라이브러리가 없이 엘리먼트가 노출중인지 확인하려면 어떻게 해야할까? 이전까지 주로 사용되던 API는 getBoundingClientRect다. 이 메서드는 해당 엘리먼트의 크기와 viewport에서의 상대적인 위치를 알려준다.\n\n1\n2\n3\n4\n5\n6\n7\n","headline":"Intersection Observer","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/06/24/intersection-observer/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/06/24/intersection-observer/","keywords":"javascript"}</script>
+    <meta name="description" content="¶Intersection Observer Intersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여부를 확인해주는 API다. 간단히 말해 브라우저의 어떤 요소가 화면에 노출되고 있는지 안되고 있는지를 확인해주는 라이브러리라고 생각하면 될 것 같다. 이 라이브러리가 없이 엘리먼트가 노출중인지 확인하려면 어떻게 해야할까? 이전까지">
+<meta name="keywords" content="javascript">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Intersection Observer">
+<meta property="og:url" content="https://www.yceffort.kr/2019/06/24/intersection-observer/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="¶Intersection Observer Intersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여부를 확인해주는 API다. 간단히 말해 브라우저의 어떤 요소가 화면에 노출되고 있는지 안되고 있는지를 확인해주는 라이브러리라고 생각하면 될 것 같다. 이 라이브러리가 없이 엘리먼트가 노출중인지 확인하려면 어떻게 해야할까? 이전까지">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-08-14T02:05:21.896Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Intersection Observer">
+<meta name="twitter:description" content="¶Intersection Observer Intersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여부를 확인해주는 API다. 간단히 말해 브라우저의 어떤 요소가 화면에 노출되고 있는지 안되고 있는지를 확인해주는 라이브러리라고 생각하면 될 것 같다. 이 라이브러리가 없이 엘리먼트가 노출중인지 확인하려면 어떻게 해야할까? 이전까지">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Intersection Observer
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-06-24T09:01:35+09:00">
+	
+		    Jun 24, 2019
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h2 id="intersection-observer"><a class="header-anchor" href="#intersection-observer">¶</a>Intersection Observer</h2>
+<p>Intersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여부를 확인해주는 API다. 간단히 말해 브라우저의 어떤 요소가 화면에 노출되고 있는지 안되고 있는지를 확인해주는 라이브러리라고 생각하면 될 것 같다. 이 라이브러리가 없이 엘리먼트가 노출중인지 확인하려면 어떻게 해야할까? 이전까지 주로 사용되던 API는 <a href="https://developer.mozilla.org/ko/docs/Web/API/Element/getBoundingClientRect" target="_blank" rel="noopener">getBoundingClientRect</a>다. 이 메서드는 해당 엘리먼트의 크기와 viewport에서의 상대적인 위치를 알려준다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isInViewport</span>(<span class="params">element</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// viewport의 height, width</span></span><br><span class="line">  <span class="keyword">const</span> viewportHeight = <span class="built_in">document</span>.documentElement.clientHeight;</span><br><span class="line">  <span class="keyword">const</span> viewportWidth = <span class="built_in">document</span>.documentElement.clientWidth;</span><br><span class="line">  <span class="comment">// 엘리먼트의 rect</span></span><br><span class="line">  <span class="keyword">const</span> rect = element.getBoundingClientRect();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!rect.width || !rect.height) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> top = rect.top &gt;= <span class="number">0</span> &amp;&amp; rect.top &lt; viewportHeight;</span><br><span class="line">  <span class="keyword">var</span> bottom = rect.bottom &gt;= <span class="number">0</span> &amp;&amp; rect.bottom &lt; viewportHeight;</span><br><span class="line">  <span class="keyword">var</span> left = rect.left &gt;= <span class="number">0</span> &amp;&amp; rect.left &lt; viewportWidth;</span><br><span class="line">  <span class="keyword">var</span> right = rect.right &gt;= <span class="number">0</span> &amp;&amp; rect.right &lt; viewportWidth;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (top || bottom) &amp;&amp; (left || right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>물론 이 함수로도 충분히 확인이 가능하다. 그러나 문제는 이 함수를 시도 때도 없이 불러야 할것이다. 문서가 처음로딩 되었을때, 스크롤 이벤트가 발생했을때, 브라우저 크키가 변경되었을때, (모바일의 경우) 화면이 회전 됐을 때 등 고려해야할 사황이 너무나도 많다. 그리고 결정적으로 <code>getBoudingClientRect()</code>는 호출이 될 때 마다 레이아웃을 다시 그리기 때문에 성능에 매우 부담이 간다. <a href="https://gist.github.com/paulirish/5d52fb081b3570c81e3a" target="_blank" rel="noopener">참고</a></p>
+<h2 id="사용법"><a class="header-anchor" href="#사용법">¶</a>사용법</h2>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> options = &#123;</span><br><span class="line">  root: <span class="built_in">document</span>.querySelector(<span class="string">"#scrollArea"</span>),</span><br><span class="line">  rootMargin: <span class="string">"0px"</span>,</span><br><span class="line">  threshold: <span class="number">1.0</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> observer = <span class="keyword">new</span> IntersectionObserver(callback, options);</span><br></pre></td></tr></table></figure>
+<p><code>root</code>: 엘리먼트 노출을 감시할 viewport 영역이다. null이 기본값이고, null이라면 브라우저 전체를 감시하게 된다.</p>
+<p><code>rootMargin</code>: css의 margin property와 사용법이 같다. root에 margin 값을 주는 것이다.</p>
+<p><code>threshold</code>: number, 또는 array of number가 가능하다. 여기서 숫자는 viewport의 n%가 되었을 때 이벤트를 호출할 것인지 결정하는 것이다. array라면 해당 숫자만큼 노출될때 마다 이벤트가 발생하게 된다. 기본값은 0 으로, 단 1픽셀이라도 노출될 경우 이벤트가 발생된다.</p>
+<p><code>callback</code>: 타겟이 노출될때 실행되는 콜백함수다. 여기서는 두개의 값을 반환한다.</p>
+<p><code>entries</code>: <a href="https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserverEntry" target="_blank" rel="noopener">IntersectionObserverEntry</a>의 array이며, 각각 얼마나 노출되었는지 값이 나온다.</p>
+<p><code>observer</code>: callback을 호출한 <code>IntersectionObserver</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> target = <span class="built_in">document</span>.querySelector(<span class="string">"#listItem"</span>);</span><br><span class="line">observer.observe(target);</span><br></pre></td></tr></table></figure>
+
+
+<p class="codepen" data-height="500" data-theme-id="dark" data-default-tab="js,result" data-user="yceffort" data-slug-hash="RzVyML" style="height: 461px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="basic intersect example">
+  <span>See the Pen <a href="https://codepen.io/yceffort/pen/RzVyML/" target="_blank" rel="noopener">
+  basic intersect example</a> by yceffort (<a href="https://codepen.io/yceffort" target="_blank" rel="noopener">@yceffort</a>)
+  on <a href="https://codepen.io" target="_blank" rel="noopener">CodePen</a>.</span>
+</p>
+<script async src="https://static.codepen.io/assets/embed/ei.js"></script>
+
+<p>콘솔창을 보면, 50% 이상 나온 엘리먼트가 찍히는 것을 볼 수 있다.</p>
+<h2 id="활용해보기"><a class="header-anchor" href="#활용해보기">¶</a>활용해보기</h2>
+<h3 id="무한스크롤"><a class="header-anchor" href="#무한스크롤">¶</a>무한스크롤</h3>
+
+
+<p class="codepen" data-height="500" data-theme-id="dark" data-default-tab="js,result" data-user="yceffort" data-slug-hash="VJbxNM" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="Infinite Scroll by Intersection Observer">
+  <span>See the Pen <a href="https://codepen.io/yceffort/pen/VJbxNM/" target="_blank" rel="noopener">
+  Infinite Scroll by Intersection Observer</a> by yceffort (<a href="https://codepen.io/yceffort" target="_blank" rel="noopener">@yceffort</a>)
+  on <a href="https://codepen.io" target="_blank" rel="noopener">CodePen</a>.</span>
+</p>
+<script async src="https://static.codepen.io/assets/embed/ei.js"></script>
+
+<p>문서의 맨 마지막에 height가 10px인 <code>#watch_end_of_document</code>를 넣어서, 이 엘리먼트가 브라우저에 노출되게 되면 스크롤의 마지막에 온것으로 간주하고 그 때마다 새로운 아이템들을 로딩하도록 명령을 내렸다.</p>
+<h3 id="이미지-레이지-로딩"><a class="header-anchor" href="#이미지-레이지-로딩">¶</a>이미지 레이지 로딩</h3>
+
+
+<p class="codepen" data-height="500" data-theme-id="dark" data-default-tab="js,result" data-user="yceffort" data-slug-hash="YoVvya" style="height: 408px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="YoVvya">
+  <span>See the Pen <a href="https://codepen.io/yceffort/pen/YoVvya/" target="_blank" rel="noopener">
+  YoVvya</a> by yceffort (<a href="https://codepen.io/yceffort" target="_blank" rel="noopener">@yceffort</a>)
+  on <a href="https://codepen.io" target="_blank" rel="noopener">CodePen</a>.</span>
+</p>
+<script async src="https://static.codepen.io/assets/embed/ei.js"></script>
+
+<p>콘솔 - 네트워크 창으로 가보면 이미지가 동적으로 로딩되는 것을 알 수 있다. 각각의 엘리먼트들에 observer를 걸어두고, viewport에 걸칠때 마다 backgroundImage를 줘서 이미지가 로딩되도록 하였다.</p>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/">javascript</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/07/09/difference-between-function-and-arrow/" data-tooltip="javascript 일반 함수와 화살표 함수의 차이" aria-label="PREVIOUS: javascript 일반 함수와 화살표 함수의 차이">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/06/20/react-nextjs-koa/" data-tooltip="Typescript, React, NextJs, Koa, Styled Component 로 프론트엔드 환경 만들기" aria-label="NEXT: Typescript, React, NextJs, Koa, Styled Component 로 프론트엔드 환경 만들기">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/06/24/intersection-observer/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/06/24/intersection-observer/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/07/09/difference-between-function-and-arrow/" data-tooltip="javascript 일반 함수와 화살표 함수의 차이" aria-label="PREVIOUS: javascript 일반 함수와 화살표 함수의 차이">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/06/20/react-nextjs-koa/" data-tooltip="Typescript, React, NextJs, Koa, Styled Component 로 프론트엔드 환경 만들기" aria-label="NEXT: Typescript, React, NextJs, Koa, Styled Component 로 프론트엔드 환경 만들기">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/06/24/intersection-observer/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/06/24/intersection-observer/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/06/24/intersection-observer/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/06/24/intersection-observer/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2019/06/24/intersection-observer/';
+                 
+                    this.page.identifier = '2019/06/24/intersection-observer/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

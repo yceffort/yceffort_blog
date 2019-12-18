@@ -1,0 +1,827 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>Pytorch 07) - Convolutional Neural Network (2) - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Pytorch - 07) Convolutional Neural Network (2)\n이번에는 코드로 구현해보자.\n123456789101112131415161718192021222324class LeNet(nn.Module):    def __init__(self):    super().__init__()    # 흑백이라 1채널, 20개 특징 추출, filter 크기, stride 1    self.conv1 = nn.Conv2d(1, 20, 5, 1)    # 전에서 20개    self.conv2 = nn.Conv2d(20, 50, 5, 1)    self.fc1 = nn.Linear(4*4*50, 500)    # 0.5 가 권장 할 만하대    self.dropout1 = nn.Dropout(0.5)    self.fc2 = nn.Linear(500, 10)  def forward(self, x):    x = F.relu(self.conv1(x))    x = F.max_pool2d(x, 2, 2)    x = F.relu(self.conv2(x))    x = F.max_pool2d(x, 2, 2)    # flatten    x = x.view(-1, 4 * 4 * 50)    x = F.relu(self.fc1(x))    x = self.dropout1(x)    x = self.fc2(x)    return x\n먼저 첫번째 conv1애서는 1개의 필터, 20개의 특징을 추출 해 낼 것이다. 필터는 5x5 크기로, 이미지가 그리 크지 않으므로 stride는 1로 할것이다.\n두번 conv2는 입력값이 20이고 (이전 conv의 ouput), 50개의 특징을 같은 크기와 stride로 찾는다.\n그리고 마지막에는 fully conncted layer를 linear로 취한다. 여기서 주목할 것은 첫번째 fc의 input 값이다. 필터의 크기가 5x5 이기 때문에, 5x5필터는 width 와 heigt를 각각 4씩 줄인다.\n\n1x1 필터: 원래크기 유지\n2x2 필터: 크기 1 감소\n3x3 필터: 크기 2 감소\n4x4 필터: 크기 3 감소\n5x5 필터: 크기 4 감소\n\n따라서 각 conv layer를 거칠 때마다 크기가 4씩 줄어들게 된다.\n그리고 max_pool2d를 2,2 크기로 사용할 것이므로 크기는 절반으로 줄어들게 된다. 요약하자면 다음과 같다.\n\n\n\ninput\nconv1\npool1\nconv2\npool2\n\n\n\n\n28\n24\n12\n8\n4\n\n\n\n4x4 크기의 이미지가, 50개의 특징으로 나오게 되므로, fully connected 의 input은 $$4\\times 4 \\times 50$$이 된다. 그리고 이를 500개의 output 으로 만들 것이다. 그리고 과적합을 방지하기 위하여, dropout을 0.5비율로 적용했다. 마지막 fc에서는, 10개의 숫자를 판별해야 하므로 500, 10을 적용했다.\n활성화 함수로는 relu를 사용하였고, fully connected로 넘기기 위해, 평탄화를 작업(view적용)을 한다. 몇줄이 생길지는 모르겠지만, 암튼 row를 $$4\\times 4 \\times 50$$를 맞추기 위하여 .view(-1, 4*4*50) 을 적용했다. fc1을 쓰고, 그 사이에 dropout을 하고, 마지막에는 relu없이 값을 내보낸다.\n이 것이 바로 LeNet이다.\n\n¶training\n123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566criterion = nn.CrossEntropyLoss()optimizer = torch.optim.Adam(model.parameters(), lr=0.0001)epochs = 12running_loss_history = []running_correct_history = []validation_running_loss_history = [] validation_running_correct_history = []for e in range(epochs):    running_loss = 0.0  running_correct = 0.0  validation_running_loss = 0.0  validation_running_correct = 0.0    for inputs, labels in training_loader:             inputs = inputs.to(device)    labels = labels.to(device)    # inputs = inputs.view(inputs.shape[0], -1)    outputs = model(inputs)    loss = criterion(outputs, labels)        optimizer.zero_grad()    loss.backward()    optimizer.step()        _, preds = torch.max(outputs, 1)        running_correct += torch.sum(preds == labels.data)    running_loss += loss.item()              else:        # 훈련팔 필요가 없으므로 메모리 절약    with torch.no_grad():            for val_input, val_label in validation_loader:                val_input = val_input.to(device)        val_label = val_label.to(device)        # val_input = val_input.view(val_input.shape[0], -1)        val_outputs = model(val_input)        val_loss = criterion(val_outputs, val_label)                _, val_preds = torch.max(val_outputs, 1)        validation_running_loss += val_loss.item()        validation_running_correct += torch.sum(val_preds == val_label.data)             epoch_loss = running_loss / len(training_loader)    epoch_acc = running_correct.float() / len(training_loader)    running_loss_history.append(epoch_loss)    running_correct_history.append(epoch_acc)        val_epoch_loss = validation_running_loss / len(validation_loader)    val_epoch_acc = validation_running_correct.float() / len(validation_loader)    validation_running_loss_history.append(val_epoch_loss)    validation_running_correct_history.append(val_epoch_acc)        print(\"===================================================\")    print(\"epoch: \", e + 1)    print(\"training loss: &#123;:.5f&#125;, acc: &#123;:5f&#125;\".format(epoch_loss, epoch_acc))    print(\"validation loss: &#123;:.5f&#125;, acc: &#123;:5f&#125;\".format(val_epoch_loss, val_epoch_acc))\n123456789101112131415161718192021222324252627282930313233343536373839404142434445464748===================================================epoch:  1training loss: 0.57984, acc: 84.566666validation loss: 0.17183, acc: 95.019997===================================================epoch:  2training loss: 0.14266, acc: 95.785004validation loss: 0.10837, acc: 96.729996===================================================epoch:  3training loss: 0.09881, acc: 97.026672validation loss: 0.07965, acc: 97.529999===================================================epoch:  4training loss: 0.07957, acc: 97.633339validation loss: 0.06295, acc: 97.970001===================================================epoch:  5training loss: 0.06528, acc: 97.988335validation loss: 0.05194, acc: 98.389999===================================================epoch:  6training loss: 0.05605, acc: 98.290001validation loss: 0.04634, acc: 98.419998===================================================epoch:  7training loss: 0.05048, acc: 98.465004validation loss: 0.04152, acc: 98.779999===================================================epoch:  8training loss: 0.04411, acc: 98.653336validation loss: 0.03743, acc: 98.820000===================================================epoch:  9training loss: 0.03852, acc: 98.820000validation loss: 0.03573, acc: 98.869995===================================================epoch:  10training loss: 0.03615, acc: 98.881668validation loss: 0.03582, acc: 98.839996===================================================epoch:  11training loss: 0.03363, acc: 98.976669validation loss: 0.03422, acc: 98.820000===================================================epoch:  12training loss: 0.03024, acc: 99.063339validation loss: 0.03219, acc: 98.879997\n\n\n\n약 99% 의 정확도로 이미지를 분류하였으며, 이전에 제대로 구별하지 못한 이미지도 제대로 구별해 내었다.\n","dateCreated":"2019-02-21T00:00:00+09:00","dateModified":"2019-02-21T22:21:57+09:00","datePublished":"2019-02-21T00:00:00+09:00","description":"Pytorch - 07) Convolutional Neural Network (2)\n\n이번에는 코드로 구현해보자.\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n\n\nclass LeNet(nn.Module):\n  \n  def __init__(self):\n    super().__init__()\n    # 흑백이라 1채널, 20개 특징 추출, filter 크기, stride 1\n    self.conv1 = nn.Conv2d(1, 20, 5, 1)\n    # 전에서 2","headline":"Pytorch 07) - Convolutional Neural Network (2)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/02/21/pytorch-07-convolutional-neural-network(2)/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/02/21/pytorch-07-convolutional-neural-network(2)/","keywords":"pytorch"}</script>
+    <meta name="description" content="Pytorch - 07) Convolutional Neural Network (2)  이번에는 코드로 구현해보자.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24   class LeNet(nn.Module):      def __init__(self):     super().__init__(">
+<meta name="keywords" content="pytorch">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Pytorch 07) - Convolutional Neural Network (2)">
+<meta property="og:url" content="https://www.yceffort.kr/2019/02/21/pytorch-07-convolutional-neural-network(2)/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="Pytorch - 07) Convolutional Neural Network (2)  이번에는 코드로 구현해보자.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24   class LeNet(nn.Module):      def __init__(self):     super().__init__(">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://www.researchgate.net/profile/Yiren_Zhou/publication/312170477/figure/fig1/AS:448817725218816@1484017892071/Structure-of-LeNet-5.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/02/cnn2-1.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/02/cnn2-2.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/02/cnn2-3.png">
+<meta property="og:updated_time" content="2019-02-21T13:21:57.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pytorch 07) - Convolutional Neural Network (2)">
+<meta name="twitter:description" content="Pytorch - 07) Convolutional Neural Network (2)  이번에는 코드로 구현해보자.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24   class LeNet(nn.Module):      def __init__(self):     super().__init__(">
+<meta name="twitter:image" content="https://www.researchgate.net/profile/Yiren_Zhou/publication/312170477/figure/fig1/AS:448817725218816@1484017892071/Structure-of-LeNet-5.png">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Pytorch 07) - Convolutional Neural Network (2)
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-02-21T00:00:00+09:00">
+	
+		    Feb 21, 2019
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>Pytorch - 07) Convolutional Neural Network (2)</p>
+<p>이번에는 코드로 구현해보자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LeNet</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">    super().__init__()</span><br><span class="line">    <span class="comment"># 흑백이라 1채널, 20개 특징 추출, filter 크기, stride 1</span></span><br><span class="line">    self.conv1 = nn.Conv2d(<span class="number">1</span>, <span class="number">20</span>, <span class="number">5</span>, <span class="number">1</span>)</span><br><span class="line">    <span class="comment"># 전에서 20개</span></span><br><span class="line">    self.conv2 = nn.Conv2d(<span class="number">20</span>, <span class="number">50</span>, <span class="number">5</span>, <span class="number">1</span>)</span><br><span class="line">    self.fc1 = nn.Linear(<span class="number">4</span>*<span class="number">4</span>*<span class="number">50</span>, <span class="number">500</span>)</span><br><span class="line">    <span class="comment"># 0.5 가 권장 할 만하대</span></span><br><span class="line">    self.dropout1 = nn.Dropout(<span class="number">0.5</span>)</span><br><span class="line">    self.fc2 = nn.Linear(<span class="number">500</span>, <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">    x = F.relu(self.conv1(x))</span><br><span class="line">    x = F.max_pool2d(x, <span class="number">2</span>, <span class="number">2</span>)</span><br><span class="line">    x = F.relu(self.conv2(x))</span><br><span class="line">    x = F.max_pool2d(x, <span class="number">2</span>, <span class="number">2</span>)</span><br><span class="line">    <span class="comment"># flatten</span></span><br><span class="line">    x = x.view(<span class="number">-1</span>, <span class="number">4</span> * <span class="number">4</span> * <span class="number">50</span>)</span><br><span class="line">    x = F.relu(self.fc1(x))</span><br><span class="line">    x = self.dropout1(x)</span><br><span class="line">    x = self.fc2(x)</span><br><span class="line">    <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<p>먼저 첫번째 conv1애서는 1개의 필터, 20개의 특징을 추출 해 낼 것이다. 필터는 5x5 크기로, 이미지가 그리 크지 않으므로 stride는 1로 할것이다.</p>
+<p>두번 conv2는 입력값이 20이고 (이전 conv의 ouput), 50개의 특징을 같은 크기와 stride로 찾는다.</p>
+<p>그리고 마지막에는 fully conncted layer를 linear로 취한다. 여기서 주목할 것은 첫번째 fc의 input 값이다. 필터의 크기가 5x5 이기 때문에, 5x5필터는 width 와 heigt를 각각 4씩 줄인다.</p>
+<ul>
+<li>1x1 필터: 원래크기 유지</li>
+<li>2x2 필터: 크기 1 감소</li>
+<li>3x3 필터: 크기 2 감소</li>
+<li>4x4 필터: 크기 3 감소</li>
+<li>5x5 필터: 크기 4 감소</li>
+</ul>
+<p>따라서 각 conv layer를 거칠 때마다 크기가 4씩 줄어들게 된다.</p>
+<p>그리고 max_pool2d를 2,2 크기로 사용할 것이므로 크기는 절반으로 줄어들게 된다. 요약하자면 다음과 같다.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">input</th>
+<th style="text-align:center">conv1</th>
+<th style="text-align:center">pool1</th>
+<th style="text-align:center">conv2</th>
+<th style="text-align:center">pool2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">28</td>
+<td style="text-align:center">24</td>
+<td style="text-align:center">12</td>
+<td style="text-align:center">8</td>
+<td style="text-align:center">4</td>
+</tr>
+</tbody>
+</table>
+<p>4x4 크기의 이미지가, 50개의 특징으로 나오게 되므로, fully connected 의 input은 $$4\times 4 \times 50$$이 된다. 그리고 이를 500개의 output 으로 만들 것이다. 그리고 과적합을 방지하기 위하여, dropout을 0.5비율로 적용했다. 마지막 fc에서는, 10개의 숫자를 판별해야 하므로 500, 10을 적용했다.</p>
+<p>활성화 함수로는 relu를 사용하였고, fully connected로 넘기기 위해, 평탄화를 작업(view적용)을 한다. 몇줄이 생길지는 모르겠지만, 암튼 row를 $$4\times 4 \times 50$$를 맞추기 위하여 <code>.view(-1, 4*4*50)</code> 을 적용했다. fc1을 쓰고, 그 사이에 dropout을 하고, 마지막에는 relu없이 값을 내보낸다.</p>
+<p>이 것이 바로 <a href="https://www.researchgate.net/figure/Structure-of-LeNet-5_fig1_312170477" target="_blank" rel="noopener">LeNet</a>이다.</p>
+<p><img src="https://www.researchgate.net/profile/Yiren_Zhou/publication/312170477/figure/fig1/AS:448817725218816@1484017892071/Structure-of-LeNet-5.png" alt="LeNet"></p>
+<h3 id="training"><a class="header-anchor" href="#training">¶</a>training</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">criterion = nn.CrossEntropyLoss()</span><br><span class="line">optimizer = torch.optim.Adam(model.parameters(), lr=<span class="number">0.0001</span>)</span><br><span class="line"></span><br><span class="line">epochs = <span class="number">12</span></span><br><span class="line">running_loss_history = []</span><br><span class="line">running_correct_history = []</span><br><span class="line">validation_running_loss_history = [] </span><br><span class="line">validation_running_correct_history = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> e <span class="keyword">in</span> range(epochs):</span><br><span class="line">  </span><br><span class="line">  running_loss = <span class="number">0.0</span></span><br><span class="line">  running_correct = <span class="number">0.0</span></span><br><span class="line">  validation_running_loss = <span class="number">0.0</span></span><br><span class="line">  validation_running_correct = <span class="number">0.0</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> inputs, labels <span class="keyword">in</span> training_loader:    </span><br><span class="line">     </span><br><span class="line">    inputs = inputs.to(device)</span><br><span class="line">    labels = labels.to(device)</span><br><span class="line">    <span class="comment"># inputs = inputs.view(inputs.shape[0], -1)</span></span><br><span class="line">    outputs = model(inputs)</span><br><span class="line">    loss = criterion(outputs, labels)</span><br><span class="line">    </span><br><span class="line">    optimizer.zero_grad()</span><br><span class="line">    loss.backward()</span><br><span class="line">    optimizer.step()</span><br><span class="line">    </span><br><span class="line">    _, preds = torch.max(outputs, <span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">    running_correct += torch.sum(preds == labels.data)</span><br><span class="line">    running_loss += loss.item()</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">  <span class="keyword">else</span>:    </span><br><span class="line">    <span class="comment"># 훈련팔 필요가 없으므로 메모리 절약</span></span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">      </span><br><span class="line">      <span class="keyword">for</span> val_input, val_label <span class="keyword">in</span> validation_loader:</span><br><span class="line">        </span><br><span class="line">        val_input = val_input.to(device)</span><br><span class="line">        val_label = val_label.to(device)</span><br><span class="line">        <span class="comment"># val_input = val_input.view(val_input.shape[0], -1)</span></span><br><span class="line">        val_outputs = model(val_input)</span><br><span class="line">        val_loss = criterion(val_outputs, val_label)</span><br><span class="line">        </span><br><span class="line">        _, val_preds = torch.max(val_outputs, <span class="number">1</span>)</span><br><span class="line">        validation_running_loss += val_loss.item()</span><br><span class="line">        validation_running_correct += torch.sum(val_preds == val_label.data) </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    epoch_loss = running_loss / len(training_loader)</span><br><span class="line">    epoch_acc = running_correct.float() / len(training_loader)</span><br><span class="line">    running_loss_history.append(epoch_loss)</span><br><span class="line">    running_correct_history.append(epoch_acc)</span><br><span class="line">    </span><br><span class="line">    val_epoch_loss = validation_running_loss / len(validation_loader)</span><br><span class="line">    val_epoch_acc = validation_running_correct.float() / len(validation_loader)</span><br><span class="line">    validation_running_loss_history.append(val_epoch_loss)</span><br><span class="line">    validation_running_correct_history.append(val_epoch_acc)</span><br><span class="line">    </span><br><span class="line">    print(<span class="string">"==================================================="</span>)</span><br><span class="line">    print(<span class="string">"epoch: "</span>, e + <span class="number">1</span>)</span><br><span class="line">    print(<span class="string">"training loss: &#123;:.5f&#125;, acc: &#123;:5f&#125;"</span>.format(epoch_loss, epoch_acc))</span><br><span class="line">    print(<span class="string">"validation loss: &#123;:.5f&#125;, acc: &#123;:5f&#125;"</span>.format(val_epoch_loss, val_epoch_acc))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">===================================================</span><br><span class="line">epoch:  1</span><br><span class="line">training loss: 0.57984, acc: 84.566666</span><br><span class="line">validation loss: 0.17183, acc: 95.019997</span><br><span class="line">===================================================</span><br><span class="line">epoch:  2</span><br><span class="line">training loss: 0.14266, acc: 95.785004</span><br><span class="line">validation loss: 0.10837, acc: 96.729996</span><br><span class="line">===================================================</span><br><span class="line">epoch:  3</span><br><span class="line">training loss: 0.09881, acc: 97.026672</span><br><span class="line">validation loss: 0.07965, acc: 97.529999</span><br><span class="line">===================================================</span><br><span class="line">epoch:  4</span><br><span class="line">training loss: 0.07957, acc: 97.633339</span><br><span class="line">validation loss: 0.06295, acc: 97.970001</span><br><span class="line">===================================================</span><br><span class="line">epoch:  5</span><br><span class="line">training loss: 0.06528, acc: 97.988335</span><br><span class="line">validation loss: 0.05194, acc: 98.389999</span><br><span class="line">===================================================</span><br><span class="line">epoch:  6</span><br><span class="line">training loss: 0.05605, acc: 98.290001</span><br><span class="line">validation loss: 0.04634, acc: 98.419998</span><br><span class="line">===================================================</span><br><span class="line">epoch:  7</span><br><span class="line">training loss: 0.05048, acc: 98.465004</span><br><span class="line">validation loss: 0.04152, acc: 98.779999</span><br><span class="line">===================================================</span><br><span class="line">epoch:  8</span><br><span class="line">training loss: 0.04411, acc: 98.653336</span><br><span class="line">validation loss: 0.03743, acc: 98.820000</span><br><span class="line">===================================================</span><br><span class="line">epoch:  9</span><br><span class="line">training loss: 0.03852, acc: 98.820000</span><br><span class="line">validation loss: 0.03573, acc: 98.869995</span><br><span class="line">===================================================</span><br><span class="line">epoch:  10</span><br><span class="line">training loss: 0.03615, acc: 98.881668</span><br><span class="line">validation loss: 0.03582, acc: 98.839996</span><br><span class="line">===================================================</span><br><span class="line">epoch:  11</span><br><span class="line">training loss: 0.03363, acc: 98.976669</span><br><span class="line">validation loss: 0.03422, acc: 98.820000</span><br><span class="line">===================================================</span><br><span class="line">epoch:  12</span><br><span class="line">training loss: 0.03024, acc: 99.063339</span><br><span class="line">validation loss: 0.03219, acc: 98.879997</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2019/02/cnn2-1.png" alt="cnn2-1"></p>
+<p><img src="/images/2019/02/cnn2-2.png" alt="cnn2-2"></p>
+<p><img src="/images/2019/02/cnn2-3.png" alt="cnn2-3"></p>
+<p>약 99% 의 정확도로 이미지를 분류하였으며, 이전에 제대로 구별하지 못한 이미지도 제대로 구별해 내었다.</p>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/">pytorch</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/21/pytorch-06-convolutional-neural-network(1)/" data-tooltip="Pytorch 06) - Convolutional Neural Network (1)" aria-label="PREVIOUS: Pytorch 06) - Convolutional Neural Network (1)">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/20/pytorch-04-deep-neural-network/" data-tooltip="Pytorch 04) - Deep Nueral Network" aria-label="NEXT: Pytorch 04) - Deep Nueral Network">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/02/21/pytorch-07-convolutional-neural-network(2)/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/02/21/pytorch-07-convolutional-neural-network(2)/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/21/pytorch-06-convolutional-neural-network(1)/" data-tooltip="Pytorch 06) - Convolutional Neural Network (1)" aria-label="PREVIOUS: Pytorch 06) - Convolutional Neural Network (1)">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/20/pytorch-04-deep-neural-network/" data-tooltip="Pytorch 04) - Deep Nueral Network" aria-label="NEXT: Pytorch 04) - Deep Nueral Network">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/02/21/pytorch-07-convolutional-neural-network(2)/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/02/21/pytorch-07-convolutional-neural-network(2)/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/02/21/pytorch-07-convolutional-neural-network(2)/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/02/21/pytorch-07-convolutional-neural-network(2)/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2019/02/21/pytorch-07-convolutional-neural-network(2)/';
+                 
+                    this.page.identifier = '2019/02/21/pytorch-07-convolutional-neural-network(2)/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

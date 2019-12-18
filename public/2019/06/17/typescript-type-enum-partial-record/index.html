@@ -1,0 +1,828 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>Typescript Type, Enum, Partial, Record로 글로벌 변수 관리하기 - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"¶고민지점\n\nGlobal 로 관리하는 Colorset Red, Blue, Green, Black이 있다.\n이 색들은 각각 지정된 칼라코드가 있다\n그러나 때로는 그 컬러코드에 맞게 안쓰는 경우도 있다\n그러나 때로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.\n\n¶Union types\nUnion Type\n어떤 라이브러리에서 받는 파라미터의 값을 number와 string으로 제한한다고 하자. 그렇다면 코드는 아래와 같을 것이다.\n12345678910function numberOrString(parameter: any) &#123;    if (typeof parameter === \"number\") &#123;        return console.log(\"this is number\")    &#125;     if (typeof parameter === \"string\") &#123;        return console.log(\"this is string\")    &#125;       throw new Error(`Expecting number of string, but got $&#123;typeof parameter&#125;`)&#125;\n물론 이런식으로 처리할수도 있다. 그러나 문제는 컴파일 상에서만 괜찮다는 것이다. any는 typescript에서 어떤 값이든 들어갈 수 있으므로, 이 에러는 런타임상에서만 발생하게 된다.\n일반적인 객체지향 코드에서는, 두 타입으로 하나 hierarchy 를 만들어서 처리할 수도 있지만, 약간 그건 과한 느낌이 있기도 하다. 이 코드를 이렇게 처리할 수도 있다.\n123function numberOrString(parameter: string|number) &#123;    // do something...&#125;\n이런 방식을 Union Type 이라고 한다. Union Type는 하나의 값에 여러가지 타입을 표현할 수 있게 해준다. 사용할 값을 |로 구별해서 넣어주면 된다.\n처음 문제로 돌아와서, Global한 컬러로 지정하려는 값이 네개 있다고 헀다. 이제 이것은 이렇게 처리하면 된다.\n1export type GlobalColors = 'Red' | 'Blue' | 'Green' | 'Black'\n자 그럼 이것이 어떻게 동작하는지 보자.\n123function getColor(parameter: GlobalColors) &#123;    console.log(parameter)&#125;\ngetColor()에 GlobalColors가 아닌 다른 값을 넣으면\n\nvscode에서 (물론 plugin덕분이지만) 네개의 값만 강제하는 것을 볼 수 있다. 만약 다른 값을 넣는다면 컴파일상에서 에러가 난다.\n\n한 가지 신기 (당연) 한점은, 이 코드는 자바스크립트로 컴파일 되지 않는다는 것이다. 이점은 enum이랑 다른데, 암튼 지간에 저건 자바스크립트에서 처리할 수 없는 일이다. 이러한 타입체크는 나중에 컴파일 하게 된다면, *.d.ts에서 처리해준다는 것이다.\n¶enum\nenum은 열거형이다. 그렇다.\n123456enum GlobalColorSet &#123;  Red,  Blue,  Green,  Black&#125;\n를 컴파일하면\n1234567var GlobalColorSet;(function (GlobalColorSet) &#123;    GlobalColorSet[GlobalColorSet[\"Red\"] = 0] = \"Red\";    GlobalColorSet[GlobalColorSet[\"Blue\"] = 1] = \"Blue\";    GlobalColorSet[GlobalColorSet[\"Green\"] = 2] = \"Green\";    GlobalColorSet[GlobalColorSet[\"Black\"] = 3] = \"Black\";&#125;)(GlobalColorSet || (GlobalColorSet = &#123;&#125;));\n로 나온다. 복잡한데, 결과적으로는 아래와 같다.\n1var GlobalColorSet = &#123;0: \"Red\", 1: \"Blue\", 2: \"Green\", 3: \"Black\", Red: 0, Blue: 1, Green: 2, Black: 3&#125;\n일반적인 map과 다르게 key로 값을 얻을 수 있고, 값으로도 key를 얻을 수 있다.\n그러나 enum은 const로 선언될 경우 컴파일 결과가 조금다르다.\n123456const enum ConstGlobalColorSet &#123;  Red,  Blue,  Green,  Black&#125;\n다른게 아니고, 사실 아무것도 컴파일 되지 않는다. 이는 읽기 전용으로 생성된 객체이기 때문에 (const) 수정할 객체 자체가 생성되지 않는 것이다. 또한 앞서 보았던 값으로 키를 얻는 행위 또한 불가능해진다.\n아무튼, 글로벌하게 쓸 색상을 enum으로 선언했다.\n123456const enum ConstGlobalColorSet &#123;  Red = '11, 11, 11',  Blue = '22, 22, 22',  Green = '33, 33, 33',  Black = '44, 44, 44',&#125;\n¶Record\nRecord&lt;K, V&gt;로 쓰인다. 여기서 K는 key이고, V는 Value다. keyof Record&lt;K, T&gt;는 k로, Record&lt;K, T&gt;[K]는 T다. (느낌이 그렇다는 것) 밑에 예시를 보자.\n이거는\n1234//이거는type ColorProperties = Record&lt;GlobalColors, string&gt;//이거와 같다type ColorProperties = &#123; red: string, blue: string, green: string, black: string &#125;\n(말보다 코드가 쉽다) 위에 경우와 마찬가지로, js로 컴파일 됐을 때는 위 두 코드는 아무런 js로 변환되지 않는다.\n12colorProp1['purple'] = 1;colorProp1['orange']\n위의 코드는 당연히 타입스크립트 컴파일에서 에러가 난다.\n¶Partial\nPartial은 key를 옵셔널하게 해준다.\n1234// 이거는let PartialColorProperties = Partial&lt;ColorProperties&gt;// 이거와 같다.let PartialColorProperties = &#123; red?: string, blue?: string, green?: string, black?: string &#125;\n¶정리\n123456789101112131415// 글로벌 색으로 4가지를 선언한다.export type GlobalColors = 'Red' | 'Blue' | 'Green' | 'Black'// 기본값으로 색상을 선언한다.const enum ConstGlobalColorSet &#123;  Red = '11, 11, 11',  Blue = '22, 22, 22',  Green = '33, 33, 33',  Black = '44, 44, 44',&#125;// 기본 색상값외에 다른 색상을 사용하고 싶다면 const CUSTOM_COLORS: Partial&lt;Record&lt;GlobalColors, string&gt;&gt; = &#123;  gray: '55, 55, 55',&#125;\n","dateCreated":"2019-06-17T16:20:52+09:00","dateModified":"2019-08-14T11:05:21+09:00","datePublished":"2019-06-17T16:20:52+09:00","description":"¶고민지점\n * Global 로 관리하는 Colorset Red, Blue, Green, Black이 있다.\n * 이 색들은 각각 지정된 칼라코드가 있다\n * 그러나 때로는 그 컬러코드에 맞게 안쓰는 경우도 있다\n * 그러나 때로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.\n\n¶Union types\nUnion Type\n\n어떤 라이브러리에서 받는 파라미터의 값을 number와 string으로 제한한다고 하자. 그렇다면 코드는 아래와 같을 것이다.\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n\n\nfunction numberOrStr","headline":"Typescript Type, Enum, Partial, Record로 글로벌 변수 관리하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/06/17/typescript-type-enum-partial-record/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/06/17/typescript-type-enum-partial-record/","keywords":"react, javascript, typescript"}</script>
+    <meta name="description" content="¶고민지점  * Global 로 관리하는 Colorset Red, Blue, Green, Black이 있다.  * 이 색들은 각각 지정된 칼라코드가 있다  * 그러나 때로는 그 컬러코드에 맞게 안쓰는 경우도 있다  * 그러나 때로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.  ¶Union types Union Type  어떤 라이브러리에서 받는 파">
+<meta name="keywords" content="react,javascript,typescript">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Typescript Type, Enum, Partial, Record로 글로벌 변수 관리하기">
+<meta property="og:url" content="https://www.yceffort.kr/2019/06/17/typescript-type-enum-partial-record/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="¶고민지점  * Global 로 관리하는 Colorset Red, Blue, Green, Black이 있다.  * 이 색들은 각각 지정된 칼라코드가 있다  * 그러나 때로는 그 컬러코드에 맞게 안쓰는 경우도 있다  * 그러나 때로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.  ¶Union types Union Type  어떤 라이브러리에서 받는 파">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/06/ts1.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/06/ts2.png">
+<meta property="og:updated_time" content="2019-08-14T02:05:21.896Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Typescript Type, Enum, Partial, Record로 글로벌 변수 관리하기">
+<meta name="twitter:description" content="¶고민지점  * Global 로 관리하는 Colorset Red, Blue, Green, Black이 있다.  * 이 색들은 각각 지정된 칼라코드가 있다  * 그러나 때로는 그 컬러코드에 맞게 안쓰는 경우도 있다  * 그러나 때로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.  ¶Union types Union Type  어떤 라이브러리에서 받는 파">
+<meta name="twitter:image" content="https://www.yceffort.kr/images/2019/06/ts1.png">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Typescript Type, Enum, Partial, Record로 글로벌 변수 관리하기
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-06-17T16:20:52+09:00">
+	
+		    Jun 17, 2019
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h2 id="고민지점"><a class="header-anchor" href="#고민지점">¶</a>고민지점</h2>
+<ul>
+<li>Global 로 관리하는 Colorset Red, Blue, Green, Black이 있다.</li>
+<li>이 색들은 각각 지정된 칼라코드가 있다</li>
+<li>그러나 때로는 그 컬러코드에 맞게 안쓰는 경우도 있다</li>
+<li>그러나 때로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.</li>
+</ul>
+<h2 id="union-types"><a class="header-anchor" href="#union-types">¶</a>Union types</h2>
+<p><a href="https://www.typescriptlang.org/docs/handbook/advanced-types.html#union-types" target="_blank" rel="noopener">Union Type</a></p>
+<p>어떤 라이브러리에서 받는 파라미터의 값을 number와 string으로 제한한다고 하자. 그렇다면 코드는 아래와 같을 것이다.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">numberOrString</span>(<span class="params">parameter: <span class="built_in">any</span></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> parameter === <span class="string">"number"</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">console</span>.log(<span class="string">"this is number"</span>)</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> parameter === <span class="string">"string"</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">console</span>.log(<span class="string">"this is string"</span>)</span><br><span class="line">    &#125;   </span><br><span class="line"></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">`Expecting number of string, but got <span class="subst">$&#123;typeof parameter&#125;</span>`</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>물론 이런식으로 처리할수도 있다. 그러나 문제는 컴파일 상에서만 괜찮다는 것이다. any는 typescript에서 어떤 값이든 들어갈 수 있으므로, 이 에러는 런타임상에서만 발생하게 된다.</p>
+<p>일반적인 객체지향 코드에서는, 두 타입으로 하나 hierarchy 를 만들어서 처리할 수도 있지만, 약간 그건 과한 느낌이 있기도 하다. 이 코드를 이렇게 처리할 수도 있다.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">numberOrString</span>(<span class="params">parameter: <span class="built_in">string</span>|<span class="built_in">number</span></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// do something...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>이런 방식을 <code>Union Type</code> 이라고 한다. <code>Union Type</code>는 하나의 값에 여러가지 타입을 표현할 수 있게 해준다. 사용할 값을 <code>|</code>로 구별해서 넣어주면 된다.</p>
+<p>처음 문제로 돌아와서, Global한 컬러로 지정하려는 값이 네개 있다고 헀다. 이제 이것은 이렇게 처리하면 된다.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> GlobalColors = <span class="string">'Red'</span> | <span class="string">'Blue'</span> | <span class="string">'Green'</span> | <span class="string">'Black'</span></span><br></pre></td></tr></table></figure>
+<p>자 그럼 이것이 어떻게 동작하는지 보자.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getColor</span>(<span class="params">parameter: GlobalColors</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(parameter)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>getColor()</code>에 <code>GlobalColors</code>가 아닌 다른 값을 넣으면</p>
+<p><img src="/images/2019/06/ts1.png" alt="ts1"></p>
+<p>vscode에서 (물론 plugin덕분이지만) 네개의 값만 강제하는 것을 볼 수 있다. 만약 다른 값을 넣는다면 컴파일상에서 에러가 난다.</p>
+<p><img src="/images/2019/06/ts2.png" alt="ts2"></p>
+<p>한 가지 신기 (당연) 한점은, 이 코드는 자바스크립트로 컴파일 되지 않는다는 것이다. 이점은 <code>enum</code>이랑 다른데, 암튼 지간에 저건 자바스크립트에서 처리할 수 없는 일이다. 이러한 타입체크는 나중에 컴파일 하게 된다면, <code>*.d.ts</code>에서 처리해준다는 것이다.</p>
+<h2 id="enum"><a class="header-anchor" href="#enum">¶</a>enum</h2>
+<p><code>enum</code>은 열거형이다. 그렇다.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> GlobalColorSet &#123;</span><br><span class="line">  Red,</span><br><span class="line">  Blue,</span><br><span class="line">  Green,</span><br><span class="line">  Black</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>를 컴파일하면</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> GlobalColorSet;</span><br><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params">GlobalColorSet</span>) </span>&#123;</span><br><span class="line">    GlobalColorSet[GlobalColorSet[<span class="string">"Red"</span>] = <span class="number">0</span>] = <span class="string">"Red"</span>;</span><br><span class="line">    GlobalColorSet[GlobalColorSet[<span class="string">"Blue"</span>] = <span class="number">1</span>] = <span class="string">"Blue"</span>;</span><br><span class="line">    GlobalColorSet[GlobalColorSet[<span class="string">"Green"</span>] = <span class="number">2</span>] = <span class="string">"Green"</span>;</span><br><span class="line">    GlobalColorSet[GlobalColorSet[<span class="string">"Black"</span>] = <span class="number">3</span>] = <span class="string">"Black"</span>;</span><br><span class="line">&#125;)(GlobalColorSet || (GlobalColorSet = &#123;&#125;));</span><br></pre></td></tr></table></figure>
+<p>로 나온다. 복잡한데, 결과적으로는 아래와 같다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> GlobalColorSet = &#123;<span class="number">0</span>: <span class="string">"Red"</span>, <span class="number">1</span>: <span class="string">"Blue"</span>, <span class="number">2</span>: <span class="string">"Green"</span>, <span class="number">3</span>: <span class="string">"Black"</span>, <span class="attr">Red</span>: <span class="number">0</span>, <span class="attr">Blue</span>: <span class="number">1</span>, <span class="attr">Green</span>: <span class="number">2</span>, <span class="attr">Black</span>: <span class="number">3</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>일반적인 map과 다르게 key로 값을 얻을 수 있고, 값으로도 key를 얻을 수 있다.</p>
+<p>그러나 <code>enum</code>은 const로 선언될 경우 컴파일 결과가 조금다르다.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">enum</span> ConstGlobalColorSet &#123;</span><br><span class="line">  Red,</span><br><span class="line">  Blue,</span><br><span class="line">  Green,</span><br><span class="line">  Black</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>다른게 아니고, 사실 아무것도 컴파일 되지 않는다. 이는 읽기 전용으로 생성된 객체이기 때문에 (const) 수정할 객체 자체가 생성되지 않는 것이다. 또한 앞서 보았던 값으로 키를 얻는 행위 또한 불가능해진다.</p>
+<p>아무튼, 글로벌하게 쓸 색상을 enum으로 선언했다.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">enum</span> ConstGlobalColorSet &#123;</span><br><span class="line">  Red = <span class="string">'11, 11, 11'</span>,</span><br><span class="line">  Blue = <span class="string">'22, 22, 22'</span>,</span><br><span class="line">  Green = <span class="string">'33, 33, 33'</span>,</span><br><span class="line">  Black = <span class="string">'44, 44, 44'</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="record"><a class="header-anchor" href="#record">¶</a>Record</h2>
+<p><code>Record&lt;K, V&gt;</code>로 쓰인다. 여기서 K는 key이고, V는 Value다. <code>keyof Record&lt;K, T&gt;</code>는 <code>k</code>로, <code>Record&lt;K, T&gt;[K]</code>는 <code>T</code>다. (느낌이 그렇다는 것) 밑에 예시를 보자.</p>
+<p>이거는</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//이거는</span></span><br><span class="line"><span class="keyword">type</span> ColorProperties = Record&lt;GlobalColors, <span class="built_in">string</span>&gt;</span><br><span class="line"><span class="comment">//이거와 같다</span></span><br><span class="line"><span class="keyword">type</span> ColorProperties = &#123; red: <span class="built_in">string</span>, blue: <span class="built_in">string</span>, green: <span class="built_in">string</span>, black: <span class="built_in">string</span> &#125;</span><br></pre></td></tr></table></figure>
+<p>(말보다 코드가 쉽다) 위에 경우와 마찬가지로, js로 컴파일 됐을 때는 위 두 코드는 아무런 js로 변환되지 않는다.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">colorProp1[<span class="string">'purple'</span>] = <span class="number">1</span>;</span><br><span class="line">colorProp1[<span class="string">'orange'</span>]</span><br></pre></td></tr></table></figure>
+<p>위의 코드는 당연히 타입스크립트 컴파일에서 에러가 난다.</p>
+<h2 id="partial"><a class="header-anchor" href="#partial">¶</a>Partial</h2>
+<p>Partial은 key를 옵셔널하게 해준다.</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 이거는</span></span><br><span class="line"><span class="keyword">let</span> PartialColorProperties = Partial&lt;ColorProperties&gt;</span><br><span class="line"><span class="comment">// 이거와 같다.</span></span><br><span class="line"><span class="keyword">let</span> PartialColorProperties = &#123; red?: <span class="built_in">string</span>, blue?: <span class="built_in">string</span>, green?: <span class="built_in">string</span>, black?: <span class="built_in">string</span> &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="정리"><a class="header-anchor" href="#정리">¶</a>정리</h2>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 글로벌 색으로 4가지를 선언한다.</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> GlobalColors = <span class="string">'Red'</span> | <span class="string">'Blue'</span> | <span class="string">'Green'</span> | <span class="string">'Black'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 기본값으로 색상을 선언한다.</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">enum</span> ConstGlobalColorSet &#123;</span><br><span class="line">  Red = <span class="string">'11, 11, 11'</span>,</span><br><span class="line">  Blue = <span class="string">'22, 22, 22'</span>,</span><br><span class="line">  Green = <span class="string">'33, 33, 33'</span>,</span><br><span class="line">  Black = <span class="string">'44, 44, 44'</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 기본 색상값외에 다른 색상을 사용하고 싶다면 </span></span><br><span class="line"><span class="keyword">const</span> CUSTOM_COLORS: Partial&lt;Record&lt;GlobalColors, <span class="built_in">string</span>&gt;&gt; = &#123;</span><br><span class="line">  gray: <span class="string">'55, 55, 55'</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/">javascript</a> <a class="tag tag--primary tag--small t-link" href="/tags/react/">react</a> <a class="tag tag--primary tag--small t-link" href="/tags/typescript/">typescript</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/06/20/react-nextjs-koa/" data-tooltip="Typescript, React, NextJs, Koa, Styled Component 로 프론트엔드 환경 만들기" aria-label="PREVIOUS: Typescript, React, NextJs, Koa, Styled Component 로 프론트엔드 환경 만들기">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/05/21/javascript-promise/" data-tooltip="Javascript - Promise" aria-label="NEXT: Javascript - Promise">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/06/17/typescript-type-enum-partial-record/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/06/17/typescript-type-enum-partial-record/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/06/20/react-nextjs-koa/" data-tooltip="Typescript, React, NextJs, Koa, Styled Component 로 프론트엔드 환경 만들기" aria-label="PREVIOUS: Typescript, React, NextJs, Koa, Styled Component 로 프론트엔드 환경 만들기">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/05/21/javascript-promise/" data-tooltip="Javascript - Promise" aria-label="NEXT: Javascript - Promise">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/06/17/typescript-type-enum-partial-record/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/06/17/typescript-type-enum-partial-record/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/06/17/typescript-type-enum-partial-record/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/06/17/typescript-type-enum-partial-record/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2019/06/17/typescript-type-enum-partial-record/';
+                 
+                    this.page.identifier = '2019/06/17/typescript-type-enum-partial-record/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

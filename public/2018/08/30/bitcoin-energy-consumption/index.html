@@ -1,0 +1,876 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>비트코인 에너지 소비 인덱스 - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Bitcoin Energy Consumption Index\n원문\n\n\n\n\n설명\n값\n\n\n\n\n현재 추산되는 비트코인 연간 전력 소비랑\n73.12 TWh\n\n\n현재 추산되는 비트코인 연간 전력 최소 소비량\n53.8 TWh\n\n\n연간 전세계 마이닝 수익\n$5,389,021,006\n\n\n연간 전세계 마이닝 비용\n$3,656,073,069\n\n\n현재 채굴 대비 이익 비율\n67.84%\n\n\n비트코인 전력 소비량과 비슷한 국가\nAustria\n\n\n전일 비트코인을 위해 소비된 전력량\n200,332,771\n\n\nGH/s 당 와트\n0.16\n\n\n총 네트워크 해시 비율\n53,324\n\n\n트랜잭션 당 전력 소비량\n929\n\n\n비트코인 전력을 사용할 수 있는 미국 가정 수\n6,770,506\n\n\n단일 거래로 소비되는 전기를 사용할 수 있는 미국 가정 수\n31.41\n\n\n전세계 전력 소비량 대비 비트코인 전기 소비량\n0.33%\n\n\n연간 탄소 배출량\n35,830\n\n\n거래당 탄소 배출량\n455.44\n\n\n\n¶기본적인 사실\n비트코인의 신뢰 최소화 합의가 시작된 이래로, 비트코인의 작업증명 알고리즘에 의해 운영되고 있다.  '작업’을 수행하는 기계는 현재 엄청난 양의 에너지를 소비하고 있다. 이 데이터에는 Bitcoin과 BitcoinCash가 포함되어 있다.\n¶마이너들은 무슨 작업을 하는가?\n소위 마이너들이 약 10분 마다 비트코인의 블록체인에 새로운 블록을 추가한다. 마이너들은 서로 신뢰하지 않아도 되며, 여기서 마이너들이 신뢰하는 유일한 것은 비트코인을 운영하는 코드다. 이 코드에는 새로운 트랜잭션을 검증하는 몇가지 규칙이 포함되어 있다. 예를들어, 송신자가 실제로 송신하는 금액을 소유하는 경우에만 트랜잭션이 유효하다. 모든 마이너들은 이러한 규칙을 준수하는지 여불르 개별적으로 확인하여 다른 마이너를 신뢰할 필요성을 제거한다.\n여기서 트릭은 모든 마이너들이 동일한 거래 히스토리에 동의하도록 하는 것이다. 네트워크의 모든 마이너는 블록체인에 다음 거래 배치를 준비하는 임무를 끊임없이 수행한다. 이 블록중 하나만 무작위로 선택되어 체인의 최신 블록이 된다. 분산 네트워크에서 무작위로 선택하는 것은 쉽지 않으므로, 여기서 작업 증명이 이루어진다. 작업 증명에서 다음 블록은 유효한 블록을 생산하는 첫번째 마이너에게서 나타난다. 네트워크의 모든 마이너가 평균 10분 마다 하나의 유효한 블록을 생산할 수 있도록 프로토콜에 의해 난이도가 정기적으로 조정된다. 마이너가 마침내 유효한 블록을 생산하면 이를 나머지 네트워크에 알린다. 다른 마이너들은 이 블록이 모든 규칙을 준수한다는 것을 확인한다음 자신이 작업한 블록을 폐기한다. 첫번째 블록을 만든 행운의 마이너는 블록에 처리된 거래에 속한 수수료화 함께 고정된 양의 비트코인을 보상으로 받는다. 그리고 다음 사이클이 다시 시작된다.\n유효한 블록을 생산하는 과정은 주로 시행착오에 기반하고 있다. 마이너들은 매초마다 ‘nonce’ 라고 불리는 블록 구성요소에 대한 올바른 값을 찾기 위해 시도하며, 완성된 블록이 요구 사항과 일치하기를 희망한다.(결과를 예측하는 방법이 없다. 그저 시도할뿐) 이런 이유로 마이닝은 자신의 번호를 선택할 수 있는 복권과 비교 되기도 한다. 초당 시도의 수는 채굴장비의 해시레이트에 주어진다. 일반적으로 초댕 10억개의 해시를 처리한다.\n¶지속성\n이러한 계속된 블록 채굴 사이클은 전세계 사람들에게 비트코인 채굴을 장려한다. 마이닝이 견고한 수익 흐름을 제공하므로, 사람들은 전력 소비가 큰 기계를 운영하여 블록을 만들 의향이 있다. 수년에 걸쳐 통화 가격이 계속 최고치를 갱신함에 따라 비트코인 네트워크의 총 에너지 소비가 계속해서 증가되었다. 비트코인 네트워크 전체는 현재 국제 에너지기구가 발표한 보고서를 기반으로 여러 국가를 합친 것 보다 더 많은 에너지를 소비한다. 비트코인이 국가라면, 에너지 소비 순위는 아래와 같다.\n\n이와 별도로 비트코인 에너지 소비량을 세계 최대 에너지 소비국과 아래와 같이 비교할 수도 있다.\n\n¶탄소 배출\n비트코인의 가장 큰 문제는 엄청난 에너지 소비량이 아니라, 이러한 전력을 중국 석탄 화력 발전소가 대부분 연료 공급을 한다는 것이다. 석탄 기반 전기는 매우 낮은 가격에 이용가능하다. 보수적으로 계산하더라도, 비트코인 거래에 대해 극단적인 탄소배출을 요구한다.\n¶비트코인 에너지 소비량을 다른 지불 시스템과 비교\n비트코인 네트워크가 소비하는 에너지를 VISA와 같은 다른 지불 시스템과 비교할 수 있다. VISA에 따르면, 이회사는 모든 작업에 대해 전세계쩍으로 총 674,922기가 줄의 에너지를 소비했다. 이는 VISA가 약 17,000 가구의 에너지 수요와 동일한 수요를 갖고 있음을 의미한다.  또한 VISA가 2017년 1112억건의 거래를 처리했다는 사실도 알고 있다. 이 수치를 통해 비교하면 아래와 같다. (아래 차트는 단일 비트코인 거래를 10만 VISA거래와 비교했다.)\n\n물론 이 수치는 완벽하지 않다. (예를 들어 VISA 사무소의 에너지 소비는 포함되지 않았다) 그러나 그 차이는 너무 극단적이어서 포함 여부와 상관없이 충격적이다. 일반 금융 시스템의 평균 비현금거래와 비교하면 비트코인 거래에는 평균 수천배의 에너지가 필요하다는 것을 알 수 있다.  이는 신뢰할 수 있는 제3자가 필요없는 거래에 수반되는 가격이라고 치기에는 너무 높다.\n¶대안\n작업 증명은 스스로를 증명할 수 있는 최초의 합의 알고리즘이지만, 이것이 유일한 합의 알고리즘은 아니다. 최근엔 지분 증명과 같은 에너지 효율적인 알고리즘이 개발되고 있다. 지분 증명은 마이너가 아니고 소유주가 블록을 생성하므로, 가능한 많은 해시를 생산하는 전력 소비 기계가 필요하지 않다. 비트코인은 잠재적으로 이러한 합의 알고리즘으로 전환하여 지속 가능성을 향상 시킬 수 있다. 여기서 유일한 단점은, 아직 이러한 합의 알고리즘에 여러가지 버전이 있으며 이들중 어느것도 완전히 입증되지 않았다는 것이다. 그럼에도 이러한 알고리즘에 대한 연구는 미래에 좋은 희망을 제공한다.\n¶비트코인 에너지 소비량 측정\n\n","dateCreated":"2018-08-30T00:00:00+09:00","dateModified":"2018-08-30T03:39:16+09:00","datePublished":"2018-08-30T00:00:00+09:00","description":"Bitcoin Energy Consumption Index\n\n원문\n\n\n\n설명값현재 추산되는 비트코인 연간 전력 소비랑73.12 TWh현재 추산되는 비트코인 연간 전력 최소 소비량53.8 TWh연간 전세계 마이닝 수익$5,389,021,006연간 전세계 마이닝 비용$3,656,073,069현재 채굴 대비 이익 비율67.84%비트코인 전력 소비량과 비슷한 국가Austria전일 비트코인을 위해 소비된 전력량200,332,771GH/s 당 와트0.16총 네트워크 해시 비율53,324트랜잭션 당 전력 소비량929비트코인 전력을 사용할 수 있","headline":"비트코인 에너지 소비 인덱스","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/08/30/bitcoin-energy-consumption/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/08/30/bitcoin-energy-consumption/","keywords":"bitcoin, blockchain"}</script>
+    <meta name="description" content="Bitcoin Energy Consumption Index  원문    설명값현재 추산되는 비트코인 연간 전력 소비랑73.12 TWh현재 추산되는 비트코인 연간 전력 최소 소비량53.8 TWh연간 전세계 마이닝 수익$5,389,021,006연간 전세계 마이닝 비용$3,656,073,069현재 채굴 대비 이익 비율67.84%비트코인 전력 소비량과 비슷한 국가">
+<meta name="keywords" content="bitcoin,blockchain">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="비트코인 에너지 소비 인덱스">
+<meta property="og:url" content="https://www.yceffort.kr/2018/08/30/bitcoin-energy-consumption/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="Bitcoin Energy Consumption Index  원문    설명값현재 추산되는 비트코인 연간 전력 소비랑73.12 TWh현재 추산되는 비트코인 연간 전력 최소 소비량53.8 TWh연간 전세계 마이닝 수익$5,389,021,006연간 전세계 마이닝 비용$3,656,073,069현재 채굴 대비 이익 비율67.84%비트코인 전력 소비량과 비슷한 국가">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://www.yceffort.kr/images/2018/08/chart1.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2018/08/chart2.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2018/08/chart3.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2018/08/chart4.png">
+<meta property="og:image" content="https://digiconomist.net/wp-content/uploads/2018/03/info-bitcoin-energy-consumption-v2.png">
+<meta property="og:updated_time" content="2018-08-29T18:39:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="비트코인 에너지 소비 인덱스">
+<meta name="twitter:description" content="Bitcoin Energy Consumption Index  원문    설명값현재 추산되는 비트코인 연간 전력 소비랑73.12 TWh현재 추산되는 비트코인 연간 전력 최소 소비량53.8 TWh연간 전세계 마이닝 수익$5,389,021,006연간 전세계 마이닝 비용$3,656,073,069현재 채굴 대비 이익 비율67.84%비트코인 전력 소비량과 비슷한 국가">
+<meta name="twitter:image" content="https://www.yceffort.kr/images/2018/08/chart1.png">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            비트코인 에너지 소비 인덱스
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2018-08-30T00:00:00+09:00">
+	
+		    Aug 30, 2018
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>Bitcoin Energy Consumption Index</p>
+<p><a href="https://digiconomist.net/bitcoin-energy-consumption" target="_blank" rel="noopener">원문</a></p>
+<p><img src="/images/2018/08/chart1.png" alt="Bitcoin Energy Consumption Index Chart"></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">설명</th>
+<th style="text-align:left">값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">현재 추산되는 비트코인 연간 전력 소비랑</td>
+<td style="text-align:left">73.12 TWh</td>
+</tr>
+<tr>
+<td style="text-align:left">현재 추산되는 비트코인 연간 전력 최소 소비량</td>
+<td style="text-align:left">53.8 TWh</td>
+</tr>
+<tr>
+<td style="text-align:left">연간 전세계 마이닝 수익</td>
+<td style="text-align:left">$5,389,021,006</td>
+</tr>
+<tr>
+<td style="text-align:left">연간 전세계 마이닝 비용</td>
+<td style="text-align:left">$3,656,073,069</td>
+</tr>
+<tr>
+<td style="text-align:left">현재 채굴 대비 이익 비율</td>
+<td style="text-align:left">67.84%</td>
+</tr>
+<tr>
+<td style="text-align:left">비트코인 전력 소비량과 비슷한 국가</td>
+<td style="text-align:left">Austria</td>
+</tr>
+<tr>
+<td style="text-align:left">전일 비트코인을 위해 소비된 전력량</td>
+<td style="text-align:left">200,332,771</td>
+</tr>
+<tr>
+<td style="text-align:left">GH/s 당 와트</td>
+<td style="text-align:left">0.16</td>
+</tr>
+<tr>
+<td style="text-align:left">총 네트워크 해시 비율</td>
+<td style="text-align:left">53,324</td>
+</tr>
+<tr>
+<td style="text-align:left">트랜잭션 당 전력 소비량</td>
+<td style="text-align:left">929</td>
+</tr>
+<tr>
+<td style="text-align:left">비트코인 전력을 사용할 수 있는 미국 가정 수</td>
+<td style="text-align:left">6,770,506</td>
+</tr>
+<tr>
+<td style="text-align:left">단일 거래로 소비되는 전기를 사용할 수 있는 미국 가정 수</td>
+<td style="text-align:left">31.41</td>
+</tr>
+<tr>
+<td style="text-align:left">전세계 전력 소비량 대비 비트코인 전기 소비량</td>
+<td style="text-align:left">0.33%</td>
+</tr>
+<tr>
+<td style="text-align:left">연간 탄소 배출량</td>
+<td style="text-align:left">35,830</td>
+</tr>
+<tr>
+<td style="text-align:left">거래당 탄소 배출량</td>
+<td style="text-align:left">455.44</td>
+</tr>
+</tbody>
+</table>
+<h2 id="기본적인-사실"><a class="header-anchor" href="#기본적인-사실">¶</a>기본적인 사실</h2>
+<p>비트코인의 신뢰 최소화 합의가 시작된 이래로, 비트코인의 작업증명 알고리즘에 의해 운영되고 있다.  '작업’을 수행하는 기계는 현재 엄청난 양의 에너지를 소비하고 있다. 이 데이터에는 Bitcoin과 BitcoinCash가 포함되어 있다.</p>
+<h2 id="마이너들은-무슨-작업을-하는가"><a class="header-anchor" href="#마이너들은-무슨-작업을-하는가">¶</a>마이너들은 무슨 작업을 하는가?</h2>
+<p>소위 마이너들이 약 10분 마다 비트코인의 블록체인에 새로운 블록을 추가한다. 마이너들은 서로 신뢰하지 않아도 되며, 여기서 마이너들이 신뢰하는 유일한 것은 비트코인을 운영하는 코드다. 이 코드에는 새로운 트랜잭션을 검증하는 몇가지 규칙이 포함되어 있다. 예를들어, 송신자가 실제로 송신하는 금액을 소유하는 경우에만 트랜잭션이 유효하다. 모든 마이너들은 이러한 규칙을 준수하는지 여불르 개별적으로 확인하여 다른 마이너를 신뢰할 필요성을 제거한다.</p>
+<p>여기서 트릭은 모든 마이너들이 동일한 거래 히스토리에 동의하도록 하는 것이다. 네트워크의 모든 마이너는 블록체인에 다음 거래 배치를 준비하는 임무를 끊임없이 수행한다. 이 블록중 하나만 무작위로 선택되어 체인의 최신 블록이 된다. 분산 네트워크에서 무작위로 선택하는 것은 쉽지 않으므로, 여기서 작업 증명이 이루어진다. 작업 증명에서 다음 블록은 유효한 블록을 생산하는 첫번째 마이너에게서 나타난다. 네트워크의 모든 마이너가 평균 10분 마다 하나의 유효한 블록을 생산할 수 있도록 프로토콜에 의해 난이도가 정기적으로 조정된다. 마이너가 마침내 유효한 블록을 생산하면 이를 나머지 네트워크에 알린다. 다른 마이너들은 이 블록이 모든 규칙을 준수한다는 것을 확인한다음 자신이 작업한 블록을 폐기한다. 첫번째 블록을 만든 행운의 마이너는 블록에 처리된 거래에 속한 수수료화 함께 고정된 양의 비트코인을 보상으로 받는다. 그리고 다음 사이클이 다시 시작된다.</p>
+<p>유효한 블록을 생산하는 과정은 주로 시행착오에 기반하고 있다. 마이너들은 매초마다 ‘nonce’ 라고 불리는 블록 구성요소에 대한 올바른 값을 찾기 위해 시도하며, 완성된 블록이 요구 사항과 일치하기를 희망한다.(결과를 예측하는 방법이 없다. 그저 시도할뿐) 이런 이유로 마이닝은 자신의 번호를 선택할 수 있는 복권과 비교 되기도 한다. 초당 시도의 수는 채굴장비의 해시레이트에 주어진다. 일반적으로 초댕 10억개의 해시를 처리한다.</p>
+<h2 id="지속성"><a class="header-anchor" href="#지속성">¶</a>지속성</h2>
+<p>이러한 계속된 블록 채굴 사이클은 전세계 사람들에게 비트코인 채굴을 장려한다. 마이닝이 견고한 수익 흐름을 제공하므로, 사람들은 전력 소비가 큰 기계를 운영하여 블록을 만들 의향이 있다. 수년에 걸쳐 통화 가격이 계속 최고치를 갱신함에 따라 비트코인 네트워크의 총 에너지 소비가 계속해서 증가되었다. 비트코인 네트워크 전체는 현재 국제 에너지기구가 발표한 보고서를 기반으로 여러 국가를 합친 것 보다 더 많은 에너지를 소비한다. 비트코인이 국가라면, 에너지 소비 순위는 아래와 같다.</p>
+<p><img src="/images/2018/08/chart2.png" alt="Energy Consumption by Country Chart"></p>
+<p>이와 별도로 비트코인 에너지 소비량을 세계 최대 에너지 소비국과 아래와 같이 비교할 수도 있다.</p>
+<p><img src="/images/2018/08/chart3.png" alt="Bitcoin Energy Consumption Relative to Several Countries"></p>
+<h2 id="탄소-배출"><a class="header-anchor" href="#탄소-배출">¶</a>탄소 배출</h2>
+<p>비트코인의 가장 큰 문제는 엄청난 에너지 소비량이 아니라, 이러한 전력을 중국 석탄 화력 발전소가 대부분 연료 공급을 한다는 것이다. 석탄 기반 전기는 매우 낮은 가격에 이용가능하다. 보수적으로 계산하더라도, 비트코인 거래에 대해 극단적인 탄소배출을 요구한다.</p>
+<h2 id="비트코인-에너지-소비량을-다른-지불-시스템과-비교"><a class="header-anchor" href="#비트코인-에너지-소비량을-다른-지불-시스템과-비교">¶</a>비트코인 에너지 소비량을 다른 지불 시스템과 비교</h2>
+<p>비트코인 네트워크가 소비하는 에너지를 VISA와 같은 다른 지불 시스템과 비교할 수 있다. VISA에 따르면, 이회사는 모든 작업에 대해 전세계쩍으로 총 674,922기가 줄의 에너지를 소비했다. 이는 VISA가 약 17,000 가구의 에너지 수요와 동일한 수요를 갖고 있음을 의미한다.  또한 VISA가 2017년 1112억건의 거래를 처리했다는 사실도 알고 있다. 이 수치를 통해 비교하면 아래와 같다. (아래 차트는 단일 비트코인 거래를 10만 VISA거래와 비교했다.)</p>
+<p><img src="/images/2018/08/chart4.png" alt="Bitcoin network versus VISA network average consumption"></p>
+<p>물론 이 수치는 완벽하지 않다. (예를 들어 VISA 사무소의 에너지 소비는 포함되지 않았다) 그러나 그 차이는 너무 극단적이어서 포함 여부와 상관없이 충격적이다. 일반 금융 시스템의 평균 비현금거래와 비교하면 비트코인 거래에는 평균 수천배의 에너지가 필요하다는 것을 알 수 있다.  이는 신뢰할 수 있는 제3자가 필요없는 거래에 수반되는 가격이라고 치기에는 너무 높다.</p>
+<h2 id="대안"><a class="header-anchor" href="#대안">¶</a>대안</h2>
+<p>작업 증명은 스스로를 증명할 수 있는 최초의 합의 알고리즘이지만, 이것이 유일한 합의 알고리즘은 아니다. 최근엔 지분 증명과 같은 에너지 효율적인 알고리즘이 개발되고 있다. 지분 증명은 마이너가 아니고 소유주가 블록을 생성하므로, 가능한 많은 해시를 생산하는 전력 소비 기계가 필요하지 않다. 비트코인은 잠재적으로 이러한 합의 알고리즘으로 전환하여 지속 가능성을 향상 시킬 수 있다. 여기서 유일한 단점은, 아직 이러한 합의 알고리즘에 여러가지 버전이 있으며 이들중 어느것도 완전히 입증되지 않았다는 것이다. 그럼에도 이러한 알고리즘에 대한 연구는 미래에 좋은 희망을 제공한다.</p>
+<h3 id="비트코인-에너지-소비량-측정"><a class="header-anchor" href="#비트코인-에너지-소비량-측정">¶</a>비트코인 에너지 소비량 측정</h3>
+<p><img src="https://digiconomist.net/wp-content/uploads/2018/03/info-bitcoin-energy-consumption-v2.png" alt="Bitcoin energy consumptin index"></p>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/bitcoin/">bitcoin</a> <a class="tag tag--primary tag--small t-link" href="/tags/blockchain/">blockchain</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/31/what-blockchain-can-and-cant-do-for-copyright/" data-tooltip="저작권을 위해 블록체인이 할 수 있는것, 그리고 없는 것" aria-label="PREVIOUS: 저작권을 위해 블록체인이 할 수 있는것, 그리고 없는 것">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/30/bitcoin-wannabes-show-hallmarks-of-fraud/" data-tooltip="암호 화폐 사기의 특징" aria-label="NEXT: 암호 화폐 사기의 특징">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/08/30/bitcoin-energy-consumption/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/08/30/bitcoin-energy-consumption/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/31/what-blockchain-can-and-cant-do-for-copyright/" data-tooltip="저작권을 위해 블록체인이 할 수 있는것, 그리고 없는 것" aria-label="PREVIOUS: 저작권을 위해 블록체인이 할 수 있는것, 그리고 없는 것">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/30/bitcoin-wannabes-show-hallmarks-of-fraud/" data-tooltip="암호 화폐 사기의 특징" aria-label="NEXT: 암호 화폐 사기의 특징">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/08/30/bitcoin-energy-consumption/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/08/30/bitcoin-energy-consumption/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/08/30/bitcoin-energy-consumption/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/08/30/bitcoin-energy-consumption/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2018/08/30/bitcoin-energy-consumption/';
+                 
+                    this.page.identifier = '2018/08/30/bitcoin-energy-consumption/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

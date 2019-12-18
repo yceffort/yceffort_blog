@@ -1,0 +1,822 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>pytorch - Flower Classification - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"pytorch를 이용해서 꽃이미지를 구별해보도록 하자.\n여기에서 활용할 데이터셋은 이거다. 총 102종류의 꽃이 있고, 각각 여러개의 이미지가 있다. 데이터셋을 다운로드 하면 train, valid, test로 나눠져 있고 이를 활용해서 꽃을 구별해보려고 한다.\n¶1. 데이터 로딩\n12345678910111213141516171819202122232425262728293031323334353637# 랜덤으로 학습하기 위해서 이미지를 약간씩 돌린다.# 마찬가지로 랜덤하게 크롭한다.# 또한 랜덤하게 상하 반전을 한다.# 데이터를 텐서로 바꾼다.# 이미지를 정규화 한다.train_transforms = transforms.Compose([transforms.RandomRotation(30),                                       transforms.RandomResizedCrop(224),                                       transforms.RandomHorizontalFlip(),                                       transforms.ToTensor(),                                       transforms.Normalize([0.485, 0.456, 0.406],                                                             [0.229, 0.224, 0.225])])# validation과 test에는 랜덤을 적용하지 않는다.# 리사이즈와, 가운데 크롭만 한다.valid_transforms = transforms.Compose([transforms.Resize(256),                                      transforms.CenterCrop(224),                                      transforms.ToTensor(),                                      transforms.Normalize([0.485, 0.456, 0.406],                                                            [0.229, 0.224, 0.225])])test_transforms = transforms.Compose([transforms.Resize(256),                                      transforms.CenterCrop(224),                                      transforms.ToTensor(),                                      transforms.Normalize([0.485, 0.456, 0.406],                                                            [0.229, 0.224, 0.225])])# 이미지를 읽어드린후, 위에 메소드를 적용한다.image_datasets = dict()image_datasets['train'] = datasets.ImageFolder(train_dir, transform=train_transforms)image_datasets['valid'] = datasets.ImageFolder(valid_dir, transform=valid_transforms)image_datasets['test'] = datasets.ImageFolder(test_dir, transform=test_transforms)# 배치로 만든다.dataloaders = dict()dataloaders['train'] = torch.utils.data.DataLoader(image_datasets['train'], batch_size=64, shuffle=True)dataloaders['valid'] = torch.utils.data.DataLoader(image_datasets['valid'], batch_size=32)dataloaders['test']  = torch.utils.data.DataLoader(image_datasets['test'], batch_size=20)\n폴더에 숫자가 있는데, 해당 숫자가 어떤 꽃인지 매칭 해준다.\n1&#123;\"21\": \"fire lily\", \"3\": \"canterbury bells\", \"45\": \"bolero deep blue\", \"1\": \"pink primrose\", \"34\": \"mexican aster\", \"27\": \"prince of wales feathers\", \"7\": \"moon orchid\", \"16\": \"globe-flower\", \"25\": \"grape hyacinth\", \"26\": \"corn poppy\", \"79\": \"toad lily\", \"39\": \"siam tulip\", \"24\": \"red ginger\", \"67\": \"spring crocus\", \"35\": \"alpine sea holly\", \"32\": \"garden phlox\", \"10\": \"globe thistle\", \"6\": \"tiger lily\", \"93\": \"ball moss\", \"33\": \"love in the mist\", \"9\": \"monkshood\", \"102\": \"blackberry lily\", \"14\": \"spear thistle\", \"19\": \"balloon flower\", \"100\": \"blanket flower\", \"13\": \"king protea\", \"49\": \"oxeye daisy\", \"15\": \"yellow iris\", \"61\": \"cautleya spicata\", \"31\": \"carnation\", \"64\": \"silverbush\", \"68\": \"bearded iris\", \"63\": \"black-eyed susan\", \"69\": \"windflower\", \"62\": \"japanese anemone\", \"20\": \"giant white arum lily\", \"38\": \"great masterwort\", \"4\": \"sweet pea\", \"86\": \"tree mallow\", \"101\": \"trumpet creeper\", \"42\": \"daffodil\", \"22\": \"pincushion flower\", \"2\": \"hard-leaved pocket orchid\", \"54\": \"sunflower\", \"66\": \"osteospermum\", \"70\": \"tree poppy\", \"85\": \"desert-rose\", \"99\": \"bromelia\", \"87\": \"magnolia\", \"5\": \"english marigold\", \"92\": \"bee balm\", \"28\": \"stemless gentian\", \"97\": \"mallow\", \"57\": \"gaura\", \"40\": \"lenten rose\", \"47\": \"marigold\", \"59\": \"orange dahlia\", \"48\": \"buttercup\", \"55\": \"pelargonium\", \"36\": \"ruby-lipped cattleya\", \"91\": \"hippeastrum\", \"29\": \"artichoke\", \"71\": \"gazania\", \"90\": \"canna lily\", \"18\": \"peruvian lily\", \"98\": \"mexican petunia\", \"8\": \"bird of paradise\", \"30\": \"sweet william\", \"17\": \"purple coneflower\", \"52\": \"wild pansy\", \"84\": \"columbine\", \"12\": \"colt's foot\", \"11\": \"snapdragon\", \"96\": \"camellia\", \"23\": \"fritillary\", \"50\": \"common dandelion\", \"44\": \"poinsettia\", \"53\": \"primula\", \"72\": \"azalea\", \"65\": \"californian poppy\", \"80\": \"anthurium\", \"76\": \"morning glory\", \"37\": \"cape flower\", \"56\": \"bishop of llandaff\", \"60\": \"pink-yellow dahlia\", \"82\": \"clematis\", \"58\": \"geranium\", \"75\": \"thorn apple\", \"41\": \"barbeton daisy\", \"95\": \"bougainvillea\", \"43\": \"sword lily\", \"83\": \"hibiscus\", \"78\": \"lotus lotus\", \"88\": \"cyclamen\", \"94\": \"foxglove\", \"81\": \"frangipani\", \"74\": \"rose\", \"89\": \"watercress\", \"73\": \"water lily\", \"46\": \"wallflower\", \"77\": \"passion flower\", \"51\": \"petunia\"&#125;\n그리고 이번 분석에는 이미 만들어져 있는 모델을 사용하려고 한다. VGG16 이다.\n¶2. VGG16\n\n\n입력: 224*224 크기의 고정된 RGB 이미지\n구조:\n\nConvoluitional Layer (3x3 filter, stride=1, padding=True)\nMax-Pooling Layer (2x2 filtter, stride=2)\n1x1 Conv Layer (1x1 filter, stride=1)\nFully Connected Layer (4096 &gt; 4096 &gt; 1000)\n\n\n특징:\n\n모든  레이어에 3x3 필터 적용\n1x1 Conv Layer 사용\n다섯장의 Max-Pooling Layer 사용\n\n\n\n¶3. Classifier 만들기\n123456789output_size = len(cat_to_name)vgg16_model = models.vgg16(pretrained=True)# 244x244input_size = vgg16_model.classifier[0].in_features# 미리 만들어진 모델이라 적용할 필요 없음.for param in vgg16_model.parameters():    param.requires_grad = False\n12345678910111213141516171819202122232425262728classifier = nn.Sequential(    OrderedDict([        ('fc1', nn.Linear(input_size, input_size // 8)),        ('relu1', nn.ReLU()),        ('droupout', nn.Dropout(p=0.20)),                ('fc2', nn.Linear(input_size // 8, input_size // 32)),        ('relu2', nn.ReLU()),        ('droupout', nn.Dropout(p=0.20)),                ('fc3', nn.Linear(input_size // 32, input_size // 128)),        ('relu3', nn.ReLU()),        ('droupout', nn.Dropout(p=0.20)),                ('fc4', nn.Linear(input_size // 128, output_size)),        ('softmax', nn.LogSoftmax(dim=1))    ]))vgg16_model.classifier = classifierdevice = torch.device(\"cuda\" if torch.cuda.is_available() else \"cpu\")epochs = 20learning_rate = 0.001criterion = nn.NLLLoss()optimizer = optim.Adam(vgg16_model.classifier.parameters(), lr=learning_rate)vgg16_model = vgg16_model.to(device)\n오차 함수로는 NLLLoss를 Optimizer로 Adam을 사용하였다.\n12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667# epochs만큼 훈련for e in range(epochs):    running_loss = 0        # 트레이닝 셋     for index, (t_inputs, t_labels) in enumerate(dataloaders['train']):                # cpu나 cuda로 변환        t_inputs, t_labels = t_inputs.to(device), t_labels.to(device)                optimizer.zero_grad()                t_ouputs = vgg16_model.forward(t_inputs)        loss = criterion(t_ouputs, t_labels)        loss.backward()        optimizer.step()                # 오차 축적        running_loss += loss.item()                # 5번마다 validset으로 확인        if (index + 1) % 5 == 0:            # eval 모드로 변환            vgg16_model.eval()            v_loss = 0            accuracy = 0                        # valid set            for v_inputs, v_labels in dataloaders['valid']:                                            v_inputs, v_labels = v_inputs.to(device), v_labels.to(device)                optimizer.zero_grad()                                # 자동미분 off                with torch.no_grad():                    v_output = vgg16_model.forward(v_inputs)                    loss = criterion(v_output, v_labels)                    ps = torch.exp(v_output)                    top_p, top_class = ps.topk(1, dim=1)                    equals = top_class == v_labels.view(*top_class.shape)                    accuracy += torch.mean(equals.type(torch.FloatTensor))                                vgg16_model.train()                        train_losses.append(running_loss / 5)            valid_losses.append(loss / len(dataloaders['valid']))            accuracies.append(accuracy / len(dataloaders['valid']))                        ## 결과 및 정확도 출력            print_accuracy = \"&#123;:.5f&#125;\".format(accuracies[-1])                        if len(accuracies) &gt;= 2:                change = accuracies[-1] - accuracies[-2]                if change &gt; 0:                    print_accuracy += '↑'                elif change == 0 :                    print_accuracy += '-'                else:                    print_accuracy += '↓'                        running_loss = 0                                print(\"Epoch: &#123;&#125;/&#123;&#125;\".format(e+1, epochs),                  \"Training Loss: &#123;:.5f&#125;\".format(train_losses[-1]),                  \"Valodation Loss: &#123;:.5f&#125;\".format(valid_losses[-1]),                  \"Accuracy: &#123;&#125;\".format(print_accuracy))\n123456789101112131415Epoch: 1/20 Training Loss: 4.69953 Valodation Loss: 0.21000 Accuracy: 0.02043Epoch: 1/20 Training Loss: 4.53161 Valodation Loss: 0.19509 Accuracy: 0.06490↑Epoch: 1/20 Training Loss: 4.50895 Valodation Loss: 0.19441 Accuracy: 0.09135↑Epoch: 1/20 Training Loss: 4.22797 Valodation Loss: 0.20272 Accuracy: 0.13582↑Epoch: 1/20 Training Loss: 4.13869 Valodation Loss: 0.21389 Accuracy: 0.17909↑Epoch: 1/20 Training Loss: 3.75459 Valodation Loss: 0.20136 Accuracy: 0.19952↑Epoch: 1/20 Training Loss: 3.63869 Valodation Loss: 0.19415 Accuracy: 0.24760↑...Epoch: 20/20 Training Loss: 0.36903 Valodation Loss: 0.00035 Accuracy: 0.89663↓Epoch: 20/20 Training Loss: 0.53348 Valodation Loss: 0.00012 Accuracy: 0.91106↑Epoch: 20/20 Training Loss: 0.50826 Valodation Loss: 0.00007 Accuracy: 0.90986↓Epoch: 20/20 Training Loss: 0.36002 Valodation Loss: 0.00102 Accuracy: 0.90385↓Epoch: 20/20 Training Loss: 0.58472 Valodation Loss: 0.00031 Accuracy: 0.90745↑Epoch: 20/20 Training Loss: 0.50919 Valodation Loss: 0.00016 Accuracy: 0.91346↑Epoch: 20/20 Training Loss: 0.49237 Valodation Loss: 0.00009 Accuracy: 0.91707↑\n아쉽게도 8번 째 부터는 90% 벽을 넘지 못하고 계속 같은 수준에서 머물렀다.\nColab Notebook에서 돌렸는데, 이렇게 까지 오래 돌릴 필요가 있었나 싶을 정도로 오래 걸렸다. (4시간 정도)\n1234567891011121314151617181920vgg16_model.eval()vgg16_model.to(device)accuracy = 0test_error = 0for images, labels in dataloaders['test']:  images, labels = images.to(device), labels.to(device)    with torch.no_grad():    output = vgg16_model.forward(images)    test_error += criterion(output, labels).item()  ps = torch.exp(output).data  equal = Variable(labels.data == ps.max(1)[1]).float()    accuracy += torch.mean(equal)    print(\"Test Error: &#123;:.5f&#125;\".format(test_error/len(dataloaders['test'])))print(\"Test Accuracy: &#123;:.5f&#125;\".format(accuracy/len(dataloaders['test'])))\n12Test Error: 0.38797Test Accuracy: 0.90456\n90%의 정확도가 나왔다. 기초적인 것만 활용한 것 치고는 괜찮은 결과 였다.\n123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293# 이미지를 위에서 변환한 것 처럼 변환해 준다.def process_image(image):    ''' Scales, crops, and normalizes a PIL image for a PyTorch model,        returns an Numpy array    '''        image = Image.open(image)        transformer = transforms.Compose([transforms.Resize(256),                                      transforms.CenterCrop(224),                                      transforms.ToTensor(),                                      transforms.Normalize([0.485, 0.456, 0.406],                                                            [0.229, 0.224, 0.225])])        return transformer(image)        # TODO: Process a PIL image for use in a PyTorch model    img_path = '/content/flowers/test/1/image_06743.jpg'img = process_image(img_path)img.shape# 예측def predict(image_path, model, topk=5):    ''' Predict the class (or classes) of an image using a trained deep learning model.    '''        # eval, cpu모드로 전환    model.eval()    model.cpu()        image = process_image(image_path)    image = image.unsqueeze(0)    with torch.no_grad():      output = model.forward(image)      top_prob, top_labels = torch.topk(output, topk)      top_prob = top_prob.exp()      top_prob_array = top_prob.data.numpy()[0]            top_prob_array = list(map(lambda x: round(float(x), 5), top_prob_array))      class_to_idx = &#123;v: k for k, v in model.class_to_idx.items()&#125;      top_labels_data = top_labels.data.numpy()      top_labels_list = top_labels_data[0].tolist()        top_classes = [class_to_idx[x] for x in top_labels_list]        return top_prob_array, top_classes# 이미지 보기def imshow(image, ax=None, title=None):    \"\"\"Imshow for Tensor.\"\"\"    if ax is None:        fig, ax = plt.subplots()        # PyTorch tensors assume the color channel is the first dimension    # but matplotlib assumes is the third dimension    image = image.numpy().transpose((1, 2, 0))        # Undo preprocessing    mean = np.array([0.485, 0.456, 0.406])    std = np.array([0.229, 0.224, 0.225])    image = std * image + mean        image = np.clip(image, 0, 1)        ax.imshow(image)        return axdef check(image_path, image_label=None):    probs, classes = predict(image_path, vgg16_model)    class_names = [cat_to_name[x] for x in classes]  print('is this &#123;&#125;?'.format(class_names[0]))    if image_label:    print('this is &#123;&#125;.'.format(cat_to_json.get(classes[0])))  fig, ax = plt.subplots()  image_to_show = process_image(image_path)  imshow(image_to_show, ax, class_names[-1])  fig, ax = plt.subplots()  y_pos = np.arange(len(class_names))  plt.barh(y_pos, probs)  plt.yticks(y_pos, class_names)  plt.xlabel('Probability')  plt.show()\n12is this fritillary?this is fritillary.\n\n\n","dateCreated":"2019-02-15T00:00:00+09:00","dateModified":"2019-02-15T12:36:35+09:00","datePublished":"2019-02-15T00:00:00+09:00","description":"pytorch를 이용해서 꽃이미지를 구별해보도록 하자.\n\n여기에서 활용할 데이터셋은 이거다. 총 102종류의 꽃이 있고, 각각 여러개의 이미지가 있다. 데이터셋을 다운로드 하면 train, valid, test로 나눠져 있고 이를 활용해서 꽃을 구별해보려고 한다.\n\n¶1. 데이터 로딩\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n23\n24\n25\n26\n27\n28\n29\n30\n31\n32\n33\n34\n35\n36\n37\n\n\n# 랜덤으로 학습하기 위해서 이미지를 약간씩 돌린다.\n# 마찬가지","headline":"pytorch - Flower Classification","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/02/15/pytorch-flower-classification/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/02/15/pytorch-flower-classification/","keywords":"pytorch"}</script>
+    <meta name="description" content="pytorch를 이용해서 꽃이미지를 구별해보도록 하자.  여기에서 활용할 데이터셋은 이거다. 총 102종류의 꽃이 있고, 각각 여러개의 이미지가 있다. 데이터셋을 다운로드 하면 train, valid, test로 나눠져 있고 이를 활용해서 꽃을 구별해보려고 한다.  ¶1. 데이터 로딩 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 1">
+<meta name="keywords" content="pytorch">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="pytorch - Flower Classification">
+<meta property="og:url" content="https://www.yceffort.kr/2019/02/15/pytorch-flower-classification/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="pytorch를 이용해서 꽃이미지를 구별해보도록 하자.  여기에서 활용할 데이터셋은 이거다. 총 102종류의 꽃이 있고, 각각 여러개의 이미지가 있다. 데이터셋을 다운로드 하면 train, valid, test로 나눠져 있고 이를 활용해서 꽃을 구별해보려고 한다.  ¶1. 데이터 로딩 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 1">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://neurohive.io/wp-content/uploads/2018/11/vgg16-1-e1542731207177.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/02/flower1.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/02/flower2.png">
+<meta property="og:updated_time" content="2019-02-15T03:36:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="pytorch - Flower Classification">
+<meta name="twitter:description" content="pytorch를 이용해서 꽃이미지를 구별해보도록 하자.  여기에서 활용할 데이터셋은 이거다. 총 102종류의 꽃이 있고, 각각 여러개의 이미지가 있다. 데이터셋을 다운로드 하면 train, valid, test로 나눠져 있고 이를 활용해서 꽃을 구별해보려고 한다.  ¶1. 데이터 로딩 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 1">
+<meta name="twitter:image" content="https://neurohive.io/wp-content/uploads/2018/11/vgg16-1-e1542731207177.png">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            pytorch - Flower Classification
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-02-15T00:00:00+09:00">
+	
+		    Feb 15, 2019
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>pytorch를 이용해서 꽃이미지를 구별해보도록 하자.</p>
+<p>여기에서 활용할 데이터셋은 <a href="http://www.robots.ox.ac.uk/~vgg/data/flowers/102/index.html" target="_blank" rel="noopener">이거</a>다. 총 102종류의 꽃이 있고, 각각 여러개의 이미지가 있다. 데이터셋을 다운로드 하면 train, valid, test로 나눠져 있고 이를 활용해서 꽃을 구별해보려고 한다.</p>
+<h2 id="1-데이터-로딩"><a class="header-anchor" href="#1-데이터-로딩">¶</a>1. 데이터 로딩</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 랜덤으로 학습하기 위해서 이미지를 약간씩 돌린다.</span></span><br><span class="line"><span class="comment"># 마찬가지로 랜덤하게 크롭한다.</span></span><br><span class="line"><span class="comment"># 또한 랜덤하게 상하 반전을 한다.</span></span><br><span class="line"><span class="comment"># 데이터를 텐서로 바꾼다.</span></span><br><span class="line"><span class="comment"># 이미지를 정규화 한다.</span></span><br><span class="line">train_transforms = transforms.Compose([transforms.RandomRotation(<span class="number">30</span>),</span><br><span class="line">                                       transforms.RandomResizedCrop(<span class="number">224</span>),</span><br><span class="line">                                       transforms.RandomHorizontalFlip(),</span><br><span class="line">                                       transforms.ToTensor(),</span><br><span class="line">                                       transforms.Normalize([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>], </span><br><span class="line">                                                            [<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>])])</span><br><span class="line"></span><br><span class="line"><span class="comment"># validation과 test에는 랜덤을 적용하지 않는다.</span></span><br><span class="line"><span class="comment"># 리사이즈와, 가운데 크롭만 한다.</span></span><br><span class="line">valid_transforms = transforms.Compose([transforms.Resize(<span class="number">256</span>),</span><br><span class="line">                                      transforms.CenterCrop(<span class="number">224</span>),</span><br><span class="line">                                      transforms.ToTensor(),</span><br><span class="line">                                      transforms.Normalize([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>], </span><br><span class="line">                                                           [<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>])])</span><br><span class="line"></span><br><span class="line">test_transforms = transforms.Compose([transforms.Resize(<span class="number">256</span>),</span><br><span class="line">                                      transforms.CenterCrop(<span class="number">224</span>),</span><br><span class="line">                                      transforms.ToTensor(),</span><br><span class="line">                                      transforms.Normalize([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>], </span><br><span class="line">                                                           [<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>])])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 이미지를 읽어드린후, 위에 메소드를 적용한다.</span></span><br><span class="line">image_datasets = dict()</span><br><span class="line">image_datasets[<span class="string">'train'</span>] = datasets.ImageFolder(train_dir, transform=train_transforms)</span><br><span class="line">image_datasets[<span class="string">'valid'</span>] = datasets.ImageFolder(valid_dir, transform=valid_transforms)</span><br><span class="line">image_datasets[<span class="string">'test'</span>] = datasets.ImageFolder(test_dir, transform=test_transforms)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 배치로 만든다.</span></span><br><span class="line">dataloaders = dict()</span><br><span class="line">dataloaders[<span class="string">'train'</span>] = torch.utils.data.DataLoader(image_datasets[<span class="string">'train'</span>], batch_size=<span class="number">64</span>, shuffle=<span class="literal">True</span>)</span><br><span class="line">dataloaders[<span class="string">'valid'</span>] = torch.utils.data.DataLoader(image_datasets[<span class="string">'valid'</span>], batch_size=<span class="number">32</span>)</span><br><span class="line">dataloaders[<span class="string">'test'</span>]  = torch.utils.data.DataLoader(image_datasets[<span class="string">'test'</span>], batch_size=<span class="number">20</span>)</span><br></pre></td></tr></table></figure>
+<p>폴더에 숫자가 있는데, 해당 숫자가 어떤 꽃인지 매칭 해준다.</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"21"</span>: <span class="string">"fire lily"</span>, <span class="attr">"3"</span>: <span class="string">"canterbury bells"</span>, <span class="attr">"45"</span>: <span class="string">"bolero deep blue"</span>, <span class="attr">"1"</span>: <span class="string">"pink primrose"</span>, <span class="attr">"34"</span>: <span class="string">"mexican aster"</span>, <span class="attr">"27"</span>: <span class="string">"prince of wales feathers"</span>, <span class="attr">"7"</span>: <span class="string">"moon orchid"</span>, <span class="attr">"16"</span>: <span class="string">"globe-flower"</span>, <span class="attr">"25"</span>: <span class="string">"grape hyacinth"</span>, <span class="attr">"26"</span>: <span class="string">"corn poppy"</span>, <span class="attr">"79"</span>: <span class="string">"toad lily"</span>, <span class="attr">"39"</span>: <span class="string">"siam tulip"</span>, <span class="attr">"24"</span>: <span class="string">"red ginger"</span>, <span class="attr">"67"</span>: <span class="string">"spring crocus"</span>, <span class="attr">"35"</span>: <span class="string">"alpine sea holly"</span>, <span class="attr">"32"</span>: <span class="string">"garden phlox"</span>, <span class="attr">"10"</span>: <span class="string">"globe thistle"</span>, <span class="attr">"6"</span>: <span class="string">"tiger lily"</span>, <span class="attr">"93"</span>: <span class="string">"ball moss"</span>, <span class="attr">"33"</span>: <span class="string">"love in the mist"</span>, <span class="attr">"9"</span>: <span class="string">"monkshood"</span>, <span class="attr">"102"</span>: <span class="string">"blackberry lily"</span>, <span class="attr">"14"</span>: <span class="string">"spear thistle"</span>, <span class="attr">"19"</span>: <span class="string">"balloon flower"</span>, <span class="attr">"100"</span>: <span class="string">"blanket flower"</span>, <span class="attr">"13"</span>: <span class="string">"king protea"</span>, <span class="attr">"49"</span>: <span class="string">"oxeye daisy"</span>, <span class="attr">"15"</span>: <span class="string">"yellow iris"</span>, <span class="attr">"61"</span>: <span class="string">"cautleya spicata"</span>, <span class="attr">"31"</span>: <span class="string">"carnation"</span>, <span class="attr">"64"</span>: <span class="string">"silverbush"</span>, <span class="attr">"68"</span>: <span class="string">"bearded iris"</span>, <span class="attr">"63"</span>: <span class="string">"black-eyed susan"</span>, <span class="attr">"69"</span>: <span class="string">"windflower"</span>, <span class="attr">"62"</span>: <span class="string">"japanese anemone"</span>, <span class="attr">"20"</span>: <span class="string">"giant white arum lily"</span>, <span class="attr">"38"</span>: <span class="string">"great masterwort"</span>, <span class="attr">"4"</span>: <span class="string">"sweet pea"</span>, <span class="attr">"86"</span>: <span class="string">"tree mallow"</span>, <span class="attr">"101"</span>: <span class="string">"trumpet creeper"</span>, <span class="attr">"42"</span>: <span class="string">"daffodil"</span>, <span class="attr">"22"</span>: <span class="string">"pincushion flower"</span>, <span class="attr">"2"</span>: <span class="string">"hard-leaved pocket orchid"</span>, <span class="attr">"54"</span>: <span class="string">"sunflower"</span>, <span class="attr">"66"</span>: <span class="string">"osteospermum"</span>, <span class="attr">"70"</span>: <span class="string">"tree poppy"</span>, <span class="attr">"85"</span>: <span class="string">"desert-rose"</span>, <span class="attr">"99"</span>: <span class="string">"bromelia"</span>, <span class="attr">"87"</span>: <span class="string">"magnolia"</span>, <span class="attr">"5"</span>: <span class="string">"english marigold"</span>, <span class="attr">"92"</span>: <span class="string">"bee balm"</span>, <span class="attr">"28"</span>: <span class="string">"stemless gentian"</span>, <span class="attr">"97"</span>: <span class="string">"mallow"</span>, <span class="attr">"57"</span>: <span class="string">"gaura"</span>, <span class="attr">"40"</span>: <span class="string">"lenten rose"</span>, <span class="attr">"47"</span>: <span class="string">"marigold"</span>, <span class="attr">"59"</span>: <span class="string">"orange dahlia"</span>, <span class="attr">"48"</span>: <span class="string">"buttercup"</span>, <span class="attr">"55"</span>: <span class="string">"pelargonium"</span>, <span class="attr">"36"</span>: <span class="string">"ruby-lipped cattleya"</span>, <span class="attr">"91"</span>: <span class="string">"hippeastrum"</span>, <span class="attr">"29"</span>: <span class="string">"artichoke"</span>, <span class="attr">"71"</span>: <span class="string">"gazania"</span>, <span class="attr">"90"</span>: <span class="string">"canna lily"</span>, <span class="attr">"18"</span>: <span class="string">"peruvian lily"</span>, <span class="attr">"98"</span>: <span class="string">"mexican petunia"</span>, <span class="attr">"8"</span>: <span class="string">"bird of paradise"</span>, <span class="attr">"30"</span>: <span class="string">"sweet william"</span>, <span class="attr">"17"</span>: <span class="string">"purple coneflower"</span>, <span class="attr">"52"</span>: <span class="string">"wild pansy"</span>, <span class="attr">"84"</span>: <span class="string">"columbine"</span>, <span class="attr">"12"</span>: <span class="string">"colt's foot"</span>, <span class="attr">"11"</span>: <span class="string">"snapdragon"</span>, <span class="attr">"96"</span>: <span class="string">"camellia"</span>, <span class="attr">"23"</span>: <span class="string">"fritillary"</span>, <span class="attr">"50"</span>: <span class="string">"common dandelion"</span>, <span class="attr">"44"</span>: <span class="string">"poinsettia"</span>, <span class="attr">"53"</span>: <span class="string">"primula"</span>, <span class="attr">"72"</span>: <span class="string">"azalea"</span>, <span class="attr">"65"</span>: <span class="string">"californian poppy"</span>, <span class="attr">"80"</span>: <span class="string">"anthurium"</span>, <span class="attr">"76"</span>: <span class="string">"morning glory"</span>, <span class="attr">"37"</span>: <span class="string">"cape flower"</span>, <span class="attr">"56"</span>: <span class="string">"bishop of llandaff"</span>, <span class="attr">"60"</span>: <span class="string">"pink-yellow dahlia"</span>, <span class="attr">"82"</span>: <span class="string">"clematis"</span>, <span class="attr">"58"</span>: <span class="string">"geranium"</span>, <span class="attr">"75"</span>: <span class="string">"thorn apple"</span>, <span class="attr">"41"</span>: <span class="string">"barbeton daisy"</span>, <span class="attr">"95"</span>: <span class="string">"bougainvillea"</span>, <span class="attr">"43"</span>: <span class="string">"sword lily"</span>, <span class="attr">"83"</span>: <span class="string">"hibiscus"</span>, <span class="attr">"78"</span>: <span class="string">"lotus lotus"</span>, <span class="attr">"88"</span>: <span class="string">"cyclamen"</span>, <span class="attr">"94"</span>: <span class="string">"foxglove"</span>, <span class="attr">"81"</span>: <span class="string">"frangipani"</span>, <span class="attr">"74"</span>: <span class="string">"rose"</span>, <span class="attr">"89"</span>: <span class="string">"watercress"</span>, <span class="attr">"73"</span>: <span class="string">"water lily"</span>, <span class="attr">"46"</span>: <span class="string">"wallflower"</span>, <span class="attr">"77"</span>: <span class="string">"passion flower"</span>, <span class="attr">"51"</span>: <span class="string">"petunia"</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>그리고 이번 분석에는 이미 만들어져 있는 모델을 사용하려고 한다. <code>VGG16</code> 이다.</p>
+<h2 id="2-vgg16"><a class="header-anchor" href="#2-vgg16">¶</a>2. VGG16</h2>
+<p><img src="https://neurohive.io/wp-content/uploads/2018/11/vgg16-1-e1542731207177.png" alt="vgg-16"></p>
+<ul>
+<li>입력: 224*224 크기의 고정된 RGB 이미지</li>
+<li>구조:
+<ul>
+<li>Convoluitional Layer (3x3 filter, stride=1, padding=True)</li>
+<li>Max-Pooling Layer (2x2 filtter, stride=2)</li>
+<li>1x1 Conv Layer (1x1 filter, stride=1)</li>
+<li>Fully Connected Layer (4096 &gt; 4096 &gt; 1000)</li>
+</ul>
+</li>
+<li>특징:
+<ul>
+<li>모든  레이어에 3x3 필터 적용</li>
+<li>1x1 Conv Layer 사용</li>
+<li>다섯장의 Max-Pooling Layer 사용</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-classifier-만들기"><a class="header-anchor" href="#3-classifier-만들기">¶</a>3. Classifier 만들기</h2>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">output_size = len(cat_to_name)</span><br><span class="line">vgg16_model = models.vgg16(pretrained=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 244x244</span></span><br><span class="line">input_size = vgg16_model.classifier[<span class="number">0</span>].in_features</span><br><span class="line"></span><br><span class="line"><span class="comment"># 미리 만들어진 모델이라 적용할 필요 없음.</span></span><br><span class="line"><span class="keyword">for</span> param <span class="keyword">in</span> vgg16_model.parameters():</span><br><span class="line">    param.requires_grad = <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">classifier = nn.Sequential(</span><br><span class="line">    OrderedDict([</span><br><span class="line">        (<span class="string">'fc1'</span>, nn.Linear(input_size, input_size // <span class="number">8</span>)),</span><br><span class="line">        (<span class="string">'relu1'</span>, nn.ReLU()),</span><br><span class="line">        (<span class="string">'droupout'</span>, nn.Dropout(p=<span class="number">0.20</span>)),</span><br><span class="line">        </span><br><span class="line">        (<span class="string">'fc2'</span>, nn.Linear(input_size // <span class="number">8</span>, input_size // <span class="number">32</span>)),</span><br><span class="line">        (<span class="string">'relu2'</span>, nn.ReLU()),</span><br><span class="line">        (<span class="string">'droupout'</span>, nn.Dropout(p=<span class="number">0.20</span>)),</span><br><span class="line">        </span><br><span class="line">        (<span class="string">'fc3'</span>, nn.Linear(input_size // <span class="number">32</span>, input_size // <span class="number">128</span>)),</span><br><span class="line">        (<span class="string">'relu3'</span>, nn.ReLU()),</span><br><span class="line">        (<span class="string">'droupout'</span>, nn.Dropout(p=<span class="number">0.20</span>)),</span><br><span class="line">        </span><br><span class="line">        (<span class="string">'fc4'</span>, nn.Linear(input_size // <span class="number">128</span>, output_size)),</span><br><span class="line">        (<span class="string">'softmax'</span>, nn.LogSoftmax(dim=<span class="number">1</span>))</span><br><span class="line">    ])</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">vgg16_model.classifier = classifier</span><br><span class="line"></span><br><span class="line">device = torch.device(<span class="string">"cuda"</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">"cpu"</span>)</span><br><span class="line">epochs = <span class="number">20</span></span><br><span class="line">learning_rate = <span class="number">0.001</span></span><br><span class="line"></span><br><span class="line">criterion = nn.NLLLoss()</span><br><span class="line">optimizer = optim.Adam(vgg16_model.classifier.parameters(), lr=learning_rate)</span><br><span class="line">vgg16_model = vgg16_model.to(device)</span><br></pre></td></tr></table></figure>
+<p>오차 함수로는 NLLLoss를 Optimizer로 Adam을 사용하였다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># epochs만큼 훈련</span></span><br><span class="line"><span class="keyword">for</span> e <span class="keyword">in</span> range(epochs):</span><br><span class="line">    running_loss = <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 트레이닝 셋 </span></span><br><span class="line">    <span class="keyword">for</span> index, (t_inputs, t_labels) <span class="keyword">in</span> enumerate(dataloaders[<span class="string">'train'</span>]):</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># cpu나 cuda로 변환</span></span><br><span class="line">        t_inputs, t_labels = t_inputs.to(device), t_labels.to(device)</span><br><span class="line">        </span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line">        </span><br><span class="line">        t_ouputs = vgg16_model.forward(t_inputs)</span><br><span class="line">        loss = criterion(t_ouputs, t_labels)</span><br><span class="line">        loss.backward()</span><br><span class="line">        optimizer.step()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 오차 축적</span></span><br><span class="line">        running_loss += loss.item()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 5번마다 validset으로 확인</span></span><br><span class="line">        <span class="keyword">if</span> (index + <span class="number">1</span>) % <span class="number">5</span> == <span class="number">0</span>:</span><br><span class="line">            <span class="comment"># eval 모드로 변환</span></span><br><span class="line">            vgg16_model.eval()</span><br><span class="line">            v_loss = <span class="number">0</span></span><br><span class="line">            accuracy = <span class="number">0</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment"># valid set</span></span><br><span class="line">            <span class="keyword">for</span> v_inputs, v_labels <span class="keyword">in</span> dataloaders[<span class="string">'valid'</span>]:</span><br><span class="line">                            </span><br><span class="line">                v_inputs, v_labels = v_inputs.to(device), v_labels.to(device)</span><br><span class="line">                optimizer.zero_grad()</span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 자동미분 off</span></span><br><span class="line">                <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">                    v_output = vgg16_model.forward(v_inputs)</span><br><span class="line">                    loss = criterion(v_output, v_labels)</span><br><span class="line">                    ps = torch.exp(v_output)</span><br><span class="line">                    top_p, top_class = ps.topk(<span class="number">1</span>, dim=<span class="number">1</span>)</span><br><span class="line">                    equals = top_class == v_labels.view(*top_class.shape)</span><br><span class="line">                    accuracy += torch.mean(equals.type(torch.FloatTensor))</span><br><span class="line">                </span><br><span class="line">                vgg16_model.train()</span><br><span class="line">            </span><br><span class="line">            train_losses.append(running_loss / <span class="number">5</span>)</span><br><span class="line">            valid_losses.append(loss / len(dataloaders[<span class="string">'valid'</span>]))</span><br><span class="line">            accuracies.append(accuracy / len(dataloaders[<span class="string">'valid'</span>]))</span><br><span class="line">            </span><br><span class="line">            <span class="comment">## 결과 및 정확도 출력</span></span><br><span class="line">            print_accuracy = <span class="string">"&#123;:.5f&#125;"</span>.format(accuracies[<span class="number">-1</span>])</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> len(accuracies) &gt;= <span class="number">2</span>:</span><br><span class="line">                change = accuracies[<span class="number">-1</span>] - accuracies[<span class="number">-2</span>]</span><br><span class="line">                <span class="keyword">if</span> change &gt; <span class="number">0</span>:</span><br><span class="line">                    print_accuracy += <span class="string">'↑'</span></span><br><span class="line">                <span class="keyword">elif</span> change == <span class="number">0</span> :</span><br><span class="line">                    print_accuracy += <span class="string">'-'</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    print_accuracy += <span class="string">'↓'</span></span><br><span class="line"></span><br><span class="line">            </span><br><span class="line">            running_loss = <span class="number">0</span></span><br><span class="line">                    </span><br><span class="line">            print(<span class="string">"Epoch: &#123;&#125;/&#123;&#125;"</span>.format(e+<span class="number">1</span>, epochs),</span><br><span class="line">                  <span class="string">"Training Loss: &#123;:.5f&#125;"</span>.format(train_losses[<span class="number">-1</span>]),</span><br><span class="line">                  <span class="string">"Valodation Loss: &#123;:.5f&#125;"</span>.format(valid_losses[<span class="number">-1</span>]),</span><br><span class="line">                  <span class="string">"Accuracy: &#123;&#125;"</span>.format(print_accuracy))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Epoch: 1/20 Training Loss: 4.69953 Valodation Loss: 0.21000 Accuracy: 0.02043</span><br><span class="line">Epoch: 1/20 Training Loss: 4.53161 Valodation Loss: 0.19509 Accuracy: 0.06490↑</span><br><span class="line">Epoch: 1/20 Training Loss: 4.50895 Valodation Loss: 0.19441 Accuracy: 0.09135↑</span><br><span class="line">Epoch: 1/20 Training Loss: 4.22797 Valodation Loss: 0.20272 Accuracy: 0.13582↑</span><br><span class="line">Epoch: 1/20 Training Loss: 4.13869 Valodation Loss: 0.21389 Accuracy: 0.17909↑</span><br><span class="line">Epoch: 1/20 Training Loss: 3.75459 Valodation Loss: 0.20136 Accuracy: 0.19952↑</span><br><span class="line">Epoch: 1/20 Training Loss: 3.63869 Valodation Loss: 0.19415 Accuracy: 0.24760↑</span><br><span class="line">...</span><br><span class="line">Epoch: 20/20 Training Loss: 0.36903 Valodation Loss: 0.00035 Accuracy: 0.89663↓</span><br><span class="line">Epoch: 20/20 Training Loss: 0.53348 Valodation Loss: 0.00012 Accuracy: 0.91106↑</span><br><span class="line">Epoch: 20/20 Training Loss: 0.50826 Valodation Loss: 0.00007 Accuracy: 0.90986↓</span><br><span class="line">Epoch: 20/20 Training Loss: 0.36002 Valodation Loss: 0.00102 Accuracy: 0.90385↓</span><br><span class="line">Epoch: 20/20 Training Loss: 0.58472 Valodation Loss: 0.00031 Accuracy: 0.90745↑</span><br><span class="line">Epoch: 20/20 Training Loss: 0.50919 Valodation Loss: 0.00016 Accuracy: 0.91346↑</span><br><span class="line">Epoch: 20/20 Training Loss: 0.49237 Valodation Loss: 0.00009 Accuracy: 0.91707↑</span><br></pre></td></tr></table></figure>
+<p>아쉽게도 8번 째 부터는 90% 벽을 넘지 못하고 계속 같은 수준에서 머물렀다.</p>
+<p>Colab Notebook에서 돌렸는데, 이렇게 까지 오래 돌릴 필요가 있었나 싶을 정도로 오래 걸렸다. (4시간 정도)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">vgg16_model.eval()</span><br><span class="line"></span><br><span class="line">vgg16_model.to(device)</span><br><span class="line">accuracy = <span class="number">0</span></span><br><span class="line">test_error = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> images, labels <span class="keyword">in</span> dataloaders[<span class="string">'test'</span>]:</span><br><span class="line">  images, labels = images.to(device), labels.to(device)</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">    output = vgg16_model.forward(images)</span><br><span class="line">  </span><br><span class="line">  test_error += criterion(output, labels).item()</span><br><span class="line">  ps = torch.exp(output).data</span><br><span class="line">  equal = Variable(labels.data == ps.max(<span class="number">1</span>)[<span class="number">1</span>]).float()  </span><br><span class="line">  accuracy += torch.mean(equal)</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">print(<span class="string">"Test Error: &#123;:.5f&#125;"</span>.format(test_error/len(dataloaders[<span class="string">'test'</span>])))</span><br><span class="line">print(<span class="string">"Test Accuracy: &#123;:.5f&#125;"</span>.format(accuracy/len(dataloaders[<span class="string">'test'</span>])))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Test Error: 0.38797</span><br><span class="line">Test Accuracy: 0.90456</span><br></pre></td></tr></table></figure>
+<p>90%의 정확도가 나왔다. 기초적인 것만 활용한 것 치고는 괜찮은 결과 였다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 이미지를 위에서 변환한 것 처럼 변환해 준다.</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">process_image</span><span class="params">(image)</span>:</span></span><br><span class="line">    <span class="string">''' Scales, crops, and normalizes a PIL image for a PyTorch model,</span></span><br><span class="line"><span class="string">        returns an Numpy array</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    </span><br><span class="line">    image = Image.open(image)</span><br><span class="line">    </span><br><span class="line">    transformer = transforms.Compose([transforms.Resize(<span class="number">256</span>),</span><br><span class="line">                                      transforms.CenterCrop(<span class="number">224</span>),</span><br><span class="line">                                      transforms.ToTensor(),</span><br><span class="line">                                      transforms.Normalize([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>], </span><br><span class="line">                                                           [<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>])])</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> transformer(image)</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># <span class="doctag">TODO:</span> Process a PIL image for use in a PyTorch model</span></span><br><span class="line">    </span><br><span class="line">img_path = <span class="string">'/content/flowers/test/1/image_06743.jpg'</span></span><br><span class="line">img = process_image(img_path)</span><br><span class="line">img.shape</span><br><span class="line"></span><br><span class="line"><span class="comment"># 예측</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(image_path, model, topk=<span class="number">5</span>)</span>:</span></span><br><span class="line">    <span class="string">''' Predict the class (or classes) of an image using a trained deep learning model.</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># eval, cpu모드로 전환</span></span><br><span class="line">    model.eval()</span><br><span class="line">    model.cpu()</span><br><span class="line">    </span><br><span class="line">    image = process_image(image_path)</span><br><span class="line">    image = image.unsqueeze(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">      output = model.forward(image)</span><br><span class="line">      top_prob, top_labels = torch.topk(output, topk)</span><br><span class="line">      top_prob = top_prob.exp()</span><br><span class="line">      top_prob_array = top_prob.data.numpy()[<span class="number">0</span>]</span><br><span class="line">      </span><br><span class="line">      top_prob_array = list(map(<span class="keyword">lambda</span> x: round(float(x), <span class="number">5</span>), top_prob_array))</span><br><span class="line">      class_to_idx = &#123;v: k <span class="keyword">for</span> k, v <span class="keyword">in</span> model.class_to_idx.items()&#125;</span><br><span class="line"></span><br><span class="line">      top_labels_data = top_labels.data.numpy()</span><br><span class="line">      top_labels_list = top_labels_data[<span class="number">0</span>].tolist()  </span><br><span class="line"></span><br><span class="line">      top_classes = [class_to_idx[x] <span class="keyword">for</span> x <span class="keyword">in</span> top_labels_list]</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> top_prob_array, top_classes</span><br><span class="line"></span><br><span class="line"><span class="comment"># 이미지 보기</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">imshow</span><span class="params">(image, ax=None, title=None)</span>:</span></span><br><span class="line">    <span class="string">"""Imshow for Tensor."""</span></span><br><span class="line">    <span class="keyword">if</span> ax <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        fig, ax = plt.subplots()</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># PyTorch tensors assume the color channel is the first dimension</span></span><br><span class="line">    <span class="comment"># but matplotlib assumes is the third dimension</span></span><br><span class="line">    image = image.numpy().transpose((<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>))</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># Undo preprocessing</span></span><br><span class="line">    mean = np.array([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>])</span><br><span class="line">    std = np.array([<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>])</span><br><span class="line">    image = std * image + mean</span><br><span class="line">    </span><br><span class="line">    image = np.clip(image, <span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">    </span><br><span class="line">    ax.imshow(image)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> ax</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">check</span><span class="params">(image_path, image_label=None)</span>:</span></span><br><span class="line">  </span><br><span class="line">  probs, classes = predict(image_path, vgg16_model)</span><br><span class="line">  </span><br><span class="line">  class_names = [cat_to_name[x] <span class="keyword">for</span> x <span class="keyword">in</span> classes]</span><br><span class="line">  print(<span class="string">'is this &#123;&#125;?'</span>.format(class_names[<span class="number">0</span>]))</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> image_label:</span><br><span class="line">    print(<span class="string">'this is &#123;&#125;.'</span>.format(cat_to_json.get(classes[<span class="number">0</span>])))</span><br><span class="line"></span><br><span class="line">  fig, ax = plt.subplots()</span><br><span class="line">  image_to_show = process_image(image_path)</span><br><span class="line">  imshow(image_to_show, ax, class_names[<span class="number">-1</span>])</span><br><span class="line"></span><br><span class="line">  fig, ax = plt.subplots()</span><br><span class="line"></span><br><span class="line">  y_pos = np.arange(len(class_names))</span><br><span class="line"></span><br><span class="line">  plt.barh(y_pos, probs)</span><br><span class="line">  plt.yticks(y_pos, class_names)</span><br><span class="line">  plt.xlabel(<span class="string">'Probability'</span>)</span><br><span class="line">  plt.show()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">is this fritillary?</span><br><span class="line">this is fritillary.</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2019/02/flower1.png" alt="flower1"><br>
+<img src="/images/2019/02/flower2.png" alt="flower2"></p>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/">pytorch</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/17/ai-programming-python-nanodegree-complete/" data-tooltip="AI Programming with Python Nanodegree 끝" aria-label="PREVIOUS: AI Programming with Python Nanodegree 끝">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/14/do-boring-stuff-with-python-1/" data-tooltip="업무 자동화 (1) - 구글 스프레드 시트 API 활용하기" aria-label="NEXT: 업무 자동화 (1) - 구글 스프레드 시트 API 활용하기">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/02/15/pytorch-flower-classification/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/02/15/pytorch-flower-classification/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/17/ai-programming-python-nanodegree-complete/" data-tooltip="AI Programming with Python Nanodegree 끝" aria-label="PREVIOUS: AI Programming with Python Nanodegree 끝">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/14/do-boring-stuff-with-python-1/" data-tooltip="업무 자동화 (1) - 구글 스프레드 시트 API 활용하기" aria-label="NEXT: 업무 자동화 (1) - 구글 스프레드 시트 API 활용하기">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/02/15/pytorch-flower-classification/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/02/15/pytorch-flower-classification/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/02/15/pytorch-flower-classification/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/02/15/pytorch-flower-classification/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2019/02/15/pytorch-flower-classification/';
+                 
+                    this.page.identifier = '2019/02/15/pytorch-flower-classification/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

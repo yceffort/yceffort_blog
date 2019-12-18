@@ -1,0 +1,816 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>Pytorch 02) - Linear Regression - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Pytorch - 02) Linear Regression\n¶Linear Regression\nLinear Regression이 한국말로 뭐였더라?\n1234import torchimport torch.nn as nnimport matplotlib.pyplot as pltimport numpy as np\n¶데이터셋 만들기\n대충 뭔가 있어보이는 데이터셋을 만들자.\n12345X = torch.randn(100, 1)*10y = X + 3*torch.randn(100, 1)plt.plot(X.numpy(), y.numpy(), 'o')plt.ylabel('y')plt.xlabel('x')\n\n12345678910111213# nn.Module은 사용자 정의 모듈을 생성하는데 있어서 가장 기초가 되는 모듈이다.class LR(nn.Module):  # linear regression의 입력값과 출력값 갯수를 받는다.  def __init__(self, input_size, output_size):    super().__init__()    # nn.Linear를 상속받는다.    self.linear = nn.Linear(input_size, output_size)  # 정방향 호출 함수. 이 함수를 통해서 linear regression을 수행하게 된다.  def forward(self, x):    pred = self.linear(x)    return pred\nnn.Linear는\n$$y = xA^{T} + b$$\n12345# random seedtorch.manual_seed(1)# 입력값이 한개고, 출력값이 한개model = LR(1, 1)print(model)\n123LR(  (linear): Linear(in_features=1, out_features=1, bias=True))\n파라미터를 살펴보면\n1print(list(model.parameters()))\n이렇게 weight와 bias 가 무작위로 들어가 있는 것을 알 수 있다.\n123[Parameter containing:tensor([[0.5153]], requires_grad=True), Parameter containing:tensor([-0.4414], requires_grad=True)]\n이제 Linear Regression을 해보자.\n1234567891011121314151617w, b = model.parameters()def get_params():  return w[0][0].item(), b[0].item()def plot_fit(title):  plt.title = title  # weight 와 bias  w1, b1 = get_params()  # -30 부터 30까지   x1 = np.array([-30, 30])  # 선형 추정선을 그려본다.  y1 = w1*x1 + b1  plt.plot(x1, y1, 'r')  plt.scatter(X, y)  plt.show()plot_fit('Initial Model')\n\n회귀선,인지, 추정선,인지 암튼지간에 제대로 그리지 못했다는 것을 알 수 있다. 그래서 이를 학습시키려고 한다.\n12criterion = nn.MSELoss()optimizer = torch.optim.SGD(model.parameters(), lr = 0.01)\ncriterion은 Mean Squred Error를 , optimizer는 stochastic gradient descent (확률적 경사하강법)을 사용한다. learning_rate는 0.01 이다.\n배치 경사하강법은, 매스텝에서 전체 훈련세트를 활용해서 그래디언트를 계산하기 대문에, 훈련세트가 커지면 속도가 매우 느려진다. 그러나 SGD는 매스텝에서 무작위 딱 한개의 샘플만을 처리하고, 그 샘플에 대한 그래디언트만 계산한다.\n따라서 속도는 훨씬 빠르지만, 매 iteration 에서 적은 데이터만 처리하기 때문에 훨씬 불안정하다. 위아래로 요동치면서 감소하므로, 물론 시간이 지나면 최소값에 얼추 닿긴 하겠지만, 말그대로 얼추일 뿐이다.\n이러한 무작위성은 국소최소값을 벗어나게 하므로 (무작위로 처리하므로), 전역 최소값을 찾을 확률이 더 크다.\n암튼 지간에\n123456789101112131415161718# 100 회 반복epochs = 100losses = []for i in range(epochs):  # 예측  y_pred = model.forward(X)  # 오차 계산  loss = criterion(y_pred, y)  print(\"epoch:\", i, \"loss:\", loss.item())    # 오차 누적 (계산을 위해서)  losses.append(loss)  # optimzer 초기화  optimizer.zero_grad()  # backward를 수행하여 그래디언트 계산  loss.backward()  # learning rate 만큼 가중치를 주어서 hyper parameter 업데이트  optimizer.step()\n123456789101112131415161718192021epoch: 0 loss: 31.671594619750977epoch: 1 loss: 22.02737808227539epoch: 2 loss: 16.717256546020508epoch: 3 loss: 13.792343139648438epoch: 4 loss: 12.180136680603027epoch: 5 loss: 11.290426254272461epoch: 6 loss: 10.798413276672363epoch: 7 loss: 10.525352478027344epoch: 8 loss: 10.372870445251465epoch: 9 loss: 10.286834716796875...epoch: 90 loss: 10.071357727050781epoch: 91 loss: 10.071175575256348epoch: 92 loss: 10.071000099182129epoch: 93 loss: 10.070833206176758epoch: 94 loss: 10.070671081542969epoch: 95 loss: 10.070516586303711epoch: 96 loss: 10.070366859436035epoch: 97 loss: 10.07022476196289epoch: 98 loss: 10.070086479187012epoch: 99 loss: 10.069954872131348\n123plt.plot(range(epochs), losses)plt.ylabel('Loss')plt.xlabel('epoch')\n\n시간이 지나면서 오차가 감소한 것을 알 수 있다.\n1plot_fit(\"Trained Model\")\n\n이전보다 잘 학습되었다.\n","dateCreated":"2019-02-19T00:00:00+09:00","dateModified":"2019-02-19T09:46:13+09:00","datePublished":"2019-02-19T00:00:00+09:00","description":"Pytorch - 02) Linear Regression\n\n¶Linear Regression\nLinear Regression이 한국말로 뭐였더라?\n\n1\n2\n3\n4\n\n\nimport torch\nimport torch.nn as nn\nimport matplotlib.pyplot as plt\nimport numpy as np\n\n\n¶데이터셋 만들기\n대충 뭔가 있어보이는 데이터셋을 만들자.\n\n1\n2\n3\n4\n5\n\n\nX = torch.randn(100, 1)*10\ny = X + 3*torch.randn(100, 1)\nplt.plot(X.numpy","headline":"Pytorch 02) - Linear Regression","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/02/19/pytorch-02-linear-regression/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/02/19/pytorch-02-linear-regression/","keywords":"pytorch"}</script>
+    <meta name="description" content="Pytorch - 02) Linear Regression  ¶Linear Regression Linear Regression이 한국말로 뭐였더라?  1 2 3 4   import torch import torch.nn as nn import matplotlib.pyplot as plt import numpy as np   ¶데이터셋 만들기 대충 뭔가 있어보">
+<meta name="keywords" content="pytorch">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Pytorch 02) - Linear Regression">
+<meta property="og:url" content="https://www.yceffort.kr/2019/02/19/pytorch-02-linear-regression/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="Pytorch - 02) Linear Regression  ¶Linear Regression Linear Regression이 한국말로 뭐였더라?  1 2 3 4   import torch import torch.nn as nn import matplotlib.pyplot as plt import numpy as np   ¶데이터셋 만들기 대충 뭔가 있어보">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/02/lr1.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/02/lr2.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/02/lr3.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/02/lr4.png">
+<meta property="og:updated_time" content="2019-02-19T00:46:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pytorch 02) - Linear Regression">
+<meta name="twitter:description" content="Pytorch - 02) Linear Regression  ¶Linear Regression Linear Regression이 한국말로 뭐였더라?  1 2 3 4   import torch import torch.nn as nn import matplotlib.pyplot as plt import numpy as np   ¶데이터셋 만들기 대충 뭔가 있어보">
+<meta name="twitter:image" content="https://www.yceffort.kr/images/2019/02/lr1.png">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Pytorch 02) - Linear Regression
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-02-19T00:00:00+09:00">
+	
+		    Feb 19, 2019
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>Pytorch - 02) Linear Regression</p>
+<h2 id="linear-regression"><a class="header-anchor" href="#linear-regression">¶</a>Linear Regression</h2>
+<p>Linear Regression이 한국말로 뭐였더라?</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
+<h3 id="데이터셋-만들기"><a class="header-anchor" href="#데이터셋-만들기">¶</a>데이터셋 만들기</h3>
+<p>대충 뭔가 있어보이는 데이터셋을 만들자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">X = torch.randn(<span class="number">100</span>, <span class="number">1</span>)*<span class="number">10</span></span><br><span class="line">y = X + <span class="number">3</span>*torch.randn(<span class="number">100</span>, <span class="number">1</span>)</span><br><span class="line">plt.plot(X.numpy(), y.numpy(), <span class="string">'o'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'y'</span>)</span><br><span class="line">plt.xlabel(<span class="string">'x'</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2019/02/lr1.png" alt="lr1"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># nn.Module은 사용자 정의 모듈을 생성하는데 있어서 가장 기초가 되는 모듈이다.</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LR</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># linear regression의 입력값과 출력값 갯수를 받는다.</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, input_size, output_size)</span>:</span></span><br><span class="line">    super().__init__()</span><br><span class="line">    <span class="comment"># nn.Linear를 상속받는다.</span></span><br><span class="line">    self.linear = nn.Linear(input_size, output_size)</span><br><span class="line"></span><br><span class="line">  <span class="comment"># 정방향 호출 함수. 이 함수를 통해서 linear regression을 수행하게 된다.</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">    pred = self.linear(x)</span><br><span class="line">    <span class="keyword">return</span> pred</span><br></pre></td></tr></table></figure>
+<p>nn.Linear는</p>
+<p>$$y = xA^{T} + b$$</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># random seed</span></span><br><span class="line">torch.manual_seed(<span class="number">1</span>)</span><br><span class="line"><span class="comment"># 입력값이 한개고, 출력값이 한개</span></span><br><span class="line">model = LR(<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">print(model)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">LR(</span><br><span class="line">  (linear): Linear(in_features=1, out_features=1, bias=True)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>파라미터를 살펴보면</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(list(model.parameters()))</span><br></pre></td></tr></table></figure>
+<p>이렇게 weight와 bias 가 무작위로 들어가 있는 것을 알 수 있다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[Parameter containing:</span><br><span class="line">tensor([[0.5153]], requires_grad=True), Parameter containing:</span><br><span class="line">tensor([-0.4414], requires_grad=True)]</span><br></pre></td></tr></table></figure>
+<p>이제 Linear Regression을 해보자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">w, b = model.parameters()</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_params</span><span class="params">()</span>:</span></span><br><span class="line">  <span class="keyword">return</span> w[<span class="number">0</span>][<span class="number">0</span>].item(), b[<span class="number">0</span>].item()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_fit</span><span class="params">(title)</span>:</span></span><br><span class="line">  plt.title = title</span><br><span class="line">  <span class="comment"># weight 와 bias</span></span><br><span class="line">  w1, b1 = get_params()</span><br><span class="line">  <span class="comment"># -30 부터 30까지 </span></span><br><span class="line">  x1 = np.array([<span class="number">-30</span>, <span class="number">30</span>])</span><br><span class="line">  <span class="comment"># 선형 추정선을 그려본다.</span></span><br><span class="line">  y1 = w1*x1 + b1</span><br><span class="line">  plt.plot(x1, y1, <span class="string">'r'</span>)</span><br><span class="line">  plt.scatter(X, y)</span><br><span class="line">  plt.show()</span><br><span class="line"></span><br><span class="line">plot_fit(<span class="string">'Initial Model'</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2019/02/lr2.png" alt="lr2"></p>
+<p>회귀선,인지, 추정선,인지 암튼지간에 제대로 그리지 못했다는 것을 알 수 있다. 그래서 이를 학습시키려고 한다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">criterion = nn.MSELoss()</span><br><span class="line">optimizer = torch.optim.SGD(model.parameters(), lr = <span class="number">0.01</span>)</span><br></pre></td></tr></table></figure>
+<p>criterion은 <code>Mean Squred Error</code>를 , optimizer는 stochastic gradient descent (확률적 경사하강법)을 사용한다. learning_rate는 0.01 이다.</p>
+<p>배치 경사하강법은, 매스텝에서 전체 훈련세트를 활용해서 그래디언트를 계산하기 대문에, 훈련세트가 커지면 속도가 매우 느려진다. 그러나 SGD는 매스텝에서 무작위 딱 한개의 샘플만을 처리하고, 그 샘플에 대한 그래디언트만 계산한다.</p>
+<p>따라서 속도는 훨씬 빠르지만, 매 iteration 에서 적은 데이터만 처리하기 때문에 훨씬 불안정하다. 위아래로 요동치면서 감소하므로, 물론 시간이 지나면 최소값에 얼추 닿긴 하겠지만, 말그대로 얼추일 뿐이다.</p>
+<p>이러한 무작위성은 국소최소값을 벗어나게 하므로 (무작위로 처리하므로), 전역 최소값을 찾을 확률이 더 크다.</p>
+<p>암튼 지간에</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 100 회 반복</span></span><br><span class="line">epochs = <span class="number">100</span></span><br><span class="line">losses = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(epochs):</span><br><span class="line">  <span class="comment"># 예측</span></span><br><span class="line">  y_pred = model.forward(X)</span><br><span class="line">  <span class="comment"># 오차 계산</span></span><br><span class="line">  loss = criterion(y_pred, y)</span><br><span class="line">  print(<span class="string">"epoch:"</span>, i, <span class="string">"loss:"</span>, loss.item())</span><br><span class="line">  </span><br><span class="line">  <span class="comment"># 오차 누적 (계산을 위해서)</span></span><br><span class="line">  losses.append(loss)</span><br><span class="line">  <span class="comment"># optimzer 초기화</span></span><br><span class="line">  optimizer.zero_grad()</span><br><span class="line">  <span class="comment"># backward를 수행하여 그래디언트 계산</span></span><br><span class="line">  loss.backward()</span><br><span class="line">  <span class="comment"># learning rate 만큼 가중치를 주어서 hyper parameter 업데이트</span></span><br><span class="line">  optimizer.step()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">epoch: 0 loss: 31.671594619750977</span><br><span class="line">epoch: 1 loss: 22.02737808227539</span><br><span class="line">epoch: 2 loss: 16.717256546020508</span><br><span class="line">epoch: 3 loss: 13.792343139648438</span><br><span class="line">epoch: 4 loss: 12.180136680603027</span><br><span class="line">epoch: 5 loss: 11.290426254272461</span><br><span class="line">epoch: 6 loss: 10.798413276672363</span><br><span class="line">epoch: 7 loss: 10.525352478027344</span><br><span class="line">epoch: 8 loss: 10.372870445251465</span><br><span class="line">epoch: 9 loss: 10.286834716796875</span><br><span class="line">...</span><br><span class="line">epoch: 90 loss: 10.071357727050781</span><br><span class="line">epoch: 91 loss: 10.071175575256348</span><br><span class="line">epoch: 92 loss: 10.071000099182129</span><br><span class="line">epoch: 93 loss: 10.070833206176758</span><br><span class="line">epoch: 94 loss: 10.070671081542969</span><br><span class="line">epoch: 95 loss: 10.070516586303711</span><br><span class="line">epoch: 96 loss: 10.070366859436035</span><br><span class="line">epoch: 97 loss: 10.07022476196289</span><br><span class="line">epoch: 98 loss: 10.070086479187012</span><br><span class="line">epoch: 99 loss: 10.069954872131348</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">plt.plot(range(epochs), losses)</span><br><span class="line">plt.ylabel(<span class="string">'Loss'</span>)</span><br><span class="line">plt.xlabel(<span class="string">'epoch'</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2019/02/lr3.png" alt="lr3"></p>
+<p>시간이 지나면서 오차가 감소한 것을 알 수 있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plot_fit(<span class="string">"Trained Model"</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2019/02/lr4.png" alt="lr4"></p>
+<p>이전보다 잘 학습되었다.</p>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/">pytorch</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-01-tensor/" data-tooltip="Pytorch 01) - Tensor" aria-label="PREVIOUS: Pytorch 01) - Tensor">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-03-perceptron/" data-tooltip="Pytorch 03) - Perceptron" aria-label="NEXT: Pytorch 03) - Perceptron">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/02/19/pytorch-02-linear-regression/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/02/19/pytorch-02-linear-regression/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-01-tensor/" data-tooltip="Pytorch 01) - Tensor" aria-label="PREVIOUS: Pytorch 01) - Tensor">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-03-perceptron/" data-tooltip="Pytorch 03) - Perceptron" aria-label="NEXT: Pytorch 03) - Perceptron">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/02/19/pytorch-02-linear-regression/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/02/19/pytorch-02-linear-regression/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/02/19/pytorch-02-linear-regression/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/02/19/pytorch-02-linear-regression/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2019/02/19/pytorch-02-linear-regression/';
+                 
+                    this.page.identifier = '2019/02/19/pytorch-02-linear-regression/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

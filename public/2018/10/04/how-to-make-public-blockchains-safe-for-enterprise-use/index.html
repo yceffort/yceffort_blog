@@ -1,0 +1,790 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>퍼블릭 블록체인을 기업이 안전하게 활용하는 방법 - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"How to Make Public Blockchains Safe for Enterprise Use\n원문\n프라이빗 블록체인의 세계는 많은 기업, 규제 기관 및 중앙 은행에게 책임 있고 중앙 집중식 주체가 있다는 편안함을 제공하지만, 이러한 허가 된 네트워크는 공공, 허가받지 않은 네트워크가 제공하는 혁신 또는 네트워크 효과와 결코 일치하지 않는다.\n기업 상거래의 세계가 민간 네트워크에 의존하고 있다면, 그들은 결과적으로 금융기관을 소프트웨어 회사 및 호스팅 조직으로 대체하는 것이다. 그러나 이 두 세계를 하나로 모으고 공공 분산 된 네트워크에서 똑같이 구현하는 것은 가능하며 필수적이기 까지 하다.\n공공 네트워크가 약속을 이행하기 위해서는 두 가지 중요한 일이 일어나야 한다. 첫째, 규제 당국은 공공 블록체인에 존재하는 토큰, 자산 및 스마트 컨트랙트가 평가되는 방법에 대한 명확한 규칙을 제공해야 한다. 둘째, 기업은 공공 네트워크의 분산된 환경에서 이러한 규제 규칙을 시행해야 한다.\n이 중 첫 번째 요소와 관련하여 미국, 유럽 및 전세계의 규제 기관들은 자산, 통화 또는 보안이 무엇인지 정의하고 있다. 모든 규제 기관이 정확하게 동일한 결론을 내릴 것으로 예상되어서는 안되지만, 어느정도 의견이 수렴하고 있는 것으로 보인다. 유틸리티 결제 코인은 증권으로 특징 지어지는 반면, 암호 화폐 또는 자산처럼 취급되고 있다.\n우리가 앞으로 특히 중요하게 생각하는 한 가지 차이는 어떻게 토큰화 된 명목화폐를 규제할 것인가 하는 것입니다. 공공 블록체인에 1달러짜리 토큰을 가지고 있다면, 그리고 그것은 1달러짜리 예금통화로 뒷받침될 것이다. 지금까지, 어떤 규제기관도 이런식으로 떠오르는 범주의 블록체인 토큰에 대해 구체적으로 언급하지 않았다.\n두 번째는 규제 규칙이 무엇이든 간에 토큰 및 스마트 컨트랙트로 구현해야 한다는 것이다. 특히 블록체인 전체는 분산될 수 있지만 중앙은행은 블록체인에서 자체 통화를 발행하고 취소할 수 있어야 하며 기업들은 토큰화된 자산을 관리할 수 있어야 한다.\n이것이 얼마나 중요한지 설명하기 위해, 기업들이 공공 블록체인 네트워크에서 어떻게 서로 거래를 할 것인가에 대한 질문으로 돌아가 보자. 일단 회사가 재고와 자산을 토큰화하고 계약 및 금융 서비스에 사용하는 것을 시작하면, 이는 전통적인 금융 기관을 중개하는 것이 된다. 또한 이들은 또한 결과적으로 중개자의 규제 책임 중 일부를 맡아야 한다.\n토큰은 예를 들어 가치가 있는 경우 돈만큼 쉽게 이동할 수 있다. 예를 들어, 소비자 패키지 상품(CPG) 회사는 전에는 이에 대해 생각해 볼 이유가 없었을지 모르지만, 일단 세제 패키지를 토큰화하면, 이러한 토큰은 실제 자금과 다른 어떤 종류의 상품에도 완벽하게 적합하게 만드는 효과적인 환율을 갖게 된다. 이는 CPG 회사들도 고객의 노하우(KYC)와 돈세탁 방지(AML) 규정 준수를 책임지게 된다는 것을 의미한다.\n스마트 컨트랙트와 블록체인 토큰의 큰 이점 중 하나는 프로그래밍이 가능하다는 것이다. 앞으로 감사, KYC 및 AML 규정은 스마트 컨트랙트 및 토큰으로 작성될 수 있으며, 블록체인 전체의 중앙화에 의존하지 않고 공공 블록체인에 토큰을 사용하는 방법과 시기를 제어할 수 있다. 여기에는 도난 및 손실을 처리하기 위한 새 토큰의 취소 및 발행도 포함된다.\n의심할 여지 없이, 규제 통제를 완전히 벗어난 시스템으로서 공공 블록체인의 종말을 애도할 많은 사람들이 있다. 블록체인들이 그들의 약속을 이행하기 위해서는, 이것은 불가피하지만, 어떻게 이것이 일어나는지에 대해서는 매우 중요하다.\n규제 준수가 중앙집권화를 통해 전달된다면, 혁신에 큰 손실이 발생할 것이고, 우리는 다시 세분화된 인터넷이 죽는 꿈을 보게 될 것이다.\n그러나 분산형 프레임워크 내에서 규제 준수라는 또 다른 방법이 있다. 스마트 계약에 대한 자발적 계약을 기반으로 한 옵트인 모델은 기업이 과도한 위험을 감수하지 않고 블록체인(블록체인)을 사업용으로 사용할 수 있다는 것을 의미한다. 그러나 동시에 개인과 창업자들은 누군가에게 허락을 구하지 않고도 급진적인 실험을 계속할 수 있다.\n","dateCreated":"2018-10-04T00:00:00+09:00","dateModified":"2018-10-04T06:25:00+09:00","datePublished":"2018-10-04T00:00:00+09:00","description":"How to Make Public Blockchains Safe for Enterprise Use\n\n원문\n\n프라이빗 블록체인의 세계는 많은 기업, 규제 기관 및 중앙 은행에게 책임 있고 중앙 집중식 주체가 있다는 편안함을 제공하지만, 이러한 허가 된 네트워크는 공공, 허가받지 않은 네트워크가 제공하는 혁신 또는 네트워크 효과와 결코 일치하지 않는다.\n\n기업 상거래의 세계가 민간 네트워크에 의존하고 있다면, 그들은 결과적으로 금융기관을 소프트웨어 회사 및 호스팅 조직으로 대체하는 것이다. 그러나 이 두 세계를 하나로 모으고 공공 분산","headline":"퍼블릭 블록체인을 기업이 안전하게 활용하는 방법","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/10/04/how-to-make-public-blockchains-safe-for-enterprise-use/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/10/04/how-to-make-public-blockchains-safe-for-enterprise-use/","keywords":"blockchain"}</script>
+    <meta name="description" content="How to Make Public Blockchains Safe for Enterprise Use  원문  프라이빗 블록체인의 세계는 많은 기업, 규제 기관 및 중앙 은행에게 책임 있고 중앙 집중식 주체가 있다는 편안함을 제공하지만, 이러한 허가 된 네트워크는 공공, 허가받지 않은 네트워크가 제공하는 혁신 또는 네트워크 효과와 결코 일치하지 않는다.  기업">
+<meta name="keywords" content="blockchain">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="퍼블릭 블록체인을 기업이 안전하게 활용하는 방법">
+<meta property="og:url" content="https://www.yceffort.kr/2018/10/04/how-to-make-public-blockchains-safe-for-enterprise-use/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="How to Make Public Blockchains Safe for Enterprise Use  원문  프라이빗 블록체인의 세계는 많은 기업, 규제 기관 및 중앙 은행에게 책임 있고 중앙 집중식 주체가 있다는 편안함을 제공하지만, 이러한 허가 된 네트워크는 공공, 허가받지 않은 네트워크가 제공하는 혁신 또는 네트워크 효과와 결코 일치하지 않는다.  기업">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-10-03T21:25:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="퍼블릭 블록체인을 기업이 안전하게 활용하는 방법">
+<meta name="twitter:description" content="How to Make Public Blockchains Safe for Enterprise Use  원문  프라이빗 블록체인의 세계는 많은 기업, 규제 기관 및 중앙 은행에게 책임 있고 중앙 집중식 주체가 있다는 편안함을 제공하지만, 이러한 허가 된 네트워크는 공공, 허가받지 않은 네트워크가 제공하는 혁신 또는 네트워크 효과와 결코 일치하지 않는다.  기업">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            퍼블릭 블록체인을 기업이 안전하게 활용하는 방법
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2018-10-04T00:00:00+09:00">
+	
+		    Oct 04, 2018
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>How to Make Public Blockchains Safe for Enterprise Use</p>
+<p><a href="https://www.coindesk.com/how-to-make-public-blockchains-safe-for-enterprise-use/" target="_blank" rel="noopener">원문</a></p>
+<p>프라이빗 블록체인의 세계는 많은 기업, 규제 기관 및 중앙 은행에게 책임 있고 중앙 집중식 주체가 있다는 편안함을 제공하지만, 이러한 허가 된 네트워크는 공공, 허가받지 않은 네트워크가 제공하는 혁신 또는 네트워크 효과와 결코 일치하지 않는다.</p>
+<p>기업 상거래의 세계가 민간 네트워크에 의존하고 있다면, 그들은 결과적으로 금융기관을 소프트웨어 회사 및 호스팅 조직으로 대체하는 것이다. 그러나 이 두 세계를 하나로 모으고 공공 분산 된 네트워크에서 똑같이 구현하는 것은 가능하며 필수적이기 까지 하다.</p>
+<p>공공 네트워크가 약속을 이행하기 위해서는 두 가지 중요한 일이 일어나야 한다. 첫째, 규제 당국은 공공 블록체인에 존재하는 토큰, 자산 및 스마트 컨트랙트가 평가되는 방법에 대한 명확한 규칙을 제공해야 한다. 둘째, 기업은 공공 네트워크의 분산된 환경에서 이러한 규제 규칙을 시행해야 한다.</p>
+<p>이 중 첫 번째 요소와 관련하여 미국, 유럽 및 전세계의 규제 기관들은 자산, 통화 또는 보안이 무엇인지 정의하고 있다. 모든 규제 기관이 정확하게 동일한 결론을 내릴 것으로 예상되어서는 안되지만, 어느정도 의견이 수렴하고 있는 것으로 보인다. 유틸리티 결제 코인은 증권으로 특징 지어지는 반면, 암호 화폐 또는 자산처럼 취급되고 있다.</p>
+<p>우리가 앞으로 특히 중요하게 생각하는 한 가지 차이는 어떻게 토큰화 된 명목화폐를 규제할 것인가 하는 것입니다. 공공 블록체인에 1달러짜리 토큰을 가지고 있다면, 그리고 그것은 1달러짜리 예금통화로 뒷받침될 것이다. 지금까지, 어떤 규제기관도 이런식으로 떠오르는 범주의 블록체인 토큰에 대해 구체적으로 언급하지 않았다.</p>
+<p>두 번째는 규제 규칙이 무엇이든 간에 토큰 및 스마트 컨트랙트로 구현해야 한다는 것이다. 특히 블록체인 전체는 분산될 수 있지만 중앙은행은 블록체인에서 자체 통화를 발행하고 취소할 수 있어야 하며 기업들은 토큰화된 자산을 관리할 수 있어야 한다.</p>
+<p>이것이 얼마나 중요한지 설명하기 위해, 기업들이 공공 블록체인 네트워크에서 어떻게 서로 거래를 할 것인가에 대한 질문으로 돌아가 보자. 일단 회사가 재고와 자산을 토큰화하고 계약 및 금융 서비스에 사용하는 것을 시작하면, 이는 전통적인 금융 기관을 중개하는 것이 된다. 또한 이들은 또한 결과적으로 중개자의 규제 책임 중 일부를 맡아야 한다.</p>
+<p>토큰은 예를 들어 가치가 있는 경우 돈만큼 쉽게 이동할 수 있다. 예를 들어, 소비자 패키지 상품(CPG) 회사는 전에는 이에 대해 생각해 볼 이유가 없었을지 모르지만, 일단 세제 패키지를 토큰화하면, 이러한 토큰은 실제 자금과 다른 어떤 종류의 상품에도 완벽하게 적합하게 만드는 효과적인 환율을 갖게 된다. 이는 CPG 회사들도 고객의 노하우(KYC)와 돈세탁 방지(AML) 규정 준수를 책임지게 된다는 것을 의미한다.</p>
+<p>스마트 컨트랙트와 블록체인 토큰의 큰 이점 중 하나는 프로그래밍이 가능하다는 것이다. 앞으로 감사, KYC 및 AML 규정은 스마트 컨트랙트 및 토큰으로 작성될 수 있으며, 블록체인 전체의 중앙화에 의존하지 않고 공공 블록체인에 토큰을 사용하는 방법과 시기를 제어할 수 있다. 여기에는 도난 및 손실을 처리하기 위한 새 토큰의 취소 및 발행도 포함된다.</p>
+<p>의심할 여지 없이, 규제 통제를 완전히 벗어난 시스템으로서 공공 블록체인의 종말을 애도할 많은 사람들이 있다. 블록체인들이 그들의 약속을 이행하기 위해서는, 이것은 불가피하지만, 어떻게 이것이 일어나는지에 대해서는 매우 중요하다.</p>
+<p>규제 준수가 중앙집권화를 통해 전달된다면, 혁신에 큰 손실이 발생할 것이고, 우리는 다시 세분화된 인터넷이 죽는 꿈을 보게 될 것이다.</p>
+<p>그러나 분산형 프레임워크 내에서 규제 준수라는 또 다른 방법이 있다. 스마트 계약에 대한 자발적 계약을 기반으로 한 옵트인 모델은 기업이 과도한 위험을 감수하지 않고 블록체인(블록체인)을 사업용으로 사용할 수 있다는 것을 의미한다. 그러나 동시에 개인과 창업자들은 누군가에게 허락을 구하지 않고도 급진적인 실험을 계속할 수 있다.</p>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/blockchain/">blockchain</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/10/05/what-determines-the-price-of-bitcoin/" data-tooltip="무엇이 비트코인의 가격을 결정하는가?" aria-label="PREVIOUS: 무엇이 비트코인의 가격을 결정하는가?">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/10/02/from-farm-to-blockchain-walmart-tracks-its-lettuce/" data-tooltip="농장에서 블록체인으로: 상추를 추적하는 월마트" aria-label="NEXT: 농장에서 블록체인으로: 상추를 추적하는 월마트">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/10/04/how-to-make-public-blockchains-safe-for-enterprise-use/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/10/04/how-to-make-public-blockchains-safe-for-enterprise-use/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/10/05/what-determines-the-price-of-bitcoin/" data-tooltip="무엇이 비트코인의 가격을 결정하는가?" aria-label="PREVIOUS: 무엇이 비트코인의 가격을 결정하는가?">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/10/02/from-farm-to-blockchain-walmart-tracks-its-lettuce/" data-tooltip="농장에서 블록체인으로: 상추를 추적하는 월마트" aria-label="NEXT: 농장에서 블록체인으로: 상추를 추적하는 월마트">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/10/04/how-to-make-public-blockchains-safe-for-enterprise-use/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/10/04/how-to-make-public-blockchains-safe-for-enterprise-use/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/10/04/how-to-make-public-blockchains-safe-for-enterprise-use/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/10/04/how-to-make-public-blockchains-safe-for-enterprise-use/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2018/10/04/how-to-make-public-blockchains-safe-for-enterprise-use/';
+                 
+                    this.page.identifier = '2018/10/04/how-to-make-public-blockchains-safe-for-enterprise-use/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

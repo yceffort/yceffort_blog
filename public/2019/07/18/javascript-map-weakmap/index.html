@@ -1,0 +1,867 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>Javascript Set 그리고 Map - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"¶근데 사실… 컬렉션 필요없지 않을까\n자바스크립트에서 일반적인 Object는 key-value쌍을 끊임 없이 추가할 수 있는 형태로 구성되어 있다. 그래서 사실 컬렉션이 필요하지 않은 것 처럼 보일 수도 있다. 그러나 이따금씩 object로 부족할 때가 있다.\n\nkey 충돌 위험이 존재하는 경우\n문자열/심볼 이외의 키 값이 필요한 경우\n객체에 얼마나 많은 속성이 있는지 알아낼 수 있는 효과적인 방법이 필요한 경우\n객체가 iterable하지 않음. 따라서 for..of 나 ...를 사용할 수 없음\n\nes6에 추가된 컬렉션들은 따라서 멤버 데이터를 드러내기 위해 property를 사용하지 않는다. (obj.key, obj[key] 불가능.) 그리고 이들에는 자유롭게 메소드를 추가할 수 있다.\n¶Set\nSet은 value로 이루어진 컬렉션이다. 그리고 수정가능하다. 배열과 같을 것 같지만, 다르다.\n123let faces = new Set(\"😀 😁 😂 🤣 😃 😄 😅\");faces.size; // 8faces.add(\"😂\");\n\n일단 (당연하게도) Set에는 같은 value가 중복으로 포함될 수 없다. 기존에 있는걸 추가해도 아무런 변화가 없다.\nSet은 어떤데이터가 자신의 멤버인지 빠르게 확인하기 위한 목적으로 사용한다\n그러나 Set은 index로 값을 조회할 수는 없다.\n\n¶set 으로 할 수 있는 것\n\n\nnew Set(): 비어있는 set 생성\n\n\nset.size: set 데이터 개수 조회\n\n\nset.has(value): value가 set에 존재하는지 조회\n\n\nset.add(value)\n\n\nset.delete(value)\n\n\nsets[Symbol.iterator](): set 안의 값을 순회할 수 있는 새로운 이터레이러를 리턴한다. set을 iterable하게 만들어 준다.\n12345let faces = new Set(\"😀 😁 😂 🤣 😃 😄 😅\");iteratorFaces = faces[Symbol.iterator]();for (let i of iteratorFaces) &#123;  console.log(i);&#125;\n\nset.forEach(f)\nset.clear\nset.keys()\nset.values()\nset.entries()\n\n\n\n¶Map\nMap은 잘 알려진 것처럼, key-value pair로 이루어진 컬렉션이다.\n¶Map으로 할 수 있는 것\n\nnew Map\nnew Map(pairs)\nmap.has(key)\nmap.size\nmag.get(key)\nmap.set(key, value)\nmap.delete(key)\nmap.clear()\nmap[Symbol.iterator]() === map.entries()\nmap.forEach(f)\nmap.keys()\nmap.values()\n\n¶javascript 가 다른점\n아래의 코드를 보자.\n12345678let messi = new Set();const 리오넬메시 = &#123; name: \"리오넬메시\" &#125;;const 라이오넬멧시 = &#123; name: \"리오넬메시\" &#125;;messi.add(리오넬메시);messi.add(라이오넬멧시);console.log(messi.size); //2 ????\n리오넬메시와 라이오넬멧시는 내부의 값이 같아 보이기 때문에, set에 한개의 값만 추가 될 것 같지만 사실은 그렇지 않다. 자바스크립트에서는 두개의 값을 다르게 본다. 이유는 자바스크립트가 값을 비교할 때 두가지 다른 방법을 사용하기 때문이다.\n\nstring, number같은 primitive는 값을 비교한다\narray, date, object 등은 reference를 비교한다. (메모리의 같은 위치를 참조하고 있는가?)\n\n1234567const 리오넬메시 = &#123; name: \"리오넬메시\" &#125;;const 라이오넬멧시 = &#123; name: \"리오넬메시\" &#125;;const 메석대 = 리오넬메시;메석대 === 리오넬메시; // true메석대 == 라이오넬멧시; // false리오넬메시 === 라이오넬멧시; //false\n본질적으로 같은 메모리를 참조하는 값 끼리만 true를 반환하는 것을 볼 수 있다. (두 object를 비교하는 방법은 여기를 참조)\n다시 Set으로 돌아와서, javascript는 저 두 값을 제대로 비교하지 못하기 때문에 set에 두개의 값이 들어가게 된다. 물론 해시코드를 사용하면 가능하지만, javascipt에는 그런거 없다\n또 하나 다른 점이라고 한다면, map과 set에 추가한 순서가 곧 순회하는 순서와 같다는 것이다. 이 역시 다른 언어들과는 다른 점이다.\n¶WeakMap, WeakSet\n\nWeakMap은 new .has() .get() .set() .delete() 만 지원한다\nWeakSet은 new .has() .add() .delete() 만 지원한다.\nWeakSet과 WeakMap의 key는 반드시 object여야 한다.\n\n그렇다. 열거형이 존재하지 않는다. 그 이유는 참조하고 있는 오브젝트가 사라지면 해당 key, value가 사라지는 WeakMap, WeakSet의 특징 때문이다.\n12345let john = &#123; name: \"John\" &#125;;// 객체에 접근 가능, 해당 객체는 메모리에서 참조되고 있음.// 참조를 null로 overwritejohn = null;// 객체는 메모리에서 이제 삭제됨\n12345678let john = &#123; name: \"John\" &#125;;let array = [john];john = null; // 참조를 null로 overwrite// john은 객체안에 살아 있기 때문에 가비지 컬렉팅이 되지 않음.// 그래서 array[0]으로 접근 가능array[0];// &#123; name: \"John\" &#125;\n이는 기존 Map, Set에서도 동일하다.\n123456789let john = &#123; name: \"John\" &#125;;let map = new Map();map.set(john, \"윅\");john = null; // 참조를 null로 overwrite// john은 맵안에서 살아있기 때문에// map.keys() 로 접근 가능\n그러나 WeakMap, WeakSet은 다르다\n12345678let john = &#123; name: \"John\" &#125;;let weakMap = new WeakMap();weakMap.set(john, \"윅\");john = null; // 참조를 null로 overwrite// john은 메모리에서 사라짐 (가비지 콜렉팅 당함)\n그럼 도대체 이것은 언제 쓸까? 객체가 사라지면 자동으로 가비지 콜렉팅 해준다는 특성을 활용해, 아래와 같은 것이 가능하다.\n1234567891011let john = &#123; name: \"John\" &#125;;// map: 유저 =&gt; 방문횟수let visitsCountMap = new Map();visitsCountMap.set(john, 123);// john이 사라짐john = null;// 그러나 Map에서는 계속 남아 있으므로, 따로 처리를 해주어야 함.// 또한 john은 map에서 key로 사용하고 있으므로 메모리에서도 존재함.console.log(visitsCountMap.size); // 1\n그러나 여기서 WeakMap을 사용하면, 자동으로 가비지 콜렉팅이 되므로 Map에 남아있는 key에 대해서 까지 신경쓰지 않아도 된다.\n","dateCreated":"2019-07-18T11:30:52+09:00","dateModified":"2019-07-19T10:12:53+09:00","datePublished":"2019-07-18T11:30:52+09:00","description":"¶근데 사실… 컬렉션 필요없지 않을까\n자바스크립트에서 일반적인 Object는 key-value쌍을 끊임 없이 추가할 수 있는 형태로 구성되어 있다. 그래서 사실 컬렉션이 필요하지 않은 것 처럼 보일 수도 있다. 그러나 이따금씩 object로 부족할 때가 있다.\n\n * key 충돌 위험이 존재하는 경우\n * 문자열/심볼 이외의 키 값이 필요한 경우\n * 객체에 얼마나 많은 속성이 있는지 알아낼 수 있는 효과적인 방법이 필요한 경우\n * 객체가 iterable하지 않음. 따라서 for..of 나 ...를 사용할 수 없음\n\nes6에 추가","headline":"Javascript Set 그리고 Map","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/07/18/javascript-map-weakmap/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/07/18/javascript-map-weakmap/","keywords":"javascript, es6"}</script>
+    <meta name="description" content="¶근데 사실… 컬렉션 필요없지 않을까 자바스크립트에서 일반적인 Object는 key-value쌍을 끊임 없이 추가할 수 있는 형태로 구성되어 있다. 그래서 사실 컬렉션이 필요하지 않은 것 처럼 보일 수도 있다. 그러나 이따금씩 object로 부족할 때가 있다.   * key 충돌 위험이 존재하는 경우  * 문자열/심볼 이외의 키 값이 필요한 경우  * 객체">
+<meta name="keywords" content="javascript,es6">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Javascript Set 그리고 Map">
+<meta property="og:url" content="https://www.yceffort.kr/2019/07/18/javascript-map-weakmap/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="¶근데 사실… 컬렉션 필요없지 않을까 자바스크립트에서 일반적인 Object는 key-value쌍을 끊임 없이 추가할 수 있는 형태로 구성되어 있다. 그래서 사실 컬렉션이 필요하지 않은 것 처럼 보일 수도 있다. 그러나 이따금씩 object로 부족할 때가 있다.   * key 충돌 위험이 존재하는 경우  * 문자열/심볼 이외의 키 값이 필요한 경우  * 객체">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-07-19T01:12:53.277Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Javascript Set 그리고 Map">
+<meta name="twitter:description" content="¶근데 사실… 컬렉션 필요없지 않을까 자바스크립트에서 일반적인 Object는 key-value쌍을 끊임 없이 추가할 수 있는 형태로 구성되어 있다. 그래서 사실 컬렉션이 필요하지 않은 것 처럼 보일 수도 있다. 그러나 이따금씩 object로 부족할 때가 있다.   * key 충돌 위험이 존재하는 경우  * 문자열/심볼 이외의 키 값이 필요한 경우  * 객체">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Javascript Set 그리고 Map
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-07-18T11:30:52+09:00">
+	
+		    Jul 18, 2019
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h2 id="근데-사실-컬렉션-필요없지-않을까"><a class="header-anchor" href="#근데-사실-컬렉션-필요없지-않을까">¶</a>근데 사실… 컬렉션 필요없지 않을까</h2>
+<p>자바스크립트에서 일반적인 Object는 key-value쌍을 끊임 없이 추가할 수 있는 형태로 구성되어 있다. 그래서 사실 컬렉션이 필요하지 않은 것 처럼 보일 수도 있다. 그러나 이따금씩 object로 부족할 때가 있다.</p>
+<ul>
+<li>key 충돌 위험이 존재하는 경우</li>
+<li>문자열/심볼 이외의 키 값이 필요한 경우</li>
+<li>객체에 얼마나 많은 속성이 있는지 알아낼 수 있는 효과적인 방법이 필요한 경우</li>
+<li>객체가 iterable하지 않음. 따라서 <code>for..of</code> 나 <code>...</code>를 사용할 수 없음</li>
+</ul>
+<p>es6에 추가된 컬렉션들은 따라서 멤버 데이터를 드러내기 위해 property를 사용하지 않는다. (<code>obj.key</code>, <code>obj[key]</code> 불가능.) 그리고 이들에는 자유롭게 메소드를 추가할 수 있다.</p>
+<h2 id="set"><a class="header-anchor" href="#set">¶</a>Set</h2>
+<p><code>Set</code>은 value로 이루어진 컬렉션이다. 그리고 수정가능하다. 배열과 같을 것 같지만, 다르다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> faces = <span class="keyword">new</span> <span class="built_in">Set</span>(<span class="string">"😀 😁 😂 🤣 😃 😄 😅"</span>);</span><br><span class="line">faces.size; <span class="comment">// 8</span></span><br><span class="line">faces.add(<span class="string">"😂"</span>);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>일단 (당연하게도) Set에는 같은 value가 중복으로 포함될 수 없다. 기존에 있는걸 추가해도 아무런 변화가 없다.</li>
+<li>Set은 어떤데이터가 자신의 멤버인지 빠르게 확인하기 위한 목적으로 사용한다</li>
+<li>그러나 Set은 index로 값을 조회할 수는 없다.</li>
+</ul>
+<h3 id="set-으로-할-수-있는-것"><a class="header-anchor" href="#set-으로-할-수-있는-것">¶</a>set 으로 할 수 있는 것</h3>
+<ul>
+<li>
+<p><code>new Set()</code>: 비어있는 set 생성</p>
+</li>
+<li>
+<p><code>set.size</code>: set 데이터 개수 조회</p>
+</li>
+<li>
+<p><code>set.has(value)</code>: <code>value</code>가 <code>set</code>에 존재하는지 조회</p>
+</li>
+<li>
+<p><code>set.add(value)</code></p>
+</li>
+<li>
+<p><code>set.delete(value)</code></p>
+</li>
+<li>
+<p><code>sets[Symbol.iterator]()</code>: set 안의 값을 순회할 수 있는 새로운 이터레이러를 리턴한다. set을 iterable하게 만들어 준다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> faces = <span class="keyword">new</span> <span class="built_in">Set</span>(<span class="string">"😀 😁 😂 🤣 😃 😄 😅"</span>);</span><br><span class="line">iteratorFaces = faces[<span class="built_in">Symbol</span>.iterator]();</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i <span class="keyword">of</span> iteratorFaces) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>set.forEach(f)</code></li>
+<li><code>set.clear</code></li>
+<li><code>set.keys()</code></li>
+<li><code>set.values()</code></li>
+<li><code>set.entries()</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="map"><a class="header-anchor" href="#map">¶</a>Map</h2>
+<p>Map은 잘 알려진 것처럼, key-value pair로 이루어진 컬렉션이다.</p>
+<h3 id="map으로-할-수-있는-것"><a class="header-anchor" href="#map으로-할-수-있는-것">¶</a>Map으로 할 수 있는 것</h3>
+<ul>
+<li><code>new Map</code></li>
+<li><code>new Map(pairs)</code></li>
+<li><code>map.has(key)</code></li>
+<li><code>map.size</code></li>
+<li><code>mag.get(key)</code></li>
+<li><code>map.set(key, value)</code></li>
+<li><code>map.delete(key)</code></li>
+<li><code>map.clear()</code></li>
+<li><code>map[Symbol.iterator]()</code> === <code>map.entries()</code></li>
+<li><code>map.forEach(f)</code></li>
+<li><code>map.keys()</code></li>
+<li><code>map.values()</code></li>
+</ul>
+<h2 id="javascript-가-다른점"><a class="header-anchor" href="#javascript-가-다른점">¶</a>javascript 가 다른점</h2>
+<p>아래의 코드를 보자.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> messi = <span class="keyword">new</span> <span class="built_in">Set</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> 리오넬메시 = &#123; <span class="attr">name</span>: <span class="string">"리오넬메시"</span> &#125;;</span><br><span class="line"><span class="keyword">const</span> 라이오넬멧시 = &#123; <span class="attr">name</span>: <span class="string">"리오넬메시"</span> &#125;;</span><br><span class="line">messi.add(리오넬메시);</span><br><span class="line">messi.add(라이오넬멧시);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(messi.size); <span class="comment">//2 ????</span></span><br></pre></td></tr></table></figure>
+<p><code>리오넬메시</code>와 <code>라이오넬멧시</code>는 내부의 값이 같아 보이기 때문에, set에 한개의 값만 추가 될 것 같지만 사실은 그렇지 않다. 자바스크립트에서는 두개의 값을 다르게 본다. 이유는 자바스크립트가 값을 비교할 때 두가지 다른 방법을 사용하기 때문이다.</p>
+<ul>
+<li>string, number같은 primitive는 값을 비교한다</li>
+<li>array, date, object 등은 reference를 비교한다. (메모리의 같은 위치를 참조하고 있는가?)</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> 리오넬메시 = &#123; <span class="attr">name</span>: <span class="string">"리오넬메시"</span> &#125;;</span><br><span class="line"><span class="keyword">const</span> 라이오넬멧시 = &#123; <span class="attr">name</span>: <span class="string">"리오넬메시"</span> &#125;;</span><br><span class="line"><span class="keyword">const</span> 메석대 = 리오넬메시;</span><br><span class="line"></span><br><span class="line">메석대 === 리오넬메시; <span class="comment">// true</span></span><br><span class="line">메석대 == 라이오넬멧시; <span class="comment">// false</span></span><br><span class="line">리오넬메시 === 라이오넬멧시; <span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+<p>본질적으로 같은 메모리를 참조하는 값 끼리만 true를 반환하는 것을 볼 수 있다. (두 object를 비교하는 방법은 <a href="https://stackoverflow.com/questions/1068834/object-comparison-in-javascript" target="_blank" rel="noopener">여기</a>를 참조)</p>
+<p>다시 <code>Set</code>으로 돌아와서, javascript는 저 두 값을 제대로 비교하지 못하기 때문에 set에 두개의 값이 들어가게 된다. 물론 해시코드를 사용하면 가능하지만, javascipt에는 그런거 없다</p>
+<p>또 하나 다른 점이라고 한다면, <code>map</code>과 <code>set</code>에 추가한 순서가 곧 순회하는 순서와 같다는 것이다. 이 역시 다른 언어들과는 다른 점이다.</p>
+<h2 id="weakmap-weakset"><a class="header-anchor" href="#weakmap-weakset">¶</a>WeakMap, WeakSet</h2>
+<ul>
+<li><code>WeakMap</code>은 <code>new</code> <code>.has()</code> <code>.get()</code> <code>.set()</code> <code>.delete()</code> 만 지원한다</li>
+<li><code>WeakSet</code>은 <code>new</code> <code>.has()</code> <code>.add()</code> <code>.delete()</code> 만 지원한다.</li>
+<li><code>WeakSet</code>과 <code>WeakMap</code>의 key는 반드시 <code>object</code>여야 한다.</li>
+</ul>
+<p>그렇다. 열거형이 존재하지 않는다. 그 이유는 참조하고 있는 오브젝트가 사라지면 해당 key, value가 사라지는 <code>WeakMap</code>, <code>WeakSet</code>의 특징 때문이다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> john = &#123; <span class="attr">name</span>: <span class="string">"John"</span> &#125;;</span><br><span class="line"><span class="comment">// 객체에 접근 가능, 해당 객체는 메모리에서 참조되고 있음.</span></span><br><span class="line"><span class="comment">// 참조를 null로 overwrite</span></span><br><span class="line">john = <span class="literal">null</span>;</span><br><span class="line"><span class="comment">// 객체는 메모리에서 이제 삭제됨</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> john = &#123; <span class="attr">name</span>: <span class="string">"John"</span> &#125;;</span><br><span class="line"><span class="keyword">let</span> array = [john];</span><br><span class="line">john = <span class="literal">null</span>; <span class="comment">// 참조를 null로 overwrite</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// john은 객체안에 살아 있기 때문에 가비지 컬렉팅이 되지 않음.</span></span><br><span class="line"><span class="comment">// 그래서 array[0]으로 접근 가능</span></span><br><span class="line">array[<span class="number">0</span>];</span><br><span class="line"><span class="comment">// &#123; name: "John" &#125;</span></span><br></pre></td></tr></table></figure>
+<p>이는 기존 Map, Set에서도 동일하다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> john = &#123; <span class="attr">name</span>: <span class="string">"John"</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> map = <span class="keyword">new</span> <span class="built_in">Map</span>();</span><br><span class="line">map.set(john, <span class="string">"윅"</span>);</span><br><span class="line"></span><br><span class="line">john = <span class="literal">null</span>; <span class="comment">// 참조를 null로 overwrite</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// john은 맵안에서 살아있기 때문에</span></span><br><span class="line"><span class="comment">// map.keys() 로 접근 가능</span></span><br></pre></td></tr></table></figure>
+<p>그러나 WeakMap, WeakSet은 다르다</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> john = &#123; <span class="attr">name</span>: <span class="string">"John"</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> weakMap = <span class="keyword">new</span> <span class="built_in">WeakMap</span>();</span><br><span class="line">weakMap.set(john, <span class="string">"윅"</span>);</span><br><span class="line"></span><br><span class="line">john = <span class="literal">null</span>; <span class="comment">// 참조를 null로 overwrite</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// john은 메모리에서 사라짐 (가비지 콜렉팅 당함)</span></span><br></pre></td></tr></table></figure>
+<p>그럼 도대체 이것은 언제 쓸까? 객체가 사라지면 자동으로 가비지 콜렉팅 해준다는 특성을 활용해, 아래와 같은 것이 가능하다.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> john = &#123; <span class="attr">name</span>: <span class="string">"John"</span> &#125;;</span><br><span class="line"><span class="comment">// map: 유저 =&gt; 방문횟수</span></span><br><span class="line"><span class="keyword">let</span> visitsCountMap = <span class="keyword">new</span> <span class="built_in">Map</span>();</span><br><span class="line">visitsCountMap.set(john, <span class="number">123</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// john이 사라짐</span></span><br><span class="line">john = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 그러나 Map에서는 계속 남아 있으므로, 따로 처리를 해주어야 함.</span></span><br><span class="line"><span class="comment">// 또한 john은 map에서 key로 사용하고 있으므로 메모리에서도 존재함.</span></span><br><span class="line"><span class="built_in">console</span>.log(visitsCountMap.size); <span class="comment">// 1</span></span><br></pre></td></tr></table></figure>
+<p>그러나 여기서 WeakMap을 사용하면, 자동으로 가비지 콜렉팅이 되므로 Map에 남아있는 key에 대해서 까지 신경쓰지 않아도 된다.</p>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/es6/">es6</a> <a class="tag tag--primary tag--small t-link" href="/tags/javascript/">javascript</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/07/22/javascript-reduce/" data-tooltip="Javascript Reduce" aria-label="PREVIOUS: Javascript Reduce">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/07/18/javascript-symbol/" data-tooltip="Javascript Symbol" aria-label="NEXT: Javascript Symbol">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/07/18/javascript-map-weakmap/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/07/18/javascript-map-weakmap/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/07/22/javascript-reduce/" data-tooltip="Javascript Reduce" aria-label="PREVIOUS: Javascript Reduce">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/07/18/javascript-symbol/" data-tooltip="Javascript Symbol" aria-label="NEXT: Javascript Symbol">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/07/18/javascript-map-weakmap/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/07/18/javascript-map-weakmap/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/07/18/javascript-map-weakmap/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/07/18/javascript-map-weakmap/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2019/07/18/javascript-map-weakmap/';
+                 
+                    this.page.identifier = '2019/07/18/javascript-map-weakmap/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

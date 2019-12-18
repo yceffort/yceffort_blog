@@ -1,0 +1,825 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>pytorch -  fashion MNIST 분류 실습 - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"pytorch를 활용해서 옷 이미지를 구별하는 예제를 해봤었는데, 다시 한번 복습하는 차원에서 기본적인 기능으로 해보려고 한다.\n¶1. 데이터셋 준비\n1234567891011121314import torchfrom torchvision import datasets, transformsimport helper# Define a transform to normalize the datatransform = transforms.Compose([transforms.ToTensor(),                                transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])# Download and load the training datatrainset = datasets.FashionMNIST('~/.pytorch/F_MNIST_data/', download=True, train=True, transform=transform)trainloader = torch.utils.data.DataLoader(trainset, batch_size=64, shuffle=True)# Download and load the test datatestset = datasets.FashionMNIST('~/.pytorch/F_MNIST_data/', download=True, train=False, transform=transform)testloader = torch.utils.data.DataLoader(testset, batch_size=64, shuffle=True)\n먼저 데이터를 받기전에, 해당 데이터를 torch tensor로 바꾸고, Normalize할 수 있ㅅ는 transform을 준비했다. 그리고 굳이 test set과 train set을 손수 나누지 않아도 저렇게 구별할 수 있게 해주었다. 그리고 각각의 데이터를 dataloader에 실어 넣었다.\n이미지를 잠깐 살펴보기 위하여, imshow라는 메소드를 하나 만들었다.\n12345678910111213141516171819202122def imshow(image, ax=None, title=None, normalize=True):    \"\"\"Imshow for Tensor.\"\"\"    if ax is None:        fig, ax = plt.subplots()    image = image.numpy().transpose((1, 2, 0))    if normalize:        mean = np.array([0.485, 0.456, 0.406])        std = np.array([0.229, 0.224, 0.225])        image = std * image + mean        image = np.clip(image, 0, 1)    ax.imshow(image)    ax.spines['top'].set_visible(False)    ax.spines['right'].set_visible(False)    ax.spines['left'].set_visible(False)    ax.spines['bottom'].set_visible(False)    ax.tick_params(axis='both', length=0)    ax.set_xticklabels('')    ax.set_yticklabels('')    return ax\n12image, label = next(iter(trainloader))imshow(image[0,:]);\n\n이게 옷인가 싶은 모양이지만 (…) 암튼 원피스겠지\n¶2. 네트워크 만들기\n만들어볼 네트워크는 아래와 같다.\n\ninput layer: 28 * 28 = 764\nhidden layer: 2개, 각각 256, 128 개의 뉴런을 갖고 있음\noutput layer: 10개 (구별할 옷이 열 종류)\nAdam Optimizer 와 NLLLoss 활용\n\n12345678910111213141516class Classifier(nn.Module):    def __init__(self):        super().__init__()        self.fc1 = nn.Linear(784, 256)        self.fc2 = nn.Linear(256, 128)        self.fc3 = nn.Linear(128, 64)        self.fc4 = nn.Linear(64, 10)            def forward(self, x):        x = x.view(x.shape[0], -1)        x = F.relu(self.fc1(x))        x = F.relu(self.fc2(x))        x = F.relu(self.fc3(x))        x = F.log_softmax(self.fc4(x), dim=1)                return x\n¶3. 네트워크 훈련하기\n12345678910111213141516171819202122232425model = Classifier()criterion = nn.NLLLoss()optimizer = optim.Adam(model.parameters(), lr=0.003)epochs = 20for e in range(epochs):    running_loss = 0    for images, labels in trainloader:        # 모델에서 훈련        result = model(images)        # 오차 계산        loss = criterion(result, labels)                # 초기화        optimizer.zero_grad()        # 역전파        loss.backward()        # 스텝        optimizer.step()                # 오차값을 총 오차에 더함        running_loss += loss.item()    else:        print(f\"Training loss: &#123;running_loss/len(trainloader)&#125;\")\n1234567891011121314151617181920Training loss: 0.5118639363504168Training loss: 0.3933752618714182Training loss: 0.35750402640432183Training loss: 0.33432440921219425Training loss: 0.31787964060648416Training loss: 0.3047505217606325Training loss: 0.29022969397654663Training loss: 0.28075202265337335Training loss: 0.27226868114555314Training loss: 0.26422357173966193Training loss: 0.2592774396702679Training loss: 0.25201891171636737Training loss: 0.24683423794265877Training loss: 0.24124097148540305Training loss: 0.23825587014923852Training loss: 0.2335602915538018Training loss: 0.224308533554297Training loss: 0.22240888378592824Training loss: 0.21599145372634504Training loss: 0.21485247272354707\n¶4. 결과\n123456789%matplotlib inline%config InlineBackend.figure_format = 'retina'dataiter = iter(testloader)images, labels = dataiter.next()img = images[0]img = img.resize_(1, 784)ps = torch.exp(model(img))view_classify(img.resize_(1, 28, 28), ps, version='Fashion')\n\n¶5. 총 accuracy 구하기\n1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950model = Classifier()criterion = nn.NLLLoss()optimizer = optim.Adam(model.parameters(), lr=0.003)epochs = 30steps = 0train_losses, test_losses = [], []for e in range(epochs):    running_loss = 0    for images, labels in trainloader:                optimizer.zero_grad()                log_ps = model(images)        loss = criterion(log_ps, labels)        loss.backward()        optimizer.step()                running_loss += loss.item()            # for 문이 끝나면 실행한다.    else:        test_loss = 0        accuracy = 0                # Turn off gradients for validation, saves memory and computations        # 자동 미분을 꺼서 pytorch가 쓸 떼 없는 짓을 안하게 한다. (어차피 test set에서 하는 작업이므로)        with torch.no_grad():            for images, labels in testloader:                log_ps = model(images)                test_loss += criterion(log_ps, labels)                                # 로그 확률에 지수 적용                ps = torch.exp(log_ps)                # topk는 k번째로 큰 숫자를 찾아내는 것이다.                # dim=1 는 dimension을 의미한다.                top_p, top_class = ps.topk(1, dim=1)                # labels를 top_class와 똑같은 형태로 만든다음에, 얼마나 같은게 있는지 확인한다.                equals = top_class == labels.view(*top_class.shape)                # equals를 float으로 바꾸고 평균 정확도를 구한다.                accuracy += torch.mean(equals.type(torch.FloatTensor))                        train_losses.append(running_loss/len(trainloader))        test_losses.append(test_loss/len(testloader))        print(\"Epoch: &#123;&#125;/&#123;&#125;.. \".format(e+1, epochs),              \"Training Loss: &#123;:.3f&#125;.. \".format(running_loss/len(trainloader)),              \"Test Loss: &#123;:.3f&#125;.. \".format(test_loss/len(testloader)),              \"Test Accuracy: &#123;:.3f&#125;\".format(accuracy/len(testloader)))\n123456789101112131415161718192021222324252627282930Epoch: 1/30..  Training Loss: 0.521..  Test Loss: 0.461..  Test Accuracy: 0.833Epoch: 2/30..  Training Loss: 0.395..  Test Loss: 0.429..  Test Accuracy: 0.839Epoch: 3/30..  Training Loss: 0.357..  Test Loss: 0.393..  Test Accuracy: 0.862Epoch: 4/30..  Training Loss: 0.334..  Test Loss: 0.388..  Test Accuracy: 0.863Epoch: 5/30..  Training Loss: 0.318..  Test Loss: 0.380..  Test Accuracy: 0.867Epoch: 6/30..  Training Loss: 0.303..  Test Loss: 0.367..  Test Accuracy: 0.871Epoch: 7/30..  Training Loss: 0.292..  Test Loss: 0.386..  Test Accuracy: 0.869Epoch: 8/30..  Training Loss: 0.285..  Test Loss: 0.371..  Test Accuracy: 0.879Epoch: 9/30..  Training Loss: 0.274..  Test Loss: 0.357..  Test Accuracy: 0.878Epoch: 10/30..  Training Loss: 0.274..  Test Loss: 0.377..  Test Accuracy: 0.876Epoch: 11/30..  Training Loss: 0.261..  Test Loss: 0.369..  Test Accuracy: 0.871Epoch: 12/30..  Training Loss: 0.255..  Test Loss: 0.357..  Test Accuracy: 0.881Epoch: 13/30..  Training Loss: 0.251..  Test Loss: 0.385..  Test Accuracy: 0.873Epoch: 14/30..  Training Loss: 0.248..  Test Loss: 0.405..  Test Accuracy: 0.875Epoch: 15/30..  Training Loss: 0.240..  Test Loss: 0.368..  Test Accuracy: 0.882Epoch: 16/30..  Training Loss: 0.232..  Test Loss: 0.364..  Test Accuracy: 0.883Epoch: 17/30..  Training Loss: 0.230..  Test Loss: 0.413..  Test Accuracy: 0.872Epoch: 18/30..  Training Loss: 0.229..  Test Loss: 0.384..  Test Accuracy: 0.878Epoch: 19/30..  Training Loss: 0.221..  Test Loss: 0.376..  Test Accuracy: 0.883Epoch: 20/30..  Training Loss: 0.217..  Test Loss: 0.443..  Test Accuracy: 0.867Epoch: 21/30..  Training Loss: 0.217..  Test Loss: 0.382..  Test Accuracy: 0.880Epoch: 22/30..  Training Loss: 0.212..  Test Loss: 0.403..  Test Accuracy: 0.880Epoch: 23/30..  Training Loss: 0.209..  Test Loss: 0.403..  Test Accuracy: 0.879Epoch: 24/30..  Training Loss: 0.209..  Test Loss: 0.398..  Test Accuracy: 0.881Epoch: 25/30..  Training Loss: 0.202..  Test Loss: 0.406..  Test Accuracy: 0.880Epoch: 26/30..  Training Loss: 0.200..  Test Loss: 0.390..  Test Accuracy: 0.882Epoch: 27/30..  Training Loss: 0.194..  Test Loss: 0.405..  Test Accuracy: 0.878Epoch: 28/30..  Training Loss: 0.195..  Test Loss: 0.415..  Test Accuracy: 0.879Epoch: 29/30..  Training Loss: 0.193..  Test Loss: 0.418..  Test Accuracy: 0.883Epoch: 30/30..  Training Loss: 0.187..  Test Loss: 0.412..  Test Accuracy: 0.879\n¶6. loss 확인해보기\n12345678%matplotlib inline%config InlineBackend.figure_format='retina'import matplotlib.pyplot as pltplt.plot(train_losses, label='training loss')plt.plot(test_losses, label='Validation loss')plt.legend(frameon=False)\n\ntraining loss는 점차 감소하지만,  validation loss는 널뛰기 하고 있다. 이 말인 즉슨, 현재 overfitting 현상이 일어나고 있는 것이다.\n¶7. dropout\n드롭아웃은 Overfitting을 방지하기 위한 방법이다.\n\n일부 노드들을 훈련에 참여시키지 않고 몇개의 노드를 끊어서, 남은 노드들을 통해서만 훈련시키는 방식이다. 이 때 끊어버리는 노드는 랜덤으로 선택한다. pytorch에서는 기본값이 0.5 다. 즉 절반의 노드를 dropout하고 계산한다. 이렇게 함으로써, training하는 과정에서 Overfitting이 발생하지 않게 할 수 있다.\n12345678910111213141516171819202122class Classifier(nn.Module):    def __init__(self):        super().__init__()        self.fc1 = nn.Linear(784, 256)        self.fc2 = nn.Linear(256, 128)        self.fc3 = nn.Linear(128, 64)        self.fc4 = nn.Linear(64, 10)        # 0.2정도를 무작위로 골라 dropout한다.        self.dropout = nn.Dropout(p=0.2)    def forward(self, x):        x = x.view(x.shape[0], -1)        x = self.dropout(F.relu(self.fc1(x)))        x = self.dropout(F.relu(self.fc2(x)))        x = self.dropout(F.relu(self.fc3(x)))        # output은 dropout하면 안된다..        x = F.log_softmax(self.fc4(x), dim=1)        return x\ndropout은 주의해야할 것이, training 과정에서만 이루어져야 한다는 것이다.\n123456789101112131415161718192021222324252627282930313233343536373839404142434445464748model = Classifier()criterion = nn.NLLLoss()optimizer = optim.Adam(model.parameters(), lr=0.003)epochs = 30steps = 0train_losses, test_losses = [], []for e in range(epochs):    running_loss = 0    for images, labels in trainloader:                optimizer.zero_grad()                log_ps = model(images)        loss = criterion(log_ps, labels)        loss.backward()        optimizer.step()                running_loss += loss.item()            else:        test_loss = 0        accuracy = 0                with torch.no_grad():            # test 과정에 들어간다. dropout을 안하게 된다.            # 정확하게 말하면, dropout 하는 비율이 0이 된다.            model.eval()            for images, labels in testloader:                log_ps = model(images)                test_loss += criterion(log_ps, labels)                                ps = torch.exp(log_ps)                top_p, top_class = ps.topk(1, dim=1)                equals = top_class == labels.view(*top_class.shape)                accuracy += torch.mean(equals.type(torch.FloatTensor))                # 다시 트레이닝 과정으로 돌아간다.        model.train()                train_losses.append(running_loss/len(trainloader))        test_losses.append(test_loss/len(testloader))        print(\"Epoch: &#123;&#125;/&#123;&#125;.. \".format(e+1, epochs),              \"Training Loss: &#123;:.3f&#125;.. \".format(train_losses[-1]),              \"Test Loss: &#123;:.3f&#125;.. \".format(test_losses[-1]),              \"Test Accuracy: &#123;:.3f&#125;\".format(accuracy/len(testloader)))\n123456789101112131415161718192021222324252627282930Epoch: 1/30..  Training Loss: 0.602..  Test Loss: 0.508..  Test Accuracy: 0.818Epoch: 2/30..  Training Loss: 0.482..  Test Loss: 0.454..  Test Accuracy: 0.835Epoch: 3/30..  Training Loss: 0.450..  Test Loss: 0.429..  Test Accuracy: 0.848Epoch: 4/30..  Training Loss: 0.434..  Test Loss: 0.418..  Test Accuracy: 0.851Epoch: 5/30..  Training Loss: 0.416..  Test Loss: 0.431..  Test Accuracy: 0.852Epoch: 6/30..  Training Loss: 0.413..  Test Loss: 0.399..  Test Accuracy: 0.855Epoch: 7/30..  Training Loss: 0.405..  Test Loss: 0.394..  Test Accuracy: 0.856Epoch: 8/30..  Training Loss: 0.397..  Test Loss: 0.386..  Test Accuracy: 0.858Epoch: 9/30..  Training Loss: 0.392..  Test Loss: 0.412..  Test Accuracy: 0.855Epoch: 10/30..  Training Loss: 0.388..  Test Loss: 0.380..  Test Accuracy: 0.865Epoch: 11/30..  Training Loss: 0.383..  Test Loss: 0.376..  Test Accuracy: 0.865Epoch: 12/30..  Training Loss: 0.375..  Test Loss: 0.392..  Test Accuracy: 0.863Epoch: 13/30..  Training Loss: 0.380..  Test Loss: 0.382..  Test Accuracy: 0.863Epoch: 14/30..  Training Loss: 0.374..  Test Loss: 0.370..  Test Accuracy: 0.876Epoch: 15/30..  Training Loss: 0.368..  Test Loss: 0.385..  Test Accuracy: 0.864Epoch: 16/30..  Training Loss: 0.371..  Test Loss: 0.371..  Test Accuracy: 0.871Epoch: 17/30..  Training Loss: 0.358..  Test Loss: 0.392..  Test Accuracy: 0.861Epoch: 18/30..  Training Loss: 0.354..  Test Loss: 0.371..  Test Accuracy: 0.872Epoch: 19/30..  Training Loss: 0.354..  Test Loss: 0.373..  Test Accuracy: 0.873Epoch: 20/30..  Training Loss: 0.353..  Test Loss: 0.386..  Test Accuracy: 0.867Epoch: 21/30..  Training Loss: 0.361..  Test Loss: 0.388..  Test Accuracy: 0.867Epoch: 22/30..  Training Loss: 0.350..  Test Loss: 0.385..  Test Accuracy: 0.869Epoch: 23/30..  Training Loss: 0.353..  Test Loss: 0.371..  Test Accuracy: 0.869Epoch: 24/30..  Training Loss: 0.343..  Test Loss: 0.368..  Test Accuracy: 0.872Epoch: 25/30..  Training Loss: 0.351..  Test Loss: 0.378..  Test Accuracy: 0.875Epoch: 26/30..  Training Loss: 0.339..  Test Loss: 0.371..  Test Accuracy: 0.872Epoch: 27/30..  Training Loss: 0.351..  Test Loss: 0.372..  Test Accuracy: 0.875Epoch: 28/30..  Training Loss: 0.350..  Test Loss: 0.375..  Test Accuracy: 0.871Epoch: 29/30..  Training Loss: 0.353..  Test Loss: 0.391..  Test Accuracy: 0.875Epoch: 30/30..  Training Loss: 0.340..  Test Loss: 0.385..  Test Accuracy: 0.876\n다시 결과를 보자.\n123plt.plot(train_losses, label='Training loss')plt.plot(test_losses, label='Validation loss')plt.legend(frameon=False)\n\ndropout이 overfitting을 방지해 주는 것을 알 수 있다.\n","dateCreated":"2019-02-13T00:00:00+09:00","dateModified":"2019-02-13T12:36:35+09:00","datePublished":"2019-02-13T00:00:00+09:00","description":"pytorch를 활용해서 옷 이미지를 구별하는 예제를 해봤었는데, 다시 한번 복습하는 차원에서 기본적인 기능으로 해보려고 한다.\n\n¶1. 데이터셋 준비\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n\n\nimport torch\nfrom torchvision import datasets, transforms\nimport helper\n\n# Define a transform to normalize the data\ntransform = transforms.Compose([transforms.ToTensor(),\n         ","headline":"pytorch -  fashion MNIST 분류 실습","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/02/13/pytorch-fashion-MNIST/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/02/13/pytorch-fashion-MNIST/","keywords":"pytorch"}</script>
+    <meta name="description" content="pytorch를 활용해서 옷 이미지를 구별하는 예제를 해봤었는데, 다시 한번 복습하는 차원에서 기본적인 기능으로 해보려고 한다.  ¶1. 데이터셋 준비 1 2 3 4 5 6 7 8 9 10 11 12 13 14   import torch from torchvision import datasets, transforms import helper  # Defin">
+<meta name="keywords" content="pytorch">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="pytorch -  fashion MNIST 분류 실습">
+<meta property="og:url" content="https://www.yceffort.kr/2019/02/13/pytorch-fashion-MNIST/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="pytorch를 활용해서 옷 이미지를 구별하는 예제를 해봤었는데, 다시 한번 복습하는 차원에서 기본적인 기능으로 해보려고 한다.  ¶1. 데이터셋 준비 1 2 3 4 5 6 7 8 9 10 11 12 13 14   import torch from torchvision import datasets, transforms import helper  # Defin">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/02/fashion-mnist1.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/02/fashion-mnist2.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/02/fashion-mnist3.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1200/1*iWQzxhVlvadk6VAJjsgXgg.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/02/fashion-mnist4.png">
+<meta property="og:updated_time" content="2019-02-13T03:36:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="pytorch -  fashion MNIST 분류 실습">
+<meta name="twitter:description" content="pytorch를 활용해서 옷 이미지를 구별하는 예제를 해봤었는데, 다시 한번 복습하는 차원에서 기본적인 기능으로 해보려고 한다.  ¶1. 데이터셋 준비 1 2 3 4 5 6 7 8 9 10 11 12 13 14   import torch from torchvision import datasets, transforms import helper  # Defin">
+<meta name="twitter:image" content="https://www.yceffort.kr/images/2019/02/fashion-mnist1.png">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            pytorch -  fashion MNIST 분류 실습
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-02-13T00:00:00+09:00">
+	
+		    Feb 13, 2019
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>pytorch를 활용해서 옷 이미지를 구별하는 예제를 해봤었는데, 다시 한번 복습하는 차원에서 기본적인 기능으로 해보려고 한다.</p>
+<h3 id="1-데이터셋-준비"><a class="header-anchor" href="#1-데이터셋-준비">¶</a>1. 데이터셋 준비</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torchvision <span class="keyword">import</span> datasets, transforms</span><br><span class="line"><span class="keyword">import</span> helper</span><br><span class="line"></span><br><span class="line"><span class="comment"># Define a transform to normalize the data</span></span><br><span class="line">transform = transforms.Compose([transforms.ToTensor(),</span><br><span class="line">                                transforms.Normalize((<span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">0.5</span>), (<span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">0.5</span>))])</span><br><span class="line"><span class="comment"># Download and load the training data</span></span><br><span class="line">trainset = datasets.FashionMNIST(<span class="string">'~/.pytorch/F_MNIST_data/'</span>, download=<span class="literal">True</span>, train=<span class="literal">True</span>, transform=transform)</span><br><span class="line">trainloader = torch.utils.data.DataLoader(trainset, batch_size=<span class="number">64</span>, shuffle=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Download and load the test data</span></span><br><span class="line">testset = datasets.FashionMNIST(<span class="string">'~/.pytorch/F_MNIST_data/'</span>, download=<span class="literal">True</span>, train=<span class="literal">False</span>, transform=transform)</span><br><span class="line">testloader = torch.utils.data.DataLoader(testset, batch_size=<span class="number">64</span>, shuffle=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<p>먼저 데이터를 받기전에, 해당 데이터를 torch tensor로 바꾸고, Normalize할 수 있ㅅ는 transform을 준비했다. 그리고 굳이 test set과 train set을 손수 나누지 않아도 저렇게 구별할 수 있게 해주었다. 그리고 각각의 데이터를 dataloader에 실어 넣었다.</p>
+<p>이미지를 잠깐 살펴보기 위하여, imshow라는 메소드를 하나 만들었다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">imshow</span><span class="params">(image, ax=None, title=None, normalize=True)</span>:</span></span><br><span class="line">    <span class="string">"""Imshow for Tensor."""</span></span><br><span class="line">    <span class="keyword">if</span> ax <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        fig, ax = plt.subplots()</span><br><span class="line">    image = image.numpy().transpose((<span class="number">1</span>, <span class="number">2</span>, <span class="number">0</span>))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> normalize:</span><br><span class="line">        mean = np.array([<span class="number">0.485</span>, <span class="number">0.456</span>, <span class="number">0.406</span>])</span><br><span class="line">        std = np.array([<span class="number">0.229</span>, <span class="number">0.224</span>, <span class="number">0.225</span>])</span><br><span class="line">        image = std * image + mean</span><br><span class="line">        image = np.clip(image, <span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    ax.imshow(image)</span><br><span class="line">    ax.spines[<span class="string">'top'</span>].set_visible(<span class="literal">False</span>)</span><br><span class="line">    ax.spines[<span class="string">'right'</span>].set_visible(<span class="literal">False</span>)</span><br><span class="line">    ax.spines[<span class="string">'left'</span>].set_visible(<span class="literal">False</span>)</span><br><span class="line">    ax.spines[<span class="string">'bottom'</span>].set_visible(<span class="literal">False</span>)</span><br><span class="line">    ax.tick_params(axis=<span class="string">'both'</span>, length=<span class="number">0</span>)</span><br><span class="line">    ax.set_xticklabels(<span class="string">''</span>)</span><br><span class="line">    ax.set_yticklabels(<span class="string">''</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> ax</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">image, label = next(iter(trainloader))</span><br><span class="line">imshow(image[<span class="number">0</span>,:]);</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2019/02/fashion-mnist1.png" alt="image-1"></p>
+<p>이게 옷인가 싶은 모양이지만 (…) 암튼 원피스겠지</p>
+<h3 id="2-네트워크-만들기"><a class="header-anchor" href="#2-네트워크-만들기">¶</a>2. 네트워크 만들기</h3>
+<p>만들어볼 네트워크는 아래와 같다.</p>
+<ul>
+<li>input layer: 28 * 28 = 764</li>
+<li>hidden layer: 2개, 각각 256, 128 개의 뉴런을 갖고 있음</li>
+<li>output layer: 10개 (구별할 옷이 열 종류)</li>
+<li>Adam Optimizer 와 NLLLoss 활용</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Classifier</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super().__init__()</span><br><span class="line">        self.fc1 = nn.Linear(<span class="number">784</span>, <span class="number">256</span>)</span><br><span class="line">        self.fc2 = nn.Linear(<span class="number">256</span>, <span class="number">128</span>)</span><br><span class="line">        self.fc3 = nn.Linear(<span class="number">128</span>, <span class="number">64</span>)</span><br><span class="line">        self.fc4 = nn.Linear(<span class="number">64</span>, <span class="number">10</span>)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        x = x.view(x.shape[<span class="number">0</span>], <span class="number">-1</span>)</span><br><span class="line">        x = F.relu(self.fc1(x))</span><br><span class="line">        x = F.relu(self.fc2(x))</span><br><span class="line">        x = F.relu(self.fc3(x))</span><br><span class="line">        x = F.log_softmax(self.fc4(x), dim=<span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<h3 id="3-네트워크-훈련하기"><a class="header-anchor" href="#3-네트워크-훈련하기">¶</a>3. 네트워크 훈련하기</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">model = Classifier()</span><br><span class="line">criterion = nn.NLLLoss()</span><br><span class="line">optimizer = optim.Adam(model.parameters(), lr=<span class="number">0.003</span>)</span><br><span class="line"></span><br><span class="line">epochs = <span class="number">20</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> e <span class="keyword">in</span> range(epochs):</span><br><span class="line">    running_loss = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> images, labels <span class="keyword">in</span> trainloader:</span><br><span class="line">        <span class="comment"># 모델에서 훈련</span></span><br><span class="line">        result = model(images)</span><br><span class="line">        <span class="comment"># 오차 계산</span></span><br><span class="line">        loss = criterion(result, labels)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 초기화</span></span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line">        <span class="comment"># 역전파</span></span><br><span class="line">        loss.backward()</span><br><span class="line">        <span class="comment"># 스텝</span></span><br><span class="line">        optimizer.step()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 오차값을 총 오차에 더함</span></span><br><span class="line">        running_loss += loss.item()</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        print(<span class="string">f"Training loss: <span class="subst">&#123;running_loss/len(trainloader)&#125;</span>"</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Training loss: 0.5118639363504168</span><br><span class="line">Training loss: 0.3933752618714182</span><br><span class="line">Training loss: 0.35750402640432183</span><br><span class="line">Training loss: 0.33432440921219425</span><br><span class="line">Training loss: 0.31787964060648416</span><br><span class="line">Training loss: 0.3047505217606325</span><br><span class="line">Training loss: 0.29022969397654663</span><br><span class="line">Training loss: 0.28075202265337335</span><br><span class="line">Training loss: 0.27226868114555314</span><br><span class="line">Training loss: 0.26422357173966193</span><br><span class="line">Training loss: 0.2592774396702679</span><br><span class="line">Training loss: 0.25201891171636737</span><br><span class="line">Training loss: 0.24683423794265877</span><br><span class="line">Training loss: 0.24124097148540305</span><br><span class="line">Training loss: 0.23825587014923852</span><br><span class="line">Training loss: 0.2335602915538018</span><br><span class="line">Training loss: 0.224308533554297</span><br><span class="line">Training loss: 0.22240888378592824</span><br><span class="line">Training loss: 0.21599145372634504</span><br><span class="line">Training loss: 0.21485247272354707</span><br></pre></td></tr></table></figure>
+<h3 id="4-결과"><a class="header-anchor" href="#4-결과">¶</a>4. 결과</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib inline</span><br><span class="line">%config InlineBackend.figure_format = <span class="string">'retina'</span></span><br><span class="line"></span><br><span class="line">dataiter = iter(testloader)</span><br><span class="line">images, labels = dataiter.next()</span><br><span class="line">img = images[<span class="number">0</span>]</span><br><span class="line">img = img.resize_(<span class="number">1</span>, <span class="number">784</span>)</span><br><span class="line">ps = torch.exp(model(img))</span><br><span class="line">view_classify(img.resize_(<span class="number">1</span>, <span class="number">28</span>, <span class="number">28</span>), ps, version=<span class="string">'Fashion'</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2019/02/fashion-mnist2.png" alt="image-2"></p>
+<h3 id="5-총-accuracy-구하기"><a class="header-anchor" href="#5-총-accuracy-구하기">¶</a>5. 총 accuracy 구하기</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">model = Classifier()</span><br><span class="line">criterion = nn.NLLLoss()</span><br><span class="line">optimizer = optim.Adam(model.parameters(), lr=<span class="number">0.003</span>)</span><br><span class="line"></span><br><span class="line">epochs = <span class="number">30</span></span><br><span class="line">steps = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">train_losses, test_losses = [], []</span><br><span class="line"><span class="keyword">for</span> e <span class="keyword">in</span> range(epochs):</span><br><span class="line">    running_loss = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> images, labels <span class="keyword">in</span> trainloader:</span><br><span class="line">        </span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line">        </span><br><span class="line">        log_ps = model(images)</span><br><span class="line">        loss = criterion(log_ps, labels)</span><br><span class="line">        loss.backward()</span><br><span class="line">        optimizer.step()</span><br><span class="line">        </span><br><span class="line">        running_loss += loss.item()</span><br><span class="line">        </span><br><span class="line">    <span class="comment"># for 문이 끝나면 실행한다.</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        test_loss = <span class="number">0</span></span><br><span class="line">        accuracy = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Turn off gradients for validation, saves memory and computations</span></span><br><span class="line">        <span class="comment"># 자동 미분을 꺼서 pytorch가 쓸 떼 없는 짓을 안하게 한다. (어차피 test set에서 하는 작업이므로)</span></span><br><span class="line">        <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">            <span class="keyword">for</span> images, labels <span class="keyword">in</span> testloader:</span><br><span class="line">                log_ps = model(images)</span><br><span class="line">                test_loss += criterion(log_ps, labels)</span><br><span class="line">                </span><br><span class="line">                <span class="comment"># 로그 확률에 지수 적용</span></span><br><span class="line">                ps = torch.exp(log_ps)</span><br><span class="line">                <span class="comment"># topk는 k번째로 큰 숫자를 찾아내는 것이다.</span></span><br><span class="line">                <span class="comment"># dim=1 는 dimension을 의미한다.</span></span><br><span class="line">                top_p, top_class = ps.topk(<span class="number">1</span>, dim=<span class="number">1</span>)</span><br><span class="line">                <span class="comment"># labels를 top_class와 똑같은 형태로 만든다음에, 얼마나 같은게 있는지 확인한다.</span></span><br><span class="line">                equals = top_class == labels.view(*top_class.shape)</span><br><span class="line">                <span class="comment"># equals를 float으로 바꾸고 평균 정확도를 구한다.</span></span><br><span class="line">                accuracy += torch.mean(equals.type(torch.FloatTensor))</span><br><span class="line">                </span><br><span class="line">        train_losses.append(running_loss/len(trainloader))</span><br><span class="line">        test_losses.append(test_loss/len(testloader))</span><br><span class="line"></span><br><span class="line">        print(<span class="string">"Epoch: &#123;&#125;/&#123;&#125;.. "</span>.format(e+<span class="number">1</span>, epochs),</span><br><span class="line">              <span class="string">"Training Loss: &#123;:.3f&#125;.. "</span>.format(running_loss/len(trainloader)),</span><br><span class="line">              <span class="string">"Test Loss: &#123;:.3f&#125;.. "</span>.format(test_loss/len(testloader)),</span><br><span class="line">              <span class="string">"Test Accuracy: &#123;:.3f&#125;"</span>.format(accuracy/len(testloader)))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">Epoch: 1/30..  Training Loss: 0.521..  Test Loss: 0.461..  Test Accuracy: 0.833</span><br><span class="line">Epoch: 2/30..  Training Loss: 0.395..  Test Loss: 0.429..  Test Accuracy: 0.839</span><br><span class="line">Epoch: 3/30..  Training Loss: 0.357..  Test Loss: 0.393..  Test Accuracy: 0.862</span><br><span class="line">Epoch: 4/30..  Training Loss: 0.334..  Test Loss: 0.388..  Test Accuracy: 0.863</span><br><span class="line">Epoch: 5/30..  Training Loss: 0.318..  Test Loss: 0.380..  Test Accuracy: 0.867</span><br><span class="line">Epoch: 6/30..  Training Loss: 0.303..  Test Loss: 0.367..  Test Accuracy: 0.871</span><br><span class="line">Epoch: 7/30..  Training Loss: 0.292..  Test Loss: 0.386..  Test Accuracy: 0.869</span><br><span class="line">Epoch: 8/30..  Training Loss: 0.285..  Test Loss: 0.371..  Test Accuracy: 0.879</span><br><span class="line">Epoch: 9/30..  Training Loss: 0.274..  Test Loss: 0.357..  Test Accuracy: 0.878</span><br><span class="line">Epoch: 10/30..  Training Loss: 0.274..  Test Loss: 0.377..  Test Accuracy: 0.876</span><br><span class="line">Epoch: 11/30..  Training Loss: 0.261..  Test Loss: 0.369..  Test Accuracy: 0.871</span><br><span class="line">Epoch: 12/30..  Training Loss: 0.255..  Test Loss: 0.357..  Test Accuracy: 0.881</span><br><span class="line">Epoch: 13/30..  Training Loss: 0.251..  Test Loss: 0.385..  Test Accuracy: 0.873</span><br><span class="line">Epoch: 14/30..  Training Loss: 0.248..  Test Loss: 0.405..  Test Accuracy: 0.875</span><br><span class="line">Epoch: 15/30..  Training Loss: 0.240..  Test Loss: 0.368..  Test Accuracy: 0.882</span><br><span class="line">Epoch: 16/30..  Training Loss: 0.232..  Test Loss: 0.364..  Test Accuracy: 0.883</span><br><span class="line">Epoch: 17/30..  Training Loss: 0.230..  Test Loss: 0.413..  Test Accuracy: 0.872</span><br><span class="line">Epoch: 18/30..  Training Loss: 0.229..  Test Loss: 0.384..  Test Accuracy: 0.878</span><br><span class="line">Epoch: 19/30..  Training Loss: 0.221..  Test Loss: 0.376..  Test Accuracy: 0.883</span><br><span class="line">Epoch: 20/30..  Training Loss: 0.217..  Test Loss: 0.443..  Test Accuracy: 0.867</span><br><span class="line">Epoch: 21/30..  Training Loss: 0.217..  Test Loss: 0.382..  Test Accuracy: 0.880</span><br><span class="line">Epoch: 22/30..  Training Loss: 0.212..  Test Loss: 0.403..  Test Accuracy: 0.880</span><br><span class="line">Epoch: 23/30..  Training Loss: 0.209..  Test Loss: 0.403..  Test Accuracy: 0.879</span><br><span class="line">Epoch: 24/30..  Training Loss: 0.209..  Test Loss: 0.398..  Test Accuracy: 0.881</span><br><span class="line">Epoch: 25/30..  Training Loss: 0.202..  Test Loss: 0.406..  Test Accuracy: 0.880</span><br><span class="line">Epoch: 26/30..  Training Loss: 0.200..  Test Loss: 0.390..  Test Accuracy: 0.882</span><br><span class="line">Epoch: 27/30..  Training Loss: 0.194..  Test Loss: 0.405..  Test Accuracy: 0.878</span><br><span class="line">Epoch: 28/30..  Training Loss: 0.195..  Test Loss: 0.415..  Test Accuracy: 0.879</span><br><span class="line">Epoch: 29/30..  Training Loss: 0.193..  Test Loss: 0.418..  Test Accuracy: 0.883</span><br><span class="line">Epoch: 30/30..  Training Loss: 0.187..  Test Loss: 0.412..  Test Accuracy: 0.879</span><br></pre></td></tr></table></figure>
+<h3 id="6-loss-확인해보기"><a class="header-anchor" href="#6-loss-확인해보기">¶</a>6. loss 확인해보기</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib inline</span><br><span class="line">%config InlineBackend.figure_format=<span class="string">'retina'</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line">plt.plot(train_losses, label=<span class="string">'training loss'</span>)</span><br><span class="line">plt.plot(test_losses, label=<span class="string">'Validation loss'</span>)</span><br><span class="line">plt.legend(frameon=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2019/02/fashion-mnist3.png" alt="image-3"></p>
+<p>training loss는 점차 감소하지만,  validation loss는 널뛰기 하고 있다. 이 말인 즉슨, 현재 overfitting 현상이 일어나고 있는 것이다.</p>
+<h3 id="7-dropout"><a class="header-anchor" href="#7-dropout">¶</a>7. dropout</h3>
+<p>드롭아웃은 Overfitting을 방지하기 위한 방법이다.</p>
+<p><img src="https://cdn-images-1.medium.com/max/1200/1*iWQzxhVlvadk6VAJjsgXgg.png" alt="drop-out"></p>
+<p>일부 노드들을 훈련에 참여시키지 않고 몇개의 노드를 끊어서, 남은 노드들을 통해서만 훈련시키는 방식이다. 이 때 끊어버리는 노드는 랜덤으로 선택한다. pytorch에서는 기본값이 0.5 다. 즉 절반의 노드를 dropout하고 계산한다. 이렇게 함으로써, training하는 과정에서 Overfitting이 발생하지 않게 할 수 있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Classifier</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super().__init__()</span><br><span class="line">        self.fc1 = nn.Linear(<span class="number">784</span>, <span class="number">256</span>)</span><br><span class="line">        self.fc2 = nn.Linear(<span class="number">256</span>, <span class="number">128</span>)</span><br><span class="line">        self.fc3 = nn.Linear(<span class="number">128</span>, <span class="number">64</span>)</span><br><span class="line">        self.fc4 = nn.Linear(<span class="number">64</span>, <span class="number">10</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 0.2정도를 무작위로 골라 dropout한다.</span></span><br><span class="line">        self.dropout = nn.Dropout(p=<span class="number">0.2</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        x = x.view(x.shape[<span class="number">0</span>], <span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">        x = self.dropout(F.relu(self.fc1(x)))</span><br><span class="line">        x = self.dropout(F.relu(self.fc2(x)))</span><br><span class="line">        x = self.dropout(F.relu(self.fc3(x)))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># output은 dropout하면 안된다..</span></span><br><span class="line">        x = F.log_softmax(self.fc4(x), dim=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> x</span><br></pre></td></tr></table></figure>
+<p>dropout은 주의해야할 것이, training 과정에서만 이루어져야 한다는 것이다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">model = Classifier()</span><br><span class="line">criterion = nn.NLLLoss()</span><br><span class="line">optimizer = optim.Adam(model.parameters(), lr=<span class="number">0.003</span>)</span><br><span class="line"></span><br><span class="line">epochs = <span class="number">30</span></span><br><span class="line">steps = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">train_losses, test_losses = [], []</span><br><span class="line"><span class="keyword">for</span> e <span class="keyword">in</span> range(epochs):</span><br><span class="line">    running_loss = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> images, labels <span class="keyword">in</span> trainloader:</span><br><span class="line">        </span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line">        </span><br><span class="line">        log_ps = model(images)</span><br><span class="line">        loss = criterion(log_ps, labels)</span><br><span class="line">        loss.backward()</span><br><span class="line">        optimizer.step()</span><br><span class="line">        </span><br><span class="line">        running_loss += loss.item()</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        test_loss = <span class="number">0</span></span><br><span class="line">        accuracy = <span class="number">0</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">            <span class="comment"># test 과정에 들어간다. dropout을 안하게 된다.</span></span><br><span class="line">            <span class="comment"># 정확하게 말하면, dropout 하는 비율이 0이 된다.</span></span><br><span class="line">            model.eval()</span><br><span class="line">            <span class="keyword">for</span> images, labels <span class="keyword">in</span> testloader:</span><br><span class="line">                log_ps = model(images)</span><br><span class="line">                test_loss += criterion(log_ps, labels)</span><br><span class="line">                </span><br><span class="line">                ps = torch.exp(log_ps)</span><br><span class="line">                top_p, top_class = ps.topk(<span class="number">1</span>, dim=<span class="number">1</span>)</span><br><span class="line">                equals = top_class == labels.view(*top_class.shape)</span><br><span class="line">                accuracy += torch.mean(equals.type(torch.FloatTensor))</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 다시 트레이닝 과정으로 돌아간다.</span></span><br><span class="line">        model.train()</span><br><span class="line">        </span><br><span class="line">        train_losses.append(running_loss/len(trainloader))</span><br><span class="line">        test_losses.append(test_loss/len(testloader))</span><br><span class="line"></span><br><span class="line">        print(<span class="string">"Epoch: &#123;&#125;/&#123;&#125;.. "</span>.format(e+<span class="number">1</span>, epochs),</span><br><span class="line">              <span class="string">"Training Loss: &#123;:.3f&#125;.. "</span>.format(train_losses[<span class="number">-1</span>]),</span><br><span class="line">              <span class="string">"Test Loss: &#123;:.3f&#125;.. "</span>.format(test_losses[<span class="number">-1</span>]),</span><br><span class="line">              <span class="string">"Test Accuracy: &#123;:.3f&#125;"</span>.format(accuracy/len(testloader)))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">Epoch: 1/30..  Training Loss: 0.602..  Test Loss: 0.508..  Test Accuracy: 0.818</span><br><span class="line">Epoch: 2/30..  Training Loss: 0.482..  Test Loss: 0.454..  Test Accuracy: 0.835</span><br><span class="line">Epoch: 3/30..  Training Loss: 0.450..  Test Loss: 0.429..  Test Accuracy: 0.848</span><br><span class="line">Epoch: 4/30..  Training Loss: 0.434..  Test Loss: 0.418..  Test Accuracy: 0.851</span><br><span class="line">Epoch: 5/30..  Training Loss: 0.416..  Test Loss: 0.431..  Test Accuracy: 0.852</span><br><span class="line">Epoch: 6/30..  Training Loss: 0.413..  Test Loss: 0.399..  Test Accuracy: 0.855</span><br><span class="line">Epoch: 7/30..  Training Loss: 0.405..  Test Loss: 0.394..  Test Accuracy: 0.856</span><br><span class="line">Epoch: 8/30..  Training Loss: 0.397..  Test Loss: 0.386..  Test Accuracy: 0.858</span><br><span class="line">Epoch: 9/30..  Training Loss: 0.392..  Test Loss: 0.412..  Test Accuracy: 0.855</span><br><span class="line">Epoch: 10/30..  Training Loss: 0.388..  Test Loss: 0.380..  Test Accuracy: 0.865</span><br><span class="line">Epoch: 11/30..  Training Loss: 0.383..  Test Loss: 0.376..  Test Accuracy: 0.865</span><br><span class="line">Epoch: 12/30..  Training Loss: 0.375..  Test Loss: 0.392..  Test Accuracy: 0.863</span><br><span class="line">Epoch: 13/30..  Training Loss: 0.380..  Test Loss: 0.382..  Test Accuracy: 0.863</span><br><span class="line">Epoch: 14/30..  Training Loss: 0.374..  Test Loss: 0.370..  Test Accuracy: 0.876</span><br><span class="line">Epoch: 15/30..  Training Loss: 0.368..  Test Loss: 0.385..  Test Accuracy: 0.864</span><br><span class="line">Epoch: 16/30..  Training Loss: 0.371..  Test Loss: 0.371..  Test Accuracy: 0.871</span><br><span class="line">Epoch: 17/30..  Training Loss: 0.358..  Test Loss: 0.392..  Test Accuracy: 0.861</span><br><span class="line">Epoch: 18/30..  Training Loss: 0.354..  Test Loss: 0.371..  Test Accuracy: 0.872</span><br><span class="line">Epoch: 19/30..  Training Loss: 0.354..  Test Loss: 0.373..  Test Accuracy: 0.873</span><br><span class="line">Epoch: 20/30..  Training Loss: 0.353..  Test Loss: 0.386..  Test Accuracy: 0.867</span><br><span class="line">Epoch: 21/30..  Training Loss: 0.361..  Test Loss: 0.388..  Test Accuracy: 0.867</span><br><span class="line">Epoch: 22/30..  Training Loss: 0.350..  Test Loss: 0.385..  Test Accuracy: 0.869</span><br><span class="line">Epoch: 23/30..  Training Loss: 0.353..  Test Loss: 0.371..  Test Accuracy: 0.869</span><br><span class="line">Epoch: 24/30..  Training Loss: 0.343..  Test Loss: 0.368..  Test Accuracy: 0.872</span><br><span class="line">Epoch: 25/30..  Training Loss: 0.351..  Test Loss: 0.378..  Test Accuracy: 0.875</span><br><span class="line">Epoch: 26/30..  Training Loss: 0.339..  Test Loss: 0.371..  Test Accuracy: 0.872</span><br><span class="line">Epoch: 27/30..  Training Loss: 0.351..  Test Loss: 0.372..  Test Accuracy: 0.875</span><br><span class="line">Epoch: 28/30..  Training Loss: 0.350..  Test Loss: 0.375..  Test Accuracy: 0.871</span><br><span class="line">Epoch: 29/30..  Training Loss: 0.353..  Test Loss: 0.391..  Test Accuracy: 0.875</span><br><span class="line">Epoch: 30/30..  Training Loss: 0.340..  Test Loss: 0.385..  Test Accuracy: 0.876</span><br></pre></td></tr></table></figure>
+<p>다시 결과를 보자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">plt.plot(train_losses, label=<span class="string">'Training loss'</span>)</span><br><span class="line">plt.plot(test_losses, label=<span class="string">'Validation loss'</span>)</span><br><span class="line">plt.legend(frameon=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2019/02/fashion-mnist4.png" alt="image-4"></p>
+<p>dropout이 overfitting을 방지해 주는 것을 알 수 있다.</p>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/">pytorch</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/14/do-boring-stuff-with-python-1/" data-tooltip="업무 자동화 (1) - 구글 스프레드 시트 API 활용하기" aria-label="PREVIOUS: 업무 자동화 (1) - 구글 스프레드 시트 API 활용하기">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/11/matlab-seaborn-summary/" data-tooltip="Matlab &amp; Seaborn 기본적인 기능 정리" aria-label="NEXT: Matlab &amp; Seaborn 기본적인 기능 정리">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/02/13/pytorch-fashion-MNIST/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/02/13/pytorch-fashion-MNIST/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/14/do-boring-stuff-with-python-1/" data-tooltip="업무 자동화 (1) - 구글 스프레드 시트 API 활용하기" aria-label="PREVIOUS: 업무 자동화 (1) - 구글 스프레드 시트 API 활용하기">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/11/matlab-seaborn-summary/" data-tooltip="Matlab &amp; Seaborn 기본적인 기능 정리" aria-label="NEXT: Matlab &amp; Seaborn 기본적인 기능 정리">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/02/13/pytorch-fashion-MNIST/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/02/13/pytorch-fashion-MNIST/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/02/13/pytorch-fashion-MNIST/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/02/13/pytorch-fashion-MNIST/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2019/02/13/pytorch-fashion-MNIST/';
+                 
+                    this.page.identifier = '2019/02/13/pytorch-fashion-MNIST/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

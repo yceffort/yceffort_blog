@@ -1,0 +1,814 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>Ethereum) 이더리움으로 구현한 선거 시스템 - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"유권자의 개인정보보호를 극대화 하는 스마트 컨트랙트를 활용한 이사회 투표\n원문\n이더리움은 비트코인 다음가는 두번째로 유명한 암호화폐다. 이더리움은 기본적으로 비트코인의 블록체인을 기반으로 하고 있으며, 이 블록체인은 탈중앙화 되고 개방되어 있는 P2P 네트워크를 기반으로 유지 되고 있다. 블록체인은 중앙에서 금융 원장을 관리하는 것을 제거하기 위해 만들어 졌다. 오늘날 많은 연구원들은 블록체인을 IOT, 헬스케어 와 같은 다양한 문제를 해결하는데 적용하고자 노력하고 있다.\n이 논문에서는, 블록체인을 활용한 탈중앙화 인터넷 투표를 구현하려고 한다. 검증 가능성을 제공하는 E-voting 프로토콜은 일반적으로 모든 유권자들에게 일관된 견해를 제공하는 공개 게시판의 존재를 가정한다. 현실적인 예로  International Association of Cryptologic Research(국제 암호학회)에서 하는 선거를 들 수 있다. 이들은 Helois 투표 시스템이라고 하는, 단일 웹서버에 구현된 투표 시스템을 사용한다. 이 서버는 신뢰할 수 있는 정보를 모든 유권자에게 제공한다. 이러한 ‘신뢰를 가정하는’ 것이 아닌, 블록체인에서 실제로 구현가능한 공공 게시판을 구현해보고자 한다. 더 나아가, 유권자들 사이에서 의사 소통을 조정할 책임 이 있는 분산된 선거 환경 또한 고려 해본다. 이를 위해, 블록체인의 기본인 P2P네트워크가 인증된 브로드캐스트 채널로서 적절한지도 탐구하였다.\n그러나 현재까지는, 비트코인과 이더리움 모두 확장성 이슈가 발목잡고 있다. 비트코인은 초당 최대 7개의 트랜잭션만 처리가 가능하며, 각 트랜잭션은 임의의 데이터를 저장하는데 80바이트만 사용할 수 있다. 반면에 이더리움은 Gas metric을 사용하여 연산과 저장을 명시적으로 실행하고, 네트워크는 사용자가 사용할 수 있는 가스를 제한해 두었다. 이러한 이유 때문에, 이들 블록체인은 국가적인 크기의 선거를 수행하기에 적합하지 않다. 이러한 이유로, 블록체인을 활용한 작은 그룹의 투표 (40명정도)를 블록체인으로 구현할 수 있는 방안에 대해 연구하였다.\n비트코인이 아닌 이더리움이 선택된 이유는 간단하다. 이더리움의 스마트 컨트랙트는 프로그래밍언어를 표현할 수 있으며, 이 코드들은 블록체인에 곧바로 저장될 수 있다. 더욱 중요한 것은, 모든 참가자들이 P2P네트워크 상에서 독립적으로 계약 코드를 실행하고 그 결과를 통해 합의에 도달하게 되는 것이다. 이 뜻은, 유권자가 프로토콜의 정상적인 실행을 확인하기 위해 모든 연산을 각자가 할 필요가 없다는 것이다. 대신 유권자들은 이더리움이 제공하는 합의 컴퓨팅을 신뢰하여 프로토콜의 올바른 실행을 보장받을 수 있는 것이다.\n¶이더리움을 활용한 공개 투표 네트워크\n이 논문에서 실제로 해당 시스템을 만들어서 깃헙에 공개하였다. 링크 모든 유권자가 접근하여 투표하는 인터페이스를 웹 기반으로 제작하였다. 브라우저는 서버에서 실행중인 이더리움 데몬과 상호작용하며, 이러한 프로토콜은 5가지의 스테이지로 구성되어 있고 유권자는 두개에서 최대 3개의 액션을 취해야 한다.\n¶구조\n여기에는 두 종류의 스마트 컨트랙트가 있으며 모두 이더리움의 solidity language로 구현되어 있다. 첫번째 컨트랙트는 voting contract다. 이는 투표를 위한 프로토콜로, 투표과정을 컨트롤 하고 Open Vote Network상에 시는 두종류의 영지식증명 을 검증한다. 이는 모든 유권자들에게 동일한 암호화 코드를 주어 이더리움 네트워크과 연결될 필요없이 로컬 환경에서 사용할 수 있게 해준다. 그리고 사용자들에게는 아래의 3가지 페이지가 주어진다\n\n\n선거 관리자 (admin.html): 여기에는 유권자 목록과 선거에 필요한 질문, 그리고 투표가 제시간에 끝날 수 있도록 설정할 수 있다.\n유권자 (voter.html): 선거에 등록하고, 단 한번 투표를 할 수 있다.\n관찰자 (livefeed.html): 선거에서 발생하는 일련의 과정을 지켜 볼 수 있음.\n\n이를 위해서는 선거 관리자와 유권자들은 각각 이더리움 어카운트를 갖고 있다는 것을 가정했다. 유저는 자신의 이더리움 어카운트를 자신의 프라이빗 키로 잠금을 해제할 수 있고, 웹브라우저를 통해 바로 인증할 수 있다. 유저는 이더리움 월렛을 활용할 필요가 없고, 이런 이더리움 클라이언트는 데몬에서 백그라운드로 이루어진다.\n¶투표단계\n¶SETUP\n선거 관리자는 유권자들의 계정을 인증하고, 투표가능한 유권자 정보를 얻기 위해 voting contract를 업데이트 한다. 그리고 투표가 가능한 시간도 설정한다.\n\n$$t_{finishRegistration}$$: 모든 유권자들은 그들의 voting key $$g^{x_i}$$를 이 시간내에 등록해야 한다.\n$$t_{beginElection}$$: 이더리움에 알릴 투표 시작 시간\n$$t_{finishCommit}$$: 모든 유권자들은 반드시 그들의 투표 $$H(g^{x_iy_i}g^{v_i})$$\n를 이 시 간내에 커밋해야 한다.(옵션)\n$$t_{finishVote}$$: 모든 유권자들은 $$g^{x_iy_i}g^{v_i}$$를 이 시간내에 투표해야한다.\n$$\\pi$$: 유권자에게 투표시간을 주기위해 투표단계가 활성화 되어야 하는 최소 기간\n\n관리자는 또한 투표용 질문인 $$d$$ 를 설정할 수 있으며, 커밋스테이지가 필요한지도 결정할 수 있다. 마지막으로, 이더리움에 SINGUP 스테이지로 넘어감을 알려야한다.\n¶SINGUP\n모든 가능한 유권자들은 투표용 질문과 관리자가 설정한 파라미터들을 본뒤에 등록을 해야한다. 등록을 위해서는 투표용 키잉ㄴ $$g^{x_i}$$와 $$ZKP(x_i)$$가 필요하다. 이 키와 proof $$d$$와 함께 이더리움으로 보내진다. 이더리움은 $$t_{finishRegistration}$$ 이 지난 뒤에는 이를 허용하지 않는다. 관리자sms COMMIT 이나 VOTE 단계로 넘어감을 이더리움에 알려야 하고, 모든 유권자들의 재생성된 키 $$g^{y_0}, g^{y_1}, g^{y_2} … g^{y_n}$$ 는 이러한 전환 되는 동안 이더리움에서 계산된다.\n¶COMMIT (옵션)\n모든 유권자들은 이더리움 블록체인에 그들의 해쉬를 $$H(g^{x_iy_i}g^{v_i})$$ 올린다. 블록체인 이 이를 최종적으로 받아드리면, contract는 자동적으로 VOTE stage로 넘어간다.\n¶VOTE\n모든 유권자들은 그들의 암호화된 투표권 $$g^{x_iy_i}g^{v_i}$$ 를 올리고 이를 영지식증명을 통해 증명한다. 투표가 이더리움에 의해 받아지면 deposit $$d$$가 유권자에게 환불된다. 투표 관리자는 이더리움이 최종적인 투표권이 행사되었음을 알리게 되면 이를 인지하게 된다.\n¶TALLY\n투표관리자는 이더리움에게 개표를 알린다. 이더리움은 이산대수를 무작위로 대입하여 yes vote의 개수를 구한다.\n이전에 언급했듯, Open Vote Network는 모든 유권자들로 하여금 그들의 표에대해 개표연산을 요구한다. 이과정에서 deposit $$d$$는 등록된 유권자들에게 투표를 할 수 있는 경제적인 인센티브를 의미한다. 이는 voting protocol에 정상적으로 투표가 진행되었다면 되돌아오고, 그렇지 않다면 돌려받지 못한다.\n이러한 방식을 활용하여 투표를 구현한 결과, 유권자당 최소 약 $0.73이 필요한 것이 밝혀졌다. 이는 유권자에게 최대한의 개인정보보호를 제공함과 동시에 공개적으로 검증가능하다는 것을 보았을때, 충분히 합리적인 비용으로 간주 될 수 있다. 이 논문은 블록체인을 활용한 최초의 탈중앙화된 인터넷 투표 프로토콜을 구현한 것이다. 단순히 이더리움 블록체인을 공공 게시판 성격으로 활용한 것 뿐 만 아니라 투표 프로토콜의 올바른 실행을 보장하는 컨센서스 플랫폼으로 사용한 것에 의의가 있다.\n향후 블록체인을 활용하여 국가단위의 선거를 치룰 수 있는 지 또한 알아야할 논제로 남게 되었다. 만약 이것이 가능하다면, 이 구현을 위한 전용 블록체인이 필요해 질 수도 있다. 예를 들어, 오로지 e-voting 스마트 컨트랙트만을 담는 이더리움 스타일의 블록체인이 될 수 도 있다. 이 새로운 블록체인은 더 많은 정보를 담기 위해 큰 블록사이즈가 필요할 것이고, 아마도 RSCoin과 비슷한 중앙 집중형식으로 유지 될 수도 있다.\n\nRSCoin은 중앙집중화된 코인으로, 중앙은행에서 완전히 통제할 수 있는 비트코인이라고 볼 수 있습니다. 자세한 내용은 여기를 참조해주세요.\n\n","dateCreated":"2018-06-21T00:00:00+09:00","dateModified":"2018-06-21T07:39:57+09:00","datePublished":"2018-06-21T00:00:00+09:00","description":"유권자의 개인정보보호를 극대화 하는 스마트 컨트랙트를 활용한 이사회 투표\n\n원문\n\n이더리움은 비트코인 다음가는 두번째로 유명한 암호화폐다. 이더리움은 기본적으로 비트코인의 블록체인을 기반으로 하고 있으며, 이 블록체인은 탈중앙화 되고 개방되어 있는 P2P 네트워크를 기반으로 유지 되고 있다. 블록체인은 중앙에서 금융 원장을 관리하는 것을 제거하기 위해 만들어 졌다. 오늘날 많은 연구원들은 블록체인을 IOT, 헬스케어 와 같은 다양한 문제를 해결하는데 적용하고자 노력하고 있다.\n\n이 논문에서는, 블록체인을 활용한 탈중앙화 인터넷 투표","headline":"Ethereum) 이더리움으로 구현한 선거 시스템","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/06/21/A-smart-contract-for-boadroom-voting-with-maximum-voter-privacy/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/06/21/A-smart-contract-for-boadroom-voting-with-maximum-voter-privacy/"}</script>
+    <meta name="description" content="유권자의 개인정보보호를 극대화 하는 스마트 컨트랙트를 활용한 이사회 투표  원문  이더리움은 비트코인 다음가는 두번째로 유명한 암호화폐다. 이더리움은 기본적으로 비트코인의 블록체인을 기반으로 하고 있으며, 이 블록체인은 탈중앙화 되고 개방되어 있는 P2P 네트워크를 기반으로 유지 되고 있다. 블록체인은 중앙에서 금융 원장을 관리하는 것을 제거하기 위해 만들">
+<meta name="keywords" content="programming,innovation,technology">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Ethereum) 이더리움으로 구현한 선거 시스템">
+<meta property="og:url" content="https://www.yceffort.kr/2018/06/21/A-smart-contract-for-boadroom-voting-with-maximum-voter-privacy/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="유권자의 개인정보보호를 극대화 하는 스마트 컨트랙트를 활용한 이사회 투표  원문  이더리움은 비트코인 다음가는 두번째로 유명한 암호화폐다. 이더리움은 기본적으로 비트코인의 블록체인을 기반으로 하고 있으며, 이 블록체인은 탈중앙화 되고 개방되어 있는 P2P 네트워크를 기반으로 유지 되고 있다. 블록체인은 중앙에서 금융 원장을 관리하는 것을 제거하기 위해 만들">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://www.yceffort.kr/images/2018/06/Ethereum-election-5-stages.png">
+<meta property="og:updated_time" content="2018-06-20T22:39:57.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ethereum) 이더리움으로 구현한 선거 시스템">
+<meta name="twitter:description" content="유권자의 개인정보보호를 극대화 하는 스마트 컨트랙트를 활용한 이사회 투표  원문  이더리움은 비트코인 다음가는 두번째로 유명한 암호화폐다. 이더리움은 기본적으로 비트코인의 블록체인을 기반으로 하고 있으며, 이 블록체인은 탈중앙화 되고 개방되어 있는 P2P 네트워크를 기반으로 유지 되고 있다. 블록체인은 중앙에서 금융 원장을 관리하는 것을 제거하기 위해 만들">
+<meta name="twitter:image" content="https://www.yceffort.kr/images/2018/06/Ethereum-election-5-stages.png">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Ethereum) 이더리움으로 구현한 선거 시스템
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2018-06-21T00:00:00+09:00">
+	
+		    Jun 21, 2018
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>유권자의 개인정보보호를 극대화 하는 스마트 컨트랙트를 활용한 이사회 투표</p>
+<p><a href="https://eprint.iacr.org/2017/110.pdf" target="_blank" rel="noopener">원문</a></p>
+<p>이더리움은 비트코인 다음가는 두번째로 유명한 암호화폐다. 이더리움은 기본적으로 비트코인의 블록체인을 기반으로 하고 있으며, 이 블록체인은 탈중앙화 되고 개방되어 있는 P2P 네트워크를 기반으로 유지 되고 있다. 블록체인은 중앙에서 금융 원장을 관리하는 것을 제거하기 위해 만들어 졌다. 오늘날 많은 연구원들은 블록체인을 IOT, 헬스케어 와 같은 다양한 문제를 해결하는데 적용하고자 노력하고 있다.</p>
+<p>이 논문에서는, 블록체인을 활용한 탈중앙화 인터넷 투표를 구현하려고 한다. 검증 가능성을 제공하는 E-voting 프로토콜은 일반적으로 모든 유권자들에게 일관된 견해를 제공하는 공개 게시판의 존재를 가정한다. 현실적인 예로  International Association of Cryptologic Research(국제 암호학회)에서 하는 선거를 들 수 있다. 이들은 Helois 투표 시스템이라고 하는, 단일 웹서버에 구현된 투표 시스템을 사용한다. 이 서버는 신뢰할 수 있는 정보를 모든 유권자에게 제공한다. 이러한 ‘신뢰를 가정하는’ 것이 아닌, 블록체인에서 실제로 구현가능한 공공 게시판을 구현해보고자 한다. 더 나아가, 유권자들 사이에서 의사 소통을 조정할 책임 이 있는 분산된 선거 환경 또한 고려 해본다. 이를 위해, 블록체인의 기본인 P2P네트워크가 인증된 브로드캐스트 채널로서 적절한지도 탐구하였다.</p>
+<p>그러나 현재까지는, 비트코인과 이더리움 모두 확장성 이슈가 발목잡고 있다. 비트코인은 초당 최대 7개의 트랜잭션만 처리가 가능하며, 각 트랜잭션은 임의의 데이터를 저장하는데 80바이트만 사용할 수 있다. 반면에 이더리움은 Gas metric을 사용하여 연산과 저장을 명시적으로 실행하고, 네트워크는 사용자가 사용할 수 있는 가스를 제한해 두었다. 이러한 이유 때문에, 이들 블록체인은 국가적인 크기의 선거를 수행하기에 적합하지 않다. 이러한 이유로, 블록체인을 활용한 작은 그룹의 투표 (40명정도)를 블록체인으로 구현할 수 있는 방안에 대해 연구하였다.</p>
+<p>비트코인이 아닌 이더리움이 선택된 이유는 간단하다. 이더리움의 스마트 컨트랙트는 프로그래밍언어를 표현할 수 있으며, 이 코드들은 블록체인에 곧바로 저장될 수 있다. 더욱 중요한 것은, 모든 참가자들이 P2P네트워크 상에서 독립적으로 계약 코드를 실행하고 그 결과를 통해 합의에 도달하게 되는 것이다. 이 뜻은, 유권자가 프로토콜의 정상적인 실행을 확인하기 위해 모든 연산을 각자가 할 필요가 없다는 것이다. 대신 유권자들은 이더리움이 제공하는 합의 컴퓨팅을 신뢰하여 프로토콜의 올바른 실행을 보장받을 수 있는 것이다.</p>
+<h2 id="이더리움을-활용한-공개-투표-네트워크"><a class="header-anchor" href="#이더리움을-활용한-공개-투표-네트워크">¶</a>이더리움을 활용한 공개 투표 네트워크</h2>
+<p>이 논문에서 실제로 해당 시스템을 만들어서 깃헙에 공개하였다. <a href="https://github.com/stonecoldpat/anonymousvoting" target="_blank" rel="noopener">링크</a> 모든 유권자가 접근하여 투표하는 인터페이스를 웹 기반으로 제작하였다. 브라우저는 서버에서 실행중인 이더리움 데몬과 상호작용하며, 이러한 프로토콜은 5가지의 스테이지로 구성되어 있고 유권자는 두개에서 최대 3개의 액션을 취해야 한다.</p>
+<h3 id="구조"><a class="header-anchor" href="#구조">¶</a>구조</h3>
+<p>여기에는 두 종류의 스마트 컨트랙트가 있으며 모두 이더리움의 solidity language로 구현되어 있다. 첫번째 컨트랙트는 voting contract다. 이는 투표를 위한 프로토콜로, 투표과정을 컨트롤 하고 Open Vote Network상에 시는 두종류의 <a href="https://ko.wikipedia.org/wiki/%EC%98%81%EC%A7%80%EC%8B%9D_%EC%A6%9D%EB%AA%85" target="_blank" rel="noopener">영지식증명</a> 을 검증한다. 이는 모든 유권자들에게 동일한 암호화 코드를 주어 이더리움 네트워크과 연결될 필요없이 로컬 환경에서 사용할 수 있게 해준다. 그리고 사용자들에게는 아래의 3가지 페이지가 주어진다</p>
+<p><img src="/images/2018/06/Ethereum-election-5-stages.png" alt="Ethereum-election-5-stages"></p>
+<ul>
+<li>선거 관리자 (admin.html): 여기에는 유권자 목록과 선거에 필요한 질문, 그리고 투표가 제시간에 끝날 수 있도록 설정할 수 있다.</li>
+<li>유권자 (voter.html): 선거에 등록하고, 단 한번 투표를 할 수 있다.</li>
+<li>관찰자 (livefeed.html): 선거에서 발생하는 일련의 과정을 지켜 볼 수 있음.</li>
+</ul>
+<p>이를 위해서는 선거 관리자와 유권자들은 각각 이더리움 어카운트를 갖고 있다는 것을 가정했다. 유저는 자신의 이더리움 어카운트를 자신의 프라이빗 키로 잠금을 해제할 수 있고, 웹브라우저를 통해 바로 인증할 수 있다. 유저는 이더리움 월렛을 활용할 필요가 없고, 이런 이더리움 클라이언트는 데몬에서 백그라운드로 이루어진다.</p>
+<h3 id="투표단계"><a class="header-anchor" href="#투표단계">¶</a>투표단계</h3>
+<h4 id="setup"><a class="header-anchor" href="#setup">¶</a>SETUP</h4>
+<p>선거 관리자는 유권자들의 계정을 인증하고, 투표가능한 유권자 정보를 얻기 위해 voting contract를 업데이트 한다. 그리고 투표가 가능한 시간도 설정한다.</p>
+<ul>
+<li>$$t_{finishRegistration}$$: 모든 유권자들은 그들의 voting key $$g^{x_i}$$를 이 시간내에 등록해야 한다.</li>
+<li>$$t_{beginElection}$$: 이더리움에 알릴 투표 시작 시간</li>
+<li>$$t_{finishCommit}$$: 모든 유권자들은 반드시 그들의 투표 $$H(g^{x_iy_i}g^{v_i})$$<br>
+를 이 시 간내에 커밋해야 한다.(옵션)</li>
+<li>$$t_{finishVote}$$: 모든 유권자들은 $$g^{x_iy_i}g^{v_i}$$를 이 시간내에 투표해야한다.</li>
+<li>$$\pi$$: 유권자에게 투표시간을 주기위해 투표단계가 활성화 되어야 하는 최소 기간</li>
+</ul>
+<p>관리자는 또한 투표용 질문인 $$d$$ 를 설정할 수 있으며, 커밋스테이지가 필요한지도 결정할 수 있다. 마지막으로, 이더리움에 SINGUP 스테이지로 넘어감을 알려야한다.</p>
+<h4 id="singup"><a class="header-anchor" href="#singup">¶</a>SINGUP</h4>
+<p>모든 가능한 유권자들은 투표용 질문과 관리자가 설정한 파라미터들을 본뒤에 등록을 해야한다. 등록을 위해서는 투표용 키잉ㄴ $$g^{x_i}$$와 $$ZKP(x_i)$$가 필요하다. 이 키와 proof $$d$$와 함께 이더리움으로 보내진다. 이더리움은 $$t_{finishRegistration}$$ 이 지난 뒤에는 이를 허용하지 않는다. 관리자sms COMMIT 이나 VOTE 단계로 넘어감을 이더리움에 알려야 하고, 모든 유권자들의 재생성된 키 $$g^{y_0}, g^{y_1}, g^{y_2} … g^{y_n}$$ 는 이러한 전환 되는 동안 이더리움에서 계산된다.</p>
+<h4 id="commit-옵션"><a class="header-anchor" href="#commit-옵션">¶</a>COMMIT (옵션)</h4>
+<p>모든 유권자들은 이더리움 블록체인에 그들의 해쉬를 $$H(g^{x_iy_i}g^{v_i})$$ 올린다. 블록체인 이 이를 최종적으로 받아드리면, contract는 자동적으로 VOTE stage로 넘어간다.</p>
+<h4 id="vote"><a class="header-anchor" href="#vote">¶</a>VOTE</h4>
+<p>모든 유권자들은 그들의 암호화된 투표권 $$g^{x_iy_i}g^{v_i}$$ 를 올리고 이를 영지식증명을 통해 증명한다. 투표가 이더리움에 의해 받아지면 deposit $$d$$가 유권자에게 환불된다. 투표 관리자는 이더리움이 최종적인 투표권이 행사되었음을 알리게 되면 이를 인지하게 된다.</p>
+<h4 id="tally"><a class="header-anchor" href="#tally">¶</a>TALLY</h4>
+<p>투표관리자는 이더리움에게 개표를 알린다. 이더리움은 이산대수를 무작위로 대입하여 yes vote의 개수를 구한다.</p>
+<p>이전에 언급했듯, Open Vote Network는 모든 유권자들로 하여금 그들의 표에대해 개표연산을 요구한다. 이과정에서 deposit $$d$$는 등록된 유권자들에게 투표를 할 수 있는 경제적인 인센티브를 의미한다. 이는 voting protocol에 정상적으로 투표가 진행되었다면 되돌아오고, 그렇지 않다면 돌려받지 못한다.</p>
+<p>이러한 방식을 활용하여 투표를 구현한 결과, 유권자당 최소 약 $0.73이 필요한 것이 밝혀졌다. 이는 유권자에게 최대한의 개인정보보호를 제공함과 동시에 공개적으로 검증가능하다는 것을 보았을때, 충분히 합리적인 비용으로 간주 될 수 있다. 이 논문은 블록체인을 활용한 최초의 탈중앙화된 인터넷 투표 프로토콜을 구현한 것이다. 단순히 이더리움 블록체인을 공공 게시판 성격으로 활용한 것 뿐 만 아니라 투표 프로토콜의 올바른 실행을 보장하는 컨센서스 플랫폼으로 사용한 것에 의의가 있다.<br>
+향후 블록체인을 활용하여 국가단위의 선거를 치룰 수 있는 지 또한 알아야할 논제로 남게 되었다. 만약 이것이 가능하다면, 이 구현을 위한 전용 블록체인이 필요해 질 수도 있다. 예를 들어, 오로지 e-voting 스마트 컨트랙트만을 담는 이더리움 스타일의 블록체인이 될 수 도 있다. 이 새로운 블록체인은 더 많은 정보를 담기 위해 큰 블록사이즈가 필요할 것이고, 아마도 RSCoin과 비슷한 중앙 집중형식으로 유지 될 수도 있다.</p>
+<blockquote>
+<p>RSCoin은 중앙집중화된 코인으로, 중앙은행에서 완전히 통제할 수 있는 비트코인이라고 볼 수 있습니다. 자세한 내용은 <a href="https://totalbitcoin.org/rscoin-a-centralized-version-of-bitcoin/" target="_blank" rel="noopener">여기</a>를 참조해주세요.</p>
+</blockquote>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/22/centrally-banked-cryptocurrencies/" data-tooltip="RSCoin) 중앙은행화된 암호화폐" aria-label="PREVIOUS: RSCoin) 중앙은행화된 암호화폐">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/20/ethereum-white-paper/" data-tooltip="Ethereum) 이더리움 백서 요약" aria-label="NEXT: Ethereum) 이더리움 백서 요약">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/06/21/A-smart-contract-for-boadroom-voting-with-maximum-voter-privacy/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/06/21/A-smart-contract-for-boadroom-voting-with-maximum-voter-privacy/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/22/centrally-banked-cryptocurrencies/" data-tooltip="RSCoin) 중앙은행화된 암호화폐" aria-label="PREVIOUS: RSCoin) 중앙은행화된 암호화폐">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/20/ethereum-white-paper/" data-tooltip="Ethereum) 이더리움 백서 요약" aria-label="NEXT: Ethereum) 이더리움 백서 요약">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/06/21/A-smart-contract-for-boadroom-voting-with-maximum-voter-privacy/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/06/21/A-smart-contract-for-boadroom-voting-with-maximum-voter-privacy/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/06/21/A-smart-contract-for-boadroom-voting-with-maximum-voter-privacy/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/06/21/A-smart-contract-for-boadroom-voting-with-maximum-voter-privacy/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2018/06/21/A-smart-contract-for-boadroom-voting-with-maximum-voter-privacy/';
+                 
+                    this.page.identifier = '2018/06/21/A-smart-contract-for-boadroom-voting-with-maximum-voter-privacy/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

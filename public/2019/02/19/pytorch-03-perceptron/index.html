@@ -1,0 +1,851 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>Pytorch 03) - Perceptron - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Pytorch - 03) Perceptron\n¶Perceptron\n(마지막 정리가 되길 바라며)\nPerceptron은 우리 두뇌 (뉴런)의 인지능력을 모방하도록 만든 인위적인 네트워크다.\n\n퍼셉트론은 다수의 신호를 받아서, 하나의 신호를 출력한다. 여기에서 x는 입력값이고 w는, 가중치라고 부르는 weight이다. 각 입력치에 가중치를 부여하여, 입력신호화 계산하고, 그 신호의 총합이 정해진 값을 넘으면 1을 출력한다.\n각 입력신호에 weight가 부여되며, 이 weight가 클수록 해당 입력값이 중요한 역할을 한다고 볼 수 있다. 머신러닝에서 하는 것은 이 weight을 조정하는 작업이라고 할 수 있다.\n이렇게만 보면, 앞에서 보았던 linear classification 모형이라고도 볼 수 있다. 실수형의 input 벡터를 받아서, 이를 선형으로 계산하는 것이라고도 볼 수 있다.\n처음에는 임의로 설정된 weight으로 시작하여, 여기에 training data를 모형에 입력하며 weight을 결과값에 맞도록 개선 나간다.\n$$ b + w1x1 + w2x2 &lt; 0 $$\n$$ b + w1x1 + w2x2 \\geq 0 $$\n여기서 가중치 (weight)는 입력신호과 결과에 주는 영향도를 조절하며, 편향 (bias)는이 뉴런이 얼마나 쉽게 활성화(1을 출력하느냐?)화되는 지를 조정하는 변수다.\n그러나 문제는, 말그대로 선형분류만 가능하다는 것이다. XOR 논리는 어느 한쪽이 1일때만 1을 출력하는 배타적인 논리연산인데, 이를 선으로 구별하지 못하는 것을 알 수 있다.\n\nxor 연산은 (1,0)이나 (0,1) 일 때 활성화되는데, 선으로는 이를 구별해내지 못한다.\n그래서 이러한 문제를 해결하기 위해 여러개의 퍼셉트론을 layer화 하여 극복해 내었다.\n\n¶perceptron in pytorch\n¶데이터셋 만들기\n12345678910111213141516import torchimport torch.nn as nnimport numpy as npimport matplotlib.pyplot as pltfrom sklearn import datasetsn_pts = 100centers = [[-0.5, 0.5], [0.5, -0.5]]X, y = datasets.make_blobs(n_samples=n_pts, random_state=123, centers=centers, cluster_std=0.4)x_data = torch.Tensor(X)y_data = torch.Tensor(y.reshape(100, 1))print(x_data[:5])print(y_data[:5])\n12345678910tensor([[-0.1372, -0.0715],        [ 0.8044, -0.3706],        [-0.6022, -0.6194],        [ 0.5709, -0.5120],        [ 0.0064,  0.1533]])tensor([[0.],        [1.],        [0.],        [1.],        [0.]])\n12345def scatter_plot():  plt.scatter(X[y==0, 0], X[y==0, 1])  plt.scatter(X[y==1, 0], X[y==1, 1])  scatter_plot()\n\n이런 형태의 만들어 냈다.\n¶모델만들기\n123456789101112class Model(nn.Module):    def __init__(self, input_size, output_size):    super().__init__()        self.linear = nn.Linear(input_size, output_size)      def forward(self, X):    pred = torch.sigmoid(self.linear(X))    return pred    def predict(self, x):    return 1 if pred &gt;= 0.5 else 0\n활성화 함수로 sigmoid함수를 사용하였다.\n$$ s(z) = \\frac{1}{1 + e ^ {-z}} $$\n\n모양에서도 알 수 있듯이, 이함수의 특징은\n\n0/1 을 구별하는 부분은 경사가 급격하고, 나머지는 완만하다.\n활성함수의 값을 성공확률이라는 의미로 해석이 가능하다.\n\n123torch.manual_seed(2)model = Model(2, 1)list(model.parameters())\n123[Parameter containing: tensor([[ 0.1622, -0.1683]], requires_grad=True), Parameter containing: tensor([0.1939], requires_grad=True)]\ninput 값이 두개이고, output은 하나인 model을 만들어 냈다.\n123456789[w, b] = model.parameters()w1, w2 = w.view(2)b1 = b[0]def get_params():  return w1.item(), w2.item(), b.item()  print(w1.item(), w2.item(), b1.item())\n10.16220331192016602 -0.1682732105255127 0.19390898942947388\n랜덤으로 가중치 2개와 bias가 생성되었다.\n12345678910def plot_fit(title):  plt.title = title  w1, w2, b1 = get_params()  # 0 = w1*x1 + w2*x2 + b  x1 = np.array([-2.0, 2.0])    # 0 = w1*x1 + w2*x2 + b  # 를 x2 입장에서 계산  x2 = (w1*x1 + b1) / -w2  plt.plot(x1, x2, 'red')  scatter_plot()\n\n아직은 회귀선이 나타나지 않은 것을 알 수 있다. 이제 이것을 학습시켜 보자.\n12criterion = nn.BCELoss()optimizer = torch.optim.SGD(model.parameters(), lr=0.01)\n이번에 사용해볼 손실함수는 Cross Entropy Loss 다. (binary의 경우에는 Binary Cross Entropy Loss, BCELoss를 사용해야하며, 활성함수로 sigmoid를 꼭써줘야 한다.)\nRegression에서는 MSE를, Classification에서는 Cros Entropy를, 여러 class를 구별하는 경우에는 Softmax를 쓴다.\n공식은 아래와 같다.\n$$ \\text{Cross Entropy} = P(X) * -log(Q(x)) $$\n여기서 $$P(x)$$는 실제값을, $$Q(x)$$는 예상값이다.\n\n예측이 맞을때에는 0으로 수렴하고, 틀릴 경우에는 무한대로 발산하는 특성을 가지고 있다. 즉, 틀릴수록 loss를 크게 두어서 가중치를 조절할 수 있게 하는 것이다.\n¶training\n123456789101112epochs = 1000losses = []for i in range(epochs):    y_pred = model.forward(x_data)  loss = criterion(y_pred, y_data)  print(\"epoch: \", i, \"loss: \", loss.item())  losses.append(loss.item())  optimizer.zero_grad()  loss.backward()  optimizer.step()\n123456789101112131415161718192021epoch:  0 loss:  0.6185115575790405epoch:  1 loss:  0.6174639463424683epoch:  2 loss:  0.6164201498031616epoch:  3 loss:  0.6153794527053833epoch:  4 loss:  0.614342451095581epoch:  5 loss:  0.6133086681365967epoch:  6 loss:  0.6122783422470093epoch:  7 loss:  0.6112515330314636epoch:  8 loss:  0.6102280616760254epoch:  9 loss:  0.6092080473899841...epoch:  990 loss:  0.25722837448120117epoch:  991 loss:  0.2571081817150116epoch:  992 loss:  0.25698813796043396epoch:  993 loss:  0.2568681538105011epoch:  994 loss:  0.2567485272884369epoch:  995 loss:  0.2566289007663727epoch:  996 loss:  0.2565094828605652epoch:  997 loss:  0.25639018416404724epoch:  998 loss:  0.2562710642814636epoch:  999 loss:  0.2561522126197815\nloss가 0.25에 수렴하고 있다.\n123plt.plot(range(epochs), losses)plt.ylabel('loss')plt.xlabel('epoch')\n\n점점 loss가 줄어들고\n\n육안으로 보기에도, 정확히 분류하는 것을 알 수 있었다.\n¶Test\n1234567891011121314point1 = torch.Tensor([1.0, -1.0])point2 = torch.Tensor([-1.0, 1.0])plt.plot(point1.numpy()[0], point1.numpy()[1], 'ro')plt.plot(point2.numpy()[0], point2.numpy()[1], 'ko')print(\"Red point positive probability = &#123;&#125;\".format(model.forward(point1).item()))print(\"black point positive probability = &#123;&#125;\".format(model.forward(point2).item()))print(\"Red point in class = &#123;&#125;\".format(model.forward(point1).item()))print(\"black point in class = &#123;&#125;\".format(model.forward(point2).item()))plot_fit('Trained Model')\n1234Red point positive probability = 0.9424158334732056black point positive probability = 0.05055497586727142Red point in class = 1black point in class = 0\n\n","dateCreated":"2019-02-19T00:00:00+09:00","dateModified":"2019-02-19T14:36:43+09:00","datePublished":"2019-02-19T00:00:00+09:00","description":"Pytorch - 03) Perceptron\n\n¶Perceptron\n(마지막 정리가 되길 바라며)\n\nPerceptron은 우리 두뇌 (뉴런)의 인지능력을 모방하도록 만든 인위적인 네트워크다.\n\n\n\n퍼셉트론은 다수의 신호를 받아서, 하나의 신호를 출력한다. 여기에서 x는 입력값이고 w는, 가중치라고 부르는 weight이다. 각 입력치에 가중치를 부여하여, 입력신호화 계산하고, 그 신호의 총합이 정해진 값을 넘으면 1을 출력한다.\n\n각 입력신호에 weight가 부여되며, 이 weight가 클수록 해당 입력값이 중요한 역할을 한다고 볼 ","headline":"Pytorch 03) - Perceptron","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/02/19/pytorch-03-perceptron/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/02/19/pytorch-03-perceptron/","keywords":"pytorch"}</script>
+    <meta name="description" content="Pytorch - 03) Perceptron  ¶Perceptron (마지막 정리가 되길 바라며)  Perceptron은 우리 두뇌 (뉴런)의 인지능력을 모방하도록 만든 인위적인 네트워크다.    퍼셉트론은 다수의 신호를 받아서, 하나의 신호를 출력한다. 여기에서 x는 입력값이고 w는, 가중치라고 부르는 weight이다. 각 입력치에 가중치를 부여하여, 입">
+<meta name="keywords" content="pytorch">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Pytorch 03) - Perceptron">
+<meta property="og:url" content="https://www.yceffort.kr/2019/02/19/pytorch-03-perceptron/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="Pytorch - 03) Perceptron  ¶Perceptron (마지막 정리가 되길 바라며)  Perceptron은 우리 두뇌 (뉴런)의 인지능력을 모방하도록 만든 인위적인 네트워크다.    퍼셉트론은 다수의 신호를 받아서, 하나의 신호를 출력한다. 여기에서 x는 입력값이고 w는, 가중치라고 부르는 weight이다. 각 입력치에 가중치를 부여하여, 입">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1600/1*_Zy1C83cnmYUdETCeQrOgA.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/1600/1*Tc8UgR_fjI_h0p3y4H9MwA.png">
+<meta property="og:image" content="https://www.oreilly.com/library/view/getting-started-with/9781786468574/graphics/B05474_04_05.jpg">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/02/perceptron1.png">
+<meta property="og:image" content="https://icim.nims.re.kr/file/1d96aff862744eef892c8c8027159935.jpg">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/02/perceptron2.png">
+<meta property="og:image" content="https://ml-cheatsheet.readthedocs.io/en/latest/_images/cross_entropy.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/02/perceptron3.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/02/perceptron4.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2019/02/perceptron5.png">
+<meta property="og:updated_time" content="2019-02-19T05:36:43.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Pytorch 03) - Perceptron">
+<meta name="twitter:description" content="Pytorch - 03) Perceptron  ¶Perceptron (마지막 정리가 되길 바라며)  Perceptron은 우리 두뇌 (뉴런)의 인지능력을 모방하도록 만든 인위적인 네트워크다.    퍼셉트론은 다수의 신호를 받아서, 하나의 신호를 출력한다. 여기에서 x는 입력값이고 w는, 가중치라고 부르는 weight이다. 각 입력치에 가중치를 부여하여, 입">
+<meta name="twitter:image" content="https://cdn-images-1.medium.com/max/1600/1*_Zy1C83cnmYUdETCeQrOgA.png">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Pytorch 03) - Perceptron
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-02-19T00:00:00+09:00">
+	
+		    Feb 19, 2019
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>Pytorch - 03) Perceptron</p>
+<h2 id="perceptron"><a class="header-anchor" href="#perceptron">¶</a>Perceptron</h2>
+<p>(마지막 정리가 되길 바라며)</p>
+<p>Perceptron은 우리 두뇌 (뉴런)의 인지능력을 모방하도록 만든 인위적인 네트워크다.</p>
+<p><img src="https://cdn-images-1.medium.com/max/1600/1*_Zy1C83cnmYUdETCeQrOgA.png" alt="perceptron"></p>
+<p>퍼셉트론은 다수의 신호를 받아서, 하나의 신호를 출력한다. 여기에서 x는 입력값이고 w는, 가중치라고 부르는 weight이다. 각 입력치에 가중치를 부여하여, 입력신호화 계산하고, 그 신호의 총합이 정해진 값을 넘으면 1을 출력한다.</p>
+<p>각 입력신호에 weight가 부여되며, 이 weight가 클수록 해당 입력값이 중요한 역할을 한다고 볼 수 있다. 머신러닝에서 하는 것은 이 weight을 조정하는 작업이라고 할 수 있다.</p>
+<p>이렇게만 보면, 앞에서 보았던 linear classification 모형이라고도 볼 수 있다. 실수형의 input 벡터를 받아서, 이를 선형으로 계산하는 것이라고도 볼 수 있다.</p>
+<p>처음에는 임의로 설정된 weight으로 시작하여, 여기에 training data를 모형에 입력하며 weight을 결과값에 맞도록 개선 나간다.</p>
+<p>$$ b + w1x1 + w2x2 &lt; 0 $$</p>
+<p>$$ b + w1x1 + w2x2 \geq 0 $$</p>
+<p>여기서 가중치 (weight)는 입력신호과 결과에 주는 영향도를 조절하며, 편향 (bias)는이 뉴런이 얼마나 쉽게 활성화(1을 출력하느냐?)화되는 지를 조정하는 변수다.</p>
+<p>그러나 문제는, 말그대로 선형분류만 가능하다는 것이다. XOR 논리는 어느 한쪽이 1일때만 1을 출력하는 배타적인 논리연산인데, 이를 선으로 구별하지 못하는 것을 알 수 있다.</p>
+<p><img src="https://cdn-images-1.medium.com/max/1600/1*Tc8UgR_fjI_h0p3y4H9MwA.png" alt="perceptron-xor"></p>
+<p>xor 연산은 (1,0)이나 (0,1) 일 때 활성화되는데, 선으로는 이를 구별해내지 못한다.</p>
+<p>그래서 이러한 문제를 해결하기 위해 여러개의 퍼셉트론을 layer화 하여 극복해 내었다.</p>
+<p><img src="https://www.oreilly.com/library/view/getting-started-with/9781786468574/graphics/B05474_04_05.jpg" alt="multi-layer-perceptron"></p>
+<h2 id="perceptron-in-pytorch"><a class="header-anchor" href="#perceptron-in-pytorch">¶</a>perceptron in pytorch</h2>
+<h3 id="데이터셋-만들기"><a class="header-anchor" href="#데이터셋-만들기">¶</a>데이터셋 만들기</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line">n_pts = <span class="number">100</span></span><br><span class="line">centers = [[<span class="number">-0.5</span>, <span class="number">0.5</span>], [<span class="number">0.5</span>, <span class="number">-0.5</span>]]</span><br><span class="line">X, y = datasets.make_blobs(n_samples=n_pts, random_state=<span class="number">123</span>, centers=centers, cluster_std=<span class="number">0.4</span>)</span><br><span class="line"></span><br><span class="line">x_data = torch.Tensor(X)</span><br><span class="line">y_data = torch.Tensor(y.reshape(<span class="number">100</span>, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">print(x_data[:<span class="number">5</span>])</span><br><span class="line">print(y_data[:<span class="number">5</span>])</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">tensor([[-0.1372, -0.0715],</span><br><span class="line">        [ 0.8044, -0.3706],</span><br><span class="line">        [-0.6022, -0.6194],</span><br><span class="line">        [ 0.5709, -0.5120],</span><br><span class="line">        [ 0.0064,  0.1533]])</span><br><span class="line">tensor([[0.],</span><br><span class="line">        [1.],</span><br><span class="line">        [0.],</span><br><span class="line">        [1.],</span><br><span class="line">        [0.]])</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">scatter_plot</span><span class="params">()</span>:</span></span><br><span class="line">  plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">  plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">  </span><br><span class="line">scatter_plot()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2019/02/perceptron1.png" alt="perceptron1"></p>
+<p>이런 형태의 만들어 냈다.</p>
+<h3 id="모델만들기"><a class="header-anchor" href="#모델만들기">¶</a>모델만들기</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Model</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, input_size, output_size)</span>:</span></span><br><span class="line">    super().__init__()    </span><br><span class="line">    self.linear = nn.Linear(input_size, output_size)</span><br><span class="line">    </span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, X)</span>:</span></span><br><span class="line">    pred = torch.sigmoid(self.linear(X))</span><br><span class="line">    <span class="keyword">return</span> pred</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self, x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span> <span class="keyword">if</span> pred &gt;= <span class="number">0.5</span> <span class="keyword">else</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<p>활성화 함수로 sigmoid함수를 사용하였다.</p>
+<p>$$ s(z) = \frac{1}{1 + e ^ {-z}} $$</p>
+<p><img src="https://icim.nims.re.kr/file/1d96aff862744eef892c8c8027159935.jpg" alt="sigmoid"></p>
+<p>모양에서도 알 수 있듯이, 이함수의 특징은</p>
+<ul>
+<li>0/1 을 구별하는 부분은 경사가 급격하고, 나머지는 완만하다.</li>
+<li>활성함수의 값을 성공확률이라는 의미로 해석이 가능하다.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">torch.manual_seed(<span class="number">2</span>)</span><br><span class="line">model = Model(<span class="number">2</span>, <span class="number">1</span>)</span><br><span class="line">list(model.parameters())</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[Parameter containing:</span><br><span class="line"> tensor([[ 0.1622, -0.1683]], requires_grad=True), Parameter containing:</span><br><span class="line"> tensor([0.1939], requires_grad=True)]</span><br></pre></td></tr></table></figure>
+<p>input 값이 두개이고, output은 하나인 model을 만들어 냈다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[w, b] = model.parameters()</span><br><span class="line">w1, w2 = w.view(<span class="number">2</span>)</span><br><span class="line">b1 = b[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_params</span><span class="params">()</span>:</span></span><br><span class="line">  <span class="keyword">return</span> w1.item(), w2.item(), b.item()</span><br><span class="line">  </span><br><span class="line">print(w1.item(), w2.item(), b1.item())</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0.16220331192016602 -0.1682732105255127 0.19390898942947388</span><br></pre></td></tr></table></figure>
+<p>랜덤으로 가중치 2개와 bias가 생성되었다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_fit</span><span class="params">(title)</span>:</span></span><br><span class="line">  plt.title = title</span><br><span class="line">  w1, w2, b1 = get_params()</span><br><span class="line">  <span class="comment"># 0 = w1*x1 + w2*x2 + b</span></span><br><span class="line">  x1 = np.array([<span class="number">-2.0</span>, <span class="number">2.0</span>])  </span><br><span class="line">  <span class="comment"># 0 = w1*x1 + w2*x2 + b</span></span><br><span class="line">  <span class="comment"># 를 x2 입장에서 계산</span></span><br><span class="line">  x2 = (w1*x1 + b1) / -w2</span><br><span class="line">  plt.plot(x1, x2, <span class="string">'red'</span>)</span><br><span class="line">  scatter_plot()</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2019/02/perceptron2.png" alt="perceptron2"></p>
+<p>아직은 회귀선이 나타나지 않은 것을 알 수 있다. 이제 이것을 학습시켜 보자.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">criterion = nn.BCELoss()</span><br><span class="line">optimizer = torch.optim.SGD(model.parameters(), lr=<span class="number">0.01</span>)</span><br></pre></td></tr></table></figure>
+<p>이번에 사용해볼 손실함수는 Cross Entropy Loss 다. (binary의 경우에는 Binary Cross Entropy Loss, <code>BCELoss</code>를 사용해야하며, 활성함수로 sigmoid를 꼭써줘야 한다.)</p>
+<p>Regression에서는 MSE를, Classification에서는 Cros Entropy를, 여러 class를 구별하는 경우에는 Softmax를 쓴다.</p>
+<p>공식은 아래와 같다.</p>
+<p>$$ \text{Cross Entropy} = P(X) * -log(Q(x)) $$</p>
+<p>여기서 $$P(x)$$는 실제값을, $$Q(x)$$는 예상값이다.</p>
+<p><img src="https://ml-cheatsheet.readthedocs.io/en/latest/_images/cross_entropy.png" alt="cross-entropy-loss"></p>
+<p>예측이 맞을때에는 0으로 수렴하고, 틀릴 경우에는 무한대로 발산하는 특성을 가지고 있다. 즉, 틀릴수록 loss를 크게 두어서 가중치를 조절할 수 있게 하는 것이다.</p>
+<h3 id="training"><a class="header-anchor" href="#training">¶</a>training</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">epochs = <span class="number">1000</span></span><br><span class="line">losses = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(epochs):</span><br><span class="line">  </span><br><span class="line">  y_pred = model.forward(x_data)</span><br><span class="line">  loss = criterion(y_pred, y_data)</span><br><span class="line">  print(<span class="string">"epoch: "</span>, i, <span class="string">"loss: "</span>, loss.item())</span><br><span class="line">  losses.append(loss.item())</span><br><span class="line"></span><br><span class="line">  optimizer.zero_grad()</span><br><span class="line">  loss.backward()</span><br><span class="line">  optimizer.step()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">epoch:  0 loss:  0.6185115575790405</span><br><span class="line">epoch:  1 loss:  0.6174639463424683</span><br><span class="line">epoch:  2 loss:  0.6164201498031616</span><br><span class="line">epoch:  3 loss:  0.6153794527053833</span><br><span class="line">epoch:  4 loss:  0.614342451095581</span><br><span class="line">epoch:  5 loss:  0.6133086681365967</span><br><span class="line">epoch:  6 loss:  0.6122783422470093</span><br><span class="line">epoch:  7 loss:  0.6112515330314636</span><br><span class="line">epoch:  8 loss:  0.6102280616760254</span><br><span class="line">epoch:  9 loss:  0.6092080473899841</span><br><span class="line">...</span><br><span class="line">epoch:  990 loss:  0.25722837448120117</span><br><span class="line">epoch:  991 loss:  0.2571081817150116</span><br><span class="line">epoch:  992 loss:  0.25698813796043396</span><br><span class="line">epoch:  993 loss:  0.2568681538105011</span><br><span class="line">epoch:  994 loss:  0.2567485272884369</span><br><span class="line">epoch:  995 loss:  0.2566289007663727</span><br><span class="line">epoch:  996 loss:  0.2565094828605652</span><br><span class="line">epoch:  997 loss:  0.25639018416404724</span><br><span class="line">epoch:  998 loss:  0.2562710642814636</span><br><span class="line">epoch:  999 loss:  0.2561522126197815</span><br></pre></td></tr></table></figure>
+<p>loss가 0.25에 수렴하고 있다.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">plt.plot(range(epochs), losses)</span><br><span class="line">plt.ylabel(<span class="string">'loss'</span>)</span><br><span class="line">plt.xlabel(<span class="string">'epoch'</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2019/02/perceptron3.png" alt="perceptron3"></p>
+<p>점점 loss가 줄어들고</p>
+<p><img src="/images/2019/02/perceptron4.png" alt="perceptron4"></p>
+<p>육안으로 보기에도, 정확히 분류하는 것을 알 수 있었다.</p>
+<h3 id="test"><a class="header-anchor" href="#test">¶</a>Test</h3>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">point1 = torch.Tensor([<span class="number">1.0</span>, <span class="number">-1.0</span>])</span><br><span class="line">point2 = torch.Tensor([<span class="number">-1.0</span>, <span class="number">1.0</span>])</span><br><span class="line">plt.plot(point1.numpy()[<span class="number">0</span>], point1.numpy()[<span class="number">1</span>], <span class="string">'ro'</span>)</span><br><span class="line">plt.plot(point2.numpy()[<span class="number">0</span>], point2.numpy()[<span class="number">1</span>], <span class="string">'ko'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">print(<span class="string">"Red point positive probability = &#123;&#125;"</span>.format(model.forward(point1).item()))</span><br><span class="line">print(<span class="string">"black point positive probability = &#123;&#125;"</span>.format(model.forward(point2).item()))</span><br><span class="line"></span><br><span class="line">print(<span class="string">"Red point in class = &#123;&#125;"</span>.format(model.forward(point1).item()))</span><br><span class="line">print(<span class="string">"black point in class = &#123;&#125;"</span>.format(model.forward(point2).item()))</span><br><span class="line"></span><br><span class="line">plot_fit(<span class="string">'Trained Model'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Red point positive probability = 0.9424158334732056</span><br><span class="line">black point positive probability = 0.05055497586727142</span><br><span class="line">Red point in class = 1</span><br><span class="line">black point in class = 0</span><br></pre></td></tr></table></figure>
+<p><img src="/images/2019/02/perceptron5.png" alt="perceptron5"></p>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/">pytorch</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-02-linear-regression/" data-tooltip="Pytorch 02) - Linear Regression" aria-label="PREVIOUS: Pytorch 02) - Linear Regression">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/17/ai-programming-python-nanodegree-complete/" data-tooltip="AI Programming with Python Nanodegree 끝" aria-label="NEXT: AI Programming with Python Nanodegree 끝">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/02/19/pytorch-03-perceptron/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/02/19/pytorch-03-perceptron/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-02-linear-regression/" data-tooltip="Pytorch 02) - Linear Regression" aria-label="PREVIOUS: Pytorch 02) - Linear Regression">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/17/ai-programming-python-nanodegree-complete/" data-tooltip="AI Programming with Python Nanodegree 끝" aria-label="NEXT: AI Programming with Python Nanodegree 끝">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/02/19/pytorch-03-perceptron/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/02/19/pytorch-03-perceptron/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/02/19/pytorch-03-perceptron/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/02/19/pytorch-03-perceptron/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2019/02/19/pytorch-03-perceptron/';
+                 
+                    this.page.identifier = '2019/02/19/pytorch-03-perceptron/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

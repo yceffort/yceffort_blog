@@ -1,0 +1,794 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>Zero Knowledge Proof (ZKP) - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Zero Knowledge Proof - 영지식증명\n암호학에서, 영지식증명 (Zero-knowledge proof/protocol)은 증명인(페기)이 검증인(빅터)에게 x라는 지식을 증명할 때, 증명인이 알고 있는 x라는 지식 이외에는 어떠한 것도 알려주지 않으면서 증명하는 것을 말한다.\n어떠한 사실을 증명하기 위해, 증명자의 일부 비밀 정보에 대한 지식이 필요하다는 것이 검증되면, 검증자는 이러한 비밀 정보를 소유하지 않기 때문에, 검증자는 다른 사람들에게 이러한 사실을 다른 사람에게 증명할 수 없다는 것을 의미한다. 증명할 수 있는 사실은 증명인이 이러한 지식을 가지고 있어야만 한다. 그렇지 않으면 이러한 사실이 증명되지 않기 때문이다.\n아래 그림을 예로 들어 보자.\n\n증명인 페기는 어떤 동굴안에 있는 비밀 열쇠를 가지고 있다. 동굴은 고리 모양으로 되어 있고, 그 가운데가 문으로 되어 있다. 이러한 문은 동굴입구에서 보이지 않는다. 페기는 이제 빅터에게 자신이 비밀 문을 열수 있는 말을 알고 있다는 것을 증명하고 싶어하지만(사실) 그 말이 무엇인지는 알리고 싶어 하지 않는다. (비밀) 이제 빅터가 밖에서 기다리는 동안, 페기는 아무 방향으로나 들어간다.\n\n빅터는 아무 출구를 골라서 이 쪽으로 나오라고 외친다. 페기가 비밀 문을 열 수 없다면, 50% 확률로 증명할 수 없게 된다. 이 실험을 여러번 반복한다면, 페기가 빅터가 시킨대로 나올 수 있는 확률은 매우 낮다. 20번 만 해도, 그 확률은 $$\\frac{1}{2^{20}}$$이 된다. 반면에 비밀문을 열수 있다면, 빅터의 요구대로 매번 나올 수 있게 될 것이다. (증명)\n\n이 실험을 계속 반복해도, 페기는 빅터 외에 다른 사람에게 어떠한 정보도 주지 않는 셈이 된다. 예를 들어 빅터가 이 과정을 모두 녹화해서 다른 사람에게 보여주어도, 다른 사람들은 이를 짜고친 연극이라 판단하고 믿지 않기 때문이다. 이는 빅터에게만 유효한 증명이 된다.\n영지식 증명을 만족시키기 위해서는 아래를 준수해야 한다.\n\n완전성: 진술이 참이라면, 정직한 증명자는 정직한 검증자에게 이사실을 납득 시켜야 한다.\n건실성: 진술이 거짓이라면, 어떠한 부적징한 증명자라도 정직한 검증자에게 이 사실을 납득 시킬 수 없어야 한다.\n영지식성: 진술이 참이라면, 검증자는 참거짓이외에 (문을 나왔다) 아무런 정보도(문을 열 암호) 얻을 수 없어야 한다.\n\n이러한 기술을 블록체인에 사용하기도 한다.\n블록체인에 사용한다면, 발신자, 수신자 등 트랜잭션 관련 내용이 보이지 않더라도, 거래를 신뢰하는 수단으로 ZKP를 사용할 수 있다.\nA Mind-Bending Cryptographic Trick Promises to Take Blockchains Mainstream\n이러한 영지식증명에 대한 아이디어는 20년간 암호전문가들에게 알려져 왔지만, 최근에서야 이 기술을 활용한 서비스가 나오기 시작했다. 이러한 ZKP를 최초로 사용한 것은 바로 ZCash다. ZCash는 발신인, 수취인 및 거래 금액 등에 대한 모든 정보가 숨겨져 있음에도, 트랜잭션을 검증 할 수 있다. 이러한 아이디어는 다른 메이저 은행의 관심을 끌었으며, JPMorgan은 ZCash의 영지식증명 기능을 자사의 프라이빗 이더리움 기반 블록체인에 적용하기도 했다. 그리고 최근 이더리움에도 이 기능이 추가되었다.\n궁극적으로, 이 기술이 우리에게 얼마나 더 많은 것을 가져올 수 있을지는 알 수 없다. 그러나 언젠가 우리 온라인 생활의 거의 모든 면에 확대될 가능성이 있다. 이는 개인정보를 다루는 방법에 있어서 가장 혁신적인 시작을 목격하고 있는 것일지도 모른다.\n","dateCreated":"2018-06-26T00:00:00+09:00","dateModified":"2018-06-26T01:12:03+09:00","datePublished":"2018-06-26T00:00:00+09:00","description":"Zero Knowledge Proof - 영지식증명\n\n암호학에서, 영지식증명 (Zero-knowledge proof/protocol)은 증명인(페기)이 검증인(빅터)에게 x라는 지식을 증명할 때, 증명인이 알고 있는 x라는 지식 이외에는 어떠한 것도 알려주지 않으면서 증명하는 것을 말한다.\n\n어떠한 사실을 증명하기 위해, 증명자의 일부 비밀 정보에 대한 지식이 필요하다는 것이 검증되면, 검증자는 이러한 비밀 정보를 소유하지 않기 때문에, 검증자는 다른 사람들에게 이러한 사실을 다른 사람에게 증명할 수 없다는 것을 의미한다. 증명할 ","headline":"Zero Knowledge Proof (ZKP)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/06/26/zero-knowledge-proof/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/06/26/zero-knowledge-proof/"}</script>
+    <meta name="description" content="Zero Knowledge Proof - 영지식증명  암호학에서, 영지식증명 (Zero-knowledge proof/protocol)은 증명인(페기)이 검증인(빅터)에게 x라는 지식을 증명할 때, 증명인이 알고 있는 x라는 지식 이외에는 어떠한 것도 알려주지 않으면서 증명하는 것을 말한다.  어떠한 사실을 증명하기 위해, 증명자의 일부 비밀 정보에 대한 지">
+<meta name="keywords" content="programming,innovation,technology">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Zero Knowledge Proof (ZKP)">
+<meta property="og:url" content="https://www.yceffort.kr/2018/06/26/zero-knowledge-proof/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="Zero Knowledge Proof - 영지식증명  암호학에서, 영지식증명 (Zero-knowledge proof/protocol)은 증명인(페기)이 검증인(빅터)에게 x라는 지식을 증명할 때, 증명인이 알고 있는 x라는 지식 이외에는 어떠한 것도 알려주지 않으면서 증명하는 것을 말한다.  어떠한 사실을 증명하기 위해, 증명자의 일부 비밀 정보에 대한 지">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://www.yceffort.kr/images/2018/06/ZKP1.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2018/06/ZKP2.png">
+<meta property="og:image" content="https://www.yceffort.kr/images/2018/06/ZKP3.png">
+<meta property="og:updated_time" content="2018-06-25T16:12:03.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Zero Knowledge Proof (ZKP)">
+<meta name="twitter:description" content="Zero Knowledge Proof - 영지식증명  암호학에서, 영지식증명 (Zero-knowledge proof/protocol)은 증명인(페기)이 검증인(빅터)에게 x라는 지식을 증명할 때, 증명인이 알고 있는 x라는 지식 이외에는 어떠한 것도 알려주지 않으면서 증명하는 것을 말한다.  어떠한 사실을 증명하기 위해, 증명자의 일부 비밀 정보에 대한 지">
+<meta name="twitter:image" content="https://www.yceffort.kr/images/2018/06/ZKP1.png">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Zero Knowledge Proof (ZKP)
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2018-06-26T00:00:00+09:00">
+	
+		    Jun 26, 2018
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>Zero Knowledge Proof - 영지식증명</p>
+<p>암호학에서, 영지식증명 (Zero-knowledge proof/protocol)은 증명인(페기)이 검증인(빅터)에게 x라는 지식을 증명할 때, 증명인이 알고 있는 x라는 지식 이외에는 어떠한 것도 알려주지 않으면서 증명하는 것을 말한다.</p>
+<p>어떠한 사실을 증명하기 위해, 증명자의 일부 비밀 정보에 대한 지식이 필요하다는 것이 검증되면, 검증자는 이러한 비밀 정보를 소유하지 않기 때문에, 검증자는 다른 사람들에게 이러한 사실을 다른 사람에게 증명할 수 없다는 것을 의미한다. 증명할 수 있는 사실은 증명인이 이러한 지식을 가지고 있어야만 한다. 그렇지 않으면 이러한 사실이 증명되지 않기 때문이다.</p>
+<p>아래 그림을 예로 들어 보자.</p>
+<p><img src="/images/2018/06/ZKP1.png" alt="ZKP1"></p>
+<p>증명인 페기는 어떤 동굴안에 있는 비밀 열쇠를 가지고 있다. 동굴은 고리 모양으로 되어 있고, 그 가운데가 문으로 되어 있다. 이러한 문은 동굴입구에서 보이지 않는다. 페기는 이제 빅터에게 자신이 비밀 문을 열수 있는 말을 알고 있다는 것을 증명하고 싶어하지만(사실) 그 말이 무엇인지는 알리고 싶어 하지 않는다. (비밀) 이제 빅터가 밖에서 기다리는 동안, 페기는 아무 방향으로나 들어간다.</p>
+<p><img src="/images/2018/06/ZKP2.png" alt="ZKP2"></p>
+<p>빅터는 아무 출구를 골라서 이 쪽으로 나오라고 외친다. 페기가 비밀 문을 열 수 없다면, 50% 확률로 증명할 수 없게 된다. 이 실험을 여러번 반복한다면, 페기가 빅터가 시킨대로 나올 수 있는 확률은 매우 낮다. 20번 만 해도, 그 확률은 $$\frac{1}{2^{20}}$$이 된다. 반면에 비밀문을 열수 있다면, 빅터의 요구대로 매번 나올 수 있게 될 것이다. (증명)</p>
+<p><img src="/images/2018/06/ZKP3.png" alt="ZKP3"></p>
+<p>이 실험을 계속 반복해도, 페기는 빅터 외에 다른 사람에게 어떠한 정보도 주지 않는 셈이 된다. 예를 들어 빅터가 이 과정을 모두 녹화해서 다른 사람에게 보여주어도, 다른 사람들은 이를 짜고친 연극이라 판단하고 믿지 않기 때문이다. 이는 빅터에게만 유효한 증명이 된다.</p>
+<p>영지식 증명을 만족시키기 위해서는 아래를 준수해야 한다.</p>
+<ol>
+<li>완전성: 진술이 참이라면, 정직한 증명자는 정직한 검증자에게 이사실을 납득 시켜야 한다.</li>
+<li>건실성: 진술이 거짓이라면, 어떠한 부적징한 증명자라도 정직한 검증자에게 이 사실을 납득 시킬 수 없어야 한다.</li>
+<li>영지식성: 진술이 참이라면, 검증자는 참거짓이외에 (문을 나왔다) 아무런 정보도(문을 열 암호) 얻을 수 없어야 한다.</li>
+</ol>
+<p>이러한 기술을 블록체인에 사용하기도 한다.</p>
+<p>블록체인에 사용한다면, 발신자, 수신자 등 트랜잭션 관련 내용이 보이지 않더라도, 거래를 신뢰하는 수단으로 ZKP를 사용할 수 있다.</p>
+<p><a href="https://www.technologyreview.com/s/609448/a-mind-bending-cryptographic-trick-promises-to-take-blockchains-mainstream/" target="_blank" rel="noopener">A Mind-Bending Cryptographic Trick Promises to Take Blockchains Mainstream</a></p>
+<p>이러한 영지식증명에 대한 아이디어는 20년간 암호전문가들에게 알려져 왔지만, 최근에서야 이 기술을 활용한 서비스가 나오기 시작했다. 이러한 ZKP를 최초로 사용한 것은 바로 ZCash다. ZCash는 발신인, 수취인 및 거래 금액 등에 대한 모든 정보가 숨겨져 있음에도, 트랜잭션을 검증 할 수 있다. 이러한 아이디어는 다른 메이저 은행의 관심을 끌었으며, JPMorgan은 ZCash의 영지식증명 기능을 자사의 프라이빗 이더리움 기반 블록체인에 적용하기도 했다. 그리고 최근 이더리움에도 이 기능이 추가되었다.</p>
+<p>궁극적으로, 이 기술이 우리에게 얼마나 더 많은 것을 가져올 수 있을지는 알 수 없다. 그러나 언젠가 우리 온라인 생활의 거의 모든 면에 확대될 가능성이 있다. 이는 개인정보를 다루는 방법에 있어서 가장 혁신적인 시작을 목격하고 있는 것일지도 모른다.</p>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/26/Zerocoin-Anonymous-Distributed-E-Cash-from-Bitcoin/" data-tooltip="Zerocoin) 비트코인 기반의 익명 분산화된 E-Cash" aria-label="PREVIOUS: Zerocoin) 비트코인 기반의 익명 분산화된 E-Cash">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/25/permacoin-repurposing-bitcoin-work-for-data-preservation/" data-tooltip="Permacoin) 데이터 보관을 위한 비트코인" aria-label="NEXT: Permacoin) 데이터 보관을 위한 비트코인">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/06/26/zero-knowledge-proof/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/06/26/zero-knowledge-proof/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/26/Zerocoin-Anonymous-Distributed-E-Cash-from-Bitcoin/" data-tooltip="Zerocoin) 비트코인 기반의 익명 분산화된 E-Cash" aria-label="PREVIOUS: Zerocoin) 비트코인 기반의 익명 분산화된 E-Cash">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/25/permacoin-repurposing-bitcoin-work-for-data-preservation/" data-tooltip="Permacoin) 데이터 보관을 위한 비트코인" aria-label="NEXT: Permacoin) 데이터 보관을 위한 비트코인">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/06/26/zero-knowledge-proof/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/06/26/zero-knowledge-proof/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/06/26/zero-knowledge-proof/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/06/26/zero-knowledge-proof/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2018/06/26/zero-knowledge-proof/';
+                 
+                    this.page.identifier = '2018/06/26/zero-knowledge-proof/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

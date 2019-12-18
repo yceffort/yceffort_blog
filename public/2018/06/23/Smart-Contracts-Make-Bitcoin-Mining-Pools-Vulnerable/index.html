@@ -1,0 +1,797 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>스마트 컨트랙트는 비트코인 마이닝 풀을 취약하게 한다. - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"스마트 컨트랙트는 비트코인 마이닝풀을 취약하게 한다.\n원문\n비트코인 및 신흥 암호화폐는 사용자가 분산 응용 프로그램을 처리하고 실행할 수 있는 신뢰할 수 있는 플랫폼을 제공한다. 각 암호화폐는 네트워크에서 발생한 거래를 P2P 분산원장에 저장하여 유지한다.네트워크는 이러한 원장의 상태에 동의하기 위하여 이른바 '나카모토 합의’라고 하는 컨센서스 프로토콜을 실행한다. 각 실행마다, 나카모토 합의는 확률적으로 컴퓨터 퍼즐 (작업증명퍼즐)을 증명해 낼 수 있는 노드를 선출해 낸다. 이를 해결해 낸 사람은 네트워크에 일련의 새로운 거래 내역이 담겨 있는 블록을 브로드 캐스트 하게 된다. 이 블록이 네트워크에 의해 검증되고 승인된다면, 블록을 만들어낸 대가로 보상을 받게 된다.\n¶마이닝 풀\n작업증명에 유효한 답을 찾아내는 과정은 확률에 기반한 과정이며, 막대한 컴퓨팅 리소스를 필요로 한다. 일반적인 컴퓨팅 파워를 가진 일반적인 채굴자들은 이러한 확률적인 프로세스로 인하여 극심한 변동성을 갖게 된다. 일례로, 가장 최신의 마이닝 하드웨어인 AntMiner S9한대를 사용했을 경우에는, 평균 일년에 한개의 블록을 발굴할 수 있다. 이러한 극심한 변동성을 줄이기 위해서 채굴자들은 이른바 마이닝 풀을 조직하고 보상을 나눠 갖게 된다. 마이닝풀에서는, 풀을 형성한 operator가 채굴자들에게 일반적인 한개의 블록을 채굴하는데 필요한 작업증명 퍼즐보다 쉬운 작업을 miner들에게 배분한다. 각각의 퍼즐에 대한 답은 작업증명 퍼즐을 해결할 수 있는 가능성을 지니게 된다. 결과 적으로, 충분한 수의 채굴자들이 이러한 작업을 처리하게 된다면, 이 중 하나는 블록을 생상하기 위한 답을 가질 수도 있는 것이다. 채굴자가 블록 생성에 필요한 답을 찾았다면, 마이닝 풀 운영자는 이를 네트워크에 제출하고 보상을 받는다. 이 보상은 마이닝풀에 참가한 모든 참석자들에게 컴퓨팅 파워를 기여한 만큼 나눠 받게 된다.\n¶마이닝 풀에 보상을 줄 경우의 취약점\n마이닝 풀은 일반적인 블록 차단 공격에 취약하다. (block withholding attack은 마이닝 풀 운영자에게 가히즌 공격이다.) 블록 헤더가 마이닝 풀 운영자에 의해 결정되기 때문에, 공격자는 자신이 발견한 블록으로 이득을 얻을 수 없다. 그러나 마이닝 풀 밖에 있는 채굴자 들은 블록을 보유하고 있음으로서 이득을 얻을 수 있다. 블록을 보유하고, 고의로 누락시킴으로서 마이닝 풀 외부에 있는 광부들은 더 많은 블록을 채굴할 수 있게 된다.\n¶공격\n스마트 컨트랙트는 블록체인 상에서 멈출수 없는 프로그램이다. (비트코인, 이더리움 등) 그리고 내부적으로 실행 코드와 상태값을 가지고 있는데, 이 안에는 정보를 저장하기 위한 공간과 화폐 보유액이 포함되어 있다. 이 논문에서는, 블록을 소유하고 있는 마이닝 풀 채굴자에게 보상을 주는 스마트 컨트랙트에 대해 소개 하려고 한다. 채굴자가 이성적이고, 그들의 단기적인 이득을 극대화 시킬 것이라는 가정하에, 이러한 공격으로 부터 얻을 수 있는 이익을 분석하였다. 공격이 큰 마이닝 풀을 대상으로 할때, 이러한 공격은 단일 하드웨어를 실행하는 공격자에게도 이득이 된다. 더욱이 , 공격자들은 이론적으로 큰 마이닝 풀에서 발생하는 이득을 모두 흡수할 수 있다. 이러한 공격은 마이닝 풀을 형성하는 전략에 치명적인 손상을 가져온다.\n블록체인 상에서 스마트 컨트랙트를 사용하는 것은 이러한 공격에 취약하게 된다는 것을 의미한다. 그러나, 광부들이 자신의 몫이 보장되지 않는 한, 이러한 공격을 막는데 협력하지 않을 것 같다. 더욱이, 스마트 컨트랙트를 통해 보상을 주는 모델은 공격자를 익명상태로 있게 하는 것이 가능하며, 공격자를 특정하는 것을 방지하고, 서비스를 마비 시킬 수 있다.\n\n기존 block withholding attack 과 다른점\nblock withholding attack은 기존 비트코인에서 알려진 공격법이다. 채굴자가 2개의 마이닝 풀에서 채굴하고, 작업증명에 대한 해답을 마이닝 풀 운영자에 알리지 않고 보유함으로써 이득을 취할 수 있다는 것이 밝혀졌다. 출처 그러나 이러한 공격이 가능하기 위해서는, 엄청나게 큰 컴퓨팅 파워 (비트코인 전체 시스템의 1%)가 필요하다는 것이 밝혀졌다.\n\n¶공격 원리\n먼저 블록의 보상은, 그 보상을 받는 주체가 마이닝 풀 운영자로 고정되어 있기 때문에, 실제 블록은 공격자에게 별 의미가 없다는 것을 언급했다. 그러므로 공격자는 전체 네트워크에 작용하는 hash rate를 감소시켜야지만 이득을 취할 수 있다. block rate (비트코인의 경우 10분에 한 블록)을 유지하기 위해서는, 네트워킄 정기적으로 네트워크에 참여하는 채굴자를 예상하여 해쉬 퍼즐의 난이도를 조절해야 한다. 비트코인의 경우에는, 2018블록 마다 난이도 조절이 이루어 진다.\n이러한 인센티브 분석을 위해, 공격자가 컨트롤하는 네트워크 hash rate를 $$\\alpha$$, 블록 보상을 $$r$$, 채굴자가 작업증명에 대한 답을 제출하여 얻는 값을 $$s \\cdot r$$이라고 하자.\n먼저 공격자가 블록의 일부 $$\\beta$$ 를 구매하여 증가시킬 수 있는 순수익을 계산해보자. 공격을 하지 않을 경우, 공격자에게 기대되는 이익은 $$alpha \\cdot r$$ 이다. 만약 $$\\beta$$가 유효한 블록이었고, 이를 보내지 않을 경우, 공격자의 hash rate 는 $$a = \\alpha /(1-\\beta)$$ 가 된다. 그러므로, 공격자가 추가적으로 잠재적인 블록을 구매해서 얻을 수 있는 추가 수익은\n$$a \\cdot r - \\alpha \\cdot r = \\frac{\\alpha\\beta \\cdot r}{1-\\beta}$$\n가 된다. 마이닝 풀 참여자가 블록 전송을 보류하기 위해서는, 공격자는 마이닝 풀에서 주는 이익과 상응하는 이익을 주어야 가능할 것이다. $$\\beta$$를 마이너가 네트워크에 전송하지 않는 블록의 비율이라고 보면, 장기적으로 네트워크의 난이도는 $$(1-\\beta)$$ 만큼 감소하게 될 것이다. 그러므로 유효한 블록을 발견하게 될 가능성은 (마이닝 풀 마이너에게 주어야할 보상은)\n$$\\frac{\\beta \\cdot s \\cdot r}{1-\\beta}$$\n가 된다. 위 두 식을 비교하면,\n$$\\alpha &gt; s$$\n가 되는 경우에만 공격자와 블록을 발견해도 보내지 않는 mining pool 참가자에게 이익이 될 수 있다.\n공격자에게 mining pool 참가자가 자신이 블록을 보유하고 있다는 것을 확신시키기 위해서는, 먼저 1) 유효한 블록을 찾고 2) 네트워크에 그 블록을 알리지 말아야 한다. 블록 검증을 위한 작업, 즉 80바이트 가량의 데이터가 유효한 블록 헤더로 구성되어 있는지 확인 하기 위해, 스마트 컨트랙트 내에 전체 블록체인을 저장해 두어야한다. 이는 이더리움에 경우에는 $76,000 가 넘는 비용이 소모되므로 불가능하다.\n\n작업 중\n\n","dateCreated":"2018-06-23T00:00:00+09:00","dateModified":"2018-06-23T07:06:24+09:00","datePublished":"2018-06-23T00:00:00+09:00","description":"스마트 컨트랙트는 비트코인 마이닝풀을 취약하게 한다.\n\n원문\n\n비트코인 및 신흥 암호화폐는 사용자가 분산 응용 프로그램을 처리하고 실행할 수 있는 신뢰할 수 있는 플랫폼을 제공한다. 각 암호화폐는 네트워크에서 발생한 거래를 P2P 분산원장에 저장하여 유지한다.네트워크는 이러한 원장의 상태에 동의하기 위하여 이른바 '나카모토 합의’라고 하는 컨센서스 프로토콜을 실행한다. 각 실행마다, 나카모토 합의는 확률적으로 컴퓨터 퍼즐 (작업증명퍼즐)을 증명해 낼 수 있는 노드를 선출해 낸다. 이를 해결해 낸 사람은 네트워크에 일련의 새로운 거래","headline":"스마트 컨트랙트는 비트코인 마이닝 풀을 취약하게 한다.","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/06/23/Smart-Contracts-Make-Bitcoin-Mining-Pools-Vulnerable/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/06/23/Smart-Contracts-Make-Bitcoin-Mining-Pools-Vulnerable/"}</script>
+    <meta name="description" content="스마트 컨트랙트는 비트코인 마이닝풀을 취약하게 한다.  원문  비트코인 및 신흥 암호화폐는 사용자가 분산 응용 프로그램을 처리하고 실행할 수 있는 신뢰할 수 있는 플랫폼을 제공한다. 각 암호화폐는 네트워크에서 발생한 거래를 P2P 분산원장에 저장하여 유지한다.네트워크는 이러한 원장의 상태에 동의하기 위하여 이른바 &apos;나카모토 합의’라고 하는 컨센서스 프로토콜">
+<meta name="keywords" content="programming,innovation,technology">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="스마트 컨트랙트는 비트코인 마이닝 풀을 취약하게 한다.">
+<meta property="og:url" content="https://www.yceffort.kr/2018/06/23/Smart-Contracts-Make-Bitcoin-Mining-Pools-Vulnerable/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="스마트 컨트랙트는 비트코인 마이닝풀을 취약하게 한다.  원문  비트코인 및 신흥 암호화폐는 사용자가 분산 응용 프로그램을 처리하고 실행할 수 있는 신뢰할 수 있는 플랫폼을 제공한다. 각 암호화폐는 네트워크에서 발생한 거래를 P2P 분산원장에 저장하여 유지한다.네트워크는 이러한 원장의 상태에 동의하기 위하여 이른바 &apos;나카모토 합의’라고 하는 컨센서스 프로토콜">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-06-22T22:06:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="스마트 컨트랙트는 비트코인 마이닝 풀을 취약하게 한다.">
+<meta name="twitter:description" content="스마트 컨트랙트는 비트코인 마이닝풀을 취약하게 한다.  원문  비트코인 및 신흥 암호화폐는 사용자가 분산 응용 프로그램을 처리하고 실행할 수 있는 신뢰할 수 있는 플랫폼을 제공한다. 각 암호화폐는 네트워크에서 발생한 거래를 P2P 분산원장에 저장하여 유지한다.네트워크는 이러한 원장의 상태에 동의하기 위하여 이른바 &apos;나카모토 합의’라고 하는 컨센서스 프로토콜">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#"
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            스마트 컨트랙트는 비트코인 마이닝 풀을 취약하게 한다.
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2018-06-23T00:00:00+09:00">
+	
+		    Jun 23, 2018
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <p>스마트 컨트랙트는 비트코인 마이닝풀을 취약하게 한다.</p>
+<p><a href="http://fc17.ifca.ai/bitcoin/papers/bitcoin17-final38.pdf" target="_blank" rel="noopener">원문</a></p>
+<p>비트코인 및 신흥 암호화폐는 사용자가 분산 응용 프로그램을 처리하고 실행할 수 있는 신뢰할 수 있는 플랫폼을 제공한다. 각 암호화폐는 네트워크에서 발생한 거래를 P2P 분산원장에 저장하여 유지한다.네트워크는 이러한 원장의 상태에 동의하기 위하여 이른바 '나카모토 합의’라고 하는 컨센서스 프로토콜을 실행한다. 각 실행마다, 나카모토 합의는 확률적으로 컴퓨터 퍼즐 (작업증명퍼즐)을 증명해 낼 수 있는 노드를 선출해 낸다. 이를 해결해 낸 사람은 네트워크에 일련의 새로운 거래 내역이 담겨 있는 블록을 브로드 캐스트 하게 된다. 이 블록이 네트워크에 의해 검증되고 승인된다면, 블록을 만들어낸 대가로 보상을 받게 된다.</p>
+<h3 id="마이닝-풀"><a class="header-anchor" href="#마이닝-풀">¶</a>마이닝 풀</h3>
+<p>작업증명에 유효한 답을 찾아내는 과정은 확률에 기반한 과정이며, 막대한 컴퓨팅 리소스를 필요로 한다. 일반적인 컴퓨팅 파워를 가진 일반적인 채굴자들은 이러한 확률적인 프로세스로 인하여 극심한 변동성을 갖게 된다. 일례로, 가장 최신의 마이닝 하드웨어인 <a href="https://www.buybitcoinworldwide.com/mining/hardware/antminer-s9/" target="_blank" rel="noopener">AntMiner S9</a>한대를 사용했을 경우에는, 평균 일년에 한개의 블록을 발굴할 수 있다. 이러한 극심한 변동성을 줄이기 위해서 채굴자들은 이른바 마이닝 풀을 조직하고 보상을 나눠 갖게 된다. 마이닝풀에서는, 풀을 형성한 operator가 채굴자들에게 일반적인 한개의 블록을 채굴하는데 필요한 작업증명 퍼즐보다 쉬운 작업을 miner들에게 배분한다. 각각의 퍼즐에 대한 답은 작업증명 퍼즐을 해결할 수 있는 가능성을 지니게 된다. 결과 적으로, 충분한 수의 채굴자들이 이러한 작업을 처리하게 된다면, 이 중 하나는 블록을 생상하기 위한 답을 가질 수도 있는 것이다. 채굴자가 블록 생성에 필요한 답을 찾았다면, 마이닝 풀 운영자는 이를 네트워크에 제출하고 보상을 받는다. 이 보상은 마이닝풀에 참가한 모든 참석자들에게 컴퓨팅 파워를 기여한 만큼 나눠 받게 된다.</p>
+<h3 id="마이닝-풀에-보상을-줄-경우의-취약점"><a class="header-anchor" href="#마이닝-풀에-보상을-줄-경우의-취약점">¶</a>마이닝 풀에 보상을 줄 경우의 취약점</h3>
+<p>마이닝 풀은 일반적인 블록 차단 공격에 취약하다. (block withholding attack은 마이닝 풀 운영자에게 가히즌 공격이다.) 블록 헤더가 마이닝 풀 운영자에 의해 결정되기 때문에, 공격자는 자신이 발견한 블록으로 이득을 얻을 수 없다. 그러나 마이닝 풀 밖에 있는 채굴자 들은 블록을 보유하고 있음으로서 이득을 얻을 수 있다. 블록을 보유하고, 고의로 누락시킴으로서 마이닝 풀 외부에 있는 광부들은 더 많은 블록을 채굴할 수 있게 된다.</p>
+<h3 id="공격"><a class="header-anchor" href="#공격">¶</a>공격</h3>
+<p>스마트 컨트랙트는 블록체인 상에서 멈출수 없는 프로그램이다. (비트코인, 이더리움 등) 그리고 내부적으로 실행 코드와 상태값을 가지고 있는데, 이 안에는 정보를 저장하기 위한 공간과 화폐 보유액이 포함되어 있다. 이 논문에서는, 블록을 소유하고 있는 마이닝 풀 채굴자에게 보상을 주는 스마트 컨트랙트에 대해 소개 하려고 한다. 채굴자가 이성적이고, 그들의 단기적인 이득을 극대화 시킬 것이라는 가정하에, 이러한 공격으로 부터 얻을 수 있는 이익을 분석하였다. 공격이 큰 마이닝 풀을 대상으로 할때, 이러한 공격은 단일 하드웨어를 실행하는 공격자에게도 이득이 된다. 더욱이 , 공격자들은 이론적으로 큰 마이닝 풀에서 발생하는 이득을 모두 흡수할 수 있다. 이러한 공격은 마이닝 풀을 형성하는 전략에 치명적인 손상을 가져온다.</p>
+<p>블록체인 상에서 스마트 컨트랙트를 사용하는 것은 이러한 공격에 취약하게 된다는 것을 의미한다. 그러나, 광부들이 자신의 몫이 보장되지 않는 한, 이러한 공격을 막는데 협력하지 않을 것 같다. 더욱이, 스마트 컨트랙트를 통해 보상을 주는 모델은 공격자를 익명상태로 있게 하는 것이 가능하며, 공격자를 특정하는 것을 방지하고, 서비스를 마비 시킬 수 있다.</p>
+<blockquote>
+<p>기존 block withholding attack 과 다른점</p>
+<p>block withholding attack은 기존 비트코인에서 알려진 공격법이다. 채굴자가 2개의 마이닝 풀에서 채굴하고, 작업증명에 대한 해답을 마이닝 풀 운영자에 알리지 않고 보유함으로써 이득을 취할 수 있다는 것이 밝혀졌다. <a href="https://arxiv.org/pdf/1402.1718.pdf" target="_blank" rel="noopener">출처</a> 그러나 이러한 공격이 가능하기 위해서는, 엄청나게 큰 컴퓨팅 파워 (비트코인 전체 시스템의 1%)가 필요하다는 것이 밝혀졌다.</p>
+</blockquote>
+<h3 id="공격-원리"><a class="header-anchor" href="#공격-원리">¶</a>공격 원리</h3>
+<p>먼저 블록의 보상은, 그 보상을 받는 주체가 마이닝 풀 운영자로 고정되어 있기 때문에, 실제 블록은 공격자에게 별 의미가 없다는 것을 언급했다. 그러므로 공격자는 전체 네트워크에 작용하는 hash rate를 감소시켜야지만 이득을 취할 수 있다. block rate (비트코인의 경우 10분에 한 블록)을 유지하기 위해서는, 네트워킄 정기적으로 네트워크에 참여하는 채굴자를 예상하여 해쉬 퍼즐의 난이도를 조절해야 한다. 비트코인의 경우에는, 2018블록 마다 난이도 조절이 이루어 진다.</p>
+<p>이러한 인센티브 분석을 위해, 공격자가 컨트롤하는 네트워크 hash rate를 $$\alpha$$, 블록 보상을 $$r$$, 채굴자가 작업증명에 대한 답을 제출하여 얻는 값을 $$s \cdot r$$이라고 하자.</p>
+<p>먼저 공격자가 블록의 일부 $$\beta$$ 를 구매하여 증가시킬 수 있는 순수익을 계산해보자. 공격을 하지 않을 경우, 공격자에게 기대되는 이익은 $$alpha \cdot r$$ 이다. 만약 $$\beta$$가 유효한 블록이었고, 이를 보내지 않을 경우, 공격자의 hash rate 는 $$a = \alpha /(1-\beta)$$ 가 된다. 그러므로, 공격자가 추가적으로 잠재적인 블록을 구매해서 얻을 수 있는 추가 수익은</p>
+<p>$$a \cdot r - \alpha \cdot r = \frac{\alpha\beta \cdot r}{1-\beta}$$</p>
+<p>가 된다. 마이닝 풀 참여자가 블록 전송을 보류하기 위해서는, 공격자는 마이닝 풀에서 주는 이익과 상응하는 이익을 주어야 가능할 것이다. $$\beta$$를 마이너가 네트워크에 전송하지 않는 블록의 비율이라고 보면, 장기적으로 네트워크의 난이도는 $$(1-\beta)$$ 만큼 감소하게 될 것이다. 그러므로 유효한 블록을 발견하게 될 가능성은 (마이닝 풀 마이너에게 주어야할 보상은)</p>
+<p>$$\frac{\beta \cdot s \cdot r}{1-\beta}$$</p>
+<p>가 된다. 위 두 식을 비교하면,</p>
+<p>$$\alpha &gt; s$$</p>
+<p>가 되는 경우에만 공격자와 블록을 발견해도 보내지 않는 mining pool 참가자에게 이익이 될 수 있다.</p>
+<p>공격자에게 mining pool 참가자가 자신이 블록을 보유하고 있다는 것을 확신시키기 위해서는, 먼저 1) 유효한 블록을 찾고 2) 네트워크에 그 블록을 알리지 말아야 한다. 블록 검증을 위한 작업, 즉 80바이트 가량의 데이터가 유효한 블록 헤더로 구성되어 있는지 확인 하기 위해, 스마트 컨트랙트 내에 전체 블록체인을 저장해 두어야한다. 이는 이더리움에 경우에는 $76,000 가 넘는 비용이 소모되므로 불가능하다.</p>
+<blockquote>
+<p>작업 중</p>
+</blockquote>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/25/bigchain-database-whitepaper/" data-tooltip="BigChainDB) 블록체인을 활용한 데이터 베이스" aria-label="PREVIOUS: BigChainDB) 블록체인을 활용한 데이터 베이스">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/23/cryptocurrencies-without-proof-of-work/" data-tooltip="작업 증명이 없는 암호화폐" aria-label="NEXT: 작업 증명이 없는 암호화폐">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/06/23/Smart-Contracts-Make-Bitcoin-Mining-Pools-Vulnerable/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/06/23/Smart-Contracts-Make-Bitcoin-Mining-Pools-Vulnerable/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/25/bigchain-database-whitepaper/" data-tooltip="BigChainDB) 블록체인을 활용한 데이터 베이스" aria-label="PREVIOUS: BigChainDB) 블록체인을 활용한 데이터 베이스">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/23/cryptocurrencies-without-proof-of-work/" data-tooltip="작업 증명이 없는 암호화폐" aria-label="NEXT: 작업 증명이 없는 암호화폐">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/06/23/Smart-Contracts-Make-Bitcoin-Mining-Pools-Vulnerable/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/06/23/Smart-Contracts-Make-Bitcoin-Mining-Pools-Vulnerable/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2018/06/23/Smart-Contracts-Make-Bitcoin-Mining-Pools-Vulnerable/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2018/06/23/Smart-Contracts-Make-Bitcoin-Mining-Pools-Vulnerable/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                249 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2018/06/23/Smart-Contracts-Make-Bitcoin-Mining-Pools-Vulnerable/';
+                 
+                    this.page.identifier = '2018/06/23/Smart-Contracts-Make-Bitcoin-Mining-Pools-Vulnerable/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>
