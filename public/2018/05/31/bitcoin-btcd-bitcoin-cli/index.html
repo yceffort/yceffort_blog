@@ -34,9 +34,9 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"얼마전에 구글 컴퓨팅 엔진을 통해서 bitcoin-cli를 돌려봤었다.\n그 때는 CPU 4개에, 램 16기가에, ssd 100기가를 활용해서 약 3일에 걸쳐서 작업을 진행했다.\n이러한 비슷한 작업을 GoLang으로 구현한 것이 바로 BTCD다.\n\nBTCD와 bitcoin core (이제부터는 bitcoincli라고 하겠다)의 가장 큰 차이점이라고 한다면,** wallet 기능의 유무다.**\nbitcoincli는 지갑의 기능도 함께 겸하고 있지만, BTCD는 그런 거 없이 오로지 bitcoin의 node를 validation하는 작업만 할 수 있다.\n(btcwallet이나 btcgui로 지갑기능을 사용할 수 있다.)\n이 차이는 태생적으로 어떤 목적을 가지고 개발됐냐의 차이에서 기인한다.\n지갑의 기능이 없지만, BTCD는 bitcoincore에 비해 여러가지로 유용한 장점을 가지고 있다.\n\n컴파일 시간이 짧다.\nbitcoincli를 설치하고 컴파일 하기 위해 우분투에서 나는 다양한 라이브러리를 오랜시간에 걸쳐 설치해야만 했다. 하지만 컴파일이 굉장히 빠르게 된다는 GoLang의 특징 덕분에, 이러한 컴파일이 수초내로 최소화 된다.\n성능이 좋다.\nbitcoincli는 c++ 기반으로 작성되었다. 때문에, RPC Request를 시스템에서 비용을 많이 소모하는 Thread를 열어서 handling 한다. 하지만 BTCD는 GoLang으로 작성되어 있기 때문에 GoLang의 GoRoutines를 활용하여 많은 양의 동시 request를 쉽고 빠르게 처리할 수 있다.\n다른 DB를 사용할 수 있다.\nbitcoincli와 BTCD 모두 google의 key-value storage인 levelDB를 사용하고 있다. 이와 더불어 BTCD는 다른 DB도 처리할 수 있도록 기능을 제공하고 있다.\nHTTP post 요청과 웹소켓을 모두 지원한다.\n\nGo라는 언어가 bitcoin이나 blockchain에서 처리해야하는 작업들을 Goroutine으로 굉장히 손쉽고 효율적으로 처리할 수 있기 때문에 관련 업종에서 Go를 core기능으로 많이 쓰는것으로 알고 있다.\n","dateCreated":"2018-05-31T00:00:00+09:00","dateModified":"2018-05-31T11:11:51+09:00","datePublished":"2018-05-31T00:00:00+09:00","description":"얼마전에 구글 컴퓨팅 엔진을 통해서 bitcoin-cli를 돌려봤었다.\n\n그 때는 CPU 4개에, 램 16기가에, ssd 100기가를 활용해서 약 3일에 걸쳐서 작업을 진행했다.\n\n이러한 비슷한 작업을 GoLang으로 구현한 것이 바로 BTCD다.\n\n\n\nBTCD와 bitcoin core (이제부터는 bitcoincli라고 하겠다)의 가장 큰 차이점이라고 한다면,** wallet 기능의 유무다.**\n\nbitcoincli는 지갑의 기능도 함께 겸하고 있지만, BTCD는 그런 거 없이 오로지 bitcoin의 node를 validation","headline":"Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/","keywords":"bitcoin, development"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"얼마전에 구글 컴퓨팅 엔진을 통해서 bitcoin-cli를 돌려봤었다.\n그 때는 CPU 4개에, 램 16기가에, ssd 100기가를 활용해서 약 3일에 걸쳐서 작업을 진행했다.\n이러한 비슷한 작업을 GoLang으로 구현한 것이 바로 BTCD다.\n\nBTCD와 bitcoin core (이제부터는 bitcoincli라고 하겠다)의 가장 큰 차이점이라고 한다면,** wallet 기능의 유무다.**\nbitcoincli는 지갑의 기능도 함께 겸하고 있지만, BTCD는 그런 거 없이 오로지 bitcoin의 node를 validation하는 작업만 할 수 있다.\n(btcwallet이나 btcgui로 지갑기능을 사용할 수 있다.)\n이 차이는 태생적으로 어떤 목적을 가지고 개발됐냐의 차이에서 기인한다.\n지갑의 기능이 없지만, BTCD는 bitcoincore에 비해 여러가지로 유용한 장점을 가지고 있다.\n\n컴파일 시간이 짧다.\nbitcoincli를 설치하고 컴파일 하기 위해 우분투에서 나는 다양한 라이브러리를 오랜시간에 걸쳐 설치해야만 했다. 하지만 컴파일이 굉장히 빠르게 된다는 GoLang의 특징 덕분에, 이러한 컴파일이 수초내로 최소화 된다.\n성능이 좋다.\nbitcoincli는 c++ 기반으로 작성되었다. 때문에, RPC Request를 시스템에서 비용을 많이 소모하는 Thread를 열어서 handling 한다. 하지만 BTCD는 GoLang으로 작성되어 있기 때문에 GoLang의 GoRoutines를 활용하여 많은 양의 동시 request를 쉽고 빠르게 처리할 수 있다.\n다른 DB를 사용할 수 있다.\nbitcoincli와 BTCD 모두 google의 key-value storage인 levelDB를 사용하고 있다. 이와 더불어 BTCD는 다른 DB도 처리할 수 있도록 기능을 제공하고 있다.\nHTTP post 요청과 웹소켓을 모두 지원한다.\n\nGo라는 언어가 bitcoin이나 blockchain에서 처리해야하는 작업들을 Goroutine으로 굉장히 손쉽고 효율적으로 처리할 수 있기 때문에 관련 업종에서 Go를 core기능으로 많이 쓰는것으로 알고 있다.\n","dateCreated":"2018-05-31T00:00:00+09:00","dateModified":"2018-05-31T11:11:51+09:00","datePublished":"2018-05-31T00:00:00+09:00","description":"얼마전에 구글 컴퓨팅 엔진을 통해서 bitcoin-cli를 돌려봤었다.\n\n그 때는 CPU 4개에, 램 16기가에, ssd 100기가를 활용해서 약 3일에 걸쳐서 작업을 진행했다.\n\n이러한 비슷한 작업을 GoLang으로 구현한 것이 바로 BTCD다.\n\n\n\nBTCD와 bitcoin core (이제부터는 bitcoincli라고 하겠다)의 가장 큰 차이점이라고 한다면,** wallet 기능의 유무다.**\n\nbitcoincli는 지갑의 기능도 함께 겸하고 있지만, BTCD는 그런 거 없이 오로지 bitcoin의 node를 validation","headline":"Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/","keywords":"development, bitcoin"}</script>
     <meta name="description" content="얼마전에 구글 컴퓨팅 엔진을 통해서 bitcoin-cli를 돌려봤었다.  그 때는 CPU 4개에, 램 16기가에, ssd 100기가를 활용해서 약 3일에 걸쳐서 작업을 진행했다.  이러한 비슷한 작업을 GoLang으로 구현한 것이 바로 BTCD다.    BTCD와 bitcoin core (이제부터는 bitcoincli라고 하겠다)의 가장 큰 차이점이라고 한">
-<meta name="keywords" content="bitcoin,development">
+<meta name="keywords" content="development,bitcoin">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이">
 <meta property="og:url" content="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/index.html">
@@ -126,7 +126,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="#"
+                             href="/ "
                             
                             title="Home"
                         >
@@ -308,7 +308,7 @@ bitcoincli와 BTCD 모두 google의 key-value storage인 levelDB를 사용하고
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/01/golang-structure-embedding/" data-tooltip="GoLang) 구조체와 임베딩" aria-label="PREVIOUS: GoLang) 구조체와 임베딩">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/05/31/ReactiveX-Observable/" data-tooltip="ReactiveX) Observable" aria-label="PREVIOUS: ReactiveX) Observable">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -317,7 +317,7 @@ bitcoincli와 BTCD 모두 google의 key-value storage인 levelDB를 사용하고
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/05/31/ReactiveX-Observable/" data-tooltip="ReactiveX) Observable" aria-label="NEXT: ReactiveX) Observable">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/05/31/compare-string-with-voice/" data-tooltip="발음 기반으로 String의 유사도를 비교해 보자." aria-label="NEXT: 발음 기반으로 String의 유사도를 비교해 보자.">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -396,7 +396,7 @@ bitcoincli와 BTCD 모두 google의 key-value storage인 levelDB를 사용하고
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/01/golang-structure-embedding/" data-tooltip="GoLang) 구조체와 임베딩" aria-label="PREVIOUS: GoLang) 구조체와 임베딩">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/05/31/ReactiveX-Observable/" data-tooltip="ReactiveX) Observable" aria-label="PREVIOUS: ReactiveX) Observable">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -405,7 +405,7 @@ bitcoincli와 BTCD 모두 google의 key-value storage인 levelDB를 사용하고
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/05/31/ReactiveX-Observable/" data-tooltip="ReactiveX) Observable" aria-label="NEXT: ReactiveX) Observable">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/05/31/compare-string-with-voice/" data-tooltip="발음 기반으로 String의 유사도를 비교해 보자." aria-label="NEXT: 발음 기반으로 String의 유사도를 비교해 보자.">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -543,8 +543,27 @@ bitcoincli와 BTCD 모두 google의 key-value storage인 levelDB를 사용하고
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -581,8 +600,8 @@ bitcoincli와 BTCD 모두 google의 key-value storage인 levelDB를 사용하고
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
-                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -602,6 +621,25 @@ bitcoincli와 BTCD 모두 google의 key-value storage인 levelDB를 사용하고
                     <div class="media-body">
                         <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
                             <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -640,44 +678,6 @@ bitcoincli와 BTCD 모두 google의 key-value storage인 levelDB를 사용하고
                     <div class="media-body">
                         <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
                             <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
-                        </a>
-                        <span class="media-meta">
-                            <span class="media-date text-small">
-                                
-                                    May 31, 2018
-                                
-                            </span>
-                        </span>
-                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
-                    </div>
-                    <div style="clear:both;"></div>
-                    <hr>
-                </div>
-                
-                <div class="media">
-                    
-                    <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
-                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
-                        </a>
-                        <span class="media-meta">
-                            <span class="media-date text-small">
-                                
-                                    May 31, 2018
-                                
-                            </span>
-                        </span>
-                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
-                    </div>
-                    <div style="clear:both;"></div>
-                    <hr>
-                </div>
-                
-                <div class="media">
-                    
-                    <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
-                            <h3 class="media-heading">ReactiveX) Subject</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -737,7 +737,7 @@ bitcoincli와 BTCD 모두 google의 key-value storage인 levelDB를 사용하고
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                249 posts found
+                252 posts found
             </p>
         </div>
     </div>

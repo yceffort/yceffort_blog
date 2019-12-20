@@ -123,7 +123,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="#"
+                             href="/ "
                             
                             title="Home"
                         >
@@ -244,59 +244,6 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title">
                     
-                        <a class="link-unstyled" href="/2018/05/31/tracking-bitcoin-core-sync/">
-                            Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2018-05-31T00:00:00+09:00">
-	
-		    May 31, 2018
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    bitcoin-core를 설치했다면 bitcoind daemon 에서는 모든 block 정보를 동기화 하게 된다.
-
-이는 꽤나 많은 양이기 때문에, 동기화에 하루이틀 이상의 오랜 시간이 소요된다.
-
-
-
-지갑주소 공개합니다. 0.00001 BTC있는데 가져가쉴??
-
-현재 Sync상황을 알기 위해선, 일단 내 bitcoin-core가 얼마나 동기화 는지 확인 해야 한다.
-
-1
-
-
-bitcoind getinfo bitcoind getblockcount
-
-
-getinfo 명령어는 bitcoin daemon 의 전반적인 상황을 볼 수 있고,
-                    
-                        <a href="/2018/05/31/tracking-bitcoin-core-sync/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
                         <a class="link-unstyled" href="/2018/05/31/i-bought-bitcoin-and/">
                             Bitcoin) 비트코인 샀던 후기
                         </a>
@@ -346,8 +293,8 @@ getinfo 명령어는 bitcoin daemon 의 전반적인 상황을 볼 수 있고,
             <div class="postShorten-header">
                 <h1 class="postShorten-title">
                     
-                        <a class="link-unstyled" href="/2018/05/31/Reactivex-subject/">
-                            ReactiveX) Subject
+                        <a class="link-unstyled" href="/2018/05/31/some-trick-delphi/">
+                            Delphi) Some tricks
                         </a>
                     
                 </h1>
@@ -363,16 +310,103 @@ getinfo 명령어는 bitcoin daemon 의 전반적인 상황을 볼 수 있고,
             </div>
             
                 <div class="postShorten-excerpt">
-                    subject는 옵저버나 observable처러 행동하는 일부 ReactiveX구현체에서만 사용가능한 일종의 프록시다. subject는 옵저버이기 때문에 하나이상의 observable을 구독할 수 있으며, 동시에 observable 이기도 하기 때문에 항목을 하나하나 거치면서 다시 push하고 새로운 항목을 push할 수 있다.
+                    정보: github page code highlight는 델파이를 지원하지 않는다.
 
-총 4종류의 subject가 있다.
+¶checksum
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
 
-¶AsyncSubject
 
-
-Observable이 마지막으로 push한 값만 push 하고, 원 Observable의 동작이 다 끝나면 동작한다. 아무값도 push되지
+function GetCheckSum(FileName: string): DWORD;
+var
+  F: file of DWORD;
+  P: Pointer;
+  Fsize: DWORD;
+  Buffer: array [0..500] of DWORD;
+begin
+  FileMode := 0;
+  Assi
                     
-                        <a href="/2018/05/31/Reactivex-subject/" class="postShorten-excerpt_link link">
+                        <a href="/2018/05/31/some-trick-delphi/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a class="link-unstyled" href="/2018/05/31/tracking-bitcoin-core-sync/">
+                            Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2018-05-31T00:00:00+09:00">
+	
+		    May 31, 2018
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    bitcoin-core를 설치했다면 bitcoind daemon 에서는 모든 block 정보를 동기화 하게 된다.
+
+이는 꽤나 많은 양이기 때문에, 동기화에 하루이틀 이상의 오랜 시간이 소요된다.
+
+
+
+지갑주소 공개합니다. 0.00001 BTC있는데 가져가쉴??
+
+현재 Sync상황을 알기 위해선, 일단 내 bitcoin-core가 얼마나 동기화 는지 확인 해야 한다.
+
+1
+
+
+bitcoind getinfo bitcoind getblockcount
+
+
+getinfo 명령어는 bitcoin daemon 의 전반적인 상황을 볼 수 있고,
+                    
+                        <a href="/2018/05/31/tracking-bitcoin-core-sync/" class="postShorten-excerpt_link link">
                             Continue reading
                         </a>
                         
@@ -470,8 +504,27 @@ Observable이 마지막으로 push한 값만 push 하고, 원 Observable의 동�
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -508,8 +561,8 @@ Observable이 마지막으로 push한 값만 push 하고, 원 Observable의 동�
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
-                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -529,6 +582,25 @@ Observable이 마지막으로 push한 값만 push 하고, 원 Observable의 동�
                     <div class="media-body">
                         <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
                             <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -567,44 +639,6 @@ Observable이 마지막으로 push한 값만 push 하고, 원 Observable의 동�
                     <div class="media-body">
                         <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
                             <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
-                        </a>
-                        <span class="media-meta">
-                            <span class="media-date text-small">
-                                
-                                    May 31, 2018
-                                
-                            </span>
-                        </span>
-                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
-                    </div>
-                    <div style="clear:both;"></div>
-                    <hr>
-                </div>
-                
-                <div class="media">
-                    
-                    <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
-                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
-                        </a>
-                        <span class="media-meta">
-                            <span class="media-date text-small">
-                                
-                                    May 31, 2018
-                                
-                            </span>
-                        </span>
-                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
-                    </div>
-                    <div style="clear:both;"></div>
-                    <hr>
-                </div>
-                
-                <div class="media">
-                    
-                    <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
-                            <h3 class="media-heading">ReactiveX) Subject</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -664,7 +698,7 @@ Observable이 마지막으로 push한 값만 push 하고, 원 Observable의 동�
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                249 posts found
+                252 posts found
             </p>
         </div>
     </div>

@@ -123,7 +123,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="#"
+                             href="/ "
                             
                             title="Home"
                         >
@@ -236,6 +236,216 @@
                         ">
                 
     <section class="postShorten-group main-content-wrap">
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a class="link-unstyled" href="/2019/02/20/pytorch-04-deep-neural-network/">
+                            Pytorch 04) - Deep Nueral Network
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-02-20T00:00:00+09:00">
+	
+		    Feb 20, 2019
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    Pytorch - 04) Deep Neural Network
+
+¶Deep Neural Network
+이전 Perceptron에서 한개의 Perceptron으로는 XOR연산을 효과적으로 분류하지 못한다는 것을 이야기 했었다.
+
+
+
+그리고 이런 XOR 이 아니더라도, 선형이 아닌 형태의 데이터를 분류 할 수 없을 것이다.
+
+
+
+이런형태의 데이터는 어떻게 classification 해야 될까? 라는 생가에서 시작된게, perceptron을 여러개 배치하는 것이다.
+
+
+
+Tensorflow playground 예제다.
+
+input laye
+                    
+                        <a href="/2019/02/20/pytorch-04-deep-neural-network/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a class="link-unstyled" href="/2019/02/19/pytorch-01-tensor/">
+                            Pytorch 01) - Tensor
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-02-19T00:00:00+09:00">
+	
+		    Feb 19, 2019
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    Pytorch - 01) Tensor
+
+¶Tensor
+이제는 더 이상 기초를 다루지 않겠다. (마지막 기초 공부)
+
+1
+2
+3
+
+
+# 기초적인 배열 선언
+v = torch.tensor([1, 2, 3])
+v
+
+
+1
+
+
+tensor([1, 2, 3])
+
+
+1
+2
+
+
+# 타입 확인
+v.dtype
+
+
+1
+
+
+torch.int64
+
+
+1
+2
+3
+4
+
+
+# pytohn 배열과 마찬가지로 슬라이싱이 가능하다
+v = torch.tensor([1, 2, 3, 4, 5, 6])
+v[1:]
+v[1:4]
+
+
+1
+2
+3
+
+
+# Float 형태로 선언
+f
+                    
+                        <a href="/2019/02/19/pytorch-01-tensor/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a class="link-unstyled" href="/2019/02/19/pytorch-02-linear-regression/">
+                            Pytorch 02) - Linear Regression
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-02-19T00:00:00+09:00">
+	
+		    Feb 19, 2019
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    Pytorch - 02) Linear Regression
+
+¶Linear Regression
+Linear Regression이 한국말로 뭐였더라?
+
+1
+2
+3
+4
+
+
+import torch
+import torch.nn as nn
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+¶데이터셋 만들기
+대충 뭔가 있어보이는 데이터셋을 만들자.
+
+1
+2
+3
+4
+5
+
+
+X = torch.randn(100, 1)*10
+y = X + 3*torch.randn(100, 1)
+plt.plot(X.numpy
+                    
+                        <a href="/2019/02/19/pytorch-02-linear-regression/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
     
     
     <article class="postShorten postShorten--thumbnailimg-right">
@@ -620,156 +830,6 @@ transform = transforms.Compose([transforms.ToTensor(),
         
     </article>
     
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a class="link-unstyled" href="/2019/02/11/pandas-summary/">
-                            Pandas 기본적인 기능 정리
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-02-11T00:00:00+09:00">
-	
-		    Feb 11, 2019
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    이것도 귀찮아서 github gist로…
-                    
-                        <a href="/2019/02/11/pandas-summary/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a class="link-unstyled" href="/2019/01/30/pytorch-3-convolutional-neural-network(2)/">
-                            Pytorch (3-1) - CNN: 곤충 이미지 분류하기
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-01-30T00:00:00+09:00">
-	
-		    Jan 30, 2019
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    pytorch에서 주는 곤충 이미지를 분류하는 작업을 해보려고 한다. 벌과 개미 이미지가 있는데, 각각의 이미지를 잠깐 살펴보면
-
-
-
-
-
-
-
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-
-
-import torch
-from torch.autograd import Variable
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
-from torch.utils.data import DataLoader, TensorDa
-                    
-                        <a href="/2019/01/30/pytorch-3-convolutional-neural-network(2)/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a class="link-unstyled" href="/2019/01/30/pytorch-3-convolutional-neural-network(3)/">
-                            Pytorch (3-2) - CNN: Convolutional Neural Network 
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-01-30T00:00:00+09:00">
-	
-		    Jan 30, 2019
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    앞서 CNN네트워크를 진행하면서 모르는 부분이 좀 있어서, 이론적인 측면을 좀더 강조해서 글을 써보려고 한다.
-
-¶구조
-일단 중간층이 Convolutional Layer, Pooling Layer, Fully-connted Layer로 구성되어 있다. 그리고 마지막엔 Dropouut Layer를 넣는 경우도 있고, Softmax 함수로 마무리 한다.
-
-
-
-¶Convolutional Layer
-이른바 합성곱층이다. 입력데이터에 필터를 적용해서 특징값을 추출하는 레이어다. 필터를 적용해서 특징값을 추출하고, 이 필터의 값을 비선형 값으
-                    
-                        <a href="/2019/01/30/pytorch-3-convolutional-neural-network(3)/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
     <div class="pagination-bar">
     <ul class="pagination">
         
@@ -864,8 +924,27 @@ from torch.utils.data import DataLoader, TensorDa
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -902,8 +981,8 @@ from torch.utils.data import DataLoader, TensorDa
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
-                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -923,6 +1002,25 @@ from torch.utils.data import DataLoader, TensorDa
                     <div class="media-body">
                         <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
                             <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -961,44 +1059,6 @@ from torch.utils.data import DataLoader, TensorDa
                     <div class="media-body">
                         <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
                             <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
-                        </a>
-                        <span class="media-meta">
-                            <span class="media-date text-small">
-                                
-                                    May 31, 2018
-                                
-                            </span>
-                        </span>
-                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
-                    </div>
-                    <div style="clear:both;"></div>
-                    <hr>
-                </div>
-                
-                <div class="media">
-                    
-                    <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
-                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
-                        </a>
-                        <span class="media-meta">
-                            <span class="media-date text-small">
-                                
-                                    May 31, 2018
-                                
-                            </span>
-                        </span>
-                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
-                    </div>
-                    <div style="clear:both;"></div>
-                    <hr>
-                </div>
-                
-                <div class="media">
-                    
-                    <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
-                            <h3 class="media-heading">ReactiveX) Subject</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -1058,7 +1118,7 @@ from torch.utils.data import DataLoader, TensorDa
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                249 posts found
+                252 posts found
             </p>
         </div>
     </div>

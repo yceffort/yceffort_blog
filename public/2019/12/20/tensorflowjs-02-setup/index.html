@@ -1,0 +1,806 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="generator" content="yceffort">
+    <meta name="google-site-verification" content="TRGuZGQqLhBScdz5opOQ5vD2jLwfHmWrWdze_xY0EbQ" />
+
+    <title>Tensorflow.js - 02. 설치하기 - yceffort</title>
+    <meta name="author" content="yceffort">
+    
+    <meta name="keywords" content="programming,innovation,technology,">
+    
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
+    
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"¶설치\n¶브라우저 설치\nTensorflow.js를 설치하는 방법은 두 가지가 있습니다.\n\nScript tag를 이용하는법\nnpm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용\n\n뉴비 웹 개발자거나, 위 에서 언급한 패키지 들을 전혀 모른다면 스크립트 태그를 활용하세요. 혹은 조금 경험 이 있거나, 큰 규모의 프로그램을 계획하고 있다면 빌드 툴 활용을 검토해보세요.\n¶스크립트 태그 사용하기\n1&lt;script src=\"https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js\"&gt;&lt;/script&gt;\n12345678910111213141516// linear regression 모델const model = tf.sequential();model.add(tf.layers.dense(&#123; units: 1, inputShape: [1] &#125;));model.compile(&#123; loss: \"meanSquaredError\", optimizer: \"sgd\" &#125;);// 훈련을 위한 임의 데이터 생성const xs = tf.tensor2d([1, 2, 3, 4], [4, 1]);const ys = tf.tensor2d([1, 3, 5, 7], [4, 1]);// 데이터 기반으로 훈련시키기model.fit(xs, ys, &#123; epochs: 10 &#125;).then(() =&gt; &#123;  // 훈련한 모델을 기반으로 데이터 예측  model.predict(tf.tensor2d([5], [1, 1])).print();  // dev tool에 결과 값이 나온다.&#125;);\n¶npm을 이용해서 설치하기\nnpm cli나 yarn둘다 활용할 수 있습니다.\n1yarn add @tensorflow/tfjs\n1npm install @tensorflow/tfjs\n123456789101112131415161718import * as tf from \"@tensorflow/tfjs\";// linear regression 모델const model = tf.sequential();model.add(tf.layers.dense(&#123; units: 1, inputShape: [1] &#125;));model.compile(&#123; loss: \"meanSquaredError\", optimizer: \"sgd\" &#125;);// 훈련을 위한 임의 데이터 생성const xs = tf.tensor2d([1, 2, 3, 4], [4, 1]);const ys = tf.tensor2d([1, 3, 5, 7], [4, 1]);// 데이터 기반으로 훈련시키기model.fit(xs, ys, &#123; epochs: 10 &#125;).then(() =&gt; &#123;  // 훈련한 모델을 기반으로 데이터 예측  model.predict(tf.tensor2d([5], [1, 1])).print();  // 결과 값이 나온다.&#125;);\n¶Node.js 설치\nnpm cli나 yarn둘다 활용할 수 있습니다.\nOption1 native C++ 바인딩이 포함되어 있는 Tensorflow.js 설치\n1yarn add @tensorflow/tfjs-node\n1npm install @tensorflow/tfjs-node\nOption2 (리눅스 만 가능) 만약 시스템에서 CUDA NVIDIA GPU를 활용 가능하다면, 더 고성능 퍼포먼스를 위해 GPU 패키지를 사용할 수도 있습니다.\n1yarn add @tensorflow/tfjs-node-gpu\n1npm install @tensorflow/tfjs-node-gpu\nOption3 순수 자바스크립트 버전 설치. 셋 중에 가장 느린 버전입니다.\n1yarn add @tensorflow/tfjs\n1npm install @tensorflow/tfjs\n123456789101112131415161718192021222324const tf = require(\"@tensorflow/tfjs\");// 옵셔널// '@tensorflow/tfjs-node-gpu' gpu와 사용하고 싶다면require(\"@tensorflow/tfjs-node\");// Train a simple model:const model = tf.sequential();model.add(  tf.layers.dense(&#123; units: 100, activation: \"relu\", inputShape: [10] &#125;));model.add(tf.layers.dense(&#123; units: 1, activation: \"linear\" &#125;));model.compile(&#123; optimizer: \"sgd\", loss: \"meanSquaredError\" &#125;);const xs = tf.randomNormal([100, 10]);const ys = tf.randomNormal([100, 1]);model.fit(xs, ys, &#123;  epochs: 100,  callbacks: &#123;    onEpochEnd: (epoch, log) =&gt;      console.log(`Epoch $&#123;epoch&#125;: loss = $&#123;log.loss&#125;`)  &#125;&#125;);\n¶TypeScript\n타입스크립트 환경에서 사용한다면, 그리고 프로젝트에서 strict null 체킹을 한다면skipLibCheck: true 을 tsconfig.json에 포함시켜서 컴파일 도중에 에러가 나지 않도록 처리해야 합니다.\n","dateCreated":"2019-12-20T13:49:01+09:00","dateModified":"2019-12-20T14:15:36+09:00","datePublished":"2019-12-20T13:49:01+09:00","description":"¶설치\n¶브라우저 설치\nTensorflow.js를 설치하는 방법은 두 가지가 있습니다.\n\n * Script tag를 이용하는법\n * npm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용\n\n뉴비 웹 개발자거나, 위 에서 언급한 패키지 들을 전혀 모른다면 스크립트 태그를 활용하세요. 혹은 조금 경험 이 있거나, 큰 규모의 프로그램을 계획하고 있다면 빌드 툴 활용을 검토해보세요.\n\n¶스크립트 태그 사용하기\n1\n\n\n","headline":"Tensorflow.js - 02. 설치하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/12/20/tensorflowjs-02-setup/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/12/20/tensorflowjs-02-setup/","keywords":"machine-learning, ai, tensorflow, tensrflowjs"}</script>
+    <meta name="description" content="¶설치 ¶브라우저 설치 Tensorflow.js를 설치하는 방법은 두 가지가 있습니다.   * Script tag를 이용하는법  * npm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용  뉴비 웹 개발자거나, 위 에서 언급한 패키지 들을 전혀 모른다면 스크립트 태그를 활용하세요. 혹은 조금 경험 이 있거나, 큰 규모의">
+<meta name="keywords" content="machine-learning,ai,tensorflow,tensrflowjs">
+<meta property="og:type" content="blog">
+<meta property="og:title" content="Tensorflow.js - 02. 설치하기">
+<meta property="og:url" content="https://www.yceffort.kr/2019/12/20/tensorflowjs-02-setup/index.html">
+<meta property="og:site_name" content="yceffort">
+<meta property="og:description" content="¶설치 ¶브라우저 설치 Tensorflow.js를 설치하는 방법은 두 가지가 있습니다.   * Script tag를 이용하는법  * npm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용  뉴비 웹 개발자거나, 위 에서 언급한 패키지 들을 전혀 모른다면 스크립트 태그를 활용하세요. 혹은 조금 경험 이 있거나, 큰 규모의">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2019-12-20T05:15:36.497Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tensorflow.js - 02. 설치하기">
+<meta name="twitter:description" content="¶설치 ¶브라우저 설치 Tensorflow.js를 설치하는 방법은 두 가지가 있습니다.   * Script tag를 이용하는법  * npm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용  뉴비 웹 개발자거나, 위 에서 언급한 패키지 들을 전혀 모른다면 스크립트 태그를 활용하세요. 혹은 조금 경험 이 있거나, 큰 규모의">
+    
+    
+    
+    
+    
+    <meta property="og:image" content="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=640" />
+    
+    
+    
+    
+    <!--STYLES-->
+    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <!--STYLES END-->
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-139493546-1');
+    </script>
+
+
+    
+</head>
+    <body>
+        <div id="blog">
+            <!-- Define author's picture -->
+
+
+    
+        
+    
+
+<header id="header" data-behavior="2">
+    <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+    <div class="header-title">
+        <a class="header-title-link" href="/ ">yceffort</a>
+    </div>
+    
+        
+            <a  class="header-right-picture "
+                href="#about">
+        
+        
+            <img class="header-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=90" alt="Author&#39;s picture"/>
+        
+        </a>
+    
+</header>
+
+            <!-- Define author's picture -->
+
+
+    
+
+<nav id="sidebar" data-behavior="2">
+    <div class="sidebar-container">
+        
+            <div class="sidebar-profile">
+                <a href="/#about">
+                    <img class="sidebar-profile-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+                </a>
+                <h4 class="sidebar-profile-name">yceffort</h4>
+                
+                    <h5 class="sidebar-profile-bio"><p>yceffort</p>
+</h5>
+                
+            </div>
+        
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/ "
+                            
+                            title="Home"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-home" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Home</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/all-tags"
+                            
+                            title="Tags"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Tags</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link open-algolia-search"
+                             href="#search"
+                            
+                            title="Search"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-search" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Search</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/bookmark"
+                            
+                            title="Bookmark"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-tags" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Bookmark</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="#about"
+                            
+                            title="About"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-question" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">About</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="https://github.com/yceffort" target="_blank" rel="noopener" title="GitHub">
+                    
+                        <i class="sidebar-button-icon fab fa-github" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">GitHub</span>
+                    </a>
+            </li>
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link " href="mailto: root@yceffort.kr" target="_blank" rel="noopener" title="Mail">
+                    
+                        <i class="sidebar-button-icon fa fa-envelope" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">Mail</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+            <ul class="sidebar-buttons">
+            
+                <li class="sidebar-button">
+                    
+                        <a  class="sidebar-button-link "
+                             href="/atom.xml"
+                            
+                            title="RSS"
+                        >
+                    
+                        <i class="sidebar-button-icon fa fa-rss" aria-hidden="true"></i>
+                        <span class="sidebar-button-desc">RSS</span>
+                    </a>
+            </li>
+            
+        </ul>
+        
+    </div>
+</nav>
+
+            
+            <div id="main" data-behavior="2"
+                 class="
+                        hasCoverMetaIn
+                        ">
+                
+<article class="post">
+    
+    
+        <div class="post-header main-content-wrap text-left">
+    
+        <h1 class="post-title">
+            Tensorflow.js - 02. 설치하기
+        </h1>
+    
+    
+        <div class="post-meta">
+    <time datetime="2019-12-20T13:49:01+09:00">
+	
+		    Dec 20, 2019
+    	
+    </time>
+    
+</div>
+
+    
+</div>
+
+    
+    <div class="post-content markdown">
+        <div class="main-content-wrap">
+            <h2 id="설치"><a class="header-anchor" href="#설치">¶</a>설치</h2>
+<h3 id="브라우저-설치"><a class="header-anchor" href="#브라우저-설치">¶</a>브라우저 설치</h3>
+<p>Tensorflow.js를 설치하는 방법은 두 가지가 있습니다.</p>
+<ul>
+<li>Script tag를 이용하는법</li>
+<li>npm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용</li>
+</ul>
+<p>뉴비 웹 개발자거나, 위 에서 언급한 패키지 들을 전혀 모른다면 스크립트 태그를 활용하세요. 혹은 조금 경험 이 있거나, 큰 규모의 프로그램을 계획하고 있다면 빌드 툴 활용을 검토해보세요.</p>
+<h4 id="스크립트-태그-사용하기"><a class="header-anchor" href="#스크립트-태그-사용하기">¶</a>스크립트 태그 사용하기</h4>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// linear regression 모델</span></span><br><span class="line"><span class="keyword">const</span> model = tf.sequential();</span><br><span class="line">model.add(tf.layers.dense(&#123; <span class="attr">units</span>: <span class="number">1</span>, <span class="attr">inputShape</span>: [<span class="number">1</span>] &#125;));</span><br><span class="line"></span><br><span class="line">model.compile(&#123; <span class="attr">loss</span>: <span class="string">"meanSquaredError"</span>, <span class="attr">optimizer</span>: <span class="string">"sgd"</span> &#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 훈련을 위한 임의 데이터 생성</span></span><br><span class="line"><span class="keyword">const</span> xs = tf.tensor2d([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], [<span class="number">4</span>, <span class="number">1</span>]);</span><br><span class="line"><span class="keyword">const</span> ys = tf.tensor2d([<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>], [<span class="number">4</span>, <span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 데이터 기반으로 훈련시키기</span></span><br><span class="line">model.fit(xs, ys, &#123; <span class="attr">epochs</span>: <span class="number">10</span> &#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 훈련한 모델을 기반으로 데이터 예측</span></span><br><span class="line">  model.predict(tf.tensor2d([<span class="number">5</span>], [<span class="number">1</span>, <span class="number">1</span>])).print();</span><br><span class="line">  <span class="comment">// dev tool에 결과 값이 나온다.</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="npm을-이용해서-설치하기"><a class="header-anchor" href="#npm을-이용해서-설치하기">¶</a>npm을 이용해서 설치하기</h3>
+<p><code>npm cli</code>나 <code>yarn</code>둘다 활용할 수 있습니다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add @tensorflow/tfjs</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @tensorflow/tfjs</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> tf <span class="keyword">from</span> <span class="string">"@tensorflow/tfjs"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// linear regression 모델</span></span><br><span class="line"><span class="keyword">const</span> model = tf.sequential();</span><br><span class="line">model.add(tf.layers.dense(&#123; <span class="attr">units</span>: <span class="number">1</span>, <span class="attr">inputShape</span>: [<span class="number">1</span>] &#125;));</span><br><span class="line"></span><br><span class="line">model.compile(&#123; <span class="attr">loss</span>: <span class="string">"meanSquaredError"</span>, <span class="attr">optimizer</span>: <span class="string">"sgd"</span> &#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 훈련을 위한 임의 데이터 생성</span></span><br><span class="line"><span class="keyword">const</span> xs = tf.tensor2d([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], [<span class="number">4</span>, <span class="number">1</span>]);</span><br><span class="line"><span class="keyword">const</span> ys = tf.tensor2d([<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>], [<span class="number">4</span>, <span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 데이터 기반으로 훈련시키기</span></span><br><span class="line">model.fit(xs, ys, &#123; <span class="attr">epochs</span>: <span class="number">10</span> &#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 훈련한 모델을 기반으로 데이터 예측</span></span><br><span class="line">  model.predict(tf.tensor2d([<span class="number">5</span>], [<span class="number">1</span>, <span class="number">1</span>])).print();</span><br><span class="line">  <span class="comment">// 결과 값이 나온다.</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="node-js-설치"><a class="header-anchor" href="#node-js-설치">¶</a>Node.js 설치</h3>
+<p><code>npm cli</code>나 <code>yarn</code>둘다 활용할 수 있습니다.</p>
+<p><strong>Option1</strong> native C++ 바인딩이 포함되어 있는 Tensorflow.js 설치</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add @tensorflow/tfjs-node</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @tensorflow/tfjs-node</span><br></pre></td></tr></table></figure>
+<p><strong>Option2</strong> (리눅스 만 가능) 만약 시스템에서 CUDA NVIDIA GPU를 활용 가능하다면, 더 고성능 퍼포먼스를 위해 GPU 패키지를 사용할 수도 있습니다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add @tensorflow/tfjs-node-gpu</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @tensorflow/tfjs-node-gpu</span><br></pre></td></tr></table></figure>
+<p><strong>Option3</strong> 순수 자바스크립트 버전 설치. 셋 중에 가장 느린 버전입니다.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add @tensorflow/tfjs</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @tensorflow/tfjs</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> tf = <span class="built_in">require</span>(<span class="string">"@tensorflow/tfjs"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 옵셔널</span></span><br><span class="line"><span class="comment">// '@tensorflow/tfjs-node-gpu' gpu와 사용하고 싶다면</span></span><br><span class="line"><span class="built_in">require</span>(<span class="string">"@tensorflow/tfjs-node"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Train a simple model:</span></span><br><span class="line"><span class="keyword">const</span> model = tf.sequential();</span><br><span class="line">model.add(</span><br><span class="line">  tf.layers.dense(&#123; <span class="attr">units</span>: <span class="number">100</span>, <span class="attr">activation</span>: <span class="string">"relu"</span>, <span class="attr">inputShape</span>: [<span class="number">10</span>] &#125;)</span><br><span class="line">);</span><br><span class="line">model.add(tf.layers.dense(&#123; <span class="attr">units</span>: <span class="number">1</span>, <span class="attr">activation</span>: <span class="string">"linear"</span> &#125;));</span><br><span class="line">model.compile(&#123; <span class="attr">optimizer</span>: <span class="string">"sgd"</span>, <span class="attr">loss</span>: <span class="string">"meanSquaredError"</span> &#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> xs = tf.randomNormal([<span class="number">100</span>, <span class="number">10</span>]);</span><br><span class="line"><span class="keyword">const</span> ys = tf.randomNormal([<span class="number">100</span>, <span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">model.fit(xs, ys, &#123;</span><br><span class="line">  epochs: <span class="number">100</span>,</span><br><span class="line">  callbacks: &#123;</span><br><span class="line">    onEpochEnd: <span class="function">(<span class="params">epoch, log</span>) =&gt;</span></span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">`Epoch <span class="subst">$&#123;epoch&#125;</span>: loss = <span class="subst">$&#123;log.loss&#125;</span>`</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="typescript"><a class="header-anchor" href="#typescript">¶</a>TypeScript</h3>
+<p>타입스크립트 환경에서 사용한다면, 그리고 프로젝트에서 strict null 체킹을 한다면<code>skipLibCheck: true</code> 을 <code>tsconfig.json</code>에 포함시켜서 컴파일 도중에 에러가 나지 않도록 처리해야 합니다.</p>
+
+            
+
+        </div>
+    </div>
+
+    <style>.bmc-button img{width: 27px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{line-height: 36px !important;height:37px !important;text-decoration: none !important;display:inline-flex !important;color:#000000 !important;background-color:#FFFFFF !important;border-radius: 3px !important;border: 1px solid transparent !important;padding: 0px 9px !important;font-size: 17px !important;letter-spacing:-0.08px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Lato', sans-serif !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#000000 !important;}</style><link href="https://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext" rel="stylesheet">
+    <center style="display: block; text-align: -webkit-center; margin-top: 20px;">
+        <a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/foryeffort"><img src="https://www.buymeacoffee.com/assets/img/BMC-btn-logo.svg" alt="coffee for yceffort"><span style="margin-left:5px">coffee for yceffort</span></a>
+    </center>
+    <div id="post-footer" class="post-footer main-content-wrap">
+        
+            <div class="post-footer-tags">
+                <span class="text-color-light text-small">TAGGED IN</span><br/>
+                
+    <a class="tag tag--primary tag--small t-link" href="/tags/ai/">ai</a> <a class="tag tag--primary tag--small t-link" href="/tags/machine-learning/">machine-learning</a> <a class="tag tag--primary tag--small t-link" href="/tags/tensorflow/">tensorflow</a> <a class="tag tag--primary tag--small t-link" href="/tags/tensrflowjs/">tensrflowjs</a>
+
+            </div>
+        
+        
+            <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/12/20/tensorflowjs-01-get-started/" data-tooltip="Tensorflow.js - 01. 시작하기" aria-label="PREVIOUS: Tensorflow.js - 01. 시작하기">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/12/18/goal-2020/" data-tooltip="2020년 목표" aria-label="NEXT: 2020년 목표">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/12/20/tensorflowjs-02-setup/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/12/20/tensorflowjs-02-setup/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+        
+        
+            
+                <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+            
+        
+    </div>
+</article>
+
+
+
+                <footer id="footer" class="main-content-wrap">
+    <span class="copyrights">
+        Copyrights &copy; 2019 yceffort. All Rights Reserved.
+    </span>
+</footer>
+
+            </div>
+            
+                <div id="bottom-bar" class="post-bottom-bar" data-behavior="2">
+                    <div class="post-actions-wrap">
+    <nav>
+        <ul class="post-actions post-action-nav">
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/12/20/tensorflowjs-01-get-started/" data-tooltip="Tensorflow.js - 01. 시작하기" aria-label="PREVIOUS: Tensorflow.js - 01. 시작하기">
+                
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
+                </a>
+            </li>
+            <li class="post-action">
+                
+                    
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/12/18/goal-2020/" data-tooltip="2020년 목표" aria-label="NEXT: 2020년 목표">
+                
+                    <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <ul class="post-actions post-action-share">
+        <li class="post-action hide-lg hide-md hide-sm">
+            <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions" aria-label="Share this post">
+                <i class="fa fa-share-alt" aria-hidden="true"></i>
+            </a>
+        </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/12/20/tensorflowjs-02-setup/" title="Share on Facebook">
+                    <i class="fab fa-facebook" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+            
+            
+            <li class="post-action hide-xs">
+                <a class="post-action-btn btn btn--default" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/12/20/tensorflowjs-02-setup/" title="Share on Twitter">
+                    <i class="fab fa-twitter" aria-hidden="true"></i>
+                </a>
+            </li>
+        
+        
+            
+                <li class="post-action">
+                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
+                        <i class="fa fa-comment"></i>
+                    </a>
+                </li>
+            
+        
+        <li class="post-action">
+            
+                <a class="post-action-btn btn btn--default" href="#" aria-label="Back to top">
+            
+                <i class="fa fa-list" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>
+
+
+                </div>
+                
+    <div id="share-options-bar" class="share-options-bar" data-behavior="2">
+        <i id="btn-close-shareoptions" class="fa fa-times"></i>
+        <ul class="share-options">
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://www.facebook.com/sharer/sharer.php?u=https://www.yceffort.kr/2019/12/20/tensorflowjs-02-setup/">
+                        <i class="fab fa-facebook" aria-hidden="true"></i><span>Share on Facebook</span>
+                    </a>
+                </li>
+            
+                
+                
+                <li class="share-option">
+                    <a class="share-option-btn" target="new" href="https://twitter.com/intent/tweet?text=https://www.yceffort.kr/2019/12/20/tensorflowjs-02-setup/">
+                        <i class="fab fa-twitter" aria-hidden="true"></i><span>Share on Twitter</span>
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+
+
+            
+        </div>
+        
+
+
+    
+
+<div id="about">
+    <div id="about-card">
+        <div id="about-btn-close">
+            <i class="fa fa-times"></i>
+        </div>
+        
+            <img id="about-card-picture" src="https://www.gravatar.com/avatar/6b0848c9324388ed7ca5157d9d6e67c6?s=110" alt="Author&#39;s picture"/>
+        
+            <h4 id="about-card-name">yceffort</h4>
+        
+            <div id="about-card-bio"><p>yceffort</p>
+</div>
+        
+        
+            <div id="about-card-job">
+                <i class="fa fa-briefcase"></i>
+                <br/>
+                <p>programmer</p>
+
+            </div>
+        
+        
+            <div id="about-card-location">
+                <i class="fa fa-map-marker-alt"></i>
+                <br/>
+                Korea
+            </div>
+        
+    </div>
+</div>
+
+        
+            <div id="algolia-search-modal" class="modal-container">
+    <div class="modal">
+        <div class="modal-header">
+            <span class="close-button"><i class="fa fa-times"></i></span>
+            <a href="https://algolia.com" target="_blank" rel="noopener" class="searchby-algolia text-color-light link-unstyled">
+                <span class="searchby-algolia-text text-color-light text-small">by</span>
+                <img class="searchby-algolia-logo" src="https://community.algolia.com/wordpress/img/community-badge.svg">
+            </a>
+            <i class="search-icon fa fa-search"></i>
+            <form id="algolia-search-form">
+                <input type="text" id="algolia-search-input" name="search"
+                    class="form-control input--large search-input" placeholder="Search "
+                    />
+            </form>
+        </div>
+        <div class="modal-body">
+            <div class="no-result text-color-light text-center">no post found</div>
+            <div class="results">
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Levenshtein-distance/">
+                            <h3 class="media-heading">두 String의 유사도를 측정해보자 - Levenshtein distance</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/Reactivex-subject/">
+                            <h3 class="media-heading">ReactiveX) Subject</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/compare-string-with-voice/">
+                            <h3 class="media-heading">발음 기반으로 String의 유사도를 비교해 보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/i-bought-bitcoin-and/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 샀던 후기</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    May 31, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/">
+                            <h3 class="media-heading">GoLang) 구조체와 임베딩</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 1, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+                <div class="media">
+                    
+                    <div class="media-body">
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/06/17/bitcoin-white-paper-summary/">
+                            <h3 class="media-heading">Bitcoin) 비트코인 백서 요약</h3>
+                        </a>
+                        <span class="media-meta">
+                            <span class="media-date text-small">
+                                
+                                    Jun 17, 2018
+                                
+                            </span>
+                        </span>
+                        <!-- <div class="media-content hide-xs font-merryweather"></div> -->
+                    </div>
+                    <div style="clear:both;"></div>
+                    <hr>
+                </div>
+                
+            </div>
+        </div>
+        <div class="modal-footer">
+            <p class="results-count text-medium"
+                data-message-zero="no post found"
+                data-message-one="1 post found"
+                data-message-other="{n} posts found">
+                252 posts found
+            </p>
+        </div>
+    </div>
+</div>
+
+        
+        
+<div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
+        <!--SCRIPTS-->
+<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<!--SCRIPTS END-->
+
+    
+        <script>
+             var disqus_config = function () {
+                 this.page.url = 'https://www.yceffort.kr/2019/12/20/tensorflowjs-02-setup/';
+                 
+                    this.page.identifier = '2019/12/20/tensorflowjs-02-setup/';
+                 
+             };
+            (function() {
+                var d = document, s = d.createElement('script');
+                var disqus_shortname = 'https-www-yceffort-kr';
+                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+
+                s.setAttribute('data-timestamp', +new Date());
+                (d.head || d.body).appendChild(s);
+            })();
+        </script>
+    
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment-with-locales.min.js"></script>
+    <script src="//cdn.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"></script>
+    <script>
+        var algoliaClient = algoliasearch('LA1F1N8028', 'a69ce72946da4962e0d62d5a662a0c06');
+        var algoliaIndex = algoliaClient.initIndex('yceffort_blog');
+    </script>
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</body>
+</html>

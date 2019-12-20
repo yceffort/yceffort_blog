@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://www.yceffort.kr/"/>
-  <updated>2019-12-18T07:22:00.830Z</updated>
+  <updated>2019-12-20T05:16:20.889Z</updated>
   <id>https://www.yceffort.kr/</id>
   
   <author>
@@ -15,6 +15,118 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Tensorflow.js - 01. 시작하기</title>
+    <link href="https://www.yceffort.kr/2019/12/20/tensorflowjs-01-get-started/"/>
+    <id>https://www.yceffort.kr/2019/12/20/tensorflowjs-01-get-started/</id>
+    <published>2019-12-20T04:49:06.000Z</published>
+    <updated>2019-12-20T05:16:20.889Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://www.tensorflow.org/js/tutorials" target="_blank" rel="noopener">https://www.tensorflow.org/js/tutorials</a>을 개인적인 학습을 위해 번역한 글입니다. 정확한 번역을 위해서가 아니라, 개인적인 공부를 위해서 하는 것입니다. 오해 ㄴㄴ</p><h2 id="시작하기"><a class="header-anchor" href="#시작하기">¶</a>시작하기</h2><p>Tensorflow.js는 브라우저와 Node.js에서 머신러닝 모델을 사용하고 훈련시킬 수 있는 자바스크립트 라이브러리입니다.</p><p>시작하는 다양한 방법은 아래 섹션들을 참고하세요.</p><h3 id="직접-tensors를-사용하지-않고-머신러닝-프로그램을-작성하기"><a class="header-anchor" href="#직접-tensors를-사용하지-않고-머신러닝-프로그램을-작성하기">¶</a>직접 Tensors를 사용하지 않고 머신러닝 프로그램을 작성하기</h3><p>저레벨의 Tensors나 Optimizers 등을 고려하지 않고 머신러닝을 시작하고 싶나요? Tensorflow.js를 기반으로 구축한 ml5.js 라이브러리는 간결하고 접근 가능한 API 를 통해 브라우저 환경에서 머신러닝 알고리즘 및 모델에 접근할 수 있게 해줍니다.</p><p><a href="https://ml5js.org/" target="_blank" rel="noopener">ml5.js</a></p><h3 id="tensorflow-js-설치하기"><a class="header-anchor" href="#tensorflow-js-설치하기">¶</a>Tensorflow.js 설치하기</h3><p>Tensors, layers, optimizers, loss functions 등의 개념에 익숙하신가요? Tensorflow.js는 자바스크립트 환경에서 신경망 네트워크 구축을 위한 유연함을 제공합니다.</p><p>Tensorflow.js를 브라우저와 node.js환경에서 어떻게 실행할 수 있는지 아래에서 확인해보세요.</p><p><a href="/2019/12/20/tensorflowjs-02-setup/">설치하기</a></p><h3 id="이미-훈련된-모델을-tensorflow-js로-변환하기"><a class="header-anchor" href="#이미-훈련된-모델을-tensorflow-js로-변환하기">¶</a>이미 훈련된 모델을 Tensorflow.js로 변환하기</h3><p>파이썬으로 사전에 훈련된 모델을 어떻게 Tensorflow.js로 변환할 수 있는지 알아보세요.</p><p><a href="https://www.tensorflow.org/js/tutorials/conversion/import_keras" target="_blank" rel="noopener">Keras Model (번역예정)</a><br><a href="https://www.tensorflow.org/js/tutorials/conversion/import_saved_model" target="_blank" rel="noopener">GraphDef Model (번역예정)</a></p><h3 id="이미-존재하는-tensorflow-js-코드에서-배우기"><a class="header-anchor" href="#이미-존재하는-tensorflow-js-코드에서-배우기">¶</a>이미 존재하는 Tensorflow.js 코드에서 배우기</h3><p><code>tfjs-examples</code>는 다양한 머신러닝 과제들을 Tensorflow.js로 구현한 작은 코드 예제들을 보여줍니다.</p><p><a href="https://github.com/tensorflow/tfjs-examples" target="_blank" rel="noopener">Github에서 보기</a></p><h3 id="tensorflow-js-모델을-시각화-하기"><a class="header-anchor" href="#tensorflow-js-모델을-시각화-하기">¶</a>Tensorflow.js 모델을 시각화 하기</h3><p><code>tfjs-vis</code> 는 브라우저에서 Tensorflow.js를 시각화 할 수 있는 작은 라이브러리 입니다.</p><h3 id="데이터를-tensorflow-js에서-처리하기"><a class="header-anchor" href="#데이터를-tensorflow-js에서-처리하기">¶</a>데이터를 Tensorflow.js에서 처리하기</h3><p><code>TensorFlow.js</code>는 머신러닝을 활용해 데이터를 처리할 수 있도록 도와줍니다.</p>]]></content>
+    
+    <summary type="html">
+    
+      https://www.tensorflow.org/js/tutorials을 개인적인 학습을 위해 번역한 글입니다. 정확한 번역을 위해서가 아니라, 개인적인 공부를 위해서 하는 것입니다. 오해 ㄴㄴ
+
+¶시작하기
+Tensorflow.js는 브라우저와 Node.js에서 머신러닝 모델을 사용하고 훈련시킬 수 있는 자바스크립트 라이브러리입니다.
+
+시작하는 다양한 방법은 아래 섹션들을 참고하세요.
+
+¶직접 Tensors를 사용하지 않고 머신러닝 프로그램을 작성하기
+저레벨의 Tensors나 Optimizers 등을 고려하지 않고 머신러닝을 시작하
+    
+    </summary>
+    
+    
+      <category term="machine-learning" scheme="https://www.yceffort.kr/tags/machine-learning/"/>
+    
+      <category term="ai" scheme="https://www.yceffort.kr/tags/ai/"/>
+    
+      <category term="tensorflow" scheme="https://www.yceffort.kr/tags/tensorflow/"/>
+    
+      <category term="tensrflowjs" scheme="https://www.yceffort.kr/tags/tensrflowjs/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Tensorflow.js - 02. 설치하기</title>
+    <link href="https://www.yceffort.kr/2019/12/20/tensorflowjs-02-setup/"/>
+    <id>https://www.yceffort.kr/2019/12/20/tensorflowjs-02-setup/</id>
+    <published>2019-12-20T04:49:01.000Z</published>
+    <updated>2019-12-20T05:15:36.497Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="설치"><a class="header-anchor" href="#설치">¶</a>설치</h2><h3 id="브라우저-설치"><a class="header-anchor" href="#브라우저-설치">¶</a>브라우저 설치</h3><p>Tensorflow.js를 설치하는 방법은 두 가지가 있습니다.</p><ul><li>Script tag를 이용하는법</li><li>npm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용</li></ul><p>뉴비 웹 개발자거나, 위 에서 언급한 패키지 들을 전혀 모른다면 스크립트 태그를 활용하세요. 혹은 조금 경험 이 있거나, 큰 규모의 프로그램을 계획하고 있다면 빌드 툴 활용을 검토해보세요.</p><h4 id="스크립트-태그-사용하기"><a class="header-anchor" href="#스크립트-태그-사용하기">¶</a>스크립트 태그 사용하기</h4><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// linear regression 모델</span></span><br><span class="line"><span class="keyword">const</span> model = tf.sequential();</span><br><span class="line">model.add(tf.layers.dense(&#123; <span class="attr">units</span>: <span class="number">1</span>, <span class="attr">inputShape</span>: [<span class="number">1</span>] &#125;));</span><br><span class="line"></span><br><span class="line">model.compile(&#123; <span class="attr">loss</span>: <span class="string">"meanSquaredError"</span>, <span class="attr">optimizer</span>: <span class="string">"sgd"</span> &#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 훈련을 위한 임의 데이터 생성</span></span><br><span class="line"><span class="keyword">const</span> xs = tf.tensor2d([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], [<span class="number">4</span>, <span class="number">1</span>]);</span><br><span class="line"><span class="keyword">const</span> ys = tf.tensor2d([<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>], [<span class="number">4</span>, <span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 데이터 기반으로 훈련시키기</span></span><br><span class="line">model.fit(xs, ys, &#123; <span class="attr">epochs</span>: <span class="number">10</span> &#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 훈련한 모델을 기반으로 데이터 예측</span></span><br><span class="line">  model.predict(tf.tensor2d([<span class="number">5</span>], [<span class="number">1</span>, <span class="number">1</span>])).print();</span><br><span class="line">  <span class="comment">// dev tool에 결과 값이 나온다.</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure><h3 id="npm을-이용해서-설치하기"><a class="header-anchor" href="#npm을-이용해서-설치하기">¶</a>npm을 이용해서 설치하기</h3><p><code>npm cli</code>나 <code>yarn</code>둘다 활용할 수 있습니다.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add @tensorflow/tfjs</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @tensorflow/tfjs</span><br></pre></td></tr></table></figure><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> tf <span class="keyword">from</span> <span class="string">"@tensorflow/tfjs"</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// linear regression 모델</span></span><br><span class="line"><span class="keyword">const</span> model = tf.sequential();</span><br><span class="line">model.add(tf.layers.dense(&#123; <span class="attr">units</span>: <span class="number">1</span>, <span class="attr">inputShape</span>: [<span class="number">1</span>] &#125;));</span><br><span class="line"></span><br><span class="line">model.compile(&#123; <span class="attr">loss</span>: <span class="string">"meanSquaredError"</span>, <span class="attr">optimizer</span>: <span class="string">"sgd"</span> &#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 훈련을 위한 임의 데이터 생성</span></span><br><span class="line"><span class="keyword">const</span> xs = tf.tensor2d([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], [<span class="number">4</span>, <span class="number">1</span>]);</span><br><span class="line"><span class="keyword">const</span> ys = tf.tensor2d([<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>], [<span class="number">4</span>, <span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 데이터 기반으로 훈련시키기</span></span><br><span class="line">model.fit(xs, ys, &#123; <span class="attr">epochs</span>: <span class="number">10</span> &#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 훈련한 모델을 기반으로 데이터 예측</span></span><br><span class="line">  model.predict(tf.tensor2d([<span class="number">5</span>], [<span class="number">1</span>, <span class="number">1</span>])).print();</span><br><span class="line">  <span class="comment">// 결과 값이 나온다.</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure><h3 id="node-js-설치"><a class="header-anchor" href="#node-js-설치">¶</a>Node.js 설치</h3><p><code>npm cli</code>나 <code>yarn</code>둘다 활용할 수 있습니다.</p><p><strong>Option1</strong> native C++ 바인딩이 포함되어 있는 Tensorflow.js 설치</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add @tensorflow/tfjs-node</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @tensorflow/tfjs-node</span><br></pre></td></tr></table></figure><p><strong>Option2</strong> (리눅스 만 가능) 만약 시스템에서 CUDA NVIDIA GPU를 활용 가능하다면, 더 고성능 퍼포먼스를 위해 GPU 패키지를 사용할 수도 있습니다.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add @tensorflow/tfjs-node-gpu</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @tensorflow/tfjs-node-gpu</span><br></pre></td></tr></table></figure><p><strong>Option3</strong> 순수 자바스크립트 버전 설치. 셋 중에 가장 느린 버전입니다.</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add @tensorflow/tfjs</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @tensorflow/tfjs</span><br></pre></td></tr></table></figure><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> tf = <span class="built_in">require</span>(<span class="string">"@tensorflow/tfjs"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 옵셔널</span></span><br><span class="line"><span class="comment">// '@tensorflow/tfjs-node-gpu' gpu와 사용하고 싶다면</span></span><br><span class="line"><span class="built_in">require</span>(<span class="string">"@tensorflow/tfjs-node"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Train a simple model:</span></span><br><span class="line"><span class="keyword">const</span> model = tf.sequential();</span><br><span class="line">model.add(</span><br><span class="line">  tf.layers.dense(&#123; <span class="attr">units</span>: <span class="number">100</span>, <span class="attr">activation</span>: <span class="string">"relu"</span>, <span class="attr">inputShape</span>: [<span class="number">10</span>] &#125;)</span><br><span class="line">);</span><br><span class="line">model.add(tf.layers.dense(&#123; <span class="attr">units</span>: <span class="number">1</span>, <span class="attr">activation</span>: <span class="string">"linear"</span> &#125;));</span><br><span class="line">model.compile(&#123; <span class="attr">optimizer</span>: <span class="string">"sgd"</span>, <span class="attr">loss</span>: <span class="string">"meanSquaredError"</span> &#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> xs = tf.randomNormal([<span class="number">100</span>, <span class="number">10</span>]);</span><br><span class="line"><span class="keyword">const</span> ys = tf.randomNormal([<span class="number">100</span>, <span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">model.fit(xs, ys, &#123;</span><br><span class="line">  epochs: <span class="number">100</span>,</span><br><span class="line">  callbacks: &#123;</span><br><span class="line">    onEpochEnd: <span class="function">(<span class="params">epoch, log</span>) =&gt;</span></span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">`Epoch <span class="subst">$&#123;epoch&#125;</span>: loss = <span class="subst">$&#123;log.loss&#125;</span>`</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure><h3 id="typescript"><a class="header-anchor" href="#typescript">¶</a>TypeScript</h3><p>타입스크립트 환경에서 사용한다면, 그리고 프로젝트에서 strict null 체킹을 한다면<code>skipLibCheck: true</code> 을 <code>tsconfig.json</code>에 포함시켜서 컴파일 도중에 에러가 나지 않도록 처리해야 합니다.</p>]]></content>
+    
+    <summary type="html">
+    
+      ¶설치
+¶브라우저 설치
+Tensorflow.js를 설치하는 방법은 두 가지가 있습니다.
+
+ * Script tag를 이용하는법
+ * npm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용
+
+뉴비 웹 개발자거나, 위 에서 언급한 패키지 들을 전혀 모른다면 스크립트 태그를 활용하세요. 혹은 조금 경험 이 있거나, 큰 규모의 프로그램을 계획하고 있다면 빌드 툴 활용을 검토해보세요.
+
+¶스크립트 태그 사용하기
+1
+
+
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/@tenso
+    
+    </summary>
+    
+    
+      <category term="machine-learning" scheme="https://www.yceffort.kr/tags/machine-learning/"/>
+    
+      <category term="ai" scheme="https://www.yceffort.kr/tags/ai/"/>
+    
+      <category term="tensorflow" scheme="https://www.yceffort.kr/tags/tensorflow/"/>
+    
+      <category term="tensrflowjs" scheme="https://www.yceffort.kr/tags/tensrflowjs/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>2020년 목표</title>
+    <link href="https://www.yceffort.kr/2019/12/18/goal-2020/"/>
+    <id>https://www.yceffort.kr/2019/12/18/goal-2020/</id>
+    <published>2019-12-18T07:38:23.000Z</published>
+    <updated>2019-12-20T01:55:20.320Z</updated>
+    
+    <content type="html"><![CDATA[<p>Don’t do anything boring</p><h2 id="tensorflow-js"><a class="header-anchor" href="#tensorflow-js">¶</a>Tensorflow JS</h2><p>중요도: ★★★★★<br>난이도: ★★★★★</p><p>AI가 하고 싶어요 선생님… tensorflowjs 를 튜토리얼부터 따라하면서 배워보자.</p><h2 id="알고리즘-강의"><a class="header-anchor" href="#알고리즘-강의">¶</a>알고리즘 강의</h2><p><a href="https://code.plus/bundle/8" target="_blank" rel="noopener">백준강의</a></p><p>이제 알고리즘 정복할 때가 되었다. 자바스크립트와 파이썬으로 진행해볼 예정.</p><p>중요도: ★★★★<br>난이도: ★★</p><h2 id="preference-패키지"><a class="header-anchor" href="#preference-패키지">¶</a>Preference 패키지</h2><p>terminal과 친숙해지기 위해 alias설정, git 설정 등을 모아 놓은 private repository를 만들어보고자 한다.</p><p><a href="https://blog.appkr.dev/work-n-play/dotfiles/" target="_blank" rel="noopener">https://blog.appkr.dev/work-n-play/dotfiles/</a><br><a href="https://github.com/inbeom/dotfiles" target="_blank" rel="noopener">https://github.com/inbeom/dotfiles</a><br><a href="https://github.com/boxersb/dotfiles" target="_blank" rel="noopener">https://github.com/boxersb/dotfiles</a></p><p>요런 거를 참고해보자. <code>dotfiles</code> 보다는 광범위한 영역을 커버해보고 싶다.</p><p>중요도: ★<br>난이도: ★★</p><h2 id="resume-작성"><a class="header-anchor" href="#resume-작성">¶</a>Resume 작성</h2><p>마크다운 문서로 Resume를 준비해두자. 그리고 꼭 이직은 아니더라도 한 두군데 이따금씩 넣어보면서 업계에서의 내 위치(?) 를 고민해보자.</p><p>중요도: ★★★★<br>난이도: ★</p><h2 id="kindle"><a class="header-anchor" href="#kindle">¶</a>Kindle</h2><p>이제 이 좁은 집에 더 이상 책 둘 곳도 없다. 이제 그냥 킨들로 읽자. 작년까지는 무식하게 많이 읽자 주의 였다면, 이제는 좀 한권씩 정독할 생각이다.</p><p>중요도: ★★★<br>난이도: ★★★★★</p><h2 id="영어-speaking"><a class="header-anchor" href="#영어-speaking">¶</a>영어 Speaking</h2><p>영어 면접 대비인데… 당장 일하러갈일이 없어서 이건 안 할 수도 있겠다.</p><p>중요도: ★★★<br>난이도: ★</p><h2 id="앱-런칭"><a class="header-anchor" href="#앱-런칭">¶</a>앱 런칭</h2><p><code>flutter</code> 나 <code>react-native-app</code>으로 새롭게 앱 하나 만들어 보고 싶다. 근데 마땅히 뭘 만들어야 할지 아무생각이 없다.</p><p>중요도: ★<br>난이도: ★★★★</p>]]></content>
+    
+    <summary type="html">
+    
+      Don’t do anything boring
+
+¶Tensorflow JS
+중요도: ★★★★★
+난이도: ★★★★★
+
+AI가 하고 싶어요 선생님… tensorflowjs 를 튜토리얼부터 따라하면서 배워보자.
+
+¶알고리즘 강의
+백준강의
+
+이제 알고리즘 정복할 때가 되었다. 자바스크립트와 파이썬으로 진행해볼 예정.
+
+중요도: ★★★★
+난이도: ★★
+
+¶Preference 패키지
+terminal과 친숙해지기 위해 alias설정, git 설정 등을 모아 놓은 private repository를 만들어보고자 한다.
+
+https://blog.ap
+    
+    </summary>
+    
+    
+      <category term="diary" scheme="https://www.yceffort.kr/tags/diary/"/>
+    
+  </entry>
   
   <entry>
     <title>Github을 아름답게 관리하기</title>
@@ -398,6 +510,28 @@ const enum ConstGlobalColorSet {
   </entry>
   
   <entry>
+    <title>koa-nextjs-react-typescript-boilerplate</title>
+    <link href="https://www.yceffort.kr/2019/08/12/koa-nextjs-react-typescript-bolierplate/"/>
+    <id>https://www.yceffort.kr/2019/08/12/koa-nextjs-react-typescript-bolierplate/</id>
+    <published>2019-08-12T04:42:22.000Z</published>
+    <updated>2019-08-13T08:28:42.915Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://github.com/yceffort/koa-nextjs-react-typescript-boilerplate" target="_blank" rel="noopener">github repository</a></p><p>nextjs와 react 만 깔끔하게 쓰고 싶지만, 그러기엔 현실적인 문제가 몇가지 있다</p>]]></content>
+    
+    <summary type="html">
+    
+      github repository
+
+nextjs와 react 만 깔끔하게 쓰고 싶지만, 그러기엔 현실적인 문제가 몇가지 있다
+    
+    </summary>
+    
+    
+      <category term="browser" scheme="https://www.yceffort.kr/tags/browser/"/>
+    
+  </entry>
+  
+  <entry>
     <title>브라우저는 어떻게 동작하는가? - 모던 웹브라우저가 동작하는 방법</title>
     <link href="https://www.yceffort.kr/2019/08/12/how-browser-work/"/>
     <id>https://www.yceffort.kr/2019/08/12/how-browser-work/</id>
@@ -418,28 +552,6 @@ const enum ConstGlobalColorSet {
 
 ¶목차
  1
-    
-    </summary>
-    
-    
-      <category term="browser" scheme="https://www.yceffort.kr/tags/browser/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>koa-nextjs-react-typescript-boilerplate</title>
-    <link href="https://www.yceffort.kr/2019/08/12/koa-nextjs-react-typescript-bolierplate/"/>
-    <id>https://www.yceffort.kr/2019/08/12/koa-nextjs-react-typescript-bolierplate/</id>
-    <published>2019-08-12T04:42:22.000Z</published>
-    <updated>2019-08-13T08:28:42.915Z</updated>
-    
-    <content type="html"><![CDATA[<p><a href="https://github.com/yceffort/koa-nextjs-react-typescript-boilerplate" target="_blank" rel="noopener">github repository</a></p><p>nextjs와 react 만 깔끔하게 쓰고 싶지만, 그러기엔 현실적인 문제가 몇가지 있다</p>]]></content>
-    
-    <summary type="html">
-    
-      github repository
-
-nextjs와 react 만 깔끔하게 쓰고 싶지만, 그러기엔 현실적인 문제가 몇가지 있다
     
     </summary>
     
@@ -599,129 +711,6 @@ function Counter
       <category term="aws" scheme="https://www.yceffort.kr/tags/aws/"/>
     
       <category term="ecs" scheme="https://www.yceffort.kr/tags/ecs/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Javascript Reduce</title>
-    <link href="https://www.yceffort.kr/2019/07/22/javascript-reduce/"/>
-    <id>https://www.yceffort.kr/2019/07/22/javascript-reduce/</id>
-    <published>2019-07-22T02:36:28.000Z</published>
-    <updated>2019-07-22T04:03:28.635Z</updated>
-    
-    <content type="html"><![CDATA[<p>멍청이라 그런지 <code>reduce</code> 함수가 잘 이해 되지 않았다.</p><h2 id="reduce"><a class="header-anchor" href="#reduce">¶</a>Reduce</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> list = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">const</span> initValue = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">const</span> totalSum = list.reduce(</span><br><span class="line">  (accumulator, currentValue, currentIndex, array) =&gt; &#123;</span><br><span class="line">    <span class="keyword">return</span> accumulator + currentValue;</span><br><span class="line">  &#125;,</span><br><span class="line">  initValue</span><br><span class="line">);</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">25</span><br></pre></td></tr></table></figure><ul><li><code>currentValue</code>: 처리할 현재 요소</li><li><code>currentIndex</code> (optional): 처리할 요소의 인덱스</li><li><code>accumulator</code>: 콜백의 반환값을 계속해서 누적한다. 이 예제에서는 처음엔 <code>1</code>, 그 다음엔 <code>1 + currentValue</code>, 그 다음엔 <code>(1 + currentValue) + currentValue</code> 가 될 것이다.</li><li><code>array</code> (optional): <code>reduce</code>를 호출한 배열, 여기서는 <code>list = [1, 2, 3, 4, 5]</code>이 될 것이다.</li><li><code>initValue</code> (optional): <code>reduce</code>의 최초 값. 없으면 배열의 0번째 값이 된다. 이 예제에서는 <code>initValue</code>값이 10 이라서, 최종결과는 <code>10 + (1 + 2 ... + 5)</code> 이 될 것이다.</li></ul><table><thead><tr><th>call</th><th>accumulator</th><th>currentValue</th><th>currentIndex</th><th>array</th><th>return</th></tr></thead><tbody><tr><td>1st</td><td>10</td><td>1</td><td>0</td><td>[1,2,3,4,5]</td><td>11</td></tr><tr><td>2nd</td><td>11</td><td>2</td><td>1</td><td>[1,2,3,4,5]</td><td>13</td></tr><tr><td>3rd</td><td>13</td><td>3</td><td>2</td><td>[1,2,3,4,5]</td><td>16</td></tr><tr><td>4th</td><td>16</td><td>4</td><td>3</td><td>[1,2,3,4,5]</td><td>20</td></tr><tr><td>5th</td><td>20</td><td>5</td><td>4</td><td>[1,2,3,4,5]</td><td>25</td></tr></tbody></table><h2 id="중첩-배열-펼치기"><a class="header-anchor" href="#중첩-배열-펼치기">¶</a>중첩 배열 펼치기</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> complicatedList = [[<span class="number">0</span>, <span class="number">1</span>], [<span class="number">2</span>, <span class="number">3</span>], [<span class="number">4</span>], [<span class="number">5</span>, <span class="number">6</span>]];</span><br><span class="line">complicatedList.reduce(</span><br><span class="line">  (accumulator, currentValue) =&gt; accumulator.concat(currentValue),</span><br><span class="line">  []</span><br><span class="line">);</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[0, 1, 2, 3, 4, 5, 6]</span><br></pre></td></tr></table></figure><p>이보다 더 괴랄한 array의 경우에도 재귀를 사용하여 가능하다.</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> moreComplicatedList = [[<span class="number">0</span>, <span class="number">1</span>], [[[<span class="number">2</span>, <span class="number">3</span>]]], [[<span class="number">4</span>, <span class="number">5</span>]], <span class="number">6</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> flatten = <span class="function"><span class="keyword">function</span>(<span class="params">arr, result = []</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, length = arr.length; i &lt; length; i++) &#123;</span><br><span class="line">    <span class="keyword">const</span> value = arr[i];</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">Array</span>.isArray(value)) &#123;</span><br><span class="line">      flatten(value, result);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      result.push(value);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">flatten(moreComplicatedList);</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[0, 1, 2, 3, 4, 5, 6]</span><br></pre></td></tr></table></figure>]]></content>
-    
-    <summary type="html">
-    
-      멍청이라 그런지 reduce 함수가 잘 이해 되지 않았다.
-
-¶Reduce
-1
-2
-3
-4
-5
-6
-7
-8
-
-
-const list = [1, 2, 3, 4, 5];
-const initValue = 10;
-const totalSum = list.reduce(
-  (accumulator, currentValue, currentIndex, array) =&gt; {
-    return accumulator + currentValue;
-  },
-  initValue
-);
-
-
-1
-
-
-25
-
-
- * currentValue: 처리할 현재 요소
- * cu
-    
-    </summary>
-    
-    
-      <category term="javascript" scheme="https://www.yceffort.kr/tags/javascript/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Javascript Set 그리고 Map</title>
-    <link href="https://www.yceffort.kr/2019/07/18/javascript-map-weakmap/"/>
-    <id>https://www.yceffort.kr/2019/07/18/javascript-map-weakmap/</id>
-    <published>2019-07-18T02:30:52.000Z</published>
-    <updated>2019-07-19T01:12:53.277Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="근데-사실-컬렉션-필요없지-않을까"><a class="header-anchor" href="#근데-사실-컬렉션-필요없지-않을까">¶</a>근데 사실… 컬렉션 필요없지 않을까</h2><p>자바스크립트에서 일반적인 Object는 key-value쌍을 끊임 없이 추가할 수 있는 형태로 구성되어 있다. 그래서 사실 컬렉션이 필요하지 않은 것 처럼 보일 수도 있다. 그러나 이따금씩 object로 부족할 때가 있다.</p><ul><li>key 충돌 위험이 존재하는 경우</li><li>문자열/심볼 이외의 키 값이 필요한 경우</li><li>객체에 얼마나 많은 속성이 있는지 알아낼 수 있는 효과적인 방법이 필요한 경우</li><li>객체가 iterable하지 않음. 따라서 <code>for..of</code> 나 <code>...</code>를 사용할 수 없음</li></ul><p>es6에 추가된 컬렉션들은 따라서 멤버 데이터를 드러내기 위해 property를 사용하지 않는다. (<code>obj.key</code>, <code>obj[key]</code> 불가능.) 그리고 이들에는 자유롭게 메소드를 추가할 수 있다.</p><h2 id="set"><a class="header-anchor" href="#set">¶</a>Set</h2><p><code>Set</code>은 value로 이루어진 컬렉션이다. 그리고 수정가능하다. 배열과 같을 것 같지만, 다르다.</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> faces = <span class="keyword">new</span> <span class="built_in">Set</span>(<span class="string">"😀 😁 😂 🤣 😃 😄 😅"</span>);</span><br><span class="line">faces.size; <span class="comment">// 8</span></span><br><span class="line">faces.add(<span class="string">"😂"</span>);</span><br></pre></td></tr></table></figure><ul><li>일단 (당연하게도) Set에는 같은 value가 중복으로 포함될 수 없다. 기존에 있는걸 추가해도 아무런 변화가 없다.</li><li>Set은 어떤데이터가 자신의 멤버인지 빠르게 확인하기 위한 목적으로 사용한다</li><li>그러나 Set은 index로 값을 조회할 수는 없다.</li></ul><h3 id="set-으로-할-수-있는-것"><a class="header-anchor" href="#set-으로-할-수-있는-것">¶</a>set 으로 할 수 있는 것</h3><ul><li><p><code>new Set()</code>: 비어있는 set 생성</p></li><li><p><code>set.size</code>: set 데이터 개수 조회</p></li><li><p><code>set.has(value)</code>: <code>value</code>가 <code>set</code>에 존재하는지 조회</p></li><li><p><code>set.add(value)</code></p></li><li><p><code>set.delete(value)</code></p></li><li><p><code>sets[Symbol.iterator]()</code>: set 안의 값을 순회할 수 있는 새로운 이터레이러를 리턴한다. set을 iterable하게 만들어 준다.</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> faces = <span class="keyword">new</span> <span class="built_in">Set</span>(<span class="string">"😀 😁 😂 🤣 😃 😄 😅"</span>);</span><br><span class="line">iteratorFaces = faces[<span class="built_in">Symbol</span>.iterator]();</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i <span class="keyword">of</span> iteratorFaces) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ul><li><code>set.forEach(f)</code></li><li><code>set.clear</code></li><li><code>set.keys()</code></li><li><code>set.values()</code></li><li><code>set.entries()</code></li></ul></li></ul><h2 id="map"><a class="header-anchor" href="#map">¶</a>Map</h2><p>Map은 잘 알려진 것처럼, key-value pair로 이루어진 컬렉션이다.</p><h3 id="map으로-할-수-있는-것"><a class="header-anchor" href="#map으로-할-수-있는-것">¶</a>Map으로 할 수 있는 것</h3><ul><li><code>new Map</code></li><li><code>new Map(pairs)</code></li><li><code>map.has(key)</code></li><li><code>map.size</code></li><li><code>mag.get(key)</code></li><li><code>map.set(key, value)</code></li><li><code>map.delete(key)</code></li><li><code>map.clear()</code></li><li><code>map[Symbol.iterator]()</code> === <code>map.entries()</code></li><li><code>map.forEach(f)</code></li><li><code>map.keys()</code></li><li><code>map.values()</code></li></ul><h2 id="javascript-가-다른점"><a class="header-anchor" href="#javascript-가-다른점">¶</a>javascript 가 다른점</h2><p>아래의 코드를 보자.</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> messi = <span class="keyword">new</span> <span class="built_in">Set</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> 리오넬메시 = &#123; <span class="attr">name</span>: <span class="string">"리오넬메시"</span> &#125;;</span><br><span class="line"><span class="keyword">const</span> 라이오넬멧시 = &#123; <span class="attr">name</span>: <span class="string">"리오넬메시"</span> &#125;;</span><br><span class="line">messi.add(리오넬메시);</span><br><span class="line">messi.add(라이오넬멧시);</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(messi.size); <span class="comment">//2 ????</span></span><br></pre></td></tr></table></figure><p><code>리오넬메시</code>와 <code>라이오넬멧시</code>는 내부의 값이 같아 보이기 때문에, set에 한개의 값만 추가 될 것 같지만 사실은 그렇지 않다. 자바스크립트에서는 두개의 값을 다르게 본다. 이유는 자바스크립트가 값을 비교할 때 두가지 다른 방법을 사용하기 때문이다.</p><ul><li>string, number같은 primitive는 값을 비교한다</li><li>array, date, object 등은 reference를 비교한다. (메모리의 같은 위치를 참조하고 있는가?)</li></ul><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> 리오넬메시 = &#123; <span class="attr">name</span>: <span class="string">"리오넬메시"</span> &#125;;</span><br><span class="line"><span class="keyword">const</span> 라이오넬멧시 = &#123; <span class="attr">name</span>: <span class="string">"리오넬메시"</span> &#125;;</span><br><span class="line"><span class="keyword">const</span> 메석대 = 리오넬메시;</span><br><span class="line"></span><br><span class="line">메석대 === 리오넬메시; <span class="comment">// true</span></span><br><span class="line">메석대 == 라이오넬멧시; <span class="comment">// false</span></span><br><span class="line">리오넬메시 === 라이오넬멧시; <span class="comment">//false</span></span><br></pre></td></tr></table></figure><p>본질적으로 같은 메모리를 참조하는 값 끼리만 true를 반환하는 것을 볼 수 있다. (두 object를 비교하는 방법은 <a href="https://stackoverflow.com/questions/1068834/object-comparison-in-javascript" target="_blank" rel="noopener">여기</a>를 참조)</p><p>다시 <code>Set</code>으로 돌아와서, javascript는 저 두 값을 제대로 비교하지 못하기 때문에 set에 두개의 값이 들어가게 된다. 물론 해시코드를 사용하면 가능하지만, javascipt에는 그런거 없다</p><p>또 하나 다른 점이라고 한다면, <code>map</code>과 <code>set</code>에 추가한 순서가 곧 순회하는 순서와 같다는 것이다. 이 역시 다른 언어들과는 다른 점이다.</p><h2 id="weakmap-weakset"><a class="header-anchor" href="#weakmap-weakset">¶</a>WeakMap, WeakSet</h2><ul><li><code>WeakMap</code>은 <code>new</code> <code>.has()</code> <code>.get()</code> <code>.set()</code> <code>.delete()</code> 만 지원한다</li><li><code>WeakSet</code>은 <code>new</code> <code>.has()</code> <code>.add()</code> <code>.delete()</code> 만 지원한다.</li><li><code>WeakSet</code>과 <code>WeakMap</code>의 key는 반드시 <code>object</code>여야 한다.</li></ul><p>그렇다. 열거형이 존재하지 않는다. 그 이유는 참조하고 있는 오브젝트가 사라지면 해당 key, value가 사라지는 <code>WeakMap</code>, <code>WeakSet</code>의 특징 때문이다.</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> john = &#123; <span class="attr">name</span>: <span class="string">"John"</span> &#125;;</span><br><span class="line"><span class="comment">// 객체에 접근 가능, 해당 객체는 메모리에서 참조되고 있음.</span></span><br><span class="line"><span class="comment">// 참조를 null로 overwrite</span></span><br><span class="line">john = <span class="literal">null</span>;</span><br><span class="line"><span class="comment">// 객체는 메모리에서 이제 삭제됨</span></span><br></pre></td></tr></table></figure><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> john = &#123; <span class="attr">name</span>: <span class="string">"John"</span> &#125;;</span><br><span class="line"><span class="keyword">let</span> array = [john];</span><br><span class="line">john = <span class="literal">null</span>; <span class="comment">// 참조를 null로 overwrite</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// john은 객체안에 살아 있기 때문에 가비지 컬렉팅이 되지 않음.</span></span><br><span class="line"><span class="comment">// 그래서 array[0]으로 접근 가능</span></span><br><span class="line">array[<span class="number">0</span>];</span><br><span class="line"><span class="comment">// &#123; name: "John" &#125;</span></span><br></pre></td></tr></table></figure><p>이는 기존 Map, Set에서도 동일하다.</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> john = &#123; <span class="attr">name</span>: <span class="string">"John"</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> map = <span class="keyword">new</span> <span class="built_in">Map</span>();</span><br><span class="line">map.set(john, <span class="string">"윅"</span>);</span><br><span class="line"></span><br><span class="line">john = <span class="literal">null</span>; <span class="comment">// 참조를 null로 overwrite</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// john은 맵안에서 살아있기 때문에</span></span><br><span class="line"><span class="comment">// map.keys() 로 접근 가능</span></span><br></pre></td></tr></table></figure><p>그러나 WeakMap, WeakSet은 다르다</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> john = &#123; <span class="attr">name</span>: <span class="string">"John"</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> weakMap = <span class="keyword">new</span> <span class="built_in">WeakMap</span>();</span><br><span class="line">weakMap.set(john, <span class="string">"윅"</span>);</span><br><span class="line"></span><br><span class="line">john = <span class="literal">null</span>; <span class="comment">// 참조를 null로 overwrite</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// john은 메모리에서 사라짐 (가비지 콜렉팅 당함)</span></span><br></pre></td></tr></table></figure><p>그럼 도대체 이것은 언제 쓸까? 객체가 사라지면 자동으로 가비지 콜렉팅 해준다는 특성을 활용해, 아래와 같은 것이 가능하다.</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> john = &#123; <span class="attr">name</span>: <span class="string">"John"</span> &#125;;</span><br><span class="line"><span class="comment">// map: 유저 =&gt; 방문횟수</span></span><br><span class="line"><span class="keyword">let</span> visitsCountMap = <span class="keyword">new</span> <span class="built_in">Map</span>();</span><br><span class="line">visitsCountMap.set(john, <span class="number">123</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// john이 사라짐</span></span><br><span class="line">john = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 그러나 Map에서는 계속 남아 있으므로, 따로 처리를 해주어야 함.</span></span><br><span class="line"><span class="comment">// 또한 john은 map에서 key로 사용하고 있으므로 메모리에서도 존재함.</span></span><br><span class="line"><span class="built_in">console</span>.log(visitsCountMap.size); <span class="comment">// 1</span></span><br></pre></td></tr></table></figure><p>그러나 여기서 WeakMap을 사용하면, 자동으로 가비지 콜렉팅이 되므로 Map에 남아있는 key에 대해서 까지 신경쓰지 않아도 된다.</p>]]></content>
-    
-    <summary type="html">
-    
-      ¶근데 사실… 컬렉션 필요없지 않을까
-자바스크립트에서 일반적인 Object는 key-value쌍을 끊임 없이 추가할 수 있는 형태로 구성되어 있다. 그래서 사실 컬렉션이 필요하지 않은 것 처럼 보일 수도 있다. 그러나 이따금씩 object로 부족할 때가 있다.
-
- * key 충돌 위험이 존재하는 경우
- * 문자열/심볼 이외의 키 값이 필요한 경우
- * 객체에 얼마나 많은 속성이 있는지 알아낼 수 있는 효과적인 방법이 필요한 경우
- * 객체가 iterable하지 않음. 따라서 for..of 나 ...를 사용할 수 없음
-
-es6에 추가
-    
-    </summary>
-    
-    
-      <category term="javascript" scheme="https://www.yceffort.kr/tags/javascript/"/>
-    
-      <category term="es6" scheme="https://www.yceffort.kr/tags/es6/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Javascript Symbol</title>
-    <link href="https://www.yceffort.kr/2019/07/18/javascript-symbol/"/>
-    <id>https://www.yceffort.kr/2019/07/18/javascript-symbol/</id>
-    <published>2019-07-18T01:03:36.000Z</published>
-    <updated>2019-07-19T01:12:49.639Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="javascript-primitive"><a class="header-anchor" href="#javascript-primitive">¶</a>Javascript Primitive</h2><p>기존에 자바스크립트는 6가지의 primitive가 있었다.</p><ul><li>Object</li><li>string</li><li>number</li><li>boolean</li><li>null</li><li>undefined</li></ul><p>그러나 es6가 들어서면서 <code>symbol</code>이라는 7번째 primitive가 추가되었다.</p><h2 id="symbol"><a class="header-anchor" href="#symbol">¶</a>Symbol</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> helloSymbol = <span class="built_in">Symbol</span>();</span><br><span class="line"><span class="keyword">const</span> hiSymbol = <span class="built_in">Symbol</span>();</span><br></pre></td></tr></table></figure><p>새로운 심볼 값을 생성했다. 이 심볼로 생성한 값은 변경할 수 없으므로 const에 할당에도 상관없다. 그리고 이렇게 생성된 심볼 값은 프로그램 내에서 유일함을 보장해 준다.</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;&#125;;</span><br><span class="line">obj[helloSymbol] = <span class="string">"hello"</span>;</span><br><span class="line">obj[hiSymbol] = <span class="string">"hi"</span>;</span><br><span class="line"><span class="built_in">console</span>.log(obj);</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;Symbol(): &quot;hello&quot;, Symbol(): &quot;hi&quot;&#125;</span><br></pre></td></tr></table></figure><p>물론 문자열이나 숫자를 key로 사용할 수 있지만, symbol은 유일함을 보장해주기 때문에 이렇게 키값으로 사용할 수 있다.</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> welcomeSymbol = <span class="built_in">Symbol</span>(<span class="string">"환영합니다"</span>);</span><br><span class="line"><span class="built_in">console</span>.log(welcomeSymbol);</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Symbol(환영합니다)</span><br></pre></td></tr></table></figure><p><code>Symbol</code>안에 있는 문자열은 일종의 주석으로 보면 될 것 같다.</p><h2 id="예제"><a class="header-anchor" href="#예제">¶</a>예제</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> isBlocked = <span class="built_in">Symbol</span>(<span class="string">"is blocked element?"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (element[isBlocked]) &#123;</span><br><span class="line">  openElement(element);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  element[isBlocked] = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p><code>element</code>는 <code>isBlocked</code>라는 심볼을 키로 갖는 object다. 문자열이나 숫자가 아닌 심볼을 key로 갖는 속성이다. 이는 유일성을 보장해주기 때문에 다른 키들과의 충돌을 방지할 수 있다. 다만 <code>obj.name</code>과 같이 dot을 이용해서 접근할 수 없다. 반드시 <code>[]</code>를 활용해서 접근해야 한다.</p><p>한가지 주의 해야할 것은 <code>isBlocked</code> 심볼 값이 스코프 내에 존재 할 때만 이러한 행위가 가능하다는 것이다. 어떤 모듈이 심볼을 스스로 만드는 경우, 해당 모듈은 해당 심볼을 모든 객체에 적용할 수 있다. <strong>즉 다른 속성과의 충돌을 걱정할 필요가 없다.</strong></p><p>그리고 심볼 키는 이러한 충돌을 방지하기 위해서 만들어 진 것이므로, 일반적인 javascript 객체 조사는 <code>Symbol</code>을 무시한다. 무슨 소리냐면…</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> 메시 = &#123;&#125;;</span><br><span class="line">메시[<span class="string">"영문명"</span>] = <span class="string">"Lionel Messi"</span>;</span><br><span class="line">메시[<span class="string">"별명"</span>] = <span class="string">"라이오넬 멧시"</span>;</span><br><span class="line"><span class="keyword">const</span> Nationality = <span class="built_in">Symbol</span>(<span class="string">"선수의 국적"</span>);</span><br><span class="line">메시[Nationality] = <span class="string">"칠레"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i <span class="keyword">in</span> 메시) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i <span class="keyword">of</span> <span class="built_in">Object</span>.keys(메시)) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(i);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i <span class="keyword">of</span> <span class="built_in">Object</span>.getOwnPropertyNames(메시)) &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&quot;영문명&quot;</span><br><span class="line">&quot;별명&quot;</span><br><span class="line">&quot;영문명&quot;</span><br><span class="line">&quot;별명&quot;</span><br><span class="line">&quot;영문명&quot;</span><br><span class="line">&quot;별명&quot;</span><br></pre></td></tr></table></figure><p>이처럼 심볼 <code>Nationality</code> 키는 일반적인 상황에서 모두 무시 되는 것을 볼 수 있다. 물론 이를 조회하는 방법도 있다.</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Object</span>.getOwnPropertySymbols(메시);</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[Symbol(선수의 국적)]</span><br></pre></td></tr></table></figure><p>혹은 심볼을 포함해서 모든 키를 조회하고 싶다면</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Reflect</span>.ownKeys(메시);</span><br></pre></td></tr></table></figure><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&quot;영문명&quot;, &quot;별명&quot;, Symbol(선수의 국적)]</span><br></pre></td></tr></table></figure><p><code>Reflect.ownKeys</code>를 활용하면 된다.</p><h2 id="심볼의-특징"><a class="header-anchor" href="#심볼의-특징">¶</a>심볼의 특징</h2><ul><li>일단 생성되면 변경되지 않는다</li><li>속성을 부여할 수 없다</li><li>object의 key 값으로 사용할 수 있다.</li><li>모든 심볼은 고유하다. 주석이 동일하다 하더라도 일단 생성되면 다르게 구별된다.</li><li>문자열로 자동으로 변환되지 않는다.</li></ul><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> newSymbol = <span class="built_in">Symbol</span>(</span><br><span class="line">  <span class="string">"this symbol"</span></span><br><span class="line">)<span class="string">`symbol is <span class="subst">$&#123;newSymbol&#125;</span>`</span><span class="comment">//Uncaught TypeError: Cannot convert a Symbol value to a string</span></span><br><span class="line"><span class="string">`symbol is <span class="subst">$&#123;<span class="built_in">String</span>(newSymbol)&#125;</span> <span class="subst">$&#123;newSymbol.toString()&#125;</span>`</span>;</span><br><span class="line"><span class="comment">// symbol is Symbol(this symbol) Symbol(this symbol)</span></span><br></pre></td></tr></table></figure><h2 id="심볼을-갖는-방법"><a class="header-anchor" href="#심볼을-갖는-방법">¶</a>심볼을 갖는 방법</h2><ul><li><code>Symbol()</code>을 호출한다. 이는 호출할 때 마다 새롭고 고유한 심볼을 만들어 준다.</li><li><code>Symbol.for(string)</code>을 호출한다. 이 메소드는 <code>Symbol Registry</code>라는 심볼목록을 참조하여 리턴하는데, 앞서와는 다르게 심볼 목록을 공유한다. <code>Symbol.for('호날도')</code>를 계속해서 호출한다면, 매번 같은 심볼을 리턴한다. 이는 심볼이 공유 되어야 하는 상황에서 유용하다.</li><li><code>Symbol.length</code> 처럼 표준에 정의된 심볼을 가져오는 법</li></ul>]]></content>
-    
-    <summary type="html">
-    
-      ¶Javascript Primitive
-기존에 자바스크립트는 6가지의 primitive가 있었다.
-
- * Object
- * string
- * number
- * boolean
- * null
- * undefined
-
-그러나 es6가 들어서면서 symbol이라는 7번째 primitive가 추가되었다.
-
-¶Symbol
-1
-2
-
-
-const helloSymbol = Symbol();
-const hiSymbol = Symbol();
-
-
-새로운 심볼 값을 생성했다. 이 심볼로 생성한 값은 변경할 수 없으므로 const에 할당에도 상관없다. 그리
-    
-    </summary>
-    
-    
-      <category term="javascript" scheme="https://www.yceffort.kr/tags/javascript/"/>
-    
-      <category term="es6" scheme="https://www.yceffort.kr/tags/es6/"/>
     
   </entry>
   
