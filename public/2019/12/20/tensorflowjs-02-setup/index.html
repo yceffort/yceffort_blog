@@ -34,19 +34,19 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"¶설치\n¶브라우저 설치\nTensorflow.js를 설치하는 방법은 두 가지가 있습니다.\n\nScript tag를 이용하는법\nnpm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용\n\n뉴비 웹 개발자거나, 위 에서 언급한 패키지 들을 전혀 모른다면 스크립트 태그를 활용하세요. 혹은 조금 경험 이 있거나, 큰 규모의 프로그램을 계획하고 있다면 빌드 툴 활용을 검토해보세요.\n¶스크립트 태그 사용하기\n1&lt;script src=\"https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js\"&gt;&lt;/script&gt;\n12345678910111213141516// linear regression 모델const model = tf.sequential();model.add(tf.layers.dense(&#123; units: 1, inputShape: [1] &#125;));model.compile(&#123; loss: \"meanSquaredError\", optimizer: \"sgd\" &#125;);// 훈련을 위한 임의 데이터 생성const xs = tf.tensor2d([1, 2, 3, 4], [4, 1]);const ys = tf.tensor2d([1, 3, 5, 7], [4, 1]);// 데이터 기반으로 훈련시키기model.fit(xs, ys, &#123; epochs: 10 &#125;).then(() =&gt; &#123;  // 훈련한 모델을 기반으로 데이터 예측  model.predict(tf.tensor2d([5], [1, 1])).print();  // dev tool에 결과 값이 나온다.&#125;);\n¶npm을 이용해서 설치하기\nnpm cli나 yarn둘다 활용할 수 있습니다.\n1yarn add @tensorflow/tfjs\n1npm install @tensorflow/tfjs\n123456789101112131415161718import * as tf from \"@tensorflow/tfjs\";// linear regression 모델const model = tf.sequential();model.add(tf.layers.dense(&#123; units: 1, inputShape: [1] &#125;));model.compile(&#123; loss: \"meanSquaredError\", optimizer: \"sgd\" &#125;);// 훈련을 위한 임의 데이터 생성const xs = tf.tensor2d([1, 2, 3, 4], [4, 1]);const ys = tf.tensor2d([1, 3, 5, 7], [4, 1]);// 데이터 기반으로 훈련시키기model.fit(xs, ys, &#123; epochs: 10 &#125;).then(() =&gt; &#123;  // 훈련한 모델을 기반으로 데이터 예측  model.predict(tf.tensor2d([5], [1, 1])).print();  // 결과 값이 나온다.&#125;);\n¶Node.js 설치\nnpm cli나 yarn둘다 활용할 수 있습니다.\nOption1 native C++ 바인딩이 포함되어 있는 Tensorflow.js 설치\n1yarn add @tensorflow/tfjs-node\n1npm install @tensorflow/tfjs-node\nOption2 (리눅스 만 가능) 만약 시스템에서 CUDA NVIDIA GPU를 활용 가능하다면, 더 고성능 퍼포먼스를 위해 GPU 패키지를 사용할 수도 있습니다.\n1yarn add @tensorflow/tfjs-node-gpu\n1npm install @tensorflow/tfjs-node-gpu\nOption3 순수 자바스크립트 버전 설치. 셋 중에 가장 느린 버전입니다.\n1yarn add @tensorflow/tfjs\n1npm install @tensorflow/tfjs\n123456789101112131415161718192021222324const tf = require(\"@tensorflow/tfjs\");// 옵셔널// '@tensorflow/tfjs-node-gpu' gpu와 사용하고 싶다면require(\"@tensorflow/tfjs-node\");// Train a simple model:const model = tf.sequential();model.add(  tf.layers.dense(&#123; units: 100, activation: \"relu\", inputShape: [10] &#125;));model.add(tf.layers.dense(&#123; units: 1, activation: \"linear\" &#125;));model.compile(&#123; optimizer: \"sgd\", loss: \"meanSquaredError\" &#125;);const xs = tf.randomNormal([100, 10]);const ys = tf.randomNormal([100, 1]);model.fit(xs, ys, &#123;  epochs: 100,  callbacks: &#123;    onEpochEnd: (epoch, log) =&gt;      console.log(`Epoch $&#123;epoch&#125;: loss = $&#123;log.loss&#125;`)  &#125;&#125;);\n¶TypeScript\n타입스크립트 환경에서 사용한다면, 그리고 프로젝트에서 strict null 체킹을 한다면skipLibCheck: true 을 tsconfig.json에 포함시켜서 컴파일 도중에 에러가 나지 않도록 처리해야 합니다.\n","dateCreated":"2019-12-20T13:49:01+09:00","dateModified":"2019-12-20T14:15:36+09:00","datePublished":"2019-12-20T13:49:01+09:00","description":"¶설치\n¶브라우저 설치\nTensorflow.js를 설치하는 방법은 두 가지가 있습니다.\n\n * Script tag를 이용하는법\n * npm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용\n\n뉴비 웹 개발자거나, 위 에서 언급한 패키지 들을 전혀 모른다면 스크립트 태그를 활용하세요. 혹은 조금 경험 이 있거나, 큰 규모의 프로그램을 계획하고 있다면 빌드 툴 활용을 검토해보세요.\n\n¶스크립트 태그 사용하기\n1\n\n\n","headline":"Tensorflow.js - 02. 설치하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/12/20/tensorflowjs-02-setup/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/12/20/tensorflowjs-02-setup/","keywords":"machine-learning, ai, tensorflow, tensrflowjs"}</script>
-    <meta name="description" content="¶설치 ¶브라우저 설치 Tensorflow.js를 설치하는 방법은 두 가지가 있습니다.   * Script tag를 이용하는법  * npm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용  뉴비 웹 개발자거나, 위 에서 언급한 패키지 들을 전혀 모른다면 스크립트 태그를 활용하세요. 혹은 조금 경험 이 있거나, 큰 규모의">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"\n¶스크립트 태그 사용하기\n1&lt;script src=\"https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js\"&gt;&lt;/script&gt;\n12345678910111213141516// linear regression 모델const model = tf.sequential();model.add(tf.layers.dense(&#123; units: 1, inputShape: [1] &#125;));model.compile(&#123; loss: \"meanSquaredError\", optimizer: \"sgd\" &#125;);// 훈련을 위한 임의 데이터 생성const xs = tf.tensor2d([1, 2, 3, 4], [4, 1]);const ys = tf.tensor2d([1, 3, 5, 7], [4, 1]);// 데이터 기반으로 훈련시키기model.fit(xs, ys, &#123; epochs: 10 &#125;).then(() =&gt; &#123;  // 훈련한 모델을 기반으로 데이터 예측  model.predict(tf.tensor2d([5], [1, 1])).print();  // dev tool에 결과 값이 나온다.&#125;);\n¶npm을 이용해서 설치하기\nnpm cli나 yarn둘다 활용할 수 있습니다.\n1yarn add @tensorflow/tfjs\n1npm install @tensorflow/tfjs\n123456789101112131415161718import * as tf from \"@tensorflow/tfjs\";// linear regression 모델const model = tf.sequential();model.add(tf.layers.dense(&#123; units: 1, inputShape: [1] &#125;));model.compile(&#123; loss: \"meanSquaredError\", optimizer: \"sgd\" &#125;);// 훈련을 위한 임의 데이터 생성const xs = tf.tensor2d([1, 2, 3, 4], [4, 1]);const ys = tf.tensor2d([1, 3, 5, 7], [4, 1]);// 데이터 기반으로 훈련시키기model.fit(xs, ys, &#123; epochs: 10 &#125;).then(() =&gt; &#123;  // 훈련한 모델을 기반으로 데이터 예측  model.predict(tf.tensor2d([5], [1, 1])).print();  // 결과 값이 나온다.&#125;);\n¶Node.js 설치\nnpm cli나 yarn둘다 활용할 수 있습니다.\nOption1 native C++ 바인딩이 포함되어 있는 Tensorflow.js 설치\n1yarn add @tensorflow/tfjs-node\n1npm install @tensorflow/tfjs-node\nOption2 (리눅스 만 가능) 만약 시스템에서 CUDA NVIDIA GPU를 활용 가능하다면, 더 고성능 퍼포먼스를 위해 GPU 패키지를 사용할 수도 있습니다.\n1yarn add @tensorflow/tfjs-node-gpu\n1npm install @tensorflow/tfjs-node-gpu\nOption3 순수 자바스크립트 버전 설치. 셋 중에 가장 느린 버전입니다.\n1yarn add @tensorflow/tfjs\n1npm install @tensorflow/tfjs\n123456789101112131415161718192021222324const tf = require(\"@tensorflow/tfjs\");// 옵셔널// '@tensorflow/tfjs-node-gpu' gpu와 사용하고 싶다면require(\"@tensorflow/tfjs-node\");// Train a simple model:const model = tf.sequential();model.add(  tf.layers.dense(&#123; units: 100, activation: \"relu\", inputShape: [10] &#125;));model.add(tf.layers.dense(&#123; units: 1, activation: \"linear\" &#125;));model.compile(&#123; optimizer: \"sgd\", loss: \"meanSquaredError\" &#125;);const xs = tf.randomNormal([100, 10]);const ys = tf.randomNormal([100, 1]);model.fit(xs, ys, &#123;  epochs: 100,  callbacks: &#123;    onEpochEnd: (epoch, log) =&gt;      console.log(`Epoch $&#123;epoch&#125;: loss = $&#123;log.loss&#125;`)  &#125;&#125;);\n¶TypeScript\n타입스크립트 환경에서 사용한다면, 그리고 프로젝트에서 strict null 체킹을 한다면skipLibCheck: true 을 tsconfig.json에 포함시켜서 컴파일 도중에 에러가 나지 않도록 처리해야 합니다.","dateCreated":"2019-12-20T13:49:01+09:00","dateModified":"2019-12-20T14:35:46+09:00","datePublished":"2019-12-20T13:49:01+09:00","description":"이전글 보기\n¶설치\n¶브라우저 설치\nTensorflow.js를 설치하는 방법은 두 가지가 있습니다.\n\nScript tag를 이용하는법\nnpm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용\n\n뉴비 웹 개발자거나, 위 에서 언급한 패키지 들을 전혀 모른다면 스크립트 태그를 활용하세요. 혹은 조금 경험 이 있거나, 큰 규모의 프로그램을 계획하고 있다면 빌드 툴 활용을 검토해보세요.","headline":"Tensorflow.js - 02. 설치하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/12/20/tensorflowjs-02-setup/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/12/20/tensorflowjs-02-setup/","keywords":"machine-learning, ai, tensorflow, tensrflowjs"}</script>
+    <meta name="description" content="이전글 보기 ¶설치 ¶브라우저 설치 Tensorflow.js를 설치하는 방법은 두 가지가 있습니다.  Script tag를 이용하는법 npm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용  뉴비 웹 개발자거나, 위 에서 언급한 패키지 들을 전혀 모른다면 스크립트 태그를 활용하세요. 혹은 조금 경험 이 있거나, 큰 규모">
 <meta name="keywords" content="machine-learning,ai,tensorflow,tensrflowjs">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Tensorflow.js - 02. 설치하기">
 <meta property="og:url" content="https://www.yceffort.kr/2019/12/20/tensorflowjs-02-setup/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="¶설치 ¶브라우저 설치 Tensorflow.js를 설치하는 방법은 두 가지가 있습니다.   * Script tag를 이용하는법  * npm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용  뉴비 웹 개발자거나, 위 에서 언급한 패키지 들을 전혀 모른다면 스크립트 태그를 활용하세요. 혹은 조금 경험 이 있거나, 큰 규모의">
+<meta property="og:description" content="이전글 보기 ¶설치 ¶브라우저 설치 Tensorflow.js를 설치하는 방법은 두 가지가 있습니다.  Script tag를 이용하는법 npm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용  뉴비 웹 개발자거나, 위 에서 언급한 패키지 들을 전혀 모른다면 스크립트 태그를 활용하세요. 혹은 조금 경험 이 있거나, 큰 규모">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-12-20T05:15:36.497Z">
+<meta property="og:updated_time" content="2019-12-20T05:35:46.258Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Tensorflow.js - 02. 설치하기">
-<meta name="twitter:description" content="¶설치 ¶브라우저 설치 Tensorflow.js를 설치하는 방법은 두 가지가 있습니다.   * Script tag를 이용하는법  * npm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용  뉴비 웹 개발자거나, 위 에서 언급한 패키지 들을 전혀 모른다면 스크립트 태그를 활용하세요. 혹은 조금 경험 이 있거나, 큰 규모의">
+<meta name="twitter:description" content="이전글 보기 ¶설치 ¶브라우저 설치 Tensorflow.js를 설치하는 방법은 두 가지가 있습니다.  Script tag를 이용하는법 npm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용  뉴비 웹 개발자거나, 위 에서 언급한 패키지 들을 전혀 모른다면 스크립트 태그를 활용하세요. 혹은 조금 경험 이 있거나, 큰 규모">
     
     
     
@@ -58,7 +58,7 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-iyxsfxng5z2aqzamse6aps0lcii97y4op8hvyv9myltr058xvtcydusibtym.min.css">
+    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -261,14 +261,7 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h2 id="설치"><a class="header-anchor" href="#설치">¶</a>설치</h2>
-<h3 id="브라우저-설치"><a class="header-anchor" href="#브라우저-설치">¶</a>브라우저 설치</h3>
-<p>Tensorflow.js를 설치하는 방법은 두 가지가 있습니다.</p>
-<ul>
-<li>Script tag를 이용하는법</li>
-<li>npm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용</li>
-</ul>
-<p>뉴비 웹 개발자거나, 위 에서 언급한 패키지 들을 전혀 모른다면 스크립트 태그를 활용하세요. 혹은 조금 경험 이 있거나, 큰 규모의 프로그램을 계획하고 있다면 빌드 툴 활용을 검토해보세요.</p>
+            <!-- excerpt -->
 <h4 id="스크립트-태그-사용하기"><a class="header-anchor" href="#스크립트-태그-사용하기">¶</a>스크립트 태그 사용하기</h4>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// linear regression 모델</span></span><br><span class="line"><span class="keyword">const</span> model = tf.sequential();</span><br><span class="line">model.add(tf.layers.dense(&#123; <span class="attr">units</span>: <span class="number">1</span>, <span class="attr">inputShape</span>: [<span class="number">1</span>] &#125;));</span><br><span class="line"></span><br><span class="line">model.compile(&#123; <span class="attr">loss</span>: <span class="string">"meanSquaredError"</span>, <span class="attr">optimizer</span>: <span class="string">"sgd"</span> &#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 훈련을 위한 임의 데이터 생성</span></span><br><span class="line"><span class="keyword">const</span> xs = tf.tensor2d([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>], [<span class="number">4</span>, <span class="number">1</span>]);</span><br><span class="line"><span class="keyword">const</span> ys = tf.tensor2d([<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>], [<span class="number">4</span>, <span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 데이터 기반으로 훈련시키기</span></span><br><span class="line">model.fit(xs, ys, &#123; <span class="attr">epochs</span>: <span class="number">10</span> &#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 훈련한 모델을 기반으로 데이터 예측</span></span><br><span class="line">  model.predict(tf.tensor2d([<span class="number">5</span>], [<span class="number">1</span>, <span class="number">1</span>])).print();</span><br><span class="line">  <span class="comment">// dev tool에 결과 값이 나온다.</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
@@ -291,7 +284,6 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> tf = <span class="built_in">require</span>(<span class="string">"@tensorflow/tfjs"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 옵셔널</span></span><br><span class="line"><span class="comment">// '@tensorflow/tfjs-node-gpu' gpu와 사용하고 싶다면</span></span><br><span class="line"><span class="built_in">require</span>(<span class="string">"@tensorflow/tfjs-node"</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Train a simple model:</span></span><br><span class="line"><span class="keyword">const</span> model = tf.sequential();</span><br><span class="line">model.add(</span><br><span class="line">  tf.layers.dense(&#123; <span class="attr">units</span>: <span class="number">100</span>, <span class="attr">activation</span>: <span class="string">"relu"</span>, <span class="attr">inputShape</span>: [<span class="number">10</span>] &#125;)</span><br><span class="line">);</span><br><span class="line">model.add(tf.layers.dense(&#123; <span class="attr">units</span>: <span class="number">1</span>, <span class="attr">activation</span>: <span class="string">"linear"</span> &#125;));</span><br><span class="line">model.compile(&#123; <span class="attr">optimizer</span>: <span class="string">"sgd"</span>, <span class="attr">loss</span>: <span class="string">"meanSquaredError"</span> &#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> xs = tf.randomNormal([<span class="number">100</span>, <span class="number">10</span>]);</span><br><span class="line"><span class="keyword">const</span> ys = tf.randomNormal([<span class="number">100</span>, <span class="number">1</span>]);</span><br><span class="line"></span><br><span class="line">model.fit(xs, ys, &#123;</span><br><span class="line">  epochs: <span class="number">100</span>,</span><br><span class="line">  callbacks: &#123;</span><br><span class="line">    onEpochEnd: <span class="function">(<span class="params">epoch, log</span>) =&gt;</span></span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">`Epoch <span class="subst">$&#123;epoch&#125;</span>: loss = <span class="subst">$&#123;log.loss&#125;</span>`</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 <h3 id="typescript"><a class="header-anchor" href="#typescript">¶</a>TypeScript</h3>
 <p>타입스크립트 환경에서 사용한다면, 그리고 프로젝트에서 strict null 체킹을 한다면<code>skipLibCheck: true</code> 을 <code>tsconfig.json</code>에 포함시켜서 컴파일 도중에 에러가 나지 않도록 처리해야 합니다.</p>
-
             
 
         </div>
@@ -590,8 +582,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -609,8 +601,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -666,8 +658,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -685,8 +677,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -756,7 +748,7 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
-<script src="/assets/js/script-x1zkdpaoieempqljgobpkeq95zi4mqk1sxpehbfxheuw5zbkhl7yw1l7engd.min.js"></script>
+<script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
 <!--SCRIPTS END-->
 
     
