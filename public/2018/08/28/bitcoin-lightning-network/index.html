@@ -34,25 +34,26 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"The Bitcoin Lightning Network\n원문\n라이트닝 네트워크란 신뢰할 수 있는 제3자에게 자금 관리를 위임하는 위험을 제거하는, 대규모 소액지불을 위한 분산 시스템이다.\n세계에서 가장 널리 사용되고 가치 있는 디지털 통화인 비트코인은 신뢰할 수 있는 중개자가 없이 가치를 보낼 수 있다. 비트코인에는 사용자가 자금에 대한 지침을 프로그래밍 할 수 있는 고급 스크립팅 시스템이 포함되어 있다. 그러나 이러한 비트코인 분산된 디자인에는 몇가지 단점이 있다. 비트코인 블록체인에서 거래가 온전히 확인되기 위해서는 최대 1시간이 걸린다. 소액 지불 또는 몇 센트 미만의 지불도 마찬가지로 오랜시간이 걸렸고, 이러한 거래를 확인하는 수수료로 인해 오늘날 네트워크에서 이러한 거래가 실행되기 어렵게 했다.\n라이트닝 네트워크는 이러한 문제를 해결한다. 비트코인의 내장 스크립팅을 이용한 다자간 스마트 컨트랙트 (프로그래밍 가능한 돈)를 구현한 최초 사례중 하나다. 라이트닝 네트워크는 다자간 금융 컴퓨팅 분야에서 기술개발을 선도하고 있다.\n¶즉시 지불\n비트코인은 거래를 10분 간격으로 블록으로 집계한다. 지불은 6블록 혹은 1시간에 걸친 확인 끝에 비트코인 네트워크 내에서 안전하고 간주된다. 라이트닝 네트워크 내에서 지불은 블록 확인을 필요로 하지 않으며, 즉각적이다. 라이트닝 네트워크는 사용자 대 디바이스 트랜잭션을 통해 소매점에서 사용하거나, 인스턴트 지불이 필요한 곳에서 사용할 수 있다.\n¶소액 지불\n소액 결제의 가능성으로 새로운 시장을 만들어 낼 수 있다. 라이트닝 네트워크는 관리상의 위험없이 0.0000001 비트코인의 자금을 보낼 수 있게 한다. 비트코인 블록체인은 현재 최소 출력 크기를 수백배 이상 높이고, 소액결제를 비실용적으로 만드는 고정 거래당 수수료를 부과하고 있다. 라이트닝 네트워크는 실제 비트코인 거래를 활용하여 비트코인으로 표시된 최소 지불을 허용한다.\n¶확장성\n비트코인 네트워크는 자동화된 지불에 따른 수요를 충족시키기 위해 보다 큰 거래량의 주문을 지원해야 한다. 인터넷에 연결된 장치가 증가하면서 기계 간 지불 및 자동화된 소액 지불 서비스를 위한 플랫폼이 필요하다. 라이트닝 네트워크 트랜잭션은 신뢰 및 소유권 위임 없이 블록체인에서 수행되므로, 사용자는 다른 장치간에 거의 무제한 트랜잭션을 수행할 수 있다.\n¶어떻게 작동하는가?\n자금은 양자의 다중 서명 ‘채널’ 비트코인 주소에 배치된다. 이 채널은 비트코인 공개 원장의 항목으로 표시된다. 채널에서 자금을 지출하기 위해서는 양 당사자가 새로운 잔고에 동의 해야 한다. 현재 잔액은 채널 주소에서 지출한 가장 최근 거래로 저장된다. 결제를 위해, 양 당사자는 채널 주소에서 새로운 출구 거래 지출에 서명한다. 모든 이전 출구 트랜잭션은 무효화 된다.\n라이트닝 네트워크는 채널을 종료하기 위해 상대방과 협력할 필요가 없다. 양 당사자는 일방적으로 채널을 닫고 끝낼 수 있는 옵션을 가지고 있다. 모든 당사자는 이 네트워크에 있는 많은 다른 사용자가 있는 여러개의 다중 서명 채널을 가지고 있기 때문에, 이 네트워크를 통해 다른 당사자에게 지불 할 수 있다.\n안전한 암호화 해시에 따라 지급 조건을 포함시킴으로써, 어떤 당사자도 자금의 일방적인 소유권을 가질 필요 없이 채널 네트워크를 통해 지급할 수 있다. 라이트닝 네트우크는 독점에 취약한 신뢰할 수 있는 금융 시스템에서 이전에는 불가능한 것을 가능하게 하며, 네트워크에 대한 참여는 동적이며 모두에게 개방적이다.\n\n원문 설명이 너무 어려운 것 같다. 조금 더 쉽게 써보자.\n라이트닝 네트워크의 가장 큰 아이디어는 모든 트랜잭션이 블록체인에 기록될 필요는 없다는 것이다. 사소한 금액의 모든 것들을 블록체인에 기록하지 않는 대신, 지불 채널이라는 것을 만들어 사소한 거래를 기록할 것이다. 이 지불 채널을 통해 여러번 거래를 할 수 있으며, 몇 시간, 몇일, 혹은 몇 주 동안 이채널을 열어 둘 수 있다. 이 내역이 블록체인에 저장되는 시간은 바로 채널을 닫을 때다. 채널을 닫으면, 발생한 거래의 최종 상태를 블록 체인에 쓴다.\n\n두 사람은 각각 동등한 금액을 멀티 시그 주소에 예치하며, 이 작업은 ‘오프닝 거래’ 형태로 블록체인에 기록되고, 두사람간에 지불 채널이 열리게 된다. 그리고 이 돈은 아무도 쓸수 없으며, 여기에 있는 돈은 서로 거래하는데만 사용하게 된다.\n\n만약 한사람이 2개 코인을 보내주길 원한다면, 해당 소유권을 상대방에게 넘겨주게 된다. 그리고 이 둘은 계속해서 거래를 하기를 원하므로 이 상태에서 계속 머물러 있는다.\n\n그리고 다른 상대방이 1개의 코인을 보내주기를 원한다면, 동일한 방법으로 소유권을 이전하면 된다.\n\n마짐막으로 서로 더이상 거래를 하기를 원하지 않는다면, 마지막 거래의 결과에 따라 소유권을 나눠 갖게 된다. 그리고 이는 블록체인에 기록된다.\n\n이는 직접적인 지불 채널이 없는 상황에서도 위와 같이 사용할 수 있다. 이와 같은 지불 채널 네트워크를 활용하면, 막대한 양의 거래를 체인 외부에서 수행할 수 있게 되며, 거래 수수료 또한 발생하지 않는다.\n참고\n","dateCreated":"2018-08-28T00:00:00+09:00","dateModified":"2018-08-28T03:22:16+09:00","datePublished":"2018-08-28T00:00:00+09:00","description":"The Bitcoin Lightning Network\n\n원문\n\n라이트닝 네트워크란 신뢰할 수 있는 제3자에게 자금 관리를 위임하는 위험을 제거하는, 대규모 소액지불을 위한 분산 시스템이다.\n\n세계에서 가장 널리 사용되고 가치 있는 디지털 통화인 비트코인은 신뢰할 수 있는 중개자가 없이 가치를 보낼 수 있다. 비트코인에는 사용자가 자금에 대한 지침을 프로그래밍 할 수 있는 고급 스크립팅 시스템이 포함되어 있다. 그러나 이러한 비트코인 분산된 디자인에는 몇가지 단점이 있다. 비트코인 블록체인에서 거래가 온전히 확인되기 위해서는 최대 1","headline":"비트코인 라이트닝 네트워크","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/08/28/bitcoin-lightning-network/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/08/28/bitcoin-lightning-network/","keywords":"bitcoin, blockchain"}</script>
-    <meta name="description" content="The Bitcoin Lightning Network  원문  라이트닝 네트워크란 신뢰할 수 있는 제3자에게 자금 관리를 위임하는 위험을 제거하는, 대규모 소액지불을 위한 분산 시스템이다.  세계에서 가장 널리 사용되고 가치 있는 디지털 통화인 비트코인은 신뢰할 수 있는 중개자가 없이 가치를 보낼 수 있다. 비트코인에는 사용자가 자금에 대한 지침을 프로그래">
-<meta name="keywords" content="bitcoin,blockchain">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"The Bitcoin Lightning Network\n원문\n라이트닝 네트워크란 신뢰할 수 있는 제3자에게 자금 관리를 위임하는 위험을 제거하는, 대규모 소액지불을 위한 분산 시스템이다. \n세계에서 가장 널리 사용되고 가치 있는 디지털 통화인 비트코인은 신뢰할 수 있는 중개자가 없이 가치를 보낼 수 있다. 비트코인에는 사용자가 자금에 대한 지침을 프로그래밍 할 수 있는 고급 스크립팅 시스템이 포함되어 있다. 그러나 이러한 비트코인 분산된 디자인에는 몇가지 단점이 있다. 비트코인 블록체인에서 거래가 온전히 확인되기 위해서는 최대 1시간이 걸린다. 소액 지불 또는 몇 센트 미만의 지불도 마찬가지로 오랜시간이 걸렸고, 이러한 거래를 확인하는 수수료로 인해 오늘날 네트워크에서 이러한 거래가 실행되기 어렵게 했다.\n라이트닝 네트워크는 이러한 문제를 해결한다. 비트코인의 내장 스크립팅을 이용한 다자간 스마트 컨트랙트 (프로그래밍 가능한 돈)를 구현한 최초 사례중 하나다. 라이트닝 네트워크는 다자간 금융 컴퓨팅 분야에서 기술개발을 선도하고 있다.\n즉시 지불비트코인은 거래를 10분 간격으로 블록으로 집계한다. 지불은 6블록 혹은 1시간에 걸친 확인 끝에 비트코인 네트워크 내에서 안전하고 간주된다. 라이트닝 네트워크 내에서 지불은 블록 확인을 필요로 하지 않으며, 즉각적이다. 라이트닝 네트워크는 사용자 대 디바이스 트랜잭션을 통해 소매점에서 사용하거나, 인스턴트 지불이 필요한 곳에서 사용할 수 있다.\n소액 지불소액 결제의 가능성으로 새로운 시장을 만들어 낼 수 있다. 라이트닝 네트워크는 관리상의 위험없이 0.0000001 비트코인의 자금을 보낼 수 있게 한다. 비트코인 블록체인은 현재 최소 출력 크기를 수백배 이상 높이고, 소액결제를 비실용적으로 만드는 고정 거래당 수수료를 부과하고 있다. 라이트닝 네트워크는 실제 비트코인 거래를 활용하여 비트코인으로 표시된 최소 지불을 허용한다.\n확장성비트코인 네트워크는 자동화된 지불에 따른 수요를 충족시키기 위해 보다 큰 거래량의 주문을 지원해야 한다. 인터넷에 연결된 장치가 증가하면서 기계 간 지불 및 자동화된 소액 지불 서비스를 위한 플랫폼이 필요하다. 라이트닝 네트워크 트랜잭션은 신뢰 및 소유권 위임 없이 블록체인에서 수행되므로, 사용자는 다른 장치간에 거의 무제한 트랜잭션을 수행할 수 있다.\n어떻게 작동하는가?자금은 양자의 다중 서명 ‘채널’ 비트코인 주소에 배치된다. 이 채널은 비트코인 공개 원장의 항목으로 표시된다. 채널에서 자금을 지출하기 위해서는 양 당사자가 새로운 잔고에 동의 해야 한다. 현재 잔액은 채널 주소에서 지출한 가장 최근 거래로 저장된다. 결제를 위해, 양 당사자는 채널 주소에서 새로운 출구 거래 지출에 서명한다. 모든 이전 출구 트랜잭션은 무효화 된다.\n라이트닝 네트워크는 채널을 종료하기 위해 상대방과 협력할 필요가 없다. 양 당사자는 일방적으로 채널을 닫고 끝낼 수 있는 옵션을 가지고 있다. 모든 당사자는 이 네트워크에 있는 많은 다른 사용자가 있는 여러개의 다중 서명 채널을 가지고 있기 때문에, 이 네트워크를 통해 다른 당사자에게 지불 할 수 있다.\n안전한 암호화 해시에 따라 지급 조건을 포함시킴으로써, 어떤 당사자도 자금의 일방적인 소유권을 가질 필요 없이 채널 네트워크를 통해 지급할 수 있다. 라이트닝 네트우크는 독점에 취약한 신뢰할 수 있는 금융 시스템에서 이전에는 불가능한 것을 가능하게 하며, 네트워크에 대한 참여는 동적이며 모두에게 개방적이다.\n\n원문 설명이 너무 어려운 것 같다. 조금 더 쉽게 써보자.\n라이트닝 네트워크의 가장 큰 아이디어는 모든 트랜잭션이 블록체인에 기록될 필요는 없다는 것이다. 사소한 금액의 모든 것들을 블록체인에 기록하지 않는 대신, 지불 채널이라는 것을 만들어 사소한 거래를 기록할 것이다. 이 지불 채널을 통해 여러번 거래를 할 수 있으며, 몇 시간, 몇일, 혹은 몇 주 동안 이채널을 열어 둘 수 있다. 이 내역이 블록체인에 저장되는 시간은 바로 채널을 닫을 때다. 채널을 닫으면, 발생한 거래의 최종 상태를 블록 체인에 쓴다.\n\n두 사람은 각각 동등한 금액을 멀티 시그 주소에 예치하며, 이 작업은 ‘오프닝 거래’ 형태로 블록체인에 기록되고, 두사람간에 지불 채널이 열리게 된다. 그리고 이 돈은 아무도 쓸수 없으며, 여기에 있는 돈은 서로 거래하는데만 사용하게 된다.\n\n만약 한사람이 2개 코인을 보내주길 원한다면, 해당 소유권을 상대방에게 넘겨주게 된다. 그리고 이 둘은 계속해서 거래를 하기를 원하므로 이 상태에서 계속 머물러 있는다.\n\n그리고 다른 상대방이 1개의 코인을 보내주기를 원한다면, 동일한 방법으로 소유권을 이전하면 된다.\n\n마짐막으로 서로 더이상 거래를 하기를 원하지 않는다면, 마지막 거래의 결과에 따라 소유권을 나눠 갖게 된다. 그리고 이는 블록체인에 기록된다.\n\n이는 직접적인 지불 채널이 없는 상황에서도 위와 같이 사용할 수 있다. 이와 같은 지불 채널 네트워크를 활용하면, 막대한 양의 거래를 체인 외부에서 수행할 수 있게 되며, 거래 수수료 또한 발생하지 않는다.\n참고\n","dateCreated":"2018-08-28T00:00:00+09:00","dateModified":"2018-08-28T03:22:16+09:00","datePublished":"2018-08-28T00:00:00+09:00","description":"The Bitcoin Lightning Network\n\n원문\n\n라이트닝 네트워크란 신뢰할 수 있는 제3자에게 자금 관리를 위임하는 위험을 제거하는, 대규모 소액지불을 위한 분산 시스템이다. \n\n세계에서 가장 널리 사용되고 가치 있는 디지털 통화인 비트코인은 신뢰할 수 있는 중개자가 없이 가치를 보낼 수 있다. 비트코인에는 사용자가 자금에 대한 지침을 프로그래밍 할 수 있는 고급 스크립팅 시스템이 포함되어 있다. 그러나 이러한 비트코인 분산된 디자인에는 몇가지 단점이 있다. 비트코인 블록체인에서 거래가 온전히 확인되기 위해서는 최대 ","headline":"비트코인 라이트닝 네트워크","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/08/28/bitcoin-lightning-network/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/08/28/bitcoin-lightning-network/","keywords":"bitcoin, blockchain"}</script>
+    <meta name="description" content="The Bitcoin Lightning Network  원문  라이트닝 네트워크란 신뢰할 수 있는 제3자에게 자금 관리를 위임하는 위험을 제거하는, 대규모 소액지불을 위한 분산 시스템이다.   세계에서 가장 널리 사용되고 가치 있는 디지털 통화인 비트코인은 신뢰할 수 있는 중개자가 없이 가치를 보낼 수 있다. 비트코인에는 사용자가 자금에 대한 지침을 프로그">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="비트코인 라이트닝 네트워크">
 <meta property="og:url" content="https://www.yceffort.kr/2018/08/28/bitcoin-lightning-network/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="The Bitcoin Lightning Network  원문  라이트닝 네트워크란 신뢰할 수 있는 제3자에게 자금 관리를 위임하는 위험을 제거하는, 대규모 소액지불을 위한 분산 시스템이다.  세계에서 가장 널리 사용되고 가치 있는 디지털 통화인 비트코인은 신뢰할 수 있는 중개자가 없이 가치를 보낼 수 있다. 비트코인에는 사용자가 자금에 대한 지침을 프로그래">
-<meta property="og:locale" content="en">
-<meta property="og:image" content="https://i1.wp.com/cointelegraph.com/storage/uploads/view/528e948fda31ac641e1abf178399ccd3.png?w=640&ssl=1">
-<meta property="og:image" content="https://i1.wp.com/cointelegraph.com/storage/uploads/view/902f4ee00dbb13ff2b7e27c0e150ce25.png?w=640&ssl=1">
-<meta property="og:image" content="https://i2.wp.com/cointelegraph.com/storage/uploads/view/1cd6956e605d0b9740af1ee0b1a11517.png?w=640&ssl=1">
-<meta property="og:image" content="https://i0.wp.com/cointelegraph.com/storage/uploads/view/5316aec3310e3495050fc6d1764422f6.png?w=640&ssl=1">
-<meta property="og:image" content="https://i0.wp.com/cointelegraph.com/storage/uploads/view/aeb65370d31a21ddd8b68b259ba5555b.png?w=640&ssl=1">
-<meta property="og:updated_time" content="2018-08-27T18:22:16.000Z">
+<meta property="og:description" content="The Bitcoin Lightning Network  원문  라이트닝 네트워크란 신뢰할 수 있는 제3자에게 자금 관리를 위임하는 위험을 제거하는, 대규모 소액지불을 위한 분산 시스템이다.   세계에서 가장 널리 사용되고 가치 있는 디지털 통화인 비트코인은 신뢰할 수 있는 중개자가 없이 가치를 보낼 수 있다. 비트코인에는 사용자가 자금에 대한 지침을 프로그">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i1.wp.com/cointelegraph.com/storage/uploads/view/528e948fda31ac641e1abf178399ccd3.png?w=640&amp;ssl=1">
+<meta property="og:image" content="https://i1.wp.com/cointelegraph.com/storage/uploads/view/902f4ee00dbb13ff2b7e27c0e150ce25.png?w=640&amp;ssl=1">
+<meta property="og:image" content="https://i2.wp.com/cointelegraph.com/storage/uploads/view/1cd6956e605d0b9740af1ee0b1a11517.png?w=640&amp;ssl=1">
+<meta property="og:image" content="https://i0.wp.com/cointelegraph.com/storage/uploads/view/5316aec3310e3495050fc6d1764422f6.png?w=640&amp;ssl=1">
+<meta property="og:image" content="https://i0.wp.com/cointelegraph.com/storage/uploads/view/aeb65370d31a21ddd8b68b259ba5555b.png?w=640&amp;ssl=1">
+<meta property="article:published_time" content="2018-08-27T15:00:00.000Z">
+<meta property="article:modified_time" content="2018-08-27T18:22:16.000Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="bitcoin">
+<meta property="article:tag" content="blockchain">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="비트코인 라이트닝 네트워크">
-<meta name="twitter:description" content="The Bitcoin Lightning Network  원문  라이트닝 네트워크란 신뢰할 수 있는 제3자에게 자금 관리를 위임하는 위험을 제거하는, 대규모 소액지불을 위한 분산 시스템이다.  세계에서 가장 널리 사용되고 가치 있는 디지털 통화인 비트코인은 신뢰할 수 있는 중개자가 없이 가치를 보낼 수 있다. 비트코인에는 사용자가 자금에 대한 지침을 프로그래">
-<meta name="twitter:image" content="https://i1.wp.com/cointelegraph.com/storage/uploads/view/528e948fda31ac641e1abf178399ccd3.png?w=640&ssl=1">
+<meta name="twitter:image" content="https://i1.wp.com/cointelegraph.com/storage/uploads/view/528e948fda31ac641e1abf178399ccd3.png?w=640&amp;ssl=1">
     
     
     
@@ -64,7 +65,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -91,7 +94,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -130,8 +133,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -269,17 +271,13 @@
         <div class="main-content-wrap">
             <p>The Bitcoin Lightning Network</p>
 <p><a href="https://lightning.network/lightning-network-summary.pdf" target="_blank" rel="noopener">원문</a></p>
-<p>라이트닝 네트워크란 신뢰할 수 있는 제3자에게 자금 관리를 위임하는 위험을 제거하는, 대규모 소액지불을 위한 분산 시스템이다.</p>
+<p>라이트닝 네트워크란 신뢰할 수 있는 제3자에게 자금 관리를 위임하는 위험을 제거하는, 대규모 소액지불을 위한 분산 시스템이다. </p>
 <p>세계에서 가장 널리 사용되고 가치 있는 디지털 통화인 비트코인은 신뢰할 수 있는 중개자가 없이 가치를 보낼 수 있다. 비트코인에는 사용자가 자금에 대한 지침을 프로그래밍 할 수 있는 고급 스크립팅 시스템이 포함되어 있다. 그러나 이러한 비트코인 분산된 디자인에는 몇가지 단점이 있다. 비트코인 블록체인에서 거래가 온전히 확인되기 위해서는 최대 1시간이 걸린다. 소액 지불 또는 몇 센트 미만의 지불도 마찬가지로 오랜시간이 걸렸고, 이러한 거래를 확인하는 수수료로 인해 오늘날 네트워크에서 이러한 거래가 실행되기 어렵게 했다.</p>
 <p>라이트닝 네트워크는 이러한 문제를 해결한다. 비트코인의 내장 스크립팅을 이용한 다자간 스마트 컨트랙트 (프로그래밍 가능한 돈)를 구현한 최초 사례중 하나다. 라이트닝 네트워크는 다자간 금융 컴퓨팅 분야에서 기술개발을 선도하고 있다.</p>
-<h2 id="즉시-지불"><a class="header-anchor" href="#즉시-지불">¶</a>즉시 지불</h2>
-<p>비트코인은 거래를 10분 간격으로 블록으로 집계한다. 지불은 6블록 혹은 1시간에 걸친 확인 끝에 비트코인 네트워크 내에서 안전하고 간주된다. 라이트닝 네트워크 내에서 지불은 블록 확인을 필요로 하지 않으며, 즉각적이다. 라이트닝 네트워크는 사용자 대 디바이스 트랜잭션을 통해 소매점에서 사용하거나, 인스턴트 지불이 필요한 곳에서 사용할 수 있다.</p>
-<h2 id="소액-지불"><a class="header-anchor" href="#소액-지불">¶</a>소액 지불</h2>
-<p>소액 결제의 가능성으로 새로운 시장을 만들어 낼 수 있다. 라이트닝 네트워크는 관리상의 위험없이 0.0000001 비트코인의 자금을 보낼 수 있게 한다. 비트코인 블록체인은 현재 최소 출력 크기를 수백배 이상 높이고, 소액결제를 비실용적으로 만드는 고정 거래당 수수료를 부과하고 있다. 라이트닝 네트워크는 실제 비트코인 거래를 활용하여 비트코인으로 표시된 최소 지불을 허용한다.</p>
-<h2 id="확장성"><a class="header-anchor" href="#확장성">¶</a>확장성</h2>
-<p>비트코인 네트워크는 자동화된 지불에 따른 수요를 충족시키기 위해 보다 큰 거래량의 주문을 지원해야 한다. 인터넷에 연결된 장치가 증가하면서 기계 간 지불 및 자동화된 소액 지불 서비스를 위한 플랫폼이 필요하다. 라이트닝 네트워크 트랜잭션은 신뢰 및 소유권 위임 없이 블록체인에서 수행되므로, 사용자는 다른 장치간에 거의 무제한 트랜잭션을 수행할 수 있다.</p>
-<h2 id="어떻게-작동하는가"><a class="header-anchor" href="#어떻게-작동하는가">¶</a>어떻게 작동하는가?</h2>
-<p>자금은 양자의 다중 서명 ‘채널’ 비트코인 주소에 배치된다. 이 채널은 비트코인 공개 원장의 항목으로 표시된다. 채널에서 자금을 지출하기 위해서는 양 당사자가 새로운 잔고에 동의 해야 한다. 현재 잔액은 채널 주소에서 지출한 가장 최근 거래로 저장된다. 결제를 위해, 양 당사자는 채널 주소에서 새로운 출구 거래 지출에 서명한다. 모든 이전 출구 트랜잭션은 무효화 된다.</p>
+<h2 id="즉시-지불"><a href="#즉시-지불" class="headerlink" title="즉시 지불"></a>즉시 지불</h2><p>비트코인은 거래를 10분 간격으로 블록으로 집계한다. 지불은 6블록 혹은 1시간에 걸친 확인 끝에 비트코인 네트워크 내에서 안전하고 간주된다. 라이트닝 네트워크 내에서 지불은 블록 확인을 필요로 하지 않으며, 즉각적이다. 라이트닝 네트워크는 사용자 대 디바이스 트랜잭션을 통해 소매점에서 사용하거나, 인스턴트 지불이 필요한 곳에서 사용할 수 있다.</p>
+<h2 id="소액-지불"><a href="#소액-지불" class="headerlink" title="소액 지불"></a>소액 지불</h2><p>소액 결제의 가능성으로 새로운 시장을 만들어 낼 수 있다. 라이트닝 네트워크는 관리상의 위험없이 0.0000001 비트코인의 자금을 보낼 수 있게 한다. 비트코인 블록체인은 현재 최소 출력 크기를 수백배 이상 높이고, 소액결제를 비실용적으로 만드는 고정 거래당 수수료를 부과하고 있다. 라이트닝 네트워크는 실제 비트코인 거래를 활용하여 비트코인으로 표시된 최소 지불을 허용한다.</p>
+<h2 id="확장성"><a href="#확장성" class="headerlink" title="확장성"></a>확장성</h2><p>비트코인 네트워크는 자동화된 지불에 따른 수요를 충족시키기 위해 보다 큰 거래량의 주문을 지원해야 한다. 인터넷에 연결된 장치가 증가하면서 기계 간 지불 및 자동화된 소액 지불 서비스를 위한 플랫폼이 필요하다. 라이트닝 네트워크 트랜잭션은 신뢰 및 소유권 위임 없이 블록체인에서 수행되므로, 사용자는 다른 장치간에 거의 무제한 트랜잭션을 수행할 수 있다.</p>
+<h2 id="어떻게-작동하는가"><a href="#어떻게-작동하는가" class="headerlink" title="어떻게 작동하는가?"></a>어떻게 작동하는가?</h2><p>자금은 양자의 다중 서명 ‘채널’ 비트코인 주소에 배치된다. 이 채널은 비트코인 공개 원장의 항목으로 표시된다. 채널에서 자금을 지출하기 위해서는 양 당사자가 새로운 잔고에 동의 해야 한다. 현재 잔액은 채널 주소에서 지출한 가장 최근 거래로 저장된다. 결제를 위해, 양 당사자는 채널 주소에서 새로운 출구 거래 지출에 서명한다. 모든 이전 출구 트랜잭션은 무효화 된다.</p>
 <p>라이트닝 네트워크는 채널을 종료하기 위해 상대방과 협력할 필요가 없다. 양 당사자는 일방적으로 채널을 닫고 끝낼 수 있는 옵션을 가지고 있다. 모든 당사자는 이 네트워크에 있는 많은 다른 사용자가 있는 여러개의 다중 서명 채널을 가지고 있기 때문에, 이 네트워크를 통해 다른 당사자에게 지불 할 수 있다.</p>
 <p>안전한 암호화 해시에 따라 지급 조건을 포함시킴으로써, 어떤 당사자도 자금의 일방적인 소유권을 가질 필요 없이 채널 네트워크를 통해 지급할 수 있다. 라이트닝 네트우크는 독점에 취약한 신뢰할 수 있는 금융 시스템에서 이전에는 불가능한 것을 가능하게 하며, 네트워크에 대한 참여는 동적이며 모두에게 개방적이다.</p>
 <hr>
@@ -311,7 +309,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/bitcoin/">bitcoin</a> <a class="tag tag--primary tag--small t-link" href="/tags/blockchain/">blockchain</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/bitcoin/" rel="tag">bitcoin</a> <a class="tag tag--primary tag--small t-link" href="/tags/blockchain/" rel="tag">blockchain</a>
 
             </div>
         
@@ -322,7 +320,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/29/what-is-segwit/" data-tooltip="세그윗이란 무엇인가?" aria-label="PREVIOUS: 세그윗이란 무엇인가?">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/28/how-blockchain-could-close-the-gender-pay-gap/" data-tooltip="블록체인으로 성별간 임금 격차를 좁히는 법" aria-label="PREVIOUS: 블록체인으로 성별간 임금 격차를 좁히는 법">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -331,7 +329,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/28/how-blockchain-could-close-the-gender-pay-gap/" data-tooltip="블록체인으로 성별간 임금 격차를 좁히는 법" aria-label="NEXT: 블록체인으로 성별간 임금 격차를 좁히는 법">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/27/erc20-basis-icos/" data-tooltip="ICO의 토양이 되는 ERC 20" aria-label="NEXT: ICO의 토양이 되는 ERC 20">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -364,12 +362,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -384,10 +376,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -410,7 +398,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/29/what-is-segwit/" data-tooltip="세그윗이란 무엇인가?" aria-label="PREVIOUS: 세그윗이란 무엇인가?">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/28/how-blockchain-could-close-the-gender-pay-gap/" data-tooltip="블록체인으로 성별간 임금 격차를 좁히는 법" aria-label="PREVIOUS: 블록체인으로 성별간 임금 격차를 좁히는 법">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -419,7 +407,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/28/how-blockchain-could-close-the-gender-pay-gap/" data-tooltip="블록체인으로 성별간 임금 격차를 좁히는 법" aria-label="NEXT: 블록체인으로 성별간 임금 격차를 좁히는 법">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/27/erc20-basis-icos/" data-tooltip="ICO의 토양이 되는 ERC 20" aria-label="NEXT: ICO의 토양이 되는 ERC 20">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -451,12 +439,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -595,8 +577,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -614,8 +596,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -671,8 +653,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -690,8 +672,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -751,7 +733,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -761,26 +743,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2018/08/28/bitcoin-lightning-network/';
-                 
-                    this.page.identifier = '2018/08/28/bitcoin-lightning-network/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

@@ -34,19 +34,20 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"¶useReducer\n1const [state, dispatch] = useReducer(reducer, initialArg, init);\nuseState의 대체 함수다. 다수의 하윗 값을 만드는 복잡한 로직, 혹은 다음 state가 이전 state의 의존적인 경우에 쓴다. 뭐가 뭔지 모르겠으니까 예제를 보자.\nuseState를 쓰기전\n1234567891011function Counter(&#123; initialCount &#125;) &#123;  const [count, setCount] = useState(initialCount);  return (    &lt;&gt;      Count: &#123;count&#125;      &lt;button onClick=&#123;() =&gt; setCount(initialCount)&#125;&gt;Reset&lt;/button&gt;      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount + 1)&#125;&gt;+&lt;/button&gt;      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount - 1)&#125;&gt;-&lt;/button&gt;    &lt;/&gt;  );&#125;\n1234567891011121314151617181920212223const initialState = &#123; count: 0 &#125;;function reducer(state, action) &#123;  switch (action.type) &#123;    case \"increment\":      return &#123; count: state.count + 1 &#125;;    case \"decrement\":      return &#123; count: state.count - 1 &#125;;    default:      throw new Error();  &#125;&#125;function Counter() &#123;  const [state, dispatch] = useReducer(reducer, initialState);  return (    &lt;&gt;      Count: &#123;state.count&#125;      &lt;button onClick=&#123;() =&gt; dispatch(&#123; type: \"increment\" &#125;)&#125;&gt;+&lt;/button&gt;      &lt;button onClick=&#123;() =&gt; dispatch(&#123; type: \"decrement\" &#125;)&#125;&gt;-&lt;/button&gt;    &lt;/&gt;  );&#125;\n1234567891011121314151617181920212223242526272829303132function init(initialCount) &#123;  return &#123; count: initialCount &#125;;&#125;function reducer(state, action) &#123;  switch (action.type) &#123;    case \"increment\":      return &#123; count: state.count + 1 &#125;;    case \"decrement\":      return &#123; count: state.count - 1 &#125;;    case \"reset\":      return init(action.payload);    default:      throw new Error();  &#125;&#125;function Counter(&#123; initialCount &#125;) &#123;  const [state, dispatch] = useReducer(reducer, initialCount, init);  return (    &lt;&gt;      Count: &#123;state.count&#125;      &lt;button        onClick=&#123;() =&gt; dispatch(&#123; type: \"reset\", payload: initialCount &#125;)&#125;      &gt;        Reset      &lt;/button&gt;      &lt;button onClick=&#123;() =&gt; dispatch(&#123; type: \"increment\" &#125;)&#125;&gt;+&lt;/button&gt;      &lt;button onClick=&#123;() =&gt; dispatch(&#123; type: \"decrement\" &#125;)&#125;&gt;-&lt;/button&gt;    &lt;/&gt;  );&#125;\n예제를 보니 대충 감이 온다. dispatch를 통해서 state값에 변화를 주지 않고 state값 변화에 트리거를 줄 수 있고, 이 트리거를 이용해 여러개의 state에 변화를 줄 수도 있다.\n¶useCallback\n메모이제이션된 콜백을 반환한다.\n123const memoizedCallback = useCallback(() =&gt; &#123;  doSomething(a, b);&#125;, [a, b]);\n동일한 콜백을 바라봐야하는 자식 컴포넌트에게 사용할 때 유용하다.\n¶useMemo\n1const memoizedValue = useMemo(() =&gt; computeExpensiveValue(a, b), [a, b]);\n메모이제이션된 값을 반환한다. useMemo는 의존성이 변경되었을 때만, 메모제이션된 값을 다시 계산할 것이다.\n¶useRef\n123456789101112131415const refContainer = useRef(initialValue);function TextInputWithFocusButton() &#123;  const inputEl = useRef(null);  const onButtonClick = () =&gt; &#123;    // `current` points to the mounted text input element    inputEl.current.focus();  &#125;;  return (    &lt;&gt;      &lt;input ref=&#123;inputEl&#125; type=\"text\" /&gt;      &lt;button onClick=&#123;onButtonClick&#125;&gt;Focus the input&lt;/button&gt;    &lt;/&gt;  );&#125;\nuseRef는 .current에 변경가능한 ref값을 담을 수 있다. 부모 클래스에서 특정 dom객체를 계속 추적해야할 때 유용하다. 다만 .current를 변경한다고 해서 리렌더링이 일어나지는 않는다.\n","dateCreated":"2019-08-12T11:03:51+09:00","dateModified":"2019-08-14T11:05:21+09:00","datePublished":"2019-08-12T11:03:51+09:00","description":"¶useReducer\n1\n\n\nconst [state, dispatch] = useReducer(reducer, initialArg, init);\n\n\nuseState의 대체 함수다. 다수의 하윗 값을 만드는 복잡한 로직, 혹은 다음 state가 이전 state의 의존적인 경우에 쓴다. 뭐가 뭔지 모르겠으니까 예제를 보자.\n\nuseState를 쓰기전\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n\n\nfunction Counter({ initialCount }) {\n  const [count, setCount] = useState(init","headline":"React Hooks Api (2)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/08/12/react-hooks-api-2/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/08/12/react-hooks-api-2/","keywords":"react, javascript"}</script>
-    <meta name="description" content="¶useReducer 1   const [state, dispatch] = useReducer(reducer, initialArg, init);   useState의 대체 함수다. 다수의 하윗 값을 만드는 복잡한 로직, 혹은 다음 state가 이전 state의 의존적인 경우에 쓴다. 뭐가 뭔지 모르겠으니까 예제를 보자.  useState를 쓰기전  1 2">
-<meta name="keywords" content="react,javascript">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"useReducer1const [state, dispatch] = useReducer(reducer, initialArg, init);\nuseState의 대체 함수다. 다수의 하윗 값을 만드는 복잡한 로직, 혹은 다음 state가 이전 state의 의존적인 경우에 쓴다. 뭐가 뭔지 모르겠으니까 예제를 보자.\nuseState를 쓰기전\n1234567891011function Counter(&#123; initialCount &#125;) &#123;  const [count, setCount] = useState(initialCount);  return (    &lt;&gt;      Count: &#123;count&#125;      &lt;button onClick=&#123;() =&gt; setCount(initialCount)&#125;&gt;Reset&lt;/button&gt;      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount + 1)&#125;&gt;+&lt;/button&gt;      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount - 1)&#125;&gt;-&lt;/button&gt;    &lt;/&gt;  );&#125;\n1234567891011121314151617181920212223const initialState = &#123; count: 0 &#125;;function reducer(state, action) &#123;  switch (action.type) &#123;    case \"increment\":      return &#123; count: state.count + 1 &#125;;    case \"decrement\":      return &#123; count: state.count - 1 &#125;;    default:      throw new Error();  &#125;&#125;function Counter() &#123;  const [state, dispatch] = useReducer(reducer, initialState);  return (    &lt;&gt;      Count: &#123;state.count&#125;      &lt;button onClick=&#123;() =&gt; dispatch(&#123; type: \"increment\" &#125;)&#125;&gt;+&lt;/button&gt;      &lt;button onClick=&#123;() =&gt; dispatch(&#123; type: \"decrement\" &#125;)&#125;&gt;-&lt;/button&gt;    &lt;/&gt;  );&#125;\n1234567891011121314151617181920212223242526272829303132function init(initialCount) &#123;  return &#123; count: initialCount &#125;;&#125;function reducer(state, action) &#123;  switch (action.type) &#123;    case \"increment\":      return &#123; count: state.count + 1 &#125;;    case \"decrement\":      return &#123; count: state.count - 1 &#125;;    case \"reset\":      return init(action.payload);    default:      throw new Error();  &#125;&#125;function Counter(&#123; initialCount &#125;) &#123;  const [state, dispatch] = useReducer(reducer, initialCount, init);  return (    &lt;&gt;      Count: &#123;state.count&#125;      &lt;button        onClick=&#123;() =&gt; dispatch(&#123; type: \"reset\", payload: initialCount &#125;)&#125;      &gt;        Reset      &lt;/button&gt;      &lt;button onClick=&#123;() =&gt; dispatch(&#123; type: \"increment\" &#125;)&#125;&gt;+&lt;/button&gt;      &lt;button onClick=&#123;() =&gt; dispatch(&#123; type: \"decrement\" &#125;)&#125;&gt;-&lt;/button&gt;    &lt;/&gt;  );&#125;\n예제를 보니 대충 감이 온다. dispatch를 통해서 state값에 변화를 주지 않고 state값 변화에 트리거를 줄 수 있고, 이 트리거를 이용해 여러개의 state에 변화를 줄 수도 있다.\nuseCallback메모이제이션된 콜백을 반환한다.\n123const memoizedCallback = useCallback(() =&gt; &#123;  doSomething(a, b);&#125;, [a, b]);\n동일한 콜백을 바라봐야하는 자식 컴포넌트에게 사용할 때 유용하다.\nuseMemo1const memoizedValue = useMemo(() =&gt; computeExpensiveValue(a, b), [a, b]);\n메모이제이션된 값을 반환한다. useMemo는 의존성이 변경되었을 때만, 메모제이션된 값을 다시 계산할 것이다.\nuseRef123456789101112131415const refContainer = useRef(initialValue);function TextInputWithFocusButton() &#123;  const inputEl = useRef(null);  const onButtonClick = () =&gt; &#123;    // `current` points to the mounted text input element    inputEl.current.focus();  &#125;;  return (    &lt;&gt;      &lt;input ref=&#123;inputEl&#125; type=\"text\" /&gt;      &lt;button onClick=&#123;onButtonClick&#125;&gt;Focus the input&lt;/button&gt;    &lt;/&gt;  );&#125;\nuseRef는 .current에 변경가능한 ref값을 담을 수 있다. 부모 클래스에서 특정 dom객체를 계속 추적해야할 때 유용하다. 다만 .current를 변경한다고 해서 리렌더링이 일어나지는 않는다.\n","dateCreated":"2019-08-12T11:03:51+09:00","dateModified":"2019-08-14T11:05:21+09:00","datePublished":"2019-08-12T11:03:51+09:00","description":"useReducer\n1\n\n\nconst [state, dispatch] = useReducer(reducer, initialArg, init);\n\n\nuseState의 대체 함수다. 다수의 하윗 값을 만드는 복잡한 로직, 혹은 다음 state가 이전 state의 의존적인 경우에 쓴다. 뭐가 뭔지 모르겠으니까 예제를 보자.\n\nuseState를 쓰기전\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n\n\nfunction Counter({ initialCount }) {\n  const [count, setCount] = useState(initi","headline":"React Hooks Api (2)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/08/12/react-hooks-api-2/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/08/12/react-hooks-api-2/","keywords":"react, javascript"}</script>
+    <meta name="description" content="useReducer 1   const [state, dispatch] &#x3D; useReducer(reducer, initialArg, init);   useState의 대체 함수다. 다수의 하윗 값을 만드는 복잡한 로직, 혹은 다음 state가 이전 state의 의존적인 경우에 쓴다. 뭐가 뭔지 모르겠으니까 예제를 보자.  useState를 쓰기전  1 2 3">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="React Hooks Api (2)">
 <meta property="og:url" content="https://www.yceffort.kr/2019/08/12/react-hooks-api-2/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="¶useReducer 1   const [state, dispatch] = useReducer(reducer, initialArg, init);   useState의 대체 함수다. 다수의 하윗 값을 만드는 복잡한 로직, 혹은 다음 state가 이전 state의 의존적인 경우에 쓴다. 뭐가 뭔지 모르겠으니까 예제를 보자.  useState를 쓰기전  1 2">
-<meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-08-14T02:05:21.889Z">
+<meta property="og:description" content="useReducer 1   const [state, dispatch] &#x3D; useReducer(reducer, initialArg, init);   useState의 대체 함수다. 다수의 하윗 값을 만드는 복잡한 로직, 혹은 다음 state가 이전 state의 의존적인 경우에 쓴다. 뭐가 뭔지 모르겠으니까 예제를 보자.  useState를 쓰기전  1 2 3">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-08-12T02:03:51.000Z">
+<meta property="article:modified_time" content="2019-08-14T02:05:21.889Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="react">
+<meta property="article:tag" content="javascript">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="React Hooks Api (2)">
-<meta name="twitter:description" content="¶useReducer 1   const [state, dispatch] = useReducer(reducer, initialArg, init);   useState의 대체 함수다. 다수의 하윗 값을 만드는 복잡한 로직, 혹은 다음 state가 이전 state의 의존적인 경우에 쓴다. 뭐가 뭔지 모르겠으니까 예제를 보자.  useState를 쓰기전  1 2">
     
     
     
@@ -58,7 +59,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -85,7 +88,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -124,8 +127,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -261,23 +263,19 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h3 id="usereducer"><a class="header-anchor" href="#usereducer">¶</a>useReducer</h3>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, dispatch] = useReducer(reducer, initialArg, init);</span><br></pre></td></tr></table></figure>
+            <h3 id="useReducer"><a href="#useReducer" class="headerlink" title="useReducer"></a>useReducer</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, dispatch] = useReducer(reducer, initialArg, init);</span><br></pre></td></tr></table></figure>
 <p><code>useState</code>의 대체 함수다. 다수의 하윗 값을 만드는 복잡한 로직, 혹은 다음 state가 이전 state의 의존적인 경우에 쓴다. 뭐가 뭔지 모르겠으니까 예제를 보자.</p>
 <p>useState를 쓰기전</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Counter</span>(<span class="params">&#123; initialCount &#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = useState(initialCount);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      Count: &#123;count&#125;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; setCount(initialCount)&#125;&gt;Reset&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount + 1)&#125;&gt;+&lt;/</span>button&gt;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; setCount(<span class="function"><span class="params">prevCount</span> =&gt;</span> prevCount - <span class="number">1</span>)&#125;&gt;-<span class="xml"><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">    &lt;<span class="regexp">/&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> initialState = &#123; <span class="attr">count</span>: <span class="number">0</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reducer</span>(<span class="params">state, action</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"increment"</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123; <span class="attr">count</span>: state.count + <span class="number">1</span> &#125;;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"decrement"</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123; <span class="attr">count</span>: state.count - <span class="number">1</span> &#125;;</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Counter</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [state, dispatch] = useReducer(reducer, initialState);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      Count: &#123;state.count&#125;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; dispatch(&#123; <span class="attr">type</span>: <span class="string">"increment"</span> &#125;)&#125;&gt;+<span class="xml"><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">      &lt;button onClick=&#123;() =&gt; dispatch(&#123; <span class="attr">type</span>: <span class="string">"decrement"</span> &#125;)&#125;&gt;-<span class="xml"><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">    &lt;<span class="regexp">/&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">init</span>(<span class="params">initialCount</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123; <span class="attr">count</span>: initialCount &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">reducer</span>(<span class="params">state, action</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">switch</span> (action.type) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"increment"</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123; <span class="attr">count</span>: state.count + <span class="number">1</span> &#125;;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"decrement"</span>:</span><br><span class="line">      <span class="keyword">return</span> &#123; <span class="attr">count</span>: state.count - <span class="number">1</span> &#125;;</span><br><span class="line">    <span class="keyword">case</span> <span class="string">"reset"</span>:</span><br><span class="line">      <span class="keyword">return</span> init(action.payload);</span><br><span class="line">    <span class="keyword">default</span>:</span><br><span class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Counter</span>(<span class="params">&#123; initialCount &#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [state, dispatch] = useReducer(reducer, initialCount, init);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      Count: &#123;state.count&#125;</span><br><span class="line">      &lt;button</span><br><span class="line">        onClick=&#123;() =&gt; dispatch(&#123; <span class="attr">type</span>: <span class="string">"reset"</span>, <span class="attr">payload</span>: initialCount &#125;)&#125;</span><br><span class="line">      &gt;</span><br><span class="line">        Reset</span><br><span class="line">      &lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; dispatch(&#123; type: "increment" &#125;)&#125;&gt;+&lt;/</span>button&gt;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; dispatch(&#123; <span class="attr">type</span>: <span class="string">"decrement"</span> &#125;)&#125;&gt;-<span class="xml"><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">    &lt;<span class="regexp">/&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
 <p>예제를 보니 대충 감이 온다. dispatch를 통해서 state값에 변화를 주지 않고 state값 변화에 트리거를 줄 수 있고, 이 트리거를 이용해 여러개의 state에 변화를 줄 수도 있다.</p>
-<h3 id="usecallback"><a class="header-anchor" href="#usecallback">¶</a>useCallback</h3>
-<p>메모이제이션된 콜백을 반환한다.</p>
+<h3 id="useCallback"><a href="#useCallback" class="headerlink" title="useCallback"></a>useCallback</h3><p>메모이제이션된 콜백을 반환한다.</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> memoizedCallback = useCallback(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  doSomething(a, b);</span><br><span class="line">&#125;, [a, b]);</span><br></pre></td></tr></table></figure>
 <p>동일한 콜백을 바라봐야하는 자식 컴포넌트에게 사용할 때 유용하다.</p>
-<h3 id="usememo"><a class="header-anchor" href="#usememo">¶</a>useMemo</h3>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> memoizedValue = useMemo(<span class="function"><span class="params">()</span> =&gt;</span> computeExpensiveValue(a, b), [a, b]);</span><br></pre></td></tr></table></figure>
+<h3 id="useMemo"><a href="#useMemo" class="headerlink" title="useMemo"></a>useMemo</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> memoizedValue = useMemo(<span class="function"><span class="params">()</span> =&gt;</span> computeExpensiveValue(a, b), [a, b]);</span><br></pre></td></tr></table></figure>
 <p>메모이제이션된 값을 반환한다. <code>useMemo</code>는 의존성이 변경되었을 때만, 메모제이션된 값을 다시 계산할 것이다.</p>
-<h3 id="useref"><a class="header-anchor" href="#useref">¶</a>useRef</h3>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> refContainer = useRef(initialValue);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">TextInputWithFocusButton</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> inputEl = useRef(<span class="literal">null</span>);</span><br><span class="line">  <span class="keyword">const</span> onButtonClick = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// `current` points to the mounted text input element</span></span><br><span class="line">    inputEl.current.focus();</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      &lt;input ref=&#123;inputEl&#125; type=<span class="string">"text"</span> /&gt;</span><br><span class="line">      &lt;button onClick=&#123;onButtonClick&#125;&gt;Focus the input&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="useRef"><a href="#useRef" class="headerlink" title="useRef"></a>useRef</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> refContainer = useRef(initialValue);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">TextInputWithFocusButton</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> inputEl = useRef(<span class="literal">null</span>);</span><br><span class="line">  <span class="keyword">const</span> onButtonClick = <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// `current` points to the mounted text input element</span></span><br><span class="line">    inputEl.current.focus();</span><br><span class="line">  &#125;;</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      &lt;input ref=&#123;inputEl&#125; type=<span class="string">"text"</span> /&gt;</span><br><span class="line">      &lt;button onClick=&#123;onButtonClick&#125;&gt;Focus the input&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>&gt;</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>useRef</code>는 <code>.current</code>에 변경가능한 ref값을 담을 수 있다. 부모 클래스에서 특정 dom객체를 계속 추적해야할 때 유용하다. 다만 <code>.current</code>를 변경한다고 해서 리렌더링이 일어나지는 않는다.</p>
 
             
@@ -294,7 +292,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/">javascript</a> <a class="tag tag--primary tag--small t-link" href="/tags/react/">react</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/" rel="tag">javascript</a> <a class="tag tag--primary tag--small t-link" href="/tags/react/" rel="tag">react</a>
 
             </div>
         
@@ -347,12 +345,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -367,10 +359,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -434,12 +422,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -578,8 +560,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -597,8 +579,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -654,8 +636,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -673,8 +655,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -734,7 +716,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -744,26 +726,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/08/12/react-hooks-api-2/';
-                 
-                    this.page.identifier = '2019/08/12/react-hooks-api-2/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

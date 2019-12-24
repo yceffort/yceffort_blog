@@ -34,22 +34,25 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"제법 규모가 있었던 전 회사에서는 특별하게 인프라에 대해 고민을 별로 할 필요가 없었다. 많은 부분이 자동화되어 있었고, 또 적당한 툴로 잘 만들어져 있었기 때문에 개발에 온전히 집중할 수 있었다. 하지만 새롭게 온 스타트업은 (당연하게도) 그런게 없으므로, 회사에서 사용하고 있는 AWS 인프라와 배포 시스템에 대해서 직접 공부할 필요가 있었다. 그 중에서도 처음 접하는 것이 docker 였다.\n¶Docker\n예전 부터 이름은 많이 들어봤지만 이런저런 이유로 (귀찮아서) 한번도 써본적이 없었다. docker는 컨테이너 기반의 오픈소스 가상화 플랫폼 이라고 정의할 수 있다. 여기서 중요한 용어 중 하나가 컨테이너라고 생각한다.\n¶컨테이너\ndocker의 컨테이너에 백엔드 프로그램, DB, 메시지 큐 등 다양한 프로그램을 컨테이너에 집어 넣어 추상화 한 다음, 이를 어디서든 배포할 수 있는 상태로 만들어 준다.\n\ndocker는 기존의 virtual machine과는 다르게 프로세스를 격리 시키는 방법으로 가상화를 한다. docker가 동작하기 위한 cpu나 메모리만 격리해서 사용하므로, 성능적으로도 손실이 적은 방식이다.\n¶이미지\n이미지는 컨테이너의 실행에 필요한 파일 및 설정을 포함하고 있는 것 으로 별도의 상태값을 갖고 변하지 않는다. 컨테이너는 이미지를 실행하는 것이라 볼 수 있고, 추가되거나 변화가 필요한 값은 컨테이너에 저장된다. 말 그대로, 컨테이너를 실행하기 위한 모든 정보를 갖고 있기 때문에 의존성 파일을 컴파일/설치할 필요가 없다. docker를 이용한다면 이제 이미지를 다운받고 컨테이너를 생성면 된다.\n¶Dockerfile을 시작으로 실제해보기\n여기를 참고하자. 친절하게 정말 잘 써주셨다.\n¶ECR\n아마존 ECR은 docker 컨테이너 이미지를 손쉽게 저장, 관리 배포할 수 있게 도와주는 일종의 레파지토리 같은 개념이다.\n\n이렇게 생성된 이미지를 푸쉬해서 관리 할 수 있다.\n¶ECS\ndocker를 사용하다보면 컨테이너를 적절하게 배치하거나 관리할 도구의 필요성을 느끼게 된다. docker에서 만든 swarm도 있지만서도, 가장 유명한건 구글의 쿠버네티스가 아닐까 싶다. 이런 컨테이너 오케스트레이션 도구 중 하나가 바로 aws의 elastic container system (이하 ECS) 다.\n¶Cluster\necs의 가장 기본적인 단위는 클러스터다. 클러스터는 도커 컨테이너를 실행할 수 있는 가상의 공간, 일종의 논리적인 단위 수준이라고 볼 수 있다.\n¶Task\nECS에서 컨테이너를 실행하는 최소단위를 task라고 부른다. task는 하나이상의 컨테이너로 구성할 수 있다. 같은 task내 있는 컨테이너들은 모두 같은 컨테이너 인스턴스에서 실행되는 것이 보장된다. 이러한 task를 실행하기 위한 것이 task definition 이다. task definition에는 task를 실행하기 위한 다양한 것들을 설정할 수 있다.\n\n귀찮아서 캡쳐는 안했지만, add container에는 이미지 주소, 컨테이너명, 컨테이너 사양, 환경변수 등을 정할 수 있도록 설정이 준비되어 있다. 그리고 설정 변경 / 이미지 변경이 필요할 때마다, task definition을 새롭게 만듦으로써 (create new revision) 이를 해결할 수 있다.\n¶Service\ncluster는 두가지 방식으로 task를 실행할 수 있다. 한가지는 run task definition을 통해서 일회성으로 실행하는 것이다. 이 task는 곧바로 실행되고, 더이상 관리되지 않는다. 두 번째 방법은 서비스를 정의하는 것이다. 서비스는 하나이상의 task definition과 연결된다. 서비스는 크게 리플리카 타입과 데몬타입으로 나누어져 있는데, 우리는 리플리카 타입을 사용해서 n개의 태스크가 실행되도록 관리하고 있다.\n¶어떻게 썼나\n먼저 dockerfile을 통해서 이미지를 만들고, 해당 이미지를 ecr에 업로드한다. 그리고 배포가 필요할 때마다 task definition을 새롭게 만들고, 새롭게 만들어진 이미지를 넣었다. 그리고 서비스에서 실행할 이미지를 새롭게 만들어진 k번째 task definition으로 교체하면 끝이다.\n¶써보니까 좋았던 점\n의식의 흐름대로 나열해 보았다.\n\n\n배포 히스토리를 남길 수 있었다 == 롤백이 쉬웠다. 배포할 때 마다 새롭게 만들어진 이미지를 ecr에 업로드 하였기 때문에 이미지 목록을 히스토리 느낌으로 남길 수 있었다. 그리고 롤백이 필요하면 이전에 잘 동작했던 이미지로 교체해주면 된다. 사실 이 방법보다 쉬운 것은 그냥 예전에 잘 동작했던 task-definition으로 service를 교체해 주는 것이다.\n\n\n스테이지 별 로 다른 변수를 task definition - container의 환경변수로 관리할 수 있다. 기존에는 프로젝트에 .development .release 이런 형식으로 소스파일안에 스테이지마다 다른 변수 값을 두어야 했다. 따라서 이 글로벌 변수에 변동이 있을 때마다 배포를 새로 하는 번거로움이 있었는데, 이 방식 대로 하면 단지 task definition을 새롭게 만들고, 환경변수를 추가해서 service에 올려주기만 하면 된다. 추가로 dockerfile 혹은 docker 빌드 과정에 환경변수를 따로따로 주입하지 않는 다면, 어떤 스테이지 든지 간에 동일한 이미지로 대처할 수 있다.\n\n\n3. 드디어 docker를 써볼 수 있었다.\n4. 아마존에 많은 돈을 지출할 수 있다.\n","dateCreated":"2019-08-06T08:55:52+09:00","dateModified":"2019-08-07T09:33:26+09:00","datePublished":"2019-08-06T08:55:52+09:00","description":"제법 규모가 있었던 전 회사에서는 특별하게 인프라에 대해 고민을 별로 할 필요가 없었다. 많은 부분이 자동화되어 있었고, 또 적당한 툴로 잘 만들어져 있었기 때문에 개발에 온전히 집중할 수 있었다. 하지만 새롭게 온 스타트업은 (당연하게도) 그런게 없으므로, 회사에서 사용하고 있는 AWS 인프라와 배포 시스템에 대해서 직접 공부할 필요가 있었다. 그 중에서도 처음 접하는 것이 docker 였다.\n\n¶Docker\n예전 부터 이름은 많이 들어봤지만 이런저런 이유로 (귀찮아서) 한번도 써본적이 없었다. docker는 컨테이너 기반의 오픈","headline":"Docker와 ECR, ECS 경험","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/08/06/experience-docker-aws-ecs/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/08/06/experience-docker-aws-ecs/","keywords":"infrastructure, docker, aws, ecs"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"제법 규모가 있었던 전 회사에서는 특별하게 인프라에 대해 고민을 별로 할 필요가 없었다. 많은 부분이 자동화되어 있었고, 또 적당한 툴로 잘 만들어져 있었기 때문에 개발에 온전히 집중할 수 있었다. 하지만 새롭게 온 스타트업은 (당연하게도) 그런게 없으므로, 회사에서 사용하고 있는 AWS 인프라와 배포 시스템에 대해서 직접 공부할 필요가 있었다. 그 중에서도 처음 접하는 것이 docker 였다.\nDocker예전 부터 이름은 많이 들어봤지만 이런저런 이유로 (귀찮아서) 한번도 써본적이 없었다. docker는 컨테이너 기반의 오픈소스 가상화 플랫폼 이라고 정의할 수 있다. 여기서 중요한 용어 중 하나가 컨테이너라고 생각한다.\n컨테이너docker의 컨테이너에 백엔드 프로그램, DB, 메시지 큐 등 다양한 프로그램을 컨테이너에 집어 넣어 추상화 한 다음, 이를 어디서든 배포할 수 있는 상태로 만들어 준다.\n\ndocker는 기존의 virtual machine과는 다르게 프로세스를 격리 시키는 방법으로 가상화를 한다. docker가 동작하기 위한 cpu나 메모리만 격리해서 사용하므로, 성능적으로도 손실이 적은 방식이다.\n이미지이미지는 컨테이너의 실행에 필요한 파일 및 설정을 포함하고 있는 것 으로 별도의 상태값을 갖고 변하지 않는다. 컨테이너는 이미지를 실행하는 것이라 볼 수 있고, 추가되거나 변화가 필요한 값은 컨테이너에 저장된다. 말 그대로, 컨테이너를 실행하기 위한 모든 정보를 갖고 있기 때문에 의존성 파일을 컴파일/설치할 필요가 없다. docker를 이용한다면 이제 이미지를 다운받고 컨테이너를 생성면 된다.\nDockerfile을 시작으로 실제해보기여기를 참고하자. 친절하게 정말 잘 써주셨다.\nECR아마존 ECR은 docker 컨테이너 이미지를 손쉽게 저장, 관리 배포할 수 있게 도와주는 일종의 레파지토리 같은 개념이다.\n\n이렇게 생성된 이미지를 푸쉬해서 관리 할 수 있다.\nECSdocker를 사용하다보면 컨테이너를 적절하게 배치하거나 관리할 도구의 필요성을 느끼게 된다. docker에서 만든 swarm도 있지만서도, 가장 유명한건 구글의 쿠버네티스가 아닐까 싶다. 이런 컨테이너 오케스트레이션 도구 중 하나가 바로 aws의 elastic container system (이하 ECS) 다.\nClusterecs의 가장 기본적인 단위는 클러스터다. 클러스터는 도커 컨테이너를 실행할 수 있는 가상의 공간, 일종의 논리적인 단위 수준이라고 볼 수 있다.\nTaskECS에서 컨테이너를 실행하는 최소단위를 task라고 부른다. task는 하나이상의 컨테이너로 구성할 수 있다. 같은 task내 있는 컨테이너들은 모두 같은 컨테이너 인스턴스에서 실행되는 것이 보장된다. 이러한 task를 실행하기 위한 것이 task definition 이다. task definition에는 task를 실행하기 위한 다양한 것들을 설정할 수 있다.\n\n귀찮아서 캡쳐는 안했지만, add container에는 이미지 주소, 컨테이너명, 컨테이너 사양, 환경변수 등을 정할 수 있도록 설정이 준비되어 있다. 그리고 설정 변경 / 이미지 변경이 필요할 때마다, task definition을 새롭게 만듦으로써 (create new revision) 이를 해결할 수 있다.\nServicecluster는 두가지 방식으로 task를 실행할 수 있다. 한가지는 run task definition을 통해서 일회성으로 실행하는 것이다. 이 task는 곧바로 실행되고, 더이상 관리되지 않는다. 두 번째 방법은 서비스를 정의하는 것이다. 서비스는 하나이상의 task definition과 연결된다. 서비스는 크게 리플리카 타입과 데몬타입으로 나누어져 있는데, 우리는 리플리카 타입을 사용해서 n개의 태스크가 실행되도록 관리하고 있다.\n어떻게 썼나먼저 dockerfile을 통해서 이미지를 만들고, 해당 이미지를 ecr에 업로드한다. 그리고 배포가 필요할 때마다 task definition을 새롭게 만들고, 새롭게 만들어진 이미지를 넣었다. 그리고 서비스에서 실행할 이미지를 새롭게 만들어진 k번째 task definition으로 교체하면 끝이다.\n써보니까 좋았던 점의식의 흐름대로 나열해 보았다.\n\n배포 히스토리를 남길 수 있었다 == 롤백이 쉬웠다. 배포할 때 마다 새롭게 만들어진 이미지를 ecr에 업로드 하였기 때문에 이미지 목록을 히스토리 느낌으로 남길 수 있었다. 그리고 롤백이 필요하면 이전에 잘 동작했던 이미지로 교체해주면 된다. 사실 이 방법보다 쉬운 것은 그냥 예전에 잘 동작했던 task-definition으로 service를 교체해 주는 것이다.\n\n스테이지 별 로 다른 변수를 task definition - container의 환경변수로 관리할 수 있다. 기존에는 프로젝트에 .development .release 이런 형식으로 소스파일안에 스테이지마다 다른 변수 값을 두어야 했다. 따라서 이 글로벌 변수에 변동이 있을 때마다 배포를 새로 하는 번거로움이 있었는데, 이 방식 대로 하면 단지 task definition을 새롭게 만들고, 환경변수를 추가해서 service에 올려주기만 하면 된다. 추가로 dockerfile 혹은 docker 빌드 과정에 환경변수를 따로따로 주입하지 않는 다면, 어떤 스테이지 든지 간에 동일한 이미지로 대처할 수 있다.\n\n\n3. 드디어 docker를 써볼 수 있었다.\n4. 아마존에 많은 돈을 지출할 수 있다.\n","dateCreated":"2019-08-06T08:55:52+09:00","dateModified":"2019-08-07T09:33:26+09:00","datePublished":"2019-08-06T08:55:52+09:00","description":"제법 규모가 있었던 전 회사에서는 특별하게 인프라에 대해 고민을 별로 할 필요가 없었다. 많은 부분이 자동화되어 있었고, 또 적당한 툴로 잘 만들어져 있었기 때문에 개발에 온전히 집중할 수 있었다. 하지만 새롭게 온 스타트업은 (당연하게도) 그런게 없으므로, 회사에서 사용하고 있는 AWS 인프라와 배포 시스템에 대해서 직접 공부할 필요가 있었다. 그 중에서도 처음 접하는 것이 docker 였다.\n\nDocker\n예전 부터 이름은 많이 들어봤지만 이런저런 이유로 (귀찮아서) 한번도 써본적이 없었다. docker는 컨테이너 기반의 오픈소","headline":"Docker와 ECR, ECS 경험","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/08/06/experience-docker-aws-ecs/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/08/06/experience-docker-aws-ecs/","keywords":"infrastructure, docker, aws, ecs"}</script>
     <meta name="description" content="제법 규모가 있었던 전 회사에서는 특별하게 인프라에 대해 고민을 별로 할 필요가 없었다. 많은 부분이 자동화되어 있었고, 또 적당한 툴로 잘 만들어져 있었기 때문에 개발에 온전히 집중할 수 있었다. 하지만 새롭게 온 스타트업은 (당연하게도) 그런게 없으므로, 회사에서 사용하고 있는 AWS 인프라와 배포 시스템에 대해서 직접 공부할 필요가 있었다. 그 중에서">
-<meta name="keywords" content="infrastructure,docker,aws,ecs">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Docker와 ECR, ECS 경험">
 <meta property="og:url" content="https://www.yceffort.kr/2019/08/06/experience-docker-aws-ecs/index.html">
 <meta property="og:site_name" content="yceffort">
 <meta property="og:description" content="제법 규모가 있었던 전 회사에서는 특별하게 인프라에 대해 고민을 별로 할 필요가 없었다. 많은 부분이 자동화되어 있었고, 또 적당한 툴로 잘 만들어져 있었기 때문에 개발에 온전히 집중할 수 있었다. 하지만 새롭게 온 스타트업은 (당연하게도) 그런게 없으므로, 회사에서 사용하고 있는 AWS 인프라와 배포 시스템에 대해서 직접 공부할 필요가 있었다. 그 중에서">
-<meta property="og:locale" content="en">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://codingthesmartway.com/wp-content/uploads/2019/02/010.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/08/AWS_ECR.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/08/task-definition.png">
-<meta property="og:updated_time" content="2019-08-07T00:33:26.794Z">
+<meta property="article:published_time" content="2019-08-05T23:55:52.000Z">
+<meta property="article:modified_time" content="2019-08-07T00:33:26.794Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="infrastructure">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="aws">
+<meta property="article:tag" content="ecs">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Docker와 ECR, ECS 경험">
-<meta name="twitter:description" content="제법 규모가 있었던 전 회사에서는 특별하게 인프라에 대해 고민을 별로 할 필요가 없었다. 많은 부분이 자동화되어 있었고, 또 적당한 툴로 잘 만들어져 있었기 때문에 개발에 온전히 집중할 수 있었다. 하지만 새롭게 온 스타트업은 (당연하게도) 그런게 없으므로, 회사에서 사용하고 있는 AWS 인프라와 배포 시스템에 대해서 직접 공부할 필요가 있었다. 그 중에서">
 <meta name="twitter:image" content="https://codingthesmartway.com/wp-content/uploads/2019/02/010.png">
     
     
@@ -62,7 +65,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -89,7 +94,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -128,8 +133,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -266,44 +270,31 @@
     <div class="post-content markdown">
         <div class="main-content-wrap">
             <p>제법 규모가 있었던 전 회사에서는 특별하게 인프라에 대해 고민을 별로 할 필요가 없었다. 많은 부분이 자동화되어 있었고, 또 적당한 툴로 잘 만들어져 있었기 때문에 개발에 온전히 집중할 수 있었다. 하지만 새롭게 온 스타트업은 (당연하게도) 그런게 없으므로, 회사에서 사용하고 있는 AWS 인프라와 배포 시스템에 대해서 직접 공부할 필요가 있었다. 그 중에서도 처음 접하는 것이 docker 였다.</p>
-<h2 id="docker"><a class="header-anchor" href="#docker">¶</a>Docker</h2>
-<p>예전 부터 이름은 많이 들어봤지만 이런저런 이유로 (귀찮아서) 한번도 써본적이 없었다. <strong>docker는 컨테이너 기반의 오픈소스 가상화 플랫폼</strong> 이라고 정의할 수 있다. 여기서 중요한 용어 중 하나가 컨테이너라고 생각한다.</p>
-<h3 id="컨테이너"><a class="header-anchor" href="#컨테이너">¶</a>컨테이너</h3>
-<p>docker의 컨테이너에 백엔드 프로그램, DB, 메시지 큐 등 다양한 프로그램을 컨테이너에 집어 넣어 추상화 한 다음, 이를 어디서든 배포할 수 있는 상태로 만들어 준다.</p>
+<h2 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h2><p>예전 부터 이름은 많이 들어봤지만 이런저런 이유로 (귀찮아서) 한번도 써본적이 없었다. <strong>docker는 컨테이너 기반의 오픈소스 가상화 플랫폼</strong> 이라고 정의할 수 있다. 여기서 중요한 용어 중 하나가 컨테이너라고 생각한다.</p>
+<h3 id="컨테이너"><a href="#컨테이너" class="headerlink" title="컨테이너"></a>컨테이너</h3><p>docker의 컨테이너에 백엔드 프로그램, DB, 메시지 큐 등 다양한 프로그램을 컨테이너에 집어 넣어 추상화 한 다음, 이를 어디서든 배포할 수 있는 상태로 만들어 준다.</p>
 <p><img src="https://codingthesmartway.com/wp-content/uploads/2019/02/010.png" alt="docker-container"></p>
 <p>docker는 기존의 virtual machine과는 다르게 프로세스를 격리 시키는 방법으로 가상화를 한다. docker가 동작하기 위한 cpu나 메모리만 격리해서 사용하므로, 성능적으로도 손실이 적은 방식이다.</p>
-<h3 id="이미지"><a class="header-anchor" href="#이미지">¶</a>이미지</h3>
-<p>이미지는 <strong>컨테이너의 실행에 필요한 파일 및 설정을 포함하고 있는 것</strong> 으로 별도의 상태값을 갖고 변하지 않는다. 컨테이너는 이미지를 실행하는 것이라 볼 수 있고, 추가되거나 변화가 필요한 값은 컨테이너에 저장된다. 말 그대로, 컨테이너를 실행하기 위한 모든 정보를 갖고 있기 때문에 의존성 파일을 컴파일/설치할 필요가 없다. docker를 이용한다면 이제 이미지를 다운받고 컨테이너를 생성면 된다.</p>
-<h3 id="dockerfile을-시작으로-실제해보기"><a class="header-anchor" href="#dockerfile을-시작으로-실제해보기">¶</a>Dockerfile을 시작으로 실제해보기</h3>
-<p><a href="https://subicura.com/2017/01/19/docker-guide-for-beginners-2.html" target="_blank" rel="noopener">여기</a>를 참고하자. 친절하게 정말 잘 써주셨다.</p>
-<h2 id="ecr"><a class="header-anchor" href="#ecr">¶</a>ECR</h2>
-<p><a href="https://aws.amazon.com/ko/ecr/" target="_blank" rel="noopener">아마존 ECR</a>은 docker 컨테이너 이미지를 손쉽게 저장, 관리 배포할 수 있게 도와주는 일종의 레파지토리 같은 개념이다.</p>
+<h3 id="이미지"><a href="#이미지" class="headerlink" title="이미지"></a>이미지</h3><p>이미지는 <strong>컨테이너의 실행에 필요한 파일 및 설정을 포함하고 있는 것</strong> 으로 별도의 상태값을 갖고 변하지 않는다. 컨테이너는 이미지를 실행하는 것이라 볼 수 있고, 추가되거나 변화가 필요한 값은 컨테이너에 저장된다. 말 그대로, 컨테이너를 실행하기 위한 모든 정보를 갖고 있기 때문에 의존성 파일을 컴파일/설치할 필요가 없다. docker를 이용한다면 이제 이미지를 다운받고 컨테이너를 생성면 된다.</p>
+<h3 id="Dockerfile을-시작으로-실제해보기"><a href="#Dockerfile을-시작으로-실제해보기" class="headerlink" title="Dockerfile을 시작으로 실제해보기"></a>Dockerfile을 시작으로 실제해보기</h3><p><a href="https://subicura.com/2017/01/19/docker-guide-for-beginners-2.html" target="_blank" rel="noopener">여기</a>를 참고하자. 친절하게 정말 잘 써주셨다.</p>
+<h2 id="ECR"><a href="#ECR" class="headerlink" title="ECR"></a>ECR</h2><p><a href="https://aws.amazon.com/ko/ecr/" target="_blank" rel="noopener">아마존 ECR</a>은 docker 컨테이너 이미지를 손쉽게 저장, 관리 배포할 수 있게 도와주는 일종의 레파지토리 같은 개념이다.</p>
 <p><img src="/images/2019/08/AWS_ECR.png" alt="AWS_ECR.png"></p>
 <p>이렇게 생성된 이미지를 푸쉬해서 관리 할 수 있다.</p>
-<h2 id="ecs"><a class="header-anchor" href="#ecs">¶</a>ECS</h2>
-<p>docker를 사용하다보면 컨테이너를 적절하게 배치하거나 관리할 도구의 필요성을 느끼게 된다. docker에서 만든 <a href="https://github.com/docker/swarm" target="_blank" rel="noopener">swarm</a>도 있지만서도, 가장 유명한건 구글의 <a href="https://kubernetes.io/" target="_blank" rel="noopener">쿠버네티스</a>가 아닐까 싶다. 이런 컨테이너 오케스트레이션 도구 중 하나가 바로 aws의 elastic container system (이하 ECS) 다.</p>
-<h3 id="cluster"><a class="header-anchor" href="#cluster">¶</a>Cluster</h3>
-<p>ecs의 가장 기본적인 단위는 클러스터다. 클러스터는 도커 컨테이너를 실행할 수 있는 가상의 공간, 일종의 논리적인 단위 수준이라고 볼 수 있다.</p>
-<h3 id="task"><a class="header-anchor" href="#task">¶</a>Task</h3>
-<p>ECS에서 컨테이너를 실행하는 최소단위를 task라고 부른다. task는 하나이상의 컨테이너로 구성할 수 있다. 같은 task내 있는 컨테이너들은 모두 같은 컨테이너 인스턴스에서 실행되는 것이 보장된다. 이러한 task를 실행하기 위한 것이 task definition 이다. task definition에는 task를 실행하기 위한 다양한 것들을 설정할 수 있다.</p>
+<h2 id="ECS"><a href="#ECS" class="headerlink" title="ECS"></a>ECS</h2><p>docker를 사용하다보면 컨테이너를 적절하게 배치하거나 관리할 도구의 필요성을 느끼게 된다. docker에서 만든 <a href="https://github.com/docker/swarm" target="_blank" rel="noopener">swarm</a>도 있지만서도, 가장 유명한건 구글의 <a href="https://kubernetes.io/" target="_blank" rel="noopener">쿠버네티스</a>가 아닐까 싶다. 이런 컨테이너 오케스트레이션 도구 중 하나가 바로 aws의 elastic container system (이하 ECS) 다.</p>
+<h3 id="Cluster"><a href="#Cluster" class="headerlink" title="Cluster"></a>Cluster</h3><p>ecs의 가장 기본적인 단위는 클러스터다. 클러스터는 도커 컨테이너를 실행할 수 있는 가상의 공간, 일종의 논리적인 단위 수준이라고 볼 수 있다.</p>
+<h3 id="Task"><a href="#Task" class="headerlink" title="Task"></a>Task</h3><p>ECS에서 컨테이너를 실행하는 최소단위를 task라고 부른다. task는 하나이상의 컨테이너로 구성할 수 있다. 같은 task내 있는 컨테이너들은 모두 같은 컨테이너 인스턴스에서 실행되는 것이 보장된다. 이러한 task를 실행하기 위한 것이 task definition 이다. task definition에는 task를 실행하기 위한 다양한 것들을 설정할 수 있다.</p>
 <p><img src="/images/2019/08/task-definition.png" alt="task-definition.png"></p>
-<p><s>귀찮아서</s> 캡쳐는 안했지만, add container에는 이미지 주소, 컨테이너명, 컨테이너 사양, 환경변수 등을 정할 수 있도록 설정이 준비되어 있다. 그리고 설정 변경 / 이미지 변경이 필요할 때마다, task definition을 새롭게 만듦으로써 (create new revision) 이를 해결할 수 있다.</p>
-<h3 id="service"><a class="header-anchor" href="#service">¶</a>Service</h3>
-<p>cluster는 두가지 방식으로 task를 실행할 수 있다. 한가지는 <code>run task definition</code>을 통해서 일회성으로 실행하는 것이다. 이 task는 곧바로 실행되고, 더이상 관리되지 않는다. 두 번째 방법은 서비스를 정의하는 것이다. 서비스는 하나이상의 task definition과 연결된다. 서비스는 크게 리플리카 타입과 데몬타입으로 나누어져 있는데, 우리는 리플리카 타입을 사용해서 n개의 태스크가 실행되도록 관리하고 있다.</p>
-<h2 id="어떻게-썼나"><a class="header-anchor" href="#어떻게-썼나">¶</a>어떻게 썼나</h2>
-<p>먼저 <code>dockerfile</code>을 통해서 이미지를 만들고, 해당 이미지를 <code>ecr</code>에 업로드한다. 그리고 배포가 필요할 때마다 <code>task definition</code>을 새롭게 만들고, 새롭게 만들어진 이미지를 넣었다. 그리고 서비스에서 실행할 이미지를 새롭게 만들어진 k번째 task definition으로 교체하면 끝이다.</p>
-<h2 id="써보니까-좋았던-점"><a class="header-anchor" href="#써보니까-좋았던-점">¶</a>써보니까 좋았던 점</h2>
-<p>의식의 흐름대로 나열해 보았다.</p>
+<p><del>귀찮아서</del> 캡쳐는 안했지만, add container에는 이미지 주소, 컨테이너명, 컨테이너 사양, 환경변수 등을 정할 수 있도록 설정이 준비되어 있다. 그리고 설정 변경 / 이미지 변경이 필요할 때마다, task definition을 새롭게 만듦으로써 (create new revision) 이를 해결할 수 있다.</p>
+<h3 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h3><p>cluster는 두가지 방식으로 task를 실행할 수 있다. 한가지는 <code>run task definition</code>을 통해서 일회성으로 실행하는 것이다. 이 task는 곧바로 실행되고, 더이상 관리되지 않는다. 두 번째 방법은 서비스를 정의하는 것이다. 서비스는 하나이상의 task definition과 연결된다. 서비스는 크게 리플리카 타입과 데몬타입으로 나누어져 있는데, 우리는 리플리카 타입을 사용해서 n개의 태스크가 실행되도록 관리하고 있다.</p>
+<h2 id="어떻게-썼나"><a href="#어떻게-썼나" class="headerlink" title="어떻게 썼나"></a>어떻게 썼나</h2><p>먼저 <code>dockerfile</code>을 통해서 이미지를 만들고, 해당 이미지를 <code>ecr</code>에 업로드한다. 그리고 배포가 필요할 때마다 <code>task definition</code>을 새롭게 만들고, 새롭게 만들어진 이미지를 넣었다. 그리고 서비스에서 실행할 이미지를 새롭게 만들어진 k번째 task definition으로 교체하면 끝이다.</p>
+<h2 id="써보니까-좋았던-점"><a href="#써보니까-좋았던-점" class="headerlink" title="써보니까 좋았던 점"></a>써보니까 좋았던 점</h2><p>의식의 흐름대로 나열해 보았다.</p>
 <ol>
-<li>
-<p>배포 히스토리를 남길 수 있었다 == 롤백이 쉬웠다. 배포할 때 마다 새롭게 만들어진 이미지를 <code>ecr</code>에 업로드 하였기 때문에 이미지 목록을 히스토리 느낌으로 남길 수 있었다. 그리고 롤백이 필요하면 이전에 잘 동작했던 이미지로 교체해주면 된다. 사실 이 방법보다 쉬운 것은 그냥 예전에 잘 동작했던 task-definition으로 service를 교체해 주는 것이다.</p>
+<li><p>배포 히스토리를 남길 수 있었다 == 롤백이 쉬웠다. 배포할 때 마다 새롭게 만들어진 이미지를 <code>ecr</code>에 업로드 하였기 때문에 이미지 목록을 히스토리 느낌으로 남길 수 있었다. 그리고 롤백이 필요하면 이전에 잘 동작했던 이미지로 교체해주면 된다. 사실 이 방법보다 쉬운 것은 그냥 예전에 잘 동작했던 task-definition으로 service를 교체해 주는 것이다.</p>
 </li>
-<li>
-<p>스테이지 별 로 다른 변수를 task definition - container의 환경변수로 관리할 수 있다. 기존에는 프로젝트에 <code>.development</code> <code>.release</code> 이런 형식으로 소스파일안에 스테이지마다 다른 변수 값을 두어야 했다. 따라서 이 글로벌 변수에 변동이 있을 때마다 배포를 새로 하는 번거로움이 있었는데, 이 방식 대로 하면 단지 task definition을 새롭게 만들고, 환경변수를 추가해서 service에 올려주기만 하면 된다. 추가로 <code>dockerfile</code> 혹은 docker 빌드 과정에 환경변수를 따로따로 주입하지 않는 다면, 어떤 스테이지 든지 간에 동일한 이미지로 대처할 수 있다.</p>
+<li><p>스테이지 별 로 다른 변수를 task definition - container의 환경변수로 관리할 수 있다. 기존에는 프로젝트에 <code>.development</code> <code>.release</code> 이런 형식으로 소스파일안에 스테이지마다 다른 변수 값을 두어야 했다. 따라서 이 글로벌 변수에 변동이 있을 때마다 배포를 새로 하는 번거로움이 있었는데, 이 방식 대로 하면 단지 task definition을 새롭게 만들고, 환경변수를 추가해서 service에 올려주기만 하면 된다. 추가로 <code>dockerfile</code> 혹은 docker 빌드 과정에 환경변수를 따로따로 주입하지 않는 다면, 어떤 스테이지 든지 간에 동일한 이미지로 대처할 수 있다.</p>
 </li>
 </ol>
-<p><s>3. 드디어 docker를 써볼 수 있었다.</s></p>
-<p><s>4. 아마존에 많은 돈을 지출할 수 있다.</s></p>
+<p><del>3. 드디어 docker를 써볼 수 있었다.</del></p>
+<p><del>4. 아마존에 많은 돈을 지출할 수 있다.</del></p>
 
             
 
@@ -319,7 +310,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/aws/">aws</a> <a class="tag tag--primary tag--small t-link" href="/tags/docker/">docker</a> <a class="tag tag--primary tag--small t-link" href="/tags/ecs/">ecs</a> <a class="tag tag--primary tag--small t-link" href="/tags/infrastructure/">infrastructure</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/aws/" rel="tag">aws</a> <a class="tag tag--primary tag--small t-link" href="/tags/docker/" rel="tag">docker</a> <a class="tag tag--primary tag--small t-link" href="/tags/ecs/" rel="tag">ecs</a> <a class="tag tag--primary tag--small t-link" href="/tags/infrastructure/" rel="tag">infrastructure</a>
 
             </div>
         
@@ -372,12 +363,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -392,10 +377,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -459,12 +440,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -603,8 +578,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -622,8 +597,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -679,8 +654,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -698,8 +673,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -759,7 +734,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -769,26 +744,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/08/06/experience-docker-aws-ecs/';
-                 
-                    this.page.identifier = '2019/08/06/experience-docker-aws-ecs/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

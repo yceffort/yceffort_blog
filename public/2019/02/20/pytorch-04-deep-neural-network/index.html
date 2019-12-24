@@ -34,15 +34,14 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Pytorch - 04) Deep Neural Network\n¶Deep Neural Network\n이전 Perceptron에서 한개의 Perceptron으로는 XOR연산을 효과적으로 분류하지 못한다는 것을 이야기 했었다.\n\n그리고 이런 XOR 이 아니더라도, 선형이 아닌 형태의 데이터를 분류 할 수 없을 것이다.\n\n이런형태의 데이터는 어떻게 classification 해야 될까? 라는 생가에서 시작된게, perceptron을 여러개 배치하는 것이다.\n\nTensorflow playground 예제다.\ninput layer 와 output layer 사이에 4개의 perceptron을 배치했는데, 각각의 perceptron이 선형으로 되어 있으며, 이 4개의 선형이 이루는 사각형 형태로 classification이 되어 있음을 알 수 있다.\n\n\n$$x1, x2$$에 대한 입력값이 각각 있고, 이 입력 값에 대해서 서로다른 perceptron이 다른 weight을 바탕으로 각각 다른 구별을 하고, 이 두가지 값을 또다른 weight로 보는 작업들을 반복하여 작업을 수행한다.\n¶Feedforward\ninput layer의 값이 hidden layer 로 전달되고, hidden layer가 ouput layer로 전파하는 과정 (hidden layer가 여러개면 hidden layer간 전파도 있을 것이다)을 feedforward, 순전파라고 한다. 말그대로, 앞쪽의 입력값을 뒤로 보내는 것을 의미한다. hidden layer에 있는 각각의 노드는 퍼셉트론의 활성함수라고 볼 수 있다.\n¶Backpropagation\n임의의 값을 기반으로 보낸 feedforward가 당연히 제대로된 classification을 해낼리가 없다. 그래서 Backpropagation(역전파)를 한다. 역전파는 input의 역방향으로 오차를 돌려보내서 weight을 재업데이트 하는 것이다. 각 파라미터 별로 Loss에 대한 그래디언트를 구한뒤, 그래디언트들이 향한 쪽으로 파라미터를 업데이트 한다.\n¶Code\n¶데이터셋\n1234567891011121314151617import torchimport numpy as npimport matplotlib.pyplot as pltimport torch.nn as nnfrom sklearn import datasetsn_pts = 500X, y = datasets.make_circles(n_samples=n_pts, random_state=123, noise=0.2, factor=0.3)x_data = torch.Tensor(X)y_data = torch.Tensor(y.reshape(500, 1))def scatter_plot():  plt.scatter(X[y==0, 0], X[y==0, 1], color='red')  plt.scatter(X[y==1, 0], X[y==1, 1], color='blue')scatter_plot()\n\n가운데 파란색 점들이 1이고, 빨간색이 0 이다.\n1234567891011121314class Model(nn.Module):    def __init__(self, input_size, H1, output_size):    super().__init__()    self.linear1 = nn.Linear(input_size, H1)    self.linear2 = nn.Linear(H1, output_size)      def forward(self, x):    x = torch.sigmoid(self.linear1(x))    x = torch.sigmoid(self.linear2(x))    return x    def predict(self, x):    return 1 if self.forward(x) &gt;= 0.5 else 0\n차이점은 hidden layer가 하나 추가됐다는 것이다. 두개 모두 linear로 처리되고 있으며, 활성화 함수로 sigmoid를 적용하였다.\n12model = Model(2, 4, 1)print(list(model.parameters()))\ninput, hidden, output이 각각 2, 4, 1 이다.\n12345678[Parameter containing:tensor([[-0.1573,  0.6670],        [-0.5144,  0.6607],        [ 0.6625,  0.1984],        [ 0.3064, -0.2649]], requires_grad=True), Parameter containing:tensor([-0.0411,  0.6752, -0.0167,  0.6902], requires_grad=True), Parameter containing:tensor([[-0.2804, -0.0074,  0.1881,  0.4310]], requires_grad=True), Parameter containing:tensor([-0.1316], requires_grad=True)]\n이제 학습을 시켜보자.\n12criterion = nn.BCELoss()optimizer = torch.optim.Adam(model.parameters(), lr=0.01)\n12345678910111213epochs = 1000losses = []for i in range(epochs):  y_pred = model.forward(x_data)  loss = criterion(y_pred, y_data)    print(\"epochs:\", i, \"loss:\", loss.item())    losses.append(loss.item())  optimizer.zero_grad()  loss.backward()  optimizer.step()\n123456789101112131415161718192021epochs: 0 loss: 0.6942843198776245epochs: 1 loss: 0.6935287117958069epochs: 2 loss: 0.6930914521217346epochs: 3 loss: 0.6929344534873962epochs: 4 loss: 0.6929613351821899epochs: 5 loss: 0.6930437088012695epochs: 6 loss: 0.6930822730064392epochs: 7 loss: 0.6930424571037292epochs: 8 loss: 0.6929377913475037epochs: 9 loss: 0.6928017139434814...epochs: 990 loss: 0.12231576442718506epochs: 991 loss: 0.12226035445928574epochs: 992 loss: 0.12220513820648193epochs: 993 loss: 0.12215007096529007epochs: 994 loss: 0.12209513783454895epochs: 995 loss: 0.12204025685787201epochs: 996 loss: 0.12198563665151596epochs: 997 loss: 0.12193109095096588epochs: 998 loss: 0.12187661975622177epochs: 999 loss: 0.1218223124742508\n1plt.plot(range(epochs), losses)\n\n오차가 완만하게 감소하여 약 0.1에서 수렴함을 알수 있다.\n12345678910111213141516def plot_decision_boundray(X, y):  # x축 y축 min max 값을 구해 그래프의 상하좌우 길이를 세팅한다.  x_span = np.linspace(min(X[:, 0]), max(X[:, 0]))  y_span = np.linspace(min(X[:, 1]), max(X[:, 1]))  # 이 두개로 그리드를 만든다.  xx, yy = np.meshgrid(x_span, y_span)  # .ravel()로 평탄화 하고 이 둘을 합쳐 tensor로 변환한다.  grid = torch.Tensor(np.c_[xx.ravel(), yy.ravel()])  # 값 예측  pred_func = model.forward(grid)  # xx와 모양을 맞춰 그래프에 넣을 수 있게 세팅한다.  # detach를 하여 autograd를 off한다.  # numpy()로 변환하여 그래프를 그릴 수 있게 한다.  z = pred_func.view(xx.shape).detach().numpy()  # 등고선  plt.contourf(xx, yy, z)\n\n그래프가 완성되었다. 짙은 검은색일 수록 1일 확률이 높고, 그렇지 않은 영역은 하얀색에 가깝다. 대체로 overfitting되지 않고 제대로 예측한 것을 알 수 있다.\n","dateCreated":"2019-02-20T00:00:00+09:00","dateModified":"2019-02-20T14:36:43+09:00","datePublished":"2019-02-20T00:00:00+09:00","description":"Pytorch - 04) Deep Neural Network\n\n¶Deep Neural Network\n이전 Perceptron에서 한개의 Perceptron으로는 XOR연산을 효과적으로 분류하지 못한다는 것을 이야기 했었다.\n\n\n\n그리고 이런 XOR 이 아니더라도, 선형이 아닌 형태의 데이터를 분류 할 수 없을 것이다.\n\n\n\n이런형태의 데이터는 어떻게 classification 해야 될까? 라는 생가에서 시작된게, perceptron을 여러개 배치하는 것이다.\n\n\n\nTensorflow playground 예제다.\n\ninput laye","headline":"Pytorch 04) - Deep Nueral Network","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/02/20/pytorch-04-deep-neural-network/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/02/20/pytorch-04-deep-neural-network/","keywords":"pytorch"}</script>
-    <meta name="description" content="Pytorch - 04) Deep Neural Network  ¶Deep Neural Network 이전 Perceptron에서 한개의 Perceptron으로는 XOR연산을 효과적으로 분류하지 못한다는 것을 이야기 했었다.    그리고 이런 XOR 이 아니더라도, 선형이 아닌 형태의 데이터를 분류 할 수 없을 것이다.    이런형태의 데이터는 어떻게 cla">
-<meta name="keywords" content="pytorch">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Pytorch - 04) Deep Neural Network\nDeep Neural Network이전 Perceptron에서 한개의 Perceptron으로는 XOR연산을 효과적으로 분류하지 못한다는 것을 이야기 했었다.\n\n그리고 이런 XOR 이 아니더라도, 선형이 아닌 형태의 데이터를 분류 할 수 없을 것이다.\n \n이런형태의 데이터는 어떻게 classification 해야 될까? 라는 생가에서 시작된게, perceptron을 여러개 배치하는 것이다.\n \nTensorflow playground 예제다.\ninput layer 와 output layer 사이에 4개의 perceptron을 배치했는데, 각각의 perceptron이 선형으로 되어 있으며, 이 4개의 선형이 이루는 사각형 형태로 classification이 되어 있음을 알 수 있다.\n\n\nx1, x2에 대한 입력값이 각각 있고, 이 입력 값에 대해서 서로다른 perceptron이 다른 weight을 바탕으로 각각 다른 구별을 하고, 이 두가지 값을 또다른 weight로 보는 작업들을 반복하여 작업을 수행한다. \nFeedforwardinput layer의 값이 hidden layer 로 전달되고, hidden layer가 ouput layer로 전파하는 과정 (hidden layer가 여러개면 hidden layer간 전파도 있을 것이다)을 feedforward, 순전파라고 한다. 말그대로, 앞쪽의 입력값을 뒤로 보내는 것을 의미한다. hidden layer에 있는 각각의 노드는 퍼셉트론의 활성함수라고 볼 수 있다.\nBackpropagation임의의 값을 기반으로 보낸 feedforward가 당연히 제대로된 classification을 해낼리가 없다. 그래서 Backpropagation(역전파)를 한다. 역전파는 input의 역방향으로 오차를 돌려보내서 weight을 재업데이트 하는 것이다. 각 파라미터 별로 Loss에 대한 그래디언트를 구한뒤, 그래디언트들이 향한 쪽으로 파라미터를 업데이트 한다.\nCode데이터셋1234567891011121314151617import torchimport numpy as npimport matplotlib.pyplot as pltimport torch.nn as nnfrom sklearn import datasetsn_pts = 500X, y = datasets.make_circles(n_samples=n_pts, random_state=123, noise=0.2, factor=0.3)x_data = torch.Tensor(X)y_data = torch.Tensor(y.reshape(500, 1))def scatter_plot():  plt.scatter(X[y==0, 0], X[y==0, 1], color='red')  plt.scatter(X[y==1, 0], X[y==1, 1], color='blue')scatter_plot()\n\n가운데 파란색 점들이 1이고, 빨간색이 0 이다.\n1234567891011121314class Model(nn.Module):    def __init__(self, input_size, H1, output_size):    super().__init__()    self.linear1 = nn.Linear(input_size, H1)    self.linear2 = nn.Linear(H1, output_size)      def forward(self, x):    x = torch.sigmoid(self.linear1(x))    x = torch.sigmoid(self.linear2(x))    return x    def predict(self, x):    return 1 if self.forward(x) &gt;= 0.5 else 0\n차이점은 hidden layer가 하나 추가됐다는 것이다. 두개 모두 linear로 처리되고 있으며, 활성화 함수로 sigmoid를 적용하였다.\n12model = Model(2, 4, 1)print(list(model.parameters()))\ninput, hidden, output이 각각 2, 4, 1 이다.\n12345678[Parameter containing:tensor([[-0.1573,  0.6670],        [-0.5144,  0.6607],        [ 0.6625,  0.1984],        [ 0.3064, -0.2649]], requires_grad=True), Parameter containing:tensor([-0.0411,  0.6752, -0.0167,  0.6902], requires_grad=True), Parameter containing:tensor([[-0.2804, -0.0074,  0.1881,  0.4310]], requires_grad=True), Parameter containing:tensor([-0.1316], requires_grad=True)]\n이제 학습을 시켜보자.\n12criterion = nn.BCELoss()optimizer = torch.optim.Adam(model.parameters(), lr=0.01)\n12345678910111213epochs = 1000losses = []for i in range(epochs):  y_pred = model.forward(x_data)  loss = criterion(y_pred, y_data)    print(\"epochs:\", i, \"loss:\", loss.item())    losses.append(loss.item())  optimizer.zero_grad()  loss.backward()  optimizer.step()\n123456789101112131415161718192021epochs: 0 loss: 0.6942843198776245epochs: 1 loss: 0.6935287117958069epochs: 2 loss: 0.6930914521217346epochs: 3 loss: 0.6929344534873962epochs: 4 loss: 0.6929613351821899epochs: 5 loss: 0.6930437088012695epochs: 6 loss: 0.6930822730064392epochs: 7 loss: 0.6930424571037292epochs: 8 loss: 0.6929377913475037epochs: 9 loss: 0.6928017139434814...epochs: 990 loss: 0.12231576442718506epochs: 991 loss: 0.12226035445928574epochs: 992 loss: 0.12220513820648193epochs: 993 loss: 0.12215007096529007epochs: 994 loss: 0.12209513783454895epochs: 995 loss: 0.12204025685787201epochs: 996 loss: 0.12198563665151596epochs: 997 loss: 0.12193109095096588epochs: 998 loss: 0.12187661975622177epochs: 999 loss: 0.1218223124742508\n1plt.plot(range(epochs), losses)\n\n오차가 완만하게 감소하여 약 0.1에서 수렴함을 알수 있다.\n12345678910111213141516def plot_decision_boundray(X, y):  # x축 y축 min max 값을 구해 그래프의 상하좌우 길이를 세팅한다.  x_span = np.linspace(min(X[:, 0]), max(X[:, 0]))  y_span = np.linspace(min(X[:, 1]), max(X[:, 1]))  # 이 두개로 그리드를 만든다.  xx, yy = np.meshgrid(x_span, y_span)  # .ravel()로 평탄화 하고 이 둘을 합쳐 tensor로 변환한다.  grid = torch.Tensor(np.c_[xx.ravel(), yy.ravel()])  # 값 예측  pred_func = model.forward(grid)  # xx와 모양을 맞춰 그래프에 넣을 수 있게 세팅한다.  # detach를 하여 autograd를 off한다.  # numpy()로 변환하여 그래프를 그릴 수 있게 한다.  z = pred_func.view(xx.shape).detach().numpy()  # 등고선  plt.contourf(xx, yy, z)\n\n그래프가 완성되었다. 짙은 검은색일 수록 1일 확률이 높고, 그렇지 않은 영역은 하얀색에 가깝다. 대체로 overfitting되지 않고 제대로 예측한 것을 알 수 있다.\n","dateCreated":"2019-02-20T00:00:00+09:00","dateModified":"2019-02-20T14:36:43+09:00","datePublished":"2019-02-20T00:00:00+09:00","description":"Pytorch - 04) Deep Neural Network\n\nDeep Neural Network\n이전 Perceptron에서 한개의 Perceptron으로는 XOR연산을 효과적으로 분류하지 못한다는 것을 이야기 했었다.\n\n\n\n그리고 이런 XOR 이 아니더라도, 선형이 아닌 형태의 데이터를 분류 할 수 없을 것이다.\n\n \n\n이런형태의 데이터는 어떻게 classification 해야 될까? 라는 생가에서 시작된게, perceptron을 여러개 배치하는 것이다.\n\n \n\nTensorflow playground 예제다.\n\ninput lay","headline":"Pytorch 04) - Deep Nueral Network","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/02/20/pytorch-04-deep-neural-network/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/02/20/pytorch-04-deep-neural-network/","keywords":"pytorch"}</script>
+    <meta name="description" content="Pytorch - 04) Deep Neural Network  Deep Neural Network 이전 Perceptron에서 한개의 Perceptron으로는 XOR연산을 효과적으로 분류하지 못한다는 것을 이야기 했었다.    그리고 이런 XOR 이 아니더라도, 선형이 아닌 형태의 데이터를 분류 할 수 없을 것이다.     이런형태의 데이터는 어떻게 cla">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Pytorch 04) - Deep Nueral Network">
 <meta property="og:url" content="https://www.yceffort.kr/2019/02/20/pytorch-04-deep-neural-network/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="Pytorch - 04) Deep Neural Network  ¶Deep Neural Network 이전 Perceptron에서 한개의 Perceptron으로는 XOR연산을 효과적으로 분류하지 못한다는 것을 이야기 했었다.    그리고 이런 XOR 이 아니더라도, 선형이 아닌 형태의 데이터를 분류 할 수 없을 것이다.    이런형태의 데이터는 어떻게 cla">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="Pytorch - 04) Deep Neural Network  Deep Neural Network 이전 Perceptron에서 한개의 Perceptron으로는 XOR연산을 효과적으로 분류하지 못한다는 것을 이야기 했었다.    그리고 이런 XOR 이 아니더라도, 선형이 아닌 형태의 데이터를 분류 할 수 없을 것이다.     이런형태의 데이터는 어떻게 cla">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://cdn-images-1.medium.com/max/1600/1*Tc8UgR_fjI_h0p3y4H9MwA.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/02/deep-neural-network3.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/02/deep-neural-network4.png">
@@ -51,10 +50,11 @@
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/02/deep-neural-network5.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/02/deep-neural-network6.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/02/deep-neural-network7.png">
-<meta property="og:updated_time" content="2019-02-20T05:36:43.000Z">
+<meta property="article:published_time" content="2019-02-19T15:00:00.000Z">
+<meta property="article:modified_time" content="2019-02-20T05:36:43.000Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="pytorch">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Pytorch 04) - Deep Nueral Network">
-<meta name="twitter:description" content="Pytorch - 04) Deep Neural Network  ¶Deep Neural Network 이전 Perceptron에서 한개의 Perceptron으로는 XOR연산을 효과적으로 분류하지 못한다는 것을 이야기 했었다.    그리고 이런 XOR 이 아니더라도, 선형이 아닌 형태의 데이터를 분류 할 수 없을 것이다.    이런형태의 데이터는 어떻게 cla">
 <meta name="twitter:image" content="https://cdn-images-1.medium.com/max/1600/1*Tc8UgR_fjI_h0p3y4H9MwA.png">
     
     
@@ -67,7 +67,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -94,7 +96,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -133,8 +135,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -271,25 +272,20 @@
     <div class="post-content markdown">
         <div class="main-content-wrap">
             <p>Pytorch - 04) Deep Neural Network</p>
-<h2 id="deep-neural-network"><a class="header-anchor" href="#deep-neural-network">¶</a>Deep Neural Network</h2>
-<p>이전 <a href="https://yceffort.github.io/2019/02/19/pytorch-03-perceptron.html" target="_blank" rel="noopener">Perceptron</a>에서 한개의 Perceptron으로는 XOR연산을 효과적으로 분류하지 못한다는 것을 이야기 했었다.</p>
+<h2 id="Deep-Neural-Network"><a href="#Deep-Neural-Network" class="headerlink" title="Deep Neural Network"></a>Deep Neural Network</h2><p>이전 <a href="https://yceffort.github.io/2019/02/19/pytorch-03-perceptron.html" target="_blank" rel="noopener">Perceptron</a>에서 한개의 Perceptron으로는 XOR연산을 효과적으로 분류하지 못한다는 것을 이야기 했었다.</p>
 <p><img src="https://cdn-images-1.medium.com/max/1600/1*Tc8UgR_fjI_h0p3y4H9MwA.png" alt="perceptron-xor"></p>
 <p>그리고 이런 XOR 이 아니더라도, 선형이 아닌 형태의 데이터를 분류 할 수 없을 것이다.</p>
-<p><img src="/images/2019/02/deep-neural-network3.png" alt="deep-neural-network3"></p>
+<p><img src="/images/2019/02/deep-neural-network3.png" alt="deep-neural-network3"> </p>
 <p>이런형태의 데이터는 어떻게 classification 해야 될까? 라는 생가에서 시작된게, perceptron을 여러개 배치하는 것이다.</p>
-<p><img src="/images/2019/02/deep-neural-network4.png" alt="deep-neural-network4"></p>
+<p><img src="/images/2019/02/deep-neural-network4.png" alt="deep-neural-network4"> </p>
 <p><a href="https://playground.tensorflow.org/#activation=sigmoid&amp;batchSize=10&amp;dataset=circle&amp;regDataset=reg-plane&amp;learningRate=0.03&amp;regularizationRate=0&amp;noise=0&amp;networkShape=4&amp;seed=0.99755&amp;showTestData=false&amp;discretize=false&amp;percTrainData=50&amp;x=true&amp;y=true&amp;xTimesY=false&amp;xSquared=false&amp;ySquared=false&amp;cosX=false&amp;sinX=false&amp;cosY=false&amp;sinY=false&amp;collectStats=false&amp;problem=classification&amp;initZero=false&amp;hideText=false" target="_blank" rel="noopener">Tensorflow playground</a> 예제다.</p>
 <p>input layer 와 output layer 사이에 4개의 perceptron을 배치했는데, 각각의 perceptron이 선형으로 되어 있으며, 이 4개의 선형이 이루는 사각형 형태로 classification이 되어 있음을 알 수 있다.</p>
 <p><img src="/images/2019/02/deep-neural-network1.png" alt="deep-neural-network1"></p>
 <p><img src="/images/2019/02/deep-neural-network2.png" alt="deep-neural-network2"></p>
-<p>$$x1, x2$$에 대한 입력값이 각각 있고, 이 입력 값에 대해서 서로다른 perceptron이 다른 weight을 바탕으로 각각 다른 구별을 하고, 이 두가지 값을 또다른 weight로 보는 작업들을 반복하여 작업을 수행한다.</p>
-<h3 id="feedforward"><a class="header-anchor" href="#feedforward">¶</a>Feedforward</h3>
-<p>input layer의 값이 hidden layer 로 전달되고, hidden layer가 ouput layer로 전파하는 과정 (hidden layer가 여러개면 hidden layer간 전파도 있을 것이다)을 feedforward, 순전파라고 한다. 말그대로, 앞쪽의 입력값을 뒤로 보내는 것을 의미한다. hidden layer에 있는 각각의 노드는 퍼셉트론의 활성함수라고 볼 수 있다.</p>
-<h3 id="backpropagation"><a class="header-anchor" href="#backpropagation">¶</a>Backpropagation</h3>
-<p>임의의 값을 기반으로 보낸 feedforward가 당연히 제대로된 classification을 해낼리가 없다. 그래서 Backpropagation(역전파)를 한다. 역전파는 input의 역방향으로 오차를 돌려보내서 weight을 재업데이트 하는 것이다. 각 파라미터 별로 Loss에 대한 그래디언트를 구한뒤, 그래디언트들이 향한 쪽으로 파라미터를 업데이트 한다.</p>
-<h2 id="code"><a class="header-anchor" href="#code">¶</a>Code</h2>
-<h3 id="데이터셋"><a class="header-anchor" href="#데이터셋">¶</a>데이터셋</h3>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line">n_pts = <span class="number">500</span></span><br><span class="line">X, y = datasets.make_circles(n_samples=n_pts, random_state=<span class="number">123</span>, noise=<span class="number">0.2</span>, factor=<span class="number">0.3</span>)</span><br><span class="line"></span><br><span class="line">x_data = torch.Tensor(X)</span><br><span class="line">y_data = torch.Tensor(y.reshape(<span class="number">500</span>, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">scatter_plot</span><span class="params">()</span>:</span></span><br><span class="line">  plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>], color=<span class="string">'red'</span>)</span><br><span class="line">  plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>], color=<span class="string">'blue'</span>)</span><br><span class="line"></span><br><span class="line">scatter_plot()</span><br></pre></td></tr></table></figure>
+<p><script type="math/tex">x1, x2</script>에 대한 입력값이 각각 있고, 이 입력 값에 대해서 서로다른 perceptron이 다른 weight을 바탕으로 각각 다른 구별을 하고, 이 두가지 값을 또다른 weight로 보는 작업들을 반복하여 작업을 수행한다. </p>
+<h3 id="Feedforward"><a href="#Feedforward" class="headerlink" title="Feedforward"></a>Feedforward</h3><p>input layer의 값이 hidden layer 로 전달되고, hidden layer가 ouput layer로 전파하는 과정 (hidden layer가 여러개면 hidden layer간 전파도 있을 것이다)을 feedforward, 순전파라고 한다. 말그대로, 앞쪽의 입력값을 뒤로 보내는 것을 의미한다. hidden layer에 있는 각각의 노드는 퍼셉트론의 활성함수라고 볼 수 있다.</p>
+<h3 id="Backpropagation"><a href="#Backpropagation" class="headerlink" title="Backpropagation"></a>Backpropagation</h3><p>임의의 값을 기반으로 보낸 feedforward가 당연히 제대로된 classification을 해낼리가 없다. 그래서 Backpropagation(역전파)를 한다. 역전파는 input의 역방향으로 오차를 돌려보내서 weight을 재업데이트 하는 것이다. 각 파라미터 별로 Loss에 대한 그래디언트를 구한뒤, 그래디언트들이 향한 쪽으로 파라미터를 업데이트 한다.</p>
+<h2 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h2><h3 id="데이터셋"><a href="#데이터셋" class="headerlink" title="데이터셋"></a>데이터셋</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets</span><br><span class="line"></span><br><span class="line">n_pts = <span class="number">500</span></span><br><span class="line">X, y = datasets.make_circles(n_samples=n_pts, random_state=<span class="number">123</span>, noise=<span class="number">0.2</span>, factor=<span class="number">0.3</span>)</span><br><span class="line"></span><br><span class="line">x_data = torch.Tensor(X)</span><br><span class="line">y_data = torch.Tensor(y.reshape(<span class="number">500</span>, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">scatter_plot</span><span class="params">()</span>:</span></span><br><span class="line">  plt.scatter(X[y==<span class="number">0</span>, <span class="number">0</span>], X[y==<span class="number">0</span>, <span class="number">1</span>], color=<span class="string">'red'</span>)</span><br><span class="line">  plt.scatter(X[y==<span class="number">1</span>, <span class="number">0</span>], X[y==<span class="number">1</span>, <span class="number">1</span>], color=<span class="string">'blue'</span>)</span><br><span class="line"></span><br><span class="line">scatter_plot()</span><br></pre></td></tr></table></figure>
 <p><img src="/images/2019/02/deep-neural-network5.png" alt="deep-neural-network5"></p>
 <p>가운데 파란색 점들이 1이고, 빨간색이 0 이다.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Model</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, input_size, H1, output_size)</span>:</span></span><br><span class="line">    super().__init__()</span><br><span class="line">    self.linear1 = nn.Linear(input_size, H1)</span><br><span class="line">    self.linear2 = nn.Linear(H1, output_size)</span><br><span class="line">    </span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">    x = torch.sigmoid(self.linear1(x))</span><br><span class="line">    x = torch.sigmoid(self.linear2(x))</span><br><span class="line">    <span class="keyword">return</span> x</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self, x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span> <span class="keyword">if</span> self.forward(x) &gt;= <span class="number">0.5</span> <span class="keyword">else</span> <span class="number">0</span></span><br></pre></td></tr></table></figure>
@@ -322,7 +318,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/">pytorch</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/" rel="tag">pytorch</a>
 
             </div>
         
@@ -342,7 +338,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-01-tensor/" data-tooltip="Pytorch 01) - Tensor" aria-label="NEXT: Pytorch 01) - Tensor">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-02-linear-regression/" data-tooltip="Pytorch 02) - Linear Regression" aria-label="NEXT: Pytorch 02) - Linear Regression">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -375,12 +371,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -395,10 +385,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -430,7 +416,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-01-tensor/" data-tooltip="Pytorch 01) - Tensor" aria-label="NEXT: Pytorch 01) - Tensor">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-02-linear-regression/" data-tooltip="Pytorch 02) - Linear Regression" aria-label="NEXT: Pytorch 02) - Linear Regression">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -462,12 +448,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -606,8 +586,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -625,8 +605,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -682,8 +662,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -701,8 +681,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -762,7 +742,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -772,26 +752,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/02/20/pytorch-04-deep-neural-network/';
-                 
-                    this.page.identifier = '2019/02/20/pytorch-04-deep-neural-network/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

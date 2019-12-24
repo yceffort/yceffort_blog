@@ -34,19 +34,20 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"¶Javascript Primitive\n기존에 자바스크립트는 6가지의 primitive가 있었다.\n\nObject\nstring\nnumber\nboolean\nnull\nundefined\n\n그러나 es6가 들어서면서 symbol이라는 7번째 primitive가 추가되었다.\n¶Symbol\n12const helloSymbol = Symbol();const hiSymbol = Symbol();\n새로운 심볼 값을 생성했다. 이 심볼로 생성한 값은 변경할 수 없으므로 const에 할당에도 상관없다. 그리고 이렇게 생성된 심볼 값은 프로그램 내에서 유일함을 보장해 준다.\n1234let obj = &#123;&#125;;obj[helloSymbol] = \"hello\";obj[hiSymbol] = \"hi\";console.log(obj);\n1&#123;Symbol(): &quot;hello&quot;, Symbol(): &quot;hi&quot;&#125;\n물론 문자열이나 숫자를 key로 사용할 수 있지만, symbol은 유일함을 보장해주기 때문에 이렇게 키값으로 사용할 수 있다.\n12const welcomeSymbol = Symbol(\"환영합니다\");console.log(welcomeSymbol);\n1Symbol(환영합니다)\nSymbol안에 있는 문자열은 일종의 주석으로 보면 될 것 같다.\n¶예제\n1234567const isBlocked = Symbol(\"is blocked element?\");if (element[isBlocked]) &#123;  openElement(element);&#125; else &#123;  element[isBlocked] = true;&#125;\nelement는 isBlocked라는 심볼을 키로 갖는 object다. 문자열이나 숫자가 아닌 심볼을 key로 갖는 속성이다. 이는 유일성을 보장해주기 때문에 다른 키들과의 충돌을 방지할 수 있다. 다만 obj.name과 같이 dot을 이용해서 접근할 수 없다. 반드시 []를 활용해서 접근해야 한다.\n한가지 주의 해야할 것은 isBlocked 심볼 값이 스코프 내에 존재 할 때만 이러한 행위가 가능하다는 것이다. 어떤 모듈이 심볼을 스스로 만드는 경우, 해당 모듈은 해당 심볼을 모든 객체에 적용할 수 있다. 즉 다른 속성과의 충돌을 걱정할 필요가 없다.\n그리고 심볼 키는 이러한 충돌을 방지하기 위해서 만들어 진 것이므로, 일반적인 javascript 객체 조사는 Symbol을 무시한다. 무슨 소리냐면…\n1234567891011121314151617let 메시 = &#123;&#125;;메시[\"영문명\"] = \"Lionel Messi\";메시[\"별명\"] = \"라이오넬 멧시\";const Nationality = Symbol(\"선수의 국적\");메시[Nationality] = \"칠레\";for (let i in 메시) &#123;  console.log(i);&#125;for (let i of Object.keys(메시)) &#123;  console.log(i);&#125;for (let i of Object.getOwnPropertyNames(메시)) &#123;  console.log(i);&#125;\n123456&quot;영문명&quot;&quot;별명&quot;&quot;영문명&quot;&quot;별명&quot;&quot;영문명&quot;&quot;별명&quot;\n이처럼 심볼 Nationality 키는 일반적인 상황에서 모두 무시 되는 것을 볼 수 있다. 물론 이를 조회하는 방법도 있다.\n1Object.getOwnPropertySymbols(메시);\n1[Symbol(선수의 국적)]\n혹은 심볼을 포함해서 모든 키를 조회하고 싶다면\n1Reflect.ownKeys(메시);\n1[&quot;영문명&quot;, &quot;별명&quot;, Symbol(선수의 국적)]\nReflect.ownKeys를 활용하면 된다.\n¶심볼의 특징\n\n일단 생성되면 변경되지 않는다\n속성을 부여할 수 없다\nobject의 key 값으로 사용할 수 있다.\n모든 심볼은 고유하다. 주석이 동일하다 하더라도 일단 생성되면 다르게 구별된다.\n문자열로 자동으로 변환되지 않는다.\n\n12345const newSymbol = Symbol(  \"this symbol\")`symbol is $&#123;newSymbol&#125;`//Uncaught TypeError: Cannot convert a Symbol value to a string`symbol is $&#123;String(newSymbol)&#125; $&#123;newSymbol.toString()&#125;`;// symbol is Symbol(this symbol) Symbol(this symbol)\n¶심볼을 갖는 방법\n\nSymbol()을 호출한다. 이는 호출할 때 마다 새롭고 고유한 심볼을 만들어 준다.\nSymbol.for(string)을 호출한다. 이 메소드는 Symbol Registry라는 심볼목록을 참조하여 리턴하는데, 앞서와는 다르게 심볼 목록을 공유한다. Symbol.for('호날도')를 계속해서 호출한다면, 매번 같은 심볼을 리턴한다. 이는 심볼이 공유 되어야 하는 상황에서 유용하다.\nSymbol.length 처럼 표준에 정의된 심볼을 가져오는 법\n\n","dateCreated":"2019-07-18T10:03:36+09:00","dateModified":"2019-07-19T10:12:49+09:00","datePublished":"2019-07-18T10:03:36+09:00","description":"¶Javascript Primitive\n기존에 자바스크립트는 6가지의 primitive가 있었다.\n\n * Object\n * string\n * number\n * boolean\n * null\n * undefined\n\n그러나 es6가 들어서면서 symbol이라는 7번째 primitive가 추가되었다.\n\n¶Symbol\n1\n2\n\n\nconst helloSymbol = Symbol();\nconst hiSymbol = Symbol();\n\n\n새로운 심볼 값을 생성했다. 이 심볼로 생성한 값은 변경할 수 없으므로 const에 할당에도 상관없다. 그리","headline":"Javascript Symbol","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/07/18/javascript-symbol/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/07/18/javascript-symbol/","keywords":"javascript, es6"}</script>
-    <meta name="description" content="¶Javascript Primitive 기존에 자바스크립트는 6가지의 primitive가 있었다.   * Object  * string  * number  * boolean  * null  * undefined  그러나 es6가 들어서면서 symbol이라는 7번째 primitive가 추가되었다.  ¶Symbol 1 2   const helloSymbol =">
-<meta name="keywords" content="javascript,es6">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Javascript Primitive기존에 자바스크립트는 6가지의 primitive가 있었다.\n\nObject\nstring\nnumber\nboolean\nnull\nundefined\n\n그러나 es6가 들어서면서 symbol이라는 7번째 primitive가 추가되었다.\nSymbol12const helloSymbol = Symbol();const hiSymbol = Symbol();\n새로운 심볼 값을 생성했다. 이 심볼로 생성한 값은 변경할 수 없으므로 const에 할당에도 상관없다. 그리고 이렇게 생성된 심볼 값은 프로그램 내에서 유일함을 보장해 준다.\n1234let obj = &#123;&#125;;obj[helloSymbol] = \"hello\";obj[hiSymbol] = \"hi\";console.log(obj);\n1&#123;Symbol(): &quot;hello&quot;, Symbol(): &quot;hi&quot;&#125;\n물론 문자열이나 숫자를 key로 사용할 수 있지만, symbol은 유일함을 보장해주기 때문에 이렇게 키값으로 사용할 수 있다.\n12const welcomeSymbol = Symbol(\"환영합니다\");console.log(welcomeSymbol);\n1Symbol(환영합니다)\nSymbol안에 있는 문자열은 일종의 주석으로 보면 될 것 같다.\n예제1234567const isBlocked = Symbol(\"is blocked element?\");if (element[isBlocked]) &#123;  openElement(element);&#125; else &#123;  element[isBlocked] = true;&#125;\nelement는 isBlocked라는 심볼을 키로 갖는 object다. 문자열이나 숫자가 아닌 심볼을 key로 갖는 속성이다. 이는 유일성을 보장해주기 때문에 다른 키들과의 충돌을 방지할 수 있다. 다만 obj.name과 같이 dot을 이용해서 접근할 수 없다. 반드시 []를 활용해서 접근해야 한다.\n한가지 주의 해야할 것은 isBlocked 심볼 값이 스코프 내에 존재 할 때만 이러한 행위가 가능하다는 것이다. 어떤 모듈이 심볼을 스스로 만드는 경우, 해당 모듈은 해당 심볼을 모든 객체에 적용할 수 있다. 즉 다른 속성과의 충돌을 걱정할 필요가 없다.\n그리고 심볼 키는 이러한 충돌을 방지하기 위해서 만들어 진 것이므로, 일반적인 javascript 객체 조사는 Symbol을 무시한다. 무슨 소리냐면…\n1234567891011121314151617let 메시 = &#123;&#125;;메시[\"영문명\"] = \"Lionel Messi\";메시[\"별명\"] = \"라이오넬 멧시\";const Nationality = Symbol(\"선수의 국적\");메시[Nationality] = \"칠레\";for (let i in 메시) &#123;  console.log(i);&#125;for (let i of Object.keys(메시)) &#123;  console.log(i);&#125;for (let i of Object.getOwnPropertyNames(메시)) &#123;  console.log(i);&#125;\n123456&quot;영문명&quot;&quot;별명&quot;&quot;영문명&quot;&quot;별명&quot;&quot;영문명&quot;&quot;별명&quot;\n이처럼 심볼 Nationality 키는 일반적인 상황에서 모두 무시 되는 것을 볼 수 있다. 물론 이를 조회하는 방법도 있다.\n1Object.getOwnPropertySymbols(메시);\n1[Symbol(선수의 국적)]\n혹은 심볼을 포함해서 모든 키를 조회하고 싶다면\n1Reflect.ownKeys(메시);\n1[&quot;영문명&quot;, &quot;별명&quot;, Symbol(선수의 국적)]\nReflect.ownKeys를 활용하면 된다.\n심볼의 특징\n일단 생성되면 변경되지 않는다\n속성을 부여할 수 없다\nobject의 key 값으로 사용할 수 있다.\n모든 심볼은 고유하다. 주석이 동일하다 하더라도 일단 생성되면 다르게 구별된다.\n문자열로 자동으로 변환되지 않는다.\n\n12345const newSymbol = Symbol(  \"this symbol\")`symbol is $&#123;newSymbol&#125;`//Uncaught TypeError: Cannot convert a Symbol value to a string`symbol is $&#123;String(newSymbol)&#125; $&#123;newSymbol.toString()&#125;`;// symbol is Symbol(this symbol) Symbol(this symbol)\n심볼을 갖는 방법\nSymbol()을 호출한다. 이는 호출할 때 마다 새롭고 고유한 심볼을 만들어 준다.\nSymbol.for(string)을 호출한다. 이 메소드는 Symbol Registry라는 심볼목록을 참조하여 리턴하는데, 앞서와는 다르게 심볼 목록을 공유한다. Symbol.for(&#39;호날도&#39;)를 계속해서 호출한다면, 매번 같은 심볼을 리턴한다. 이는 심볼이 공유 되어야 하는 상황에서 유용하다.\nSymbol.length 처럼 표준에 정의된 심볼을 가져오는 법\n\n","dateCreated":"2019-07-18T10:03:36+09:00","dateModified":"2019-07-19T10:12:49+09:00","datePublished":"2019-07-18T10:03:36+09:00","description":"Javascript Primitive\n기존에 자바스크립트는 6가지의 primitive가 있었다.\n\n * Object\n * string\n * number\n * boolean\n * null\n * undefined\n\n그러나 es6가 들어서면서 symbol이라는 7번째 primitive가 추가되었다.\n\nSymbol\n1\n2\n\n\nconst helloSymbol = Symbol();\nconst hiSymbol = Symbol();\n\n\n새로운 심볼 값을 생성했다. 이 심볼로 생성한 값은 변경할 수 없으므로 const에 할당에도 상관없다. 그리고 ","headline":"Javascript Symbol","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/07/18/javascript-symbol/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/07/18/javascript-symbol/","keywords":"javascript, es6"}</script>
+    <meta name="description" content="Javascript Primitive 기존에 자바스크립트는 6가지의 primitive가 있었다.   * Object  * string  * number  * boolean  * null  * undefined  그러나 es6가 들어서면서 symbol이라는 7번째 primitive가 추가되었다.  Symbol 1 2   const helloSymbol &#x3D; S">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Javascript Symbol">
 <meta property="og:url" content="https://www.yceffort.kr/2019/07/18/javascript-symbol/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="¶Javascript Primitive 기존에 자바스크립트는 6가지의 primitive가 있었다.   * Object  * string  * number  * boolean  * null  * undefined  그러나 es6가 들어서면서 symbol이라는 7번째 primitive가 추가되었다.  ¶Symbol 1 2   const helloSymbol =">
-<meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-07-19T01:12:49.639Z">
+<meta property="og:description" content="Javascript Primitive 기존에 자바스크립트는 6가지의 primitive가 있었다.   * Object  * string  * number  * boolean  * null  * undefined  그러나 es6가 들어서면서 symbol이라는 7번째 primitive가 추가되었다.  Symbol 1 2   const helloSymbol &#x3D; S">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-07-18T01:03:36.000Z">
+<meta property="article:modified_time" content="2019-07-19T01:12:49.639Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="javascript">
+<meta property="article:tag" content="es6">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Javascript Symbol">
-<meta name="twitter:description" content="¶Javascript Primitive 기존에 자바스크립트는 6가지의 primitive가 있었다.   * Object  * string  * number  * boolean  * null  * undefined  그러나 es6가 들어서면서 symbol이라는 7번째 primitive가 추가되었다.  ¶Symbol 1 2   const helloSymbol =">
     
     
     
@@ -58,7 +59,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -85,7 +88,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -124,8 +127,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -261,8 +263,7 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h2 id="javascript-primitive"><a class="header-anchor" href="#javascript-primitive">¶</a>Javascript Primitive</h2>
-<p>기존에 자바스크립트는 6가지의 primitive가 있었다.</p>
+            <h2 id="Javascript-Primitive"><a href="#Javascript-Primitive" class="headerlink" title="Javascript Primitive"></a>Javascript Primitive</h2><p>기존에 자바스크립트는 6가지의 primitive가 있었다.</p>
 <ul>
 <li>Object</li>
 <li>string</li>
@@ -272,8 +273,7 @@
 <li>undefined</li>
 </ul>
 <p>그러나 es6가 들어서면서 <code>symbol</code>이라는 7번째 primitive가 추가되었다.</p>
-<h2 id="symbol"><a class="header-anchor" href="#symbol">¶</a>Symbol</h2>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> helloSymbol = <span class="built_in">Symbol</span>();</span><br><span class="line"><span class="keyword">const</span> hiSymbol = <span class="built_in">Symbol</span>();</span><br></pre></td></tr></table></figure>
+<h2 id="Symbol"><a href="#Symbol" class="headerlink" title="Symbol"></a>Symbol</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> helloSymbol = <span class="built_in">Symbol</span>();</span><br><span class="line"><span class="keyword">const</span> hiSymbol = <span class="built_in">Symbol</span>();</span><br></pre></td></tr></table></figure>
 <p>새로운 심볼 값을 생성했다. 이 심볼로 생성한 값은 변경할 수 없으므로 const에 할당에도 상관없다. 그리고 이렇게 생성된 심볼 값은 프로그램 내에서 유일함을 보장해 준다.</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj = &#123;&#125;;</span><br><span class="line">obj[helloSymbol] = <span class="string">"hello"</span>;</span><br><span class="line">obj[hiSymbol] = <span class="string">"hi"</span>;</span><br><span class="line"><span class="built_in">console</span>.log(obj);</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;Symbol(): &quot;hello&quot;, Symbol(): &quot;hi&quot;&#125;</span><br></pre></td></tr></table></figure>
@@ -281,8 +281,7 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> welcomeSymbol = <span class="built_in">Symbol</span>(<span class="string">"환영합니다"</span>);</span><br><span class="line"><span class="built_in">console</span>.log(welcomeSymbol);</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Symbol(환영합니다)</span><br></pre></td></tr></table></figure>
 <p><code>Symbol</code>안에 있는 문자열은 일종의 주석으로 보면 될 것 같다.</p>
-<h2 id="예제"><a class="header-anchor" href="#예제">¶</a>예제</h2>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> isBlocked = <span class="built_in">Symbol</span>(<span class="string">"is blocked element?"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (element[isBlocked]) &#123;</span><br><span class="line">  openElement(element);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  element[isBlocked] = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="예제"><a href="#예제" class="headerlink" title="예제"></a>예제</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> isBlocked = <span class="built_in">Symbol</span>(<span class="string">"is blocked element?"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (element[isBlocked]) &#123;</span><br><span class="line">  openElement(element);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  element[isBlocked] = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>element</code>는 <code>isBlocked</code>라는 심볼을 키로 갖는 object다. 문자열이나 숫자가 아닌 심볼을 key로 갖는 속성이다. 이는 유일성을 보장해주기 때문에 다른 키들과의 충돌을 방지할 수 있다. 다만 <code>obj.name</code>과 같이 dot을 이용해서 접근할 수 없다. 반드시 <code>[]</code>를 활용해서 접근해야 한다.</p>
 <p>한가지 주의 해야할 것은 <code>isBlocked</code> 심볼 값이 스코프 내에 존재 할 때만 이러한 행위가 가능하다는 것이다. 어떤 모듈이 심볼을 스스로 만드는 경우, 해당 모듈은 해당 심볼을 모든 객체에 적용할 수 있다. <strong>즉 다른 속성과의 충돌을 걱정할 필요가 없다.</strong></p>
 <p>그리고 심볼 키는 이러한 충돌을 방지하기 위해서 만들어 진 것이므로, 일반적인 javascript 객체 조사는 <code>Symbol</code>을 무시한다. 무슨 소리냐면…</p>
@@ -295,8 +294,7 @@
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Reflect</span>.ownKeys(메시);</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&quot;영문명&quot;, &quot;별명&quot;, Symbol(선수의 국적)]</span><br></pre></td></tr></table></figure>
 <p><code>Reflect.ownKeys</code>를 활용하면 된다.</p>
-<h2 id="심볼의-특징"><a class="header-anchor" href="#심볼의-특징">¶</a>심볼의 특징</h2>
-<ul>
+<h2 id="심볼의-특징"><a href="#심볼의-특징" class="headerlink" title="심볼의 특징"></a>심볼의 특징</h2><ul>
 <li>일단 생성되면 변경되지 않는다</li>
 <li>속성을 부여할 수 없다</li>
 <li>object의 key 값으로 사용할 수 있다.</li>
@@ -304,10 +302,9 @@
 <li>문자열로 자동으로 변환되지 않는다.</li>
 </ul>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> newSymbol = <span class="built_in">Symbol</span>(</span><br><span class="line">  <span class="string">"this symbol"</span></span><br><span class="line">)<span class="string">`symbol is <span class="subst">$&#123;newSymbol&#125;</span>`</span><span class="comment">//Uncaught TypeError: Cannot convert a Symbol value to a string</span></span><br><span class="line"><span class="string">`symbol is <span class="subst">$&#123;<span class="built_in">String</span>(newSymbol)&#125;</span> <span class="subst">$&#123;newSymbol.toString()&#125;</span>`</span>;</span><br><span class="line"><span class="comment">// symbol is Symbol(this symbol) Symbol(this symbol)</span></span><br></pre></td></tr></table></figure>
-<h2 id="심볼을-갖는-방법"><a class="header-anchor" href="#심볼을-갖는-방법">¶</a>심볼을 갖는 방법</h2>
-<ul>
+<h2 id="심볼을-갖는-방법"><a href="#심볼을-갖는-방법" class="headerlink" title="심볼을 갖는 방법"></a>심볼을 갖는 방법</h2><ul>
 <li><code>Symbol()</code>을 호출한다. 이는 호출할 때 마다 새롭고 고유한 심볼을 만들어 준다.</li>
-<li><code>Symbol.for(string)</code>을 호출한다. 이 메소드는 <code>Symbol Registry</code>라는 심볼목록을 참조하여 리턴하는데, 앞서와는 다르게 심볼 목록을 공유한다. <code>Symbol.for('호날도')</code>를 계속해서 호출한다면, 매번 같은 심볼을 리턴한다. 이는 심볼이 공유 되어야 하는 상황에서 유용하다.</li>
+<li><code>Symbol.for(string)</code>을 호출한다. 이 메소드는 <code>Symbol Registry</code>라는 심볼목록을 참조하여 리턴하는데, 앞서와는 다르게 심볼 목록을 공유한다. <code>Symbol.for(&#39;호날도&#39;)</code>를 계속해서 호출한다면, 매번 같은 심볼을 리턴한다. 이는 심볼이 공유 되어야 하는 상황에서 유용하다.</li>
 <li><code>Symbol.length</code> 처럼 표준에 정의된 심볼을 가져오는 법</li>
 </ul>
 
@@ -325,7 +322,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/es6/">es6</a> <a class="tag tag--primary tag--small t-link" href="/tags/javascript/">javascript</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/es6/" rel="tag">es6</a> <a class="tag tag--primary tag--small t-link" href="/tags/javascript/" rel="tag">javascript</a>
 
             </div>
         
@@ -378,12 +375,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -398,10 +389,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -465,12 +452,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -609,8 +590,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -628,8 +609,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -685,8 +666,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -704,8 +685,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -765,7 +746,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -775,26 +756,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/07/18/javascript-symbol/';
-                 
-                    this.page.identifier = '2019/07/18/javascript-symbol/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

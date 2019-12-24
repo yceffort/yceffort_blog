@@ -34,23 +34,23 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"subject는 옵저버나 observable처러 행동하는 일부 ReactiveX구현체에서만 사용가능한 일종의 프록시다. subject는 옵저버이기 때문에 하나이상의 observable을 구독할 수 있으며, 동시에 observable 이기도 하기 때문에 항목을 하나하나 거치면서 다시 push하고 새로운 항목을 push할 수 있다.\n총 4종류의 subject가 있다.\n¶AsyncSubject\n\nObservable이 마지막으로 push한 값만 push 하고, 원 Observable의 동작이 다 끝나면 동작한다. 아무값도 push되지 않으면, 이 subject 역시 배출하지 않는다. 또한 맨 마지막 값 바로 뒤에 오는 옵저버에도 값을 전달하는데, 만약 오류에 의해 종류될 경우 이 오류를 그냥 전달한다.\n¶BehaviorSubject\n\n옵저버가 BehaviorSubject를 구독하면, 옵저버는 Observable 이 가장 최근에 발행한 항목 (또는 값이 없을 경우 맨처음 값이나 기본값) 을 push하며, 이후 Observable 이 push한 값을 push한다.\n¶PublishSubject\n\nSubscribe 이후에 push한 항목에 대해서 모두 Observable에게 배출한다. 하지만 이 때문에 subject가 생성되는 시점과 구독하는 시점사이에 빈 공간이 생긴다는 단점이 있다. 따라서 모든 push하는 모든 항목을 받기 위해서는 cold observable을 생성하거나, 아래의 subject를 사용해야 한다.\n¶RelaySubject\n\nPublishSubject 와 다르게, 구독한 시점에 상관없이 Observable이 push한 모든 항목을 받는다. 다만 재생버퍼의 크기가 특정이상으로 증가할 경우에는, 처음 배출후 지정한 시간이 경과하면 오래된 항목을 제거한다. 또한 onNext사용을 주의해야한다. (순서의 모호함이 있기 때문)\n","dateCreated":"2018-05-31T00:00:00+09:00","dateModified":"2018-05-31T12:43:40+09:00","datePublished":"2018-05-31T00:00:00+09:00","description":"subject는 옵저버나 observable처러 행동하는 일부 ReactiveX구현체에서만 사용가능한 일종의 프록시다. subject는 옵저버이기 때문에 하나이상의 observable을 구독할 수 있으며, 동시에 observable 이기도 하기 때문에 항목을 하나하나 거치면서 다시 push하고 새로운 항목을 push할 수 있다.\n\n총 4종류의 subject가 있다.\n\n¶AsyncSubject\n\n\nObservable이 마지막으로 push한 값만 push 하고, 원 Observable의 동작이 다 끝나면 동작한다. 아무값도 push되지","headline":"ReactiveX) Subject","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/05/31/Reactivex-subject/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/05/31/Reactivex-subject/","keywords":"development"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"subject는 옵저버나 observable처러 행동하는 일부 ReactiveX구현체에서만 사용가능한 일종의 프록시다. subject는 옵저버이기 때문에 하나이상의 observable을 구독할 수 있으며, 동시에 observable 이기도 하기 때문에 항목을 하나하나 거치면서 다시 push하고 새로운 항목을 push할 수 있다.\n총 4종류의 subject가 있다.\nAsyncSubject\nObservable이 마지막으로 push한 값만 push 하고, 원 Observable의 동작이 다 끝나면 동작한다. 아무값도 push되지 않으면, 이 subject 역시 배출하지 않는다. 또한 맨 마지막 값 바로 뒤에 오는 옵저버에도 값을 전달하는데, 만약 오류에 의해 종류될 경우 이 오류를 그냥 전달한다.\nBehaviorSubject옵저버가 BehaviorSubject를 구독하면, 옵저버는 Observable 이 가장 최근에 발행한 항목 (또는 값이 없을 경우 맨처음 값이나 기본값) 을 push하며, 이후 Observable 이 push한 값을 push한다.\nPublishSubjectSubscribe 이후에 push한 항목에 대해서 모두 Observable에게 배출한다. 하지만 이 때문에 subject가 생성되는 시점과 구독하는 시점사이에 빈 공간이 생긴다는 단점이 있다. 따라서 모든 push하는 모든 항목을 받기 위해서는 cold observable을 생성하거나, 아래의 subject를 사용해야 한다.\nRelaySubjectPublishSubject 와 다르게, 구독한 시점에 상관없이 Observable이 push한 모든 항목을 받는다. 다만 재생버퍼의 크기가 특정이상으로 증가할 경우에는, 처음 배출후 지정한 시간이 경과하면 오래된 항목을 제거한다. 또한 onNext사용을 주의해야한다. (순서의 모호함이 있기 때문)\n","dateCreated":"2018-05-31T00:00:00+09:00","dateModified":"2018-05-31T12:43:40+09:00","datePublished":"2018-05-31T00:00:00+09:00","description":"subject는 옵저버나 observable처러 행동하는 일부 ReactiveX구현체에서만 사용가능한 일종의 프록시다. subject는 옵저버이기 때문에 하나이상의 observable을 구독할 수 있으며, 동시에 observable 이기도 하기 때문에 항목을 하나하나 거치면서 다시 push하고 새로운 항목을 push할 수 있다.\n\n총 4종류의 subject가 있다.\n\nAsyncSubject\n\n\nObservable이 마지막으로 push한 값만 push 하고, 원 Observable의 동작이 다 끝나면 동작한다. 아무값도 push되지 ","headline":"ReactiveX) Subject","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/05/31/Reactivex-subject/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/05/31/Reactivex-subject/","keywords":"development"}</script>
     <meta name="description" content="subject는 옵저버나 observable처러 행동하는 일부 ReactiveX구현체에서만 사용가능한 일종의 프록시다. subject는 옵저버이기 때문에 하나이상의 observable을 구독할 수 있으며, 동시에 observable 이기도 하기 때문에 항목을 하나하나 거치면서 다시 push하고 새로운 항목을 push할 수 있다.  총 4종류의 subject">
-<meta name="keywords" content="development">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="ReactiveX) Subject">
 <meta property="og:url" content="https://www.yceffort.kr/2018/05/31/Reactivex-subject/index.html">
 <meta property="og:site_name" content="yceffort">
 <meta property="og:description" content="subject는 옵저버나 observable처러 행동하는 일부 ReactiveX구현체에서만 사용가능한 일종의 프록시다. subject는 옵저버이기 때문에 하나이상의 observable을 구독할 수 있으며, 동시에 observable 이기도 하기 때문에 항목을 하나하나 거치면서 다시 push하고 새로운 항목을 push할 수 있다.  총 4종류의 subject">
-<meta property="og:locale" content="en">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://reactivex.io/documentation/operators/images/S.AsyncSubject.png">
 <meta property="og:image" content="http://reactivex.io/documentation/operators/images/S.BehaviorSubject.png">
 <meta property="og:image" content="http://reactivex.io/documentation/operators/images/S.PublishSubject.png">
 <meta property="og:image" content="http://reactivex.io/documentation/operators/images/S.ReplaySubject.png">
-<meta property="og:updated_time" content="2018-05-31T03:43:40.000Z">
+<meta property="article:published_time" content="2018-05-30T15:00:00.000Z">
+<meta property="article:modified_time" content="2018-05-31T03:43:40.000Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="development">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ReactiveX) Subject">
-<meta name="twitter:description" content="subject는 옵저버나 observable처러 행동하는 일부 ReactiveX구현체에서만 사용가능한 일종의 프록시다. subject는 옵저버이기 때문에 하나이상의 observable을 구독할 수 있으며, 동시에 observable 이기도 하기 때문에 항목을 하나하나 거치면서 다시 push하고 새로운 항목을 push할 수 있다.  총 4종류의 subject">
 <meta name="twitter:image" content="http://reactivex.io/documentation/operators/images/S.AsyncSubject.png">
     
     
@@ -63,7 +63,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -90,7 +92,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -129,8 +131,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -268,18 +269,11 @@
         <div class="main-content-wrap">
             <p>subject는 옵저버나 observable처러 행동하는 일부 ReactiveX구현체에서만 사용가능한 일종의 프록시다. subject는 옵저버이기 때문에 하나이상의 observable을 구독할 수 있으며, 동시에 observable 이기도 하기 때문에 항목을 하나하나 거치면서 다시 push하고 새로운 항목을 push할 수 있다.</p>
 <p>총 4종류의 subject가 있다.</p>
-<h3 id="asyncsubject"><a class="header-anchor" href="#asyncsubject">¶</a>AsyncSubject</h3>
-<p><img src="http://reactivex.io/documentation/operators/images/S.AsyncSubject.png" alt></p>
+<h3 id="AsyncSubject"><a href="#AsyncSubject" class="headerlink" title="AsyncSubject"></a>AsyncSubject</h3><p><img src="http://reactivex.io/documentation/operators/images/S.AsyncSubject.png" alt></p>
 <p>Observable이 마지막으로 push한 값만 push 하고, 원 Observable의 동작이 다 끝나면 동작한다. 아무값도 push되지 않으면, 이 subject 역시 배출하지 않는다. 또한 맨 마지막 값 바로 뒤에 오는 옵저버에도 값을 전달하는데, 만약 오류에 의해 종류될 경우 이 오류를 그냥 전달한다.</p>
-<h3 id="behaviorsubject"><a class="header-anchor" href="#behaviorsubject">¶</a>BehaviorSubject</h3>
-<p><img src="http://reactivex.io/documentation/operators/images/S.BehaviorSubject.png" alt><br>
-옵저버가 BehaviorSubject를 구독하면, 옵저버는 Observable 이 가장 최근에 발행한 항목 (또는 값이 없을 경우 맨처음 값이나 기본값) 을 push하며, 이후 Observable 이 push한 값을 push한다.</p>
-<h3 id="publishsubject"><a class="header-anchor" href="#publishsubject">¶</a>PublishSubject</h3>
-<p><img src="http://reactivex.io/documentation/operators/images/S.PublishSubject.png" alt><br>
-Subscribe 이후에 push한 항목에 대해서 모두 Observable에게 배출한다. 하지만 이 때문에 subject가 생성되는 시점과 구독하는 시점사이에 빈 공간이 생긴다는 단점이 있다. 따라서 모든 push하는 모든 항목을 받기 위해서는 cold observable을 생성하거나, 아래의 subject를 사용해야 한다.</p>
-<h3 id="relaysubject"><a class="header-anchor" href="#relaysubject">¶</a>RelaySubject</h3>
-<p><img src="http://reactivex.io/documentation/operators/images/S.ReplaySubject.png" alt><br>
-PublishSubject 와 다르게, 구독한 시점에 상관없이 Observable이 push한 모든 항목을 받는다. 다만 재생버퍼의 크기가 특정이상으로 증가할 경우에는, 처음 배출후 지정한 시간이 경과하면 오래된 항목을 제거한다. 또한 onNext사용을 주의해야한다. (순서의 모호함이 있기 때문)</p>
+<h3 id="BehaviorSubject"><a href="#BehaviorSubject" class="headerlink" title="BehaviorSubject"></a>BehaviorSubject</h3><p><img src="http://reactivex.io/documentation/operators/images/S.BehaviorSubject.png" alt><br>옵저버가 BehaviorSubject를 구독하면, 옵저버는 Observable 이 가장 최근에 발행한 항목 (또는 값이 없을 경우 맨처음 값이나 기본값) 을 push하며, 이후 Observable 이 push한 값을 push한다.</p>
+<h3 id="PublishSubject"><a href="#PublishSubject" class="headerlink" title="PublishSubject"></a>PublishSubject</h3><p><img src="http://reactivex.io/documentation/operators/images/S.PublishSubject.png" alt><br>Subscribe 이후에 push한 항목에 대해서 모두 Observable에게 배출한다. 하지만 이 때문에 subject가 생성되는 시점과 구독하는 시점사이에 빈 공간이 생긴다는 단점이 있다. 따라서 모든 push하는 모든 항목을 받기 위해서는 cold observable을 생성하거나, 아래의 subject를 사용해야 한다.</p>
+<h3 id="RelaySubject"><a href="#RelaySubject" class="headerlink" title="RelaySubject"></a>RelaySubject</h3><p><img src="http://reactivex.io/documentation/operators/images/S.ReplaySubject.png" alt><br>PublishSubject 와 다르게, 구독한 시점에 상관없이 Observable이 push한 모든 항목을 받는다. 다만 재생버퍼의 크기가 특정이상으로 증가할 경우에는, 처음 배출후 지정한 시간이 경과하면 오래된 항목을 제거한다. 또한 onNext사용을 주의해야한다. (순서의 모호함이 있기 때문)</p>
 
             
 
@@ -295,7 +289,7 @@ PublishSubject 와 다르게, 구독한 시점에 상관없이 Observable이 pus
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/development/">development</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/development/" rel="tag">development</a>
 
             </div>
         
@@ -315,7 +309,7 @@ PublishSubject 와 다르게, 구독한 시점에 상관없이 Observable이 pus
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/05/31/bitcoin-btcd-bitcoin-cli/" data-tooltip="Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이" aria-label="NEXT: Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/05/31/ReactiveX-Observable/" data-tooltip="ReactiveX) Observable" aria-label="NEXT: ReactiveX) Observable">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -348,12 +342,6 @@ PublishSubject 와 다르게, 구독한 시점에 상관없이 Observable이 pus
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -368,10 +356,6 @@ PublishSubject 와 다르게, 구독한 시점에 상관없이 Observable이 pus
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -403,7 +387,7 @@ PublishSubject 와 다르게, 구독한 시점에 상관없이 Observable이 pus
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/05/31/bitcoin-btcd-bitcoin-cli/" data-tooltip="Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이" aria-label="NEXT: Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/05/31/ReactiveX-Observable/" data-tooltip="ReactiveX) Observable" aria-label="NEXT: ReactiveX) Observable">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -435,12 +419,6 @@ PublishSubject 와 다르게, 구독한 시점에 상관없이 Observable이 pus
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -579,8 +557,8 @@ PublishSubject 와 다르게, 구독한 시점에 상관없이 Observable이 pus
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -598,8 +576,8 @@ PublishSubject 와 다르게, 구독한 시점에 상관없이 Observable이 pus
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -655,8 +633,8 @@ PublishSubject 와 다르게, 구독한 시점에 상관없이 Observable이 pus
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -674,8 +652,8 @@ PublishSubject 와 다르게, 구독한 시점에 상관없이 Observable이 pus
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -735,7 +713,7 @@ PublishSubject 와 다르게, 구독한 시점에 상관없이 Observable이 pus
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -745,26 +723,11 @@ PublishSubject 와 다르게, 구독한 시점에 상관없이 Observable이 pus
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2018/05/31/Reactivex-subject/';
-                 
-                    this.page.identifier = '2018/05/31/Reactivex-subject/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

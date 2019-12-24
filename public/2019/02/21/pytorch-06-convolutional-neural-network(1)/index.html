@@ -34,15 +34,14 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Pytorch - 06) Convolutional Neural Network (1)\n¶Convolutional Neural Network (CNN)\n¶Fully Connected Layer의 문제점\nConvolutional Neural Network (이하 CNN)은 이미지, 비디오, 텍스트, 사운드를 분류하는 딥러닝에서 가장 많이 사용되는 알고리즘 중 하나다. CNN은 패턴을 찾는데 특히 유용하며, 데이터에서 직접 학습하며, 패턴을 사용하여 이미지를 분류하여 특징을 수동으로 추출할 필요가 없다.\n기존 신경망은 인접하는 계층의 모든 뉴런이 연결되어 있는 fully-connected 구조다. 이전에 28281 짜리 이미지를 학습했을때, 3차원적인 정보는 모두 무시하고 1차원 배열로 변환하여 학습하였다. 이는 공간적인 정보를 모두 잃게 된다.\n\n예를 들어 가까운 픽셀은 값이 비슷하거나, rgb값이 비슷하거나 하는 ㄹ등의 정보가 있을 수 있지만, 1차원으로 쭉 늘어트리게 되면 이러한 정보 (패턴)가 모두 무시되어 버린다.\n또한, 큰이미지가 인풋으로 들어오게되면 weight로 설정해야 하는 값이 기하급수적으로 많아지게 되며, 이는 성능저하를 불러온다.\n¶Convolution\n합성곱연산은, 특징정 크기 (width, height)를 갖는 필터(filter, kernel)를 일정간격(stride)로 이동해가며 입력데이터에 적용하는 것을 의미한다.\n\n\n원본이미지에서 필터를 곱하는 것을 합성곱(convolution)이라고 한다. 이렇게 주어진 필터를 이미지 전체에 stride에 따라서 적용하면서, 이미지의 특징을 찾아내는 것이다.\n이렇게 하게 되면, 해당 필터는 필터가 갖고 있는 특징이 데이터에 있는지 없는지를 검출 해 줄 수 있다.\n\n왼쪽이 곡선의 특징을 찾는 필터라면, 오른쪽과 같은 모양을 필터가 찾아내는 것이라고 보면 된다.\n\n\n이런 식으로, 쥐의 엉덩이에 있는 곡선의 특징을 이미지에서 찾아내게 되는 것이다. Linear에 비유하자면, weight가 filter가 되는 것이다. 마찬가지로 bias (편향) 도 포함될 것이다.\n¶padding\ncnn을 하기전에, 입력데이터 주변을 특정값으로 채우는 단계로, 이는 주로 입력 데이터와 출력데이터의 크기를 맞추기 위해서 쓴다.\n\n32x32x3의 입력값에서 5x5x3 필터를 적용 시키게 되면, feature map의 크기는 28x28x3이 된다. 이렇게 사이즈가 안 맞는것을 막기 위해서 Padding을 쓴다. 입력데이터 주위에 2의 두께로 0을 둘러 쌓아주면, 36x36x3이 되고, 5x5x3 필터를 적용하더라도 결과값은 32x32x3 로 유지된다.\n이러한 패딩은 특징이 유실되는 것을 방지해주고, 또한 과적합도 방지하는 효과가 있다. 주로 0을 적용하는 zero-padding을 쓴다.\n¶stride\n필터를 적용하는 위치의 간격을 의미한다. stride가 커지면, 당연히 간격이 넓어지므로 출력크기가 작아진다.\n\n위의 이미지에서는 한칸씩 (1의 크기로) stride를 적용하고 있다.\n¶출력 크기 계산\n\n입력크기: H, W\n필터크기: FH, FW\n출력크기: OH, OW\n패딩: P\n스트라이드 S\n\n$$ OH = \\frac{H + 2P - FH}{S} + 1 $$\n$$ OW = \\frac{W + 2P - FW}{S} + 1 $$\n두 결과는 모두 정수로 나누어 떨어지는 값이어야 한다.\n¶3차원 데이터 (RGB 이미지)\n3차원 이미지 데이터에 대해서는, 필터도 이미지와 마찬가지로 같은 수의 채널을 갖고 있어야 한다.\n¶Pooling\n이렇게 input에서 filter 를 적용하여 특징을 추출했다면, 이를 어떻게 판단할지가 중요 하다. 이렇게 추출된 map을 인위적으로 줄이는 작업을 pooling이라고 한다.\n\npooling 하는 방법은 크게 max와 average가 있는데, 위 샘플 이미지에서는 최대값을 가져오는 MaxPooling 을 수행했다. 이는 큰값이 다른 주변 값(특징)을 대표한다는 개념을 적용시키게 된다. 이는 과적합을 방지하고, 컴퓨팅 리소스를 줄이는 효과를 가져온다.\n¶Convolutaional Layer\n\n자동차 인식을 위해 CNN을 적용한 모습이다. Conv-Relu-Conv-Relu-Pool-Conv-Relu-Conv-Relu-Pool-Conv-Relu-Conv-Relu-Pool를 적용해서 인식을 해낸 모습이다.\n정리하자면, 이미지에서 특징을 추출해내는 작업을 몇번 거치고, 그뒤에 이를 fully connect 하여 perceptron을 바탕으로 최종적으로 예측을 하는 것이라고 할 수 있다.\n¶ReLU를 쓰는이유\n\n대부분의 실제 예제는 linear한 상황이 별로 없다.\nReLU는 negative값을 모두 무시하기 때문에, 조금 더 낫다.\ntanh와 sigmoid는 vanishing gradient 문제를 갖고 있다.\n\nDeep Neural Netwrok는 Backpropagation (역전파)를 하기 위해서 gradient descent (경사하강법)을 적용하여 parameter를 조정한다.\n그러나 이 gradient 값이 매우 작아지게 되면, 이것을 효율적으로 개선해나가는 것이 쉽지 않아지고, 느려진다.\nsigmoid는 중간 값에서는 경사가 있지만, 값이 작거나 커질 수록 극도로 경사가 작은 값을 갖게 된다. (0과 가까워 진다.)\n따라서 아무리 계산을 누적해도 굉장히 작은 값이 나오게 된다.\n\n\nRelu는 input이 음수면 그냥 0을 리턴, 양수면 같은 값을 리턴한다.\n따라서 값이 극도로 작아지거나 커진다고 해서 gredient가 사라지지 않는다.\n\n\nMNIST 손글씨 데이터셋에 CNN을 적용한다면 위의 이미지와 같은  \\모습이 될것이다.\n","dateCreated":"2019-02-21T00:00:00+09:00","dateModified":"2019-02-21T12:05:35+09:00","datePublished":"2019-02-21T00:00:00+09:00","description":"Pytorch - 06) Convolutional Neural Network (1)\n\n¶Convolutional Neural Network (CNN)\n¶Fully Connected Layer의 문제점\nConvolutional Neural Network (이하 CNN)은 이미지, 비디오, 텍스트, 사운드를 분류하는 딥러닝에서 가장 많이 사용되는 알고리즘 중 하나다. CNN은 패턴을 찾는데 특히 유용하며, 데이터에서 직접 학습하며, 패턴을 사용하여 이미지를 분류하여 특징을 수동으로 추출할 필요가 없다.\n\n기존 신경망은 인접하는 계층의 ","headline":"Pytorch 06) - Convolutional Neural Network (1)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/02/21/pytorch-06-convolutional-neural-network(1)/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/02/21/pytorch-06-convolutional-neural-network(1)/","keywords":"pytorch"}</script>
-    <meta name="description" content="Pytorch - 06) Convolutional Neural Network (1)  ¶Convolutional Neural Network (CNN) ¶Fully Connected Layer의 문제점 Convolutional Neural Network (이하 CNN)은 이미지, 비디오, 텍스트, 사운드를 분류하는 딥러닝에서 가장 많이 사용되는 알고리즘 중">
-<meta name="keywords" content="pytorch">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Pytorch - 06) Convolutional Neural Network (1)\nConvolutional Neural Network (CNN)Fully Connected Layer의 문제점Convolutional Neural Network (이하 CNN)은 이미지, 비디오, 텍스트, 사운드를 분류하는 딥러닝에서 가장 많이 사용되는 알고리즘 중 하나다. CNN은 패턴을 찾는데 특히 유용하며, 데이터에서 직접 학습하며, 패턴을 사용하여 이미지를 분류하여 특징을 수동으로 추출할 필요가 없다.\n기존 신경망은 인접하는 계층의 모든 뉴런이 연결되어 있는 fully-connected 구조다. 이전에 28281 짜리 이미지를 학습했을때, 3차원적인 정보는 모두 무시하고 1차원 배열로 변환하여 학습하였다. 이는 공간적인 정보를 모두 잃게 된다.\n\n예를 들어 가까운 픽셀은 값이 비슷하거나, rgb값이 비슷하거나 하는 ㄹ등의 정보가 있을 수 있지만, 1차원으로 쭉 늘어트리게 되면 이러한 정보 (패턴)가 모두 무시되어 버린다. \n또한, 큰이미지가 인풋으로 들어오게되면 weight로 설정해야 하는 값이 기하급수적으로 많아지게 되며, 이는 성능저하를 불러온다.\nConvolution합성곱연산은, 특징정 크기 (width, height)를 갖는 필터(filter, kernel)를 일정간격(stride)로 이동해가며 입력데이터에 적용하는 것을 의미한다. \n\n\n원본이미지에서 필터를 곱하는 것을 합성곱(convolution)이라고 한다. 이렇게 주어진 필터를 이미지 전체에 stride에 따라서 적용하면서, 이미지의 특징을 찾아내는 것이다.\n이렇게 하게 되면, 해당 필터는 필터가 갖고 있는 특징이 데이터에 있는지 없는지를 검출 해 줄 수 있다. \n\n왼쪽이 곡선의 특징을 찾는 필터라면, 오른쪽과 같은 모양을 필터가 찾아내는 것이라고 보면 된다.\n\n\n이런 식으로, 쥐의 엉덩이에 있는 곡선의 특징을 이미지에서 찾아내게 되는 것이다. Linear에 비유하자면, weight가 filter가 되는 것이다. 마찬가지로 bias (편향) 도 포함될 것이다. \npaddingcnn을 하기전에, 입력데이터 주변을 특정값으로 채우는 단계로, 이는 주로 입력 데이터와 출력데이터의 크기를 맞추기 위해서 쓴다. \n\n32x32x3의 입력값에서 5x5x3 필터를 적용 시키게 되면, feature map의 크기는 28x28x3이 된다. 이렇게 사이즈가 안 맞는것을 막기 위해서 Padding을 쓴다. 입력데이터 주위에 2의 두께로 0을 둘러 쌓아주면, 36x36x3이 되고, 5x5x3 필터를 적용하더라도 결과값은 32x32x3 로 유지된다.\n이러한 패딩은 특징이 유실되는 것을 방지해주고, 또한 과적합도 방지하는 효과가 있다. 주로 0을 적용하는 zero-padding을 쓴다.\nstride필터를 적용하는 위치의 간격을 의미한다. stride가 커지면, 당연히 간격이 넓어지므로 출력크기가 작아진다. \n\n위의 이미지에서는 한칸씩 (1의 크기로) stride를 적용하고 있다.\n출력 크기 계산\n입력크기: H, W\n필터크기: FH, FW\n출력크기: OH, OW\n패딩: P\n스트라이드 S\n\nOH = \\frac{H + 2P - FH}{S} + 1OW = \\frac{W + 2P - FW}{S} + 1두 결과는 모두 정수로 나누어 떨어지는 값이어야 한다.\n3차원 데이터 (RGB 이미지)3차원 이미지 데이터에 대해서는, 필터도 이미지와 마찬가지로 같은 수의 채널을 갖고 있어야 한다. \nPooling이렇게 input에서 filter 를 적용하여 특징을 추출했다면, 이를 어떻게 판단할지가 중요 하다. 이렇게 추출된 map을 인위적으로 줄이는 작업을 pooling이라고 한다. \n\npooling 하는 방법은 크게 max와 average가 있는데, 위 샘플 이미지에서는 최대값을 가져오는 MaxPooling 을 수행했다. 이는 큰값이 다른 주변 값(특징)을 대표한다는 개념을 적용시키게 된다. 이는 과적합을 방지하고, 컴퓨팅 리소스를 줄이는 효과를 가져온다.\nConvolutaional Layer\n자동차 인식을 위해 CNN을 적용한 모습이다. Conv-Relu-Conv-Relu-Pool-Conv-Relu-Conv-Relu-Pool-Conv-Relu-Conv-Relu-Pool를 적용해서 인식을 해낸 모습이다.\n정리하자면, 이미지에서 특징을 추출해내는 작업을 몇번 거치고, 그뒤에 이를 fully connect 하여 perceptron을 바탕으로 최종적으로 예측을 하는 것이라고 할 수 있다. \nReLU를 쓰는이유\n대부분의 실제 예제는 linear한 상황이 별로 없다.\nReLU는 negative값을 모두 무시하기 때문에, 조금 더 낫다.\ntanh와 sigmoid는 vanishing gradient 문제를 갖고 있다.\nDeep Neural Netwrok는 Backpropagation (역전파)를 하기 위해서 gradient descent (경사하강법)을 적용하여 parameter를 조정한다. \n그러나 이 gradient 값이 매우 작아지게 되면, 이것을 효율적으로 개선해나가는 것이 쉽지 않아지고, 느려진다. \nsigmoid는 중간 값에서는 경사가 있지만, 값이 작거나 커질 수록 극도로 경사가 작은 값을 갖게 된다. (0과 가까워 진다.)\n따라서 아무리 계산을 누적해도 굉장히 작은 값이 나오게 된다.\n\n\nRelu는 input이 음수면 그냥 0을 리턴, 양수면 같은 값을 리턴한다. \n따라서 값이 극도로 작아지거나 커진다고 해서 gredient가 사라지지 않는다. \n\n\nMNIST 손글씨 데이터셋에 CNN을 적용한다면 위의 이미지와 같은  \\모습이 될것이다.\n","dateCreated":"2019-02-21T00:00:00+09:00","dateModified":"2019-02-21T12:05:35+09:00","datePublished":"2019-02-21T00:00:00+09:00","description":"Pytorch - 06) Convolutional Neural Network (1)\n\nConvolutional Neural Network (CNN)\nFully Connected Layer의 문제점\nConvolutional Neural Network (이하 CNN)은 이미지, 비디오, 텍스트, 사운드를 분류하는 딥러닝에서 가장 많이 사용되는 알고리즘 중 하나다. CNN은 패턴을 찾는데 특히 유용하며, 데이터에서 직접 학습하며, 패턴을 사용하여 이미지를 분류하여 특징을 수동으로 추출할 필요가 없다.\n\n기존 신경망은 인접하는 계층의 모든","headline":"Pytorch 06) - Convolutional Neural Network (1)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/02/21/pytorch-06-convolutional-neural-network(1)/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/02/21/pytorch-06-convolutional-neural-network(1)/","keywords":"pytorch"}</script>
+    <meta name="description" content="Pytorch - 06) Convolutional Neural Network (1)  Convolutional Neural Network (CNN) Fully Connected Layer의 문제점 Convolutional Neural Network (이하 CNN)은 이미지, 비디오, 텍스트, 사운드를 분류하는 딥러닝에서 가장 많이 사용되는 알고리즘 중 하나">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Pytorch 06) - Convolutional Neural Network (1)">
 <meta property="og:url" content="https://www.yceffort.kr/2019/02/21/pytorch-06-convolutional-neural-network(1)/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="Pytorch - 06) Convolutional Neural Network (1)  ¶Convolutional Neural Network (CNN) ¶Fully Connected Layer의 문제점 Convolutional Neural Network (이하 CNN)은 이미지, 비디오, 텍스트, 사운드를 분류하는 딥러닝에서 가장 많이 사용되는 알고리즘 중">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="Pytorch - 06) Convolutional Neural Network (1)  Convolutional Neural Network (CNN) Fully Connected Layer의 문제점 Convolutional Neural Network (이하 CNN)은 이미지, 비디오, 텍스트, 사운드를 분류하는 딥러닝에서 가장 많이 사용되는 알고리즘 중 하나">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/02/cnn1.png">
 <meta property="og:image" content="https://cdn-images-1.medium.com/max/1600/1*7S266Kq-UCExS25iX_I_AQ.png">
 <meta property="og:image" content="http://deeplearning.stanford.edu/wiki/images/6/6c/Convolution_schematic.gif">
@@ -54,10 +53,11 @@
 <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/e/e9/Max_pooling.png">
 <meta property="og:image" content="https://image.slidesharecdn.com/deeplearning-161020090534/95/deep-learning-stm-6-19-638.jpg?cb=1476964837">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/02/cnn2.png">
-<meta property="og:updated_time" content="2019-02-21T03:05:35.000Z">
+<meta property="article:published_time" content="2019-02-20T15:00:00.000Z">
+<meta property="article:modified_time" content="2019-02-21T03:05:35.000Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="pytorch">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Pytorch 06) - Convolutional Neural Network (1)">
-<meta name="twitter:description" content="Pytorch - 06) Convolutional Neural Network (1)  ¶Convolutional Neural Network (CNN) ¶Fully Connected Layer의 문제점 Convolutional Neural Network (이하 CNN)은 이미지, 비디오, 텍스트, 사운드를 분류하는 딥러닝에서 가장 많이 사용되는 알고리즘 중">
 <meta name="twitter:image" content="https://www.yceffort.kr/images/2019/02/cnn1.png">
     
     
@@ -70,7 +70,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -97,7 +99,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -136,8 +138,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -274,68 +275,55 @@
     <div class="post-content markdown">
         <div class="main-content-wrap">
             <p>Pytorch - 06) Convolutional Neural Network (1)</p>
-<h2 id="convolutional-neural-network-cnn"><a class="header-anchor" href="#convolutional-neural-network-cnn">¶</a>Convolutional Neural Network (CNN)</h2>
-<h3 id="fully-connected-layer의-문제점"><a class="header-anchor" href="#fully-connected-layer의-문제점">¶</a>Fully Connected Layer의 문제점</h3>
-<p>Convolutional Neural Network (이하 CNN)은 이미지, 비디오, 텍스트, 사운드를 분류하는 딥러닝에서 가장 많이 사용되는 알고리즘 중 하나다. CNN은 패턴을 찾는데 특히 유용하며, 데이터에서 직접 학습하며, 패턴을 사용하여 이미지를 분류하여 특징을 수동으로 추출할 필요가 없다.</p>
+<h2 id="Convolutional-Neural-Network-CNN"><a href="#Convolutional-Neural-Network-CNN" class="headerlink" title="Convolutional Neural Network (CNN)"></a>Convolutional Neural Network (CNN)</h2><h3 id="Fully-Connected-Layer의-문제점"><a href="#Fully-Connected-Layer의-문제점" class="headerlink" title="Fully Connected Layer의 문제점"></a>Fully Connected Layer의 문제점</h3><p>Convolutional Neural Network (이하 CNN)은 이미지, 비디오, 텍스트, 사운드를 분류하는 딥러닝에서 가장 많이 사용되는 알고리즘 중 하나다. CNN은 패턴을 찾는데 특히 유용하며, 데이터에서 직접 학습하며, 패턴을 사용하여 이미지를 분류하여 특징을 수동으로 추출할 필요가 없다.</p>
 <p>기존 신경망은 인접하는 계층의 모든 뉴런이 연결되어 있는 fully-connected 구조다. 이전에 28<em>28</em>1 짜리 이미지를 학습했을때, 3차원적인 정보는 모두 무시하고 1차원 배열로 변환하여 학습하였다. 이는 공간적인 정보를 모두 잃게 된다.</p>
 <p><img src="/images/2019/02/cnn1.png" alt="cnn1"></p>
-<p>예를 들어 가까운 픽셀은 값이 비슷하거나, rgb값이 비슷하거나 하는 ㄹ등의 정보가 있을 수 있지만, 1차원으로 쭉 늘어트리게 되면 이러한 정보 (패턴)가 모두 무시되어 버린다.</p>
+<p>예를 들어 가까운 픽셀은 값이 비슷하거나, rgb값이 비슷하거나 하는 ㄹ등의 정보가 있을 수 있지만, 1차원으로 쭉 늘어트리게 되면 이러한 정보 (패턴)가 모두 무시되어 버린다. </p>
 <p>또한, 큰이미지가 인풋으로 들어오게되면 weight로 설정해야 하는 값이 기하급수적으로 많아지게 되며, 이는 성능저하를 불러온다.</p>
-<h3 id="convolution"><a class="header-anchor" href="#convolution">¶</a>Convolution</h3>
-<p>합성곱연산은, 특징정 크기 (width, height)를 갖는 필터(filter, kernel)를 일정간격(stride)로 이동해가며 입력데이터에 적용하는 것을 의미한다.</p>
+<h3 id="Convolution"><a href="#Convolution" class="headerlink" title="Convolution"></a>Convolution</h3><p>합성곱연산은, 특징정 크기 (width, height)를 갖는 필터(filter, kernel)를 일정간격(stride)로 이동해가며 입력데이터에 적용하는 것을 의미한다. </p>
 <p><img src="https://cdn-images-1.medium.com/max/1600/1*7S266Kq-UCExS25iX_I_AQ.png" alt="cnn"></p>
 <p><img src="http://deeplearning.stanford.edu/wiki/images/6/6c/Convolution_schematic.gif" alt="filter-stride"></p>
 <p>원본이미지에서 필터를 곱하는 것을 합성곱(convolution)이라고 한다. 이렇게 주어진 필터를 이미지 전체에 stride에 따라서 적용하면서, 이미지의 특징을 찾아내는 것이다.</p>
-<p>이렇게 하게 되면, 해당 필터는 필터가 갖고 있는 특징이 데이터에 있는지 없는지를 검출 해 줄 수 있다.</p>
+<p>이렇게 하게 되면, 해당 필터는 필터가 갖고 있는 특징이 데이터에 있는지 없는지를 검출 해 줄 수 있다. </p>
 <p><img src="https://adeshpande3.github.io/assets/Filter.png" alt="filter"></p>
 <p>왼쪽이 곡선의 특징을 찾는 필터라면, 오른쪽과 같은 모양을 필터가 찾아내는 것이라고 보면 된다.</p>
 <p><img src="https://adeshpande3.github.io/assets/OriginalAndFilter.png" alt="filter1"></p>
 <p><img src="https://adeshpande3.github.io/assets/FirstPixelMulitiplication.png" alt="filter2"></p>
-<p>이런 식으로, 쥐의 엉덩이에 있는 곡선의 특징을 이미지에서 찾아내게 되는 것이다. Linear에 비유하자면, weight가 filter가 되는 것이다. 마찬가지로 bias (편향) 도 포함될 것이다.</p>
-<h3 id="padding"><a class="header-anchor" href="#padding">¶</a>padding</h3>
-<p>cnn을 하기전에, 입력데이터 주변을 특정값으로 채우는 단계로, 이는 주로 입력 데이터와 출력데이터의 크기를 맞추기 위해서 쓴다.</p>
+<p>이런 식으로, 쥐의 엉덩이에 있는 곡선의 특징을 이미지에서 찾아내게 되는 것이다. Linear에 비유하자면, weight가 filter가 되는 것이다. 마찬가지로 bias (편향) 도 포함될 것이다. </p>
+<h3 id="padding"><a href="#padding" class="headerlink" title="padding"></a>padding</h3><p>cnn을 하기전에, 입력데이터 주변을 특정값으로 채우는 단계로, 이는 주로 입력 데이터와 출력데이터의 크기를 맞추기 위해서 쓴다. </p>
 <p><img src="https://adeshpande3.github.io/assets/Pad.png" alt="padding"></p>
 <p>32x32x3의 입력값에서 5x5x3 필터를 적용 시키게 되면, feature map의 크기는 28x28x3이 된다. 이렇게 사이즈가 안 맞는것을 막기 위해서 Padding을 쓴다. 입력데이터 주위에 2의 두께로 0을 둘러 쌓아주면, 36x36x3이 되고, 5x5x3 필터를 적용하더라도 결과값은 32x32x3 로 유지된다.</p>
 <p>이러한 패딩은 특징이 유실되는 것을 방지해주고, 또한 과적합도 방지하는 효과가 있다. 주로 0을 적용하는 zero-padding을 쓴다.</p>
-<h3 id="stride"><a class="header-anchor" href="#stride">¶</a>stride</h3>
-<p>필터를 적용하는 위치의 간격을 의미한다. stride가 커지면, 당연히 간격이 넓어지므로 출력크기가 작아진다.</p>
+<h3 id="stride"><a href="#stride" class="headerlink" title="stride"></a>stride</h3><p>필터를 적용하는 위치의 간격을 의미한다. stride가 커지면, 당연히 간격이 넓어지므로 출력크기가 작아진다. </p>
 <p><img src="http://deeplearning.stanford.edu/wiki/images/6/6c/Convolution_schematic.gif" alt="stride"></p>
 <p>위의 이미지에서는 한칸씩 (1의 크기로) stride를 적용하고 있다.</p>
-<h3 id="출력-크기-계산"><a class="header-anchor" href="#출력-크기-계산">¶</a>출력 크기 계산</h3>
-<ul>
+<h3 id="출력-크기-계산"><a href="#출력-크기-계산" class="headerlink" title="출력 크기 계산"></a>출력 크기 계산</h3><ul>
 <li>입력크기: H, W</li>
 <li>필터크기: FH, FW</li>
 <li>출력크기: OH, OW</li>
 <li>패딩: P</li>
 <li>스트라이드 S</li>
 </ul>
-<p>$$ OH = \frac{H + 2P - FH}{S} + 1 $$</p>
-<p>$$ OW = \frac{W + 2P - FW}{S} + 1 $$</p>
-<p>두 결과는 모두 정수로 나누어 떨어지는 값이어야 한다.</p>
-<h3 id="3차원-데이터-rgb-이미지"><a class="header-anchor" href="#3차원-데이터-rgb-이미지">¶</a>3차원 데이터 (RGB 이미지)</h3>
-<p>3차원 이미지 데이터에 대해서는, 필터도 이미지와 마찬가지로 같은 수의 채널을 갖고 있어야 한다.</p>
-<h3 id="pooling"><a class="header-anchor" href="#pooling">¶</a>Pooling</h3>
-<p>이렇게 input에서 filter 를 적용하여 특징을 추출했다면, 이를 어떻게 판단할지가 중요 하다. 이렇게 추출된 map을 인위적으로 줄이는 작업을 pooling이라고 한다.</p>
+<script type="math/tex; mode=display">OH = \frac{H + 2P - FH}{S} + 1</script><script type="math/tex; mode=display">OW = \frac{W + 2P - FW}{S} + 1</script><p>두 결과는 모두 정수로 나누어 떨어지는 값이어야 한다.</p>
+<h3 id="3차원-데이터-RGB-이미지"><a href="#3차원-데이터-RGB-이미지" class="headerlink" title="3차원 데이터 (RGB 이미지)"></a>3차원 데이터 (RGB 이미지)</h3><p>3차원 이미지 데이터에 대해서는, 필터도 이미지와 마찬가지로 같은 수의 채널을 갖고 있어야 한다. </p>
+<h3 id="Pooling"><a href="#Pooling" class="headerlink" title="Pooling"></a>Pooling</h3><p>이렇게 input에서 filter 를 적용하여 특징을 추출했다면, 이를 어떻게 판단할지가 중요 하다. 이렇게 추출된 map을 인위적으로 줄이는 작업을 pooling이라고 한다. </p>
 <p><img src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Max_pooling.png" alt="pooling"></p>
 <p>pooling 하는 방법은 크게 max와 average가 있는데, 위 샘플 이미지에서는 최대값을 가져오는 MaxPooling 을 수행했다. 이는 큰값이 다른 주변 값(특징)을 대표한다는 개념을 적용시키게 된다. 이는 과적합을 방지하고, 컴퓨팅 리소스를 줄이는 효과를 가져온다.</p>
-<h2 id="convolutaional-layer"><a class="header-anchor" href="#convolutaional-layer">¶</a>Convolutaional Layer</h2>
-<p><img src="https://image.slidesharecdn.com/deeplearning-161020090534/95/deep-learning-stm-6-19-638.jpg?cb=1476964837" alt="cnn-sample"></p>
+<h2 id="Convolutaional-Layer"><a href="#Convolutaional-Layer" class="headerlink" title="Convolutaional Layer"></a>Convolutaional Layer</h2><p><img src="https://image.slidesharecdn.com/deeplearning-161020090534/95/deep-learning-stm-6-19-638.jpg?cb=1476964837" alt="cnn-sample"></p>
 <p>자동차 인식을 위해 CNN을 적용한 모습이다. Conv-Relu-Conv-Relu-Pool-Conv-Relu-Conv-Relu-Pool-Conv-Relu-Conv-Relu-Pool를 적용해서 인식을 해낸 모습이다.</p>
-<p>정리하자면, 이미지에서 특징을 추출해내는 작업을 몇번 거치고, 그뒤에 이를 fully connect 하여 perceptron을 바탕으로 최종적으로 예측을 하는 것이라고 할 수 있다.</p>
-<h3 id="relu를-쓰는이유"><a class="header-anchor" href="#relu를-쓰는이유">¶</a>ReLU를 쓰는이유</h3>
-<ul>
+<p>정리하자면, 이미지에서 특징을 추출해내는 작업을 몇번 거치고, 그뒤에 이를 fully connect 하여 perceptron을 바탕으로 최종적으로 예측을 하는 것이라고 할 수 있다. </p>
+<h3 id="ReLU를-쓰는이유"><a href="#ReLU를-쓰는이유" class="headerlink" title="ReLU를 쓰는이유"></a>ReLU를 쓰는이유</h3><ul>
 <li>대부분의 실제 예제는 linear한 상황이 별로 없다.</li>
 <li>ReLU는 negative값을 모두 무시하기 때문에, 조금 더 낫다.</li>
-<li>tanh와 sigmoid는 vanishing gradient 문제를 갖고 있다.
-<ul>
-<li>Deep Neural Netwrok는 Backpropagation (역전파)를 하기 위해서 gradient descent (경사하강법)을 적용하여 parameter를 조정한다.</li>
-<li>그러나 이 gradient 값이 매우 작아지게 되면, 이것을 효율적으로 개선해나가는 것이 쉽지 않아지고, 느려진다.</li>
+<li>tanh와 sigmoid는 vanishing gradient 문제를 갖고 있다.<ul>
+<li>Deep Neural Netwrok는 Backpropagation (역전파)를 하기 위해서 gradient descent (경사하강법)을 적용하여 parameter를 조정한다. </li>
+<li>그러나 이 gradient 값이 매우 작아지게 되면, 이것을 효율적으로 개선해나가는 것이 쉽지 않아지고, 느려진다. </li>
 <li>sigmoid는 중간 값에서는 경사가 있지만, 값이 작거나 커질 수록 극도로 경사가 작은 값을 갖게 된다. (0과 가까워 진다.)</li>
 <li>따라서 아무리 계산을 누적해도 굉장히 작은 값이 나오게 된다.</li>
 </ul>
 </li>
-<li>Relu는 input이 음수면 그냥 0을 리턴, 양수면 같은 값을 리턴한다.</li>
-<li>따라서 값이 극도로 작아지거나 커진다고 해서 gredient가 사라지지 않는다.</li>
+<li>Relu는 input이 음수면 그냥 0을 리턴, 양수면 같은 값을 리턴한다. </li>
+<li>따라서 값이 극도로 작아지거나 커진다고 해서 gredient가 사라지지 않는다. </li>
 </ul>
 <p><img src="/images/2019/02/cnn2.png" alt="cnn2"></p>
 <p>MNIST 손글씨 데이터셋에 CNN을 적용한다면 위의 이미지와 같은  \모습이 될것이다.</p>
@@ -354,7 +342,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/">pytorch</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/" rel="tag">pytorch</a>
 
             </div>
         
@@ -365,7 +353,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/25/pytorch-08-CIFAR-10/" data-tooltip="Pytorch 08) - CIFAR 10 학습" aria-label="PREVIOUS: Pytorch 08) - CIFAR 10 학습">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/21/pytorch-05-image-recognition/" data-tooltip="Pytorch 05) - Image Recognition" aria-label="PREVIOUS: Pytorch 05) - Image Recognition">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -374,7 +362,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/21/pytorch-05-image-recognition/" data-tooltip="Pytorch 05) - Image Recognition" aria-label="NEXT: Pytorch 05) - Image Recognition">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/21/pytorch-07-convolutional-neural-network(2)/" data-tooltip="Pytorch 07) - Convolutional Neural Network (2)" aria-label="NEXT: Pytorch 07) - Convolutional Neural Network (2)">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -407,12 +395,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -427,10 +409,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -453,7 +431,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/25/pytorch-08-CIFAR-10/" data-tooltip="Pytorch 08) - CIFAR 10 학습" aria-label="PREVIOUS: Pytorch 08) - CIFAR 10 학습">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/21/pytorch-05-image-recognition/" data-tooltip="Pytorch 05) - Image Recognition" aria-label="PREVIOUS: Pytorch 05) - Image Recognition">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -462,7 +440,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/21/pytorch-05-image-recognition/" data-tooltip="Pytorch 05) - Image Recognition" aria-label="NEXT: Pytorch 05) - Image Recognition">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/21/pytorch-07-convolutional-neural-network(2)/" data-tooltip="Pytorch 07) - Convolutional Neural Network (2)" aria-label="NEXT: Pytorch 07) - Convolutional Neural Network (2)">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -494,12 +472,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -638,8 +610,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -657,8 +629,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -714,8 +686,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -733,8 +705,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -794,7 +766,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -804,26 +776,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/02/21/pytorch-06-convolutional-neural-network(1)/';
-                 
-                    this.page.identifier = '2019/02/21/pytorch-06-convolutional-neural-network(1)/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

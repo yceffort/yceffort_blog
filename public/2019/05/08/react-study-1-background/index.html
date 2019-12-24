@@ -34,21 +34,22 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"¶리액트 요약\n기존에 많은 자바스크립트 기반 플게임워크들이 있었는데, 대부분의 프레임워크들은 MVC (Model-View-Controller), MVVM(Model-View-View Model), MVW(Model-View-Whatever) 아키텍쳐를 사용하여 개발되었다.\n\n그러나 이 작업은 어플리케이션 규모가 커지면 복잡해지고, 제대로 관리하지 않으면 성능이 떨어진다는 문제점을 지니고 있다.\n이렇게 부분적으로 찾아서 업데이트 하는 대신에, 데이터가 변할 때마다 기존 뷰를 날려 버리고 처음부터 새로 렌더링을 하면 어떨까? 이렇게 하면 어플리케이션 구조가 간단해지고, 작성할 코드의 양도 적어지며, 변화가 있으면 기존의 뷰를 날려버리고 그냥 다시 만들어 버리면 된다. 그러가 이 방식대로 하면 웹브라우저에 CPU 점유율도 늘어날 것이고, 메모리도 많이 사용 될 것이다. 그리고 사용자도 잠깐이지만 뷰가 날라가는 모습을 볼 수 있을지도 모른다.\n리액트는 오직 V, 즉 View만 신경 쓰는 라이브러리다. 리액트에서 중요한 두가지는 초기렌더링과 리렌더링이다. 즁요한 것은 react자체는 view만을 담당하는 라이브러리 라는 것이다.\n¶초기 렌더링\n1render () &#123;...&#125;\n이 함수는 컴포넌트가 어떻게 생겼는지 정의 한다. 여기에는 html 구문이 아니라, 뷰가 어떻게 생겼고 무슨 정보를 지니고 있는지에 대한 내용을 가지고 있다.  이 함수를 실행하면, 내부 컴포넌트들도 재귀적으로 실행해서,html 마크업을 만들고, 실제 페이지의 dom 요소에 주입하게 된다.\n¶Reconcilation\n앞서 말한 뷰를 새로 갈아끼는 과정을 Reconcilation이라고 한다. 이 작업도 render함수에서 진행된다. 이 작업은 render가 반환한 결과를 바로 적용하는 것이 아니라, 이전에 만들었던 컴포넌트 정보와 비교를 먼저한다. 이렇게 비교한 후, 둘의 차이를 알아내 최소한의 연산으로 dom 트리를 바꿔 치는 것이다.\n¶Virtual Dom\nDOM (Document Object Model)은 동적 UI에 최적화되어 있지 못하다. HTML은 정적인 문서이지만, Javascript를 통해 동적으로 만드는 것이다. 흔히들 DOM은 느리다고 하지만, 이는 정확한 표현이 아니다. 정확히는 DOM에서 변화가 일어났을 때, 브라우저가 CSS를 연산하고 리페인트 하는 과정이 느린 것이다. 여기애서 React는 Virtual Dom 방식을 사용하여, DOM 업데이트를 추상화 하여 처리횟수를 최소화 하고 효율적으로 처리한다.\n\nVirtual Dom을 사용한다고 해서 무조건 빠른 것은 아니다. 작업이 매우 간단한 경우에는 리액트가 없는 편이 나을 수 있다. 어쨌거나, React Virtual Dom이 주는 것은 업데이트 처리의 간결성이다.\n","dateCreated":"2019-05-08T10:46:42+09:00","dateModified":"2019-05-20T11:50:56+09:00","datePublished":"2019-05-08T10:46:42+09:00","description":"¶리액트 요약\n기존에 많은 자바스크립트 기반 플게임워크들이 있었는데, 대부분의 프레임워크들은 MVC (Model-View-Controller), MVVM(Model-View-View Model), MVW(Model-View-Whatever) 아키텍쳐를 사용하여 개발되었다.\n\n\n\n그러나 이 작업은 어플리케이션 규모가 커지면 복잡해지고, 제대로 관리하지 않으면 성능이 떨어진다는 문제점을 지니고 있다.\n\n이렇게 부분적으로 찾아서 업데이트 하는 대신에, 데이터가 변할 때마다 기존 뷰를 날려 버리고 처음부터 새로 렌더링을 하면 어떨까? 이렇","headline":"React 공부하기 1 - background","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/05/08/react-study-1-background/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/05/08/react-study-1-background/","keywords":"react, javascript"}</script>
-    <meta name="description" content="¶리액트 요약 기존에 많은 자바스크립트 기반 플게임워크들이 있었는데, 대부분의 프레임워크들은 MVC (Model-View-Controller), MVVM(Model-View-View Model), MVW(Model-View-Whatever) 아키텍쳐를 사용하여 개발되었다.    그러나 이 작업은 어플리케이션 규모가 커지면 복잡해지고, 제대로 관리하지 않으면">
-<meta name="keywords" content="react,javascript">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"리액트 요약기존에 많은 자바스크립트 기반 플게임워크들이 있었는데, 대부분의 프레임워크들은 MVC (Model-View-Controller), MVVM(Model-View-View Model), MVW(Model-View-Whatever) 아키텍쳐를 사용하여 개발되었다.\n\n그러나 이 작업은 어플리케이션 규모가 커지면 복잡해지고, 제대로 관리하지 않으면 성능이 떨어진다는 문제점을 지니고 있다.\n이렇게 부분적으로 찾아서 업데이트 하는 대신에, 데이터가 변할 때마다 기존 뷰를 날려 버리고 처음부터 새로 렌더링을 하면 어떨까? 이렇게 하면 어플리케이션 구조가 간단해지고, 작성할 코드의 양도 적어지며, 변화가 있으면 기존의 뷰를 날려버리고 그냥 다시 만들어 버리면 된다. 그러가 이 방식대로 하면 웹브라우저에 CPU 점유율도 늘어날 것이고, 메모리도 많이 사용 될 것이다. 그리고 사용자도 잠깐이지만 뷰가 날라가는 모습을 볼 수 있을지도 모른다.\n리액트는 오직 V, 즉 View만 신경 쓰는 라이브러리다. 리액트에서 중요한 두가지는 초기렌더링과 리렌더링이다. 즁요한 것은 react자체는 view만을 담당하는 라이브러리 라는 것이다.\n초기 렌더링1render () &#123;...&#125;\n이 함수는 컴포넌트가 어떻게 생겼는지 정의 한다. 여기에는 html 구문이 아니라, 뷰가 어떻게 생겼고 무슨 정보를 지니고 있는지에 대한 내용을 가지고 있다.  이 함수를 실행하면, 내부 컴포넌트들도 재귀적으로 실행해서,html 마크업을 만들고, 실제 페이지의 dom 요소에 주입하게 된다.\nReconcilation앞서 말한 뷰를 새로 갈아끼는 과정을 Reconcilation이라고 한다. 이 작업도 render함수에서 진행된다. 이 작업은 render가 반환한 결과를 바로 적용하는 것이 아니라, 이전에 만들었던 컴포넌트 정보와 비교를 먼저한다. 이렇게 비교한 후, 둘의 차이를 알아내 최소한의 연산으로 dom 트리를 바꿔 치는 것이다.\nVirtual DomDOM (Document Object Model)은 동적 UI에 최적화되어 있지 못하다. HTML은 정적인 문서이지만, Javascript를 통해 동적으로 만드는 것이다. 흔히들 DOM은 느리다고 하지만, 이는 정확한 표현이 아니다. 정확히는 DOM에서 변화가 일어났을 때, 브라우저가 CSS를 연산하고 리페인트 하는 과정이 느린 것이다. 여기애서 React는 Virtual Dom 방식을 사용하여, DOM 업데이트를 추상화 하여 처리횟수를 최소화 하고 효율적으로 처리한다.\n\nVirtual Dom을 사용한다고 해서 무조건 빠른 것은 아니다. 작업이 매우 간단한 경우에는 리액트가 없는 편이 나을 수 있다. 어쨌거나, React Virtual Dom이 주는 것은 업데이트 처리의 간결성이다.\n","dateCreated":"2019-05-08T10:46:42+09:00","dateModified":"2019-05-20T11:50:56+09:00","datePublished":"2019-05-08T10:46:42+09:00","description":"리액트 요약\n기존에 많은 자바스크립트 기반 플게임워크들이 있었는데, 대부분의 프레임워크들은 MVC (Model-View-Controller), MVVM(Model-View-View Model), MVW(Model-View-Whatever) 아키텍쳐를 사용하여 개발되었다.\n\n\n\n그러나 이 작업은 어플리케이션 규모가 커지면 복잡해지고, 제대로 관리하지 않으면 성능이 떨어진다는 문제점을 지니고 있다.\n\n이렇게 부분적으로 찾아서 업데이트 하는 대신에, 데이터가 변할 때마다 기존 뷰를 날려 버리고 처음부터 새로 렌더링을 하면 어떨까? 이렇게","headline":"React 공부하기 1 - background","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/05/08/react-study-1-background/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/05/08/react-study-1-background/","keywords":"react, javascript"}</script>
+    <meta name="description" content="리액트 요약 기존에 많은 자바스크립트 기반 플게임워크들이 있었는데, 대부분의 프레임워크들은 MVC (Model-View-Controller), MVVM(Model-View-View Model), MVW(Model-View-Whatever) 아키텍쳐를 사용하여 개발되었다.    그러나 이 작업은 어플리케이션 규모가 커지면 복잡해지고, 제대로 관리하지 않으면">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="React 공부하기 1 - background">
 <meta property="og:url" content="https://www.yceffort.kr/2019/05/08/react-study-1-background/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="¶리액트 요약 기존에 많은 자바스크립트 기반 플게임워크들이 있었는데, 대부분의 프레임워크들은 MVC (Model-View-Controller), MVVM(Model-View-View Model), MVW(Model-View-Whatever) 아키텍쳐를 사용하여 개발되었다.    그러나 이 작업은 어플리케이션 규모가 커지면 복잡해지고, 제대로 관리하지 않으면">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="리액트 요약 기존에 많은 자바스크립트 기반 플게임워크들이 있었는데, 대부분의 프레임워크들은 MVC (Model-View-Controller), MVVM(Model-View-View Model), MVW(Model-View-Whatever) 아키텍쳐를 사용하여 개발되었다.    그러나 이 작업은 어플리케이션 규모가 커지면 복잡해지고, 제대로 관리하지 않으면">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://mdn.mozillademos.org/files/16042/model-view-controller-light-blue.png">
 <meta property="og:image" content="https://i1.wp.com/programmingwithmosh.com/wp-content/uploads/2018/11/lnrn_0201.png?ssl=1">
-<meta property="og:updated_time" content="2019-05-20T02:50:56.475Z">
+<meta property="article:published_time" content="2019-05-08T01:46:42.000Z">
+<meta property="article:modified_time" content="2019-05-20T02:50:56.475Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="react">
+<meta property="article:tag" content="javascript">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="React 공부하기 1 - background">
-<meta name="twitter:description" content="¶리액트 요약 기존에 많은 자바스크립트 기반 플게임워크들이 있었는데, 대부분의 프레임워크들은 MVC (Model-View-Controller), MVVM(Model-View-View Model), MVW(Model-View-Whatever) 아키텍쳐를 사용하여 개발되었다.    그러나 이 작업은 어플리케이션 규모가 커지면 복잡해지고, 제대로 관리하지 않으면">
 <meta name="twitter:image" content="https://mdn.mozillademos.org/files/16042/model-view-controller-light-blue.png">
     
     
@@ -61,7 +62,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -88,7 +91,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -127,8 +130,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -264,19 +266,15 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h2 id="리액트-요약"><a class="header-anchor" href="#리액트-요약">¶</a>리액트 요약</h2>
-<p>기존에 많은 자바스크립트 기반 플게임워크들이 있었는데, 대부분의 프레임워크들은 MVC (Model-View-Controller), MVVM(Model-View-View Model), MVW(Model-View-Whatever) 아키텍쳐를 사용하여 개발되었다.</p>
+            <h2 id="리액트-요약"><a href="#리액트-요약" class="headerlink" title="리액트 요약"></a>리액트 요약</h2><p>기존에 많은 자바스크립트 기반 플게임워크들이 있었는데, 대부분의 프레임워크들은 MVC (Model-View-Controller), MVVM(Model-View-View Model), MVW(Model-View-Whatever) 아키텍쳐를 사용하여 개발되었다.</p>
 <p><img src="https://mdn.mozillademos.org/files/16042/model-view-controller-light-blue.png" alt="MVC"></p>
 <p>그러나 이 작업은 어플리케이션 규모가 커지면 복잡해지고, 제대로 관리하지 않으면 성능이 떨어진다는 문제점을 지니고 있다.</p>
 <p>이렇게 부분적으로 찾아서 업데이트 하는 대신에, 데이터가 변할 때마다 기존 뷰를 날려 버리고 처음부터 새로 렌더링을 하면 어떨까? 이렇게 하면 어플리케이션 구조가 간단해지고, 작성할 코드의 양도 적어지며, 변화가 있으면 기존의 뷰를 날려버리고 그냥 다시 만들어 버리면 된다. 그러가 이 방식대로 하면 웹브라우저에 CPU 점유율도 늘어날 것이고, 메모리도 많이 사용 될 것이다. 그리고 사용자도 잠깐이지만 뷰가 날라가는 모습을 볼 수 있을지도 모른다.</p>
 <p>리액트는 오직 V, 즉 View만 신경 쓰는 라이브러리다. 리액트에서 중요한 두가지는 <code>초기렌더링</code>과 <code>리렌더링</code>이다. 즁요한 것은 react자체는 view만을 담당하는 라이브러리 라는 것이다.</p>
-<h3 id="초기-렌더링"><a class="header-anchor" href="#초기-렌더링">¶</a>초기 렌더링</h3>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">render () &#123;...&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="초기-렌더링"><a href="#초기-렌더링" class="headerlink" title="초기 렌더링"></a>초기 렌더링</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">render () &#123;...&#125;</span><br></pre></td></tr></table></figure>
 <p>이 함수는 컴포넌트가 어떻게 생겼는지 정의 한다. 여기에는 html 구문이 아니라, 뷰가 어떻게 생겼고 무슨 정보를 지니고 있는지에 대한 내용을 가지고 있다.  이 함수를 실행하면, 내부 컴포넌트들도 재귀적으로 실행해서,html 마크업을 만들고, 실제 페이지의 dom 요소에 주입하게 된다.</p>
-<h3 id="reconcilation"><a class="header-anchor" href="#reconcilation">¶</a>Reconcilation</h3>
-<p>앞서 말한 뷰를 새로 갈아끼는 과정을 Reconcilation이라고 한다. 이 작업도 render함수에서 진행된다. 이 작업은 render가 반환한 결과를 바로 적용하는 것이 아니라, 이전에 만들었던 컴포넌트 정보와 비교를 먼저한다. 이렇게 비교한 후, 둘의 차이를 알아내 최소한의 연산으로 dom 트리를 바꿔 치는 것이다.</p>
-<h3 id="virtual-dom"><a class="header-anchor" href="#virtual-dom">¶</a>Virtual Dom</h3>
-<p>DOM (Document Object Model)은 동적 UI에 최적화되어 있지 못하다. HTML은 정적인 문서이지만, Javascript를 통해 동적으로 만드는 것이다. 흔히들 DOM은 느리다고 하지만, 이는 정확한 표현이 아니다. 정확히는 <code>DOM에서 변화가 일어났을 때, 브라우저가 CSS를 연산하고 리페인트 하는 과정이 느린 것</code>이다. 여기애서 React는 Virtual Dom 방식을 사용하여, DOM 업데이트를 추상화 하여 처리횟수를 최소화 하고 효율적으로 처리한다.</p>
+<h3 id="Reconcilation"><a href="#Reconcilation" class="headerlink" title="Reconcilation"></a>Reconcilation</h3><p>앞서 말한 뷰를 새로 갈아끼는 과정을 Reconcilation이라고 한다. 이 작업도 render함수에서 진행된다. 이 작업은 render가 반환한 결과를 바로 적용하는 것이 아니라, 이전에 만들었던 컴포넌트 정보와 비교를 먼저한다. 이렇게 비교한 후, 둘의 차이를 알아내 최소한의 연산으로 dom 트리를 바꿔 치는 것이다.</p>
+<h3 id="Virtual-Dom"><a href="#Virtual-Dom" class="headerlink" title="Virtual Dom"></a>Virtual Dom</h3><p>DOM (Document Object Model)은 동적 UI에 최적화되어 있지 못하다. HTML은 정적인 문서이지만, Javascript를 통해 동적으로 만드는 것이다. 흔히들 DOM은 느리다고 하지만, 이는 정확한 표현이 아니다. 정확히는 <code>DOM에서 변화가 일어났을 때, 브라우저가 CSS를 연산하고 리페인트 하는 과정이 느린 것</code>이다. 여기애서 React는 Virtual Dom 방식을 사용하여, DOM 업데이트를 추상화 하여 처리횟수를 최소화 하고 효율적으로 처리한다.</p>
 <p><img src="https://i1.wp.com/programmingwithmosh.com/wp-content/uploads/2018/11/lnrn_0201.png?ssl=1" alt="Virtual Dom"></p>
 <p>Virtual Dom을 사용한다고 해서 무조건 빠른 것은 아니다. 작업이 매우 간단한 경우에는 리액트가 없는 편이 나을 수 있다. 어쨌거나, React Virtual Dom이 주는 것은 업데이트 처리의 간결성이다.</p>
 
@@ -294,7 +292,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/">javascript</a> <a class="tag tag--primary tag--small t-link" href="/tags/react/">react</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/" rel="tag">javascript</a> <a class="tag tag--primary tag--small t-link" href="/tags/react/" rel="tag">react</a>
 
             </div>
         
@@ -347,12 +345,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -367,10 +359,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -434,12 +422,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -578,8 +560,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -597,8 +579,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -654,8 +636,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -673,8 +655,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -734,7 +716,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -744,26 +726,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/05/08/react-study-1-background/';
-                 
-                    this.page.identifier = '2019/05/08/react-study-1-background/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

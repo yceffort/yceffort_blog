@@ -35,17 +35,18 @@
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
     <script type="application/ld+json">{}</script>
-    <meta name="description" content="this is the yceffort&apos;s private blog">
-<meta name="keywords" content="programming,innovation,technology">
+    <meta name="description" content="this is the yceffort&#39;s private blog">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="yceffort">
 <meta property="og:url" content="https://www.yceffort.kr/archives/2019/03/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="this is the yceffort&apos;s private blog">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="this is the yceffort&#39;s private blog">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="programming">
+<meta property="article:tag" content="innovation">
+<meta property="article:tag" content="technology">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="yceffort">
-<meta name="twitter:description" content="this is the yceffort&apos;s private blog">
     
     
     
@@ -57,7 +58,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -84,7 +87,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -123,8 +126,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -263,8 +265,8 @@
                 <div class="postShorten-excerpt">
                     Deep Learning 01) Neuron
 
-¶Neron
-뉴런은 딥러닝의 핵심이 되는 개념이다. 뉴론 하나 자체로는 별다른 기능을 할 수 없지만, 여러개의 뉴런이 모여야 진정하게 기능을 할 수 있다.
+Neron
+뉴런은 딥러닝의 핵심이 되는 개념이다. 뉴론 하나 자체로는 별다른 기능을 할 수 없지만, 여러개의 뉴런이 모여야 진정하게 기능을 할 수 있다. 
 
 일단 뉴런의 구조를 살펴보자.
 
@@ -273,51 +275,6 @@
 뉴런은 보이는 것처럼 n개의 input signal을 받아서 output signal을 내보내는 구조를 가지고 있다. input value는 독립변수이며, 이를 받아서 어떻게 output을 내보낼 것인가가 핵심이다. 일단 이러한 input value들의 값은 특성에 따라 제각각 일 것이므로, 일반
                     
                         <a href="/2019/03/05/deep-learning-1-neuron/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a class="link-unstyled" href="/2019/03/05/deep-learning-3-how-do-nn-work/">
-                            Deep Learning 03) - How do neural networks work/learn?
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-03-05T00:00:00+09:00">
-	
-		    Mar 05, 2019
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    How do neural networks work/learn?
-
-¶신경망은 어떻게 동작하는가?
-다양한 정보를 바탕으로 부동산 가격을 예측하는 일을 해보도록 하자.
-
-
-
-가장 일반적으로 할 수 있는 접근은, 각각의 데이터에 적절한 가중치를 적용한 값을 바탕으로 가격을 예측하는 것이다. 여기에는 여러가지 방식이 적용될 수 있다. Regression이 될 수도 있고, 대부분의 머신러닝 알고리즘이 여기에 해당 될 것이다. 즉, 히든레이어가 없어도 어떻게서든 적절한 output을 찾아내는 것은 가능할 것이다.
-하지만 신경망은 Hidden l
-                    
-                        <a href="/2019/03/05/deep-learning-3-how-do-nn-work/" class="postShorten-excerpt_link link">
                             Continue reading
                         </a>
                         
@@ -354,30 +311,69 @@
                 <div class="postShorten-excerpt">
                     Deep Learning 02) Activation Function
 
-¶Activation Function
+Activation Function
 활성화 함수
 
 
 
 활성화 함수는 가중치가 더해진 input value를 어떻게 처리할 것인지 결정하는 함수다. 이러한 활성화 함수에는 몇가지 종류가 있다.
 
-¶1. Threshold Function
+1. Threshold Function
 
 
-$$ 1 f x \geq 0 $$
+매우매우 간단한 형태의 함수다. 
 
-$$ 0 f x < 0 $$
-
-매우매우 간단한 형태의 함수다.
-
-¶2. Sigmoid Function
+2. Sigmoid Function
 
 
-$$ \frac{1}{1 + e^{-x}}$$
-
-위 함수와 다르게 부드러운 형태를 띄고
+위 함수와 다르게 부드러운 형태를 띄고 있다. 0과 1을 구분하는 곳은 경사가 급하고, 나머지 부분에서는 경사가 매우 완만하다. 이 함수는 결과값으로 확률을
                     
                         <a href="/2019/03/05/deep-learning-2-activation-function/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a class="link-unstyled" href="/2019/03/05/deep-learning-3-how-do-nn-work/">
+                            Deep Learning 03) - How do neural networks work/learn?
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-03-05T00:00:00+09:00">
+	
+		    Mar 05, 2019
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    How do neural networks work/learn?
+
+신경망은 어떻게 동작하는가?
+다양한 정보를 바탕으로 부동산 가격을 예측하는 일을 해보도록 하자.
+
+
+
+가장 일반적으로 할 수 있는 접근은, 각각의 데이터에 적절한 가중치를 적용한 값을 바탕으로 가격을 예측하는 것이다. 여기에는 여러가지 방식이 적용될 수 있다. Regression이 될 수도 있고, 대부분의 머신러닝 알고리즘이 여기에 해당 될 것이다. 즉, 히든레이어가 없어도 어떻게서든 적절한 output을 찾아내는 것은 가능할 것이다.
+하지만 신경망은 Hidden la
+                    
+                        <a href="/2019/03/05/deep-learning-3-how-do-nn-work/" class="postShorten-excerpt_link link">
                             Continue reading
                         </a>
                         
@@ -506,8 +502,8 @@ $$ \frac{1}{1 + e^{-x}}$$
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -525,8 +521,8 @@ $$ \frac{1}{1 + e^{-x}}$$
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -582,8 +578,8 @@ $$ \frac{1}{1 + e^{-x}}$$
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -601,8 +597,8 @@ $$ \frac{1}{1 + e^{-x}}$$
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -662,7 +658,7 @@ $$ \frac{1}{1 + e^{-x}}$$
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -672,7 +668,9 @@ $$ \frac{1}{1 + e^{-x}}$$
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
 

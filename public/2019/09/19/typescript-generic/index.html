@@ -34,19 +34,19 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"¶제네릭이란\n제네릭은 클래스 내부에서 사용하는 데이터의 타입을 외부에서 지정하는 것을 의미한다. 어떤 타입의 데이터를 쓸지를, 클래스 선언부가 아니라 외부에서 결정하는 것이다. 일단 자바 코드로 한번 살펴보자.\n123456class Person&lt;T&gt;&#123;    public T name;&#125;Person&lt;String&gt; p1 = new Person&lt;String&gt;();Person&lt;StringBuilder&gt; p1 = new Person&lt;StringBuilder&gt;();\nT라는 데이터 타입은 존재하지 않는다. T는 name의 타입으로, 아래 처럼 Person을 사용하는 곳에서 정해진다. 따라서 string이 될수도, stringbuilder가 될수도 있는 것이다.\n하지만 자바스크립트에서는 제네릭을 쓸일이 없다. 타입이 없기 때문에, 타입에 맞지 않는 코딩을 한다면 런타임에서 에러가 발생한다. 하지만 타입스크립트는 정적타입 언어이기 때문에 제네릭이 필요하게 되었다.\n¶any를 그냥 쓰면 안되나?\n아래 코드를 살펴보자.\n12345678910111213class School &#123;  private students: any[] = [];  constructor() &#123;&#125;  go(student: any): void &#123;    this.students.push(student);  &#125;  bye(): void &#123;    this.students.pop();  &#125;&#125;\n12345const school = new School();stack.push(\"라이오넬 멧시\");stack.push(10);stack.pop().substring(0);stack.pop().substring(0); // 에러\nstring에 이어서 number도 일일이 대응하기 위해서는 any를 쓰거나, 상속을 받아야 할 것이다.\n¶typescript 문법\n12345678910111213class School&lt;T&gt; &#123;  private students: T[] = [];  constructor() &#123;&#125;  go(student: T): void &#123;    this.students.push(student);  &#125;  bye(): T &#123;    return this.students.pop();  &#125;&#125;\n&lt;T&gt;는 제네릭을 의미하며, 그안에 타입으로 사용될 T를 넣었다. 다른 문자도 되지만, 대게는 T를 쓰고 Type Variables라고 한다.\n123const numberSchool = new School&lt;number&gt;();const stringSchool = new School&lt;string&gt;();const stringSchool = new School&lt;boolean&gt;();\n이제 각각의 타입이 선언되어 사용될 수 가 있다.\n¶함수에 써보기\n다양한 타입의 array를 받아서 그 array의 첫번쨰를 리턴하는 함수를 만든다고 가정해보자. any를 사용한다면\n123function returnFirstItem(items: any[]): any &#123;  return items[0];&#125;\n하지만 제네릭을 쓴다면\n12345function returnFirstItem&lt;T&gt;(items: T[]): T &#123;  return items[0];&#125;returnFirstItem&lt;number&gt; [0, 1, 2, 3];\n이 된다.\n¶여러개 Generic\n12345function multipleGeneric&lt;T, U&gt;(a1: T, a2: U): [T, U] &#123;  return [a1, a2];&#125;multipleGeneric&lt;string, boolean&gt;(\"true\", true);\n¶rest에서 제네릭\n12345678910interface XYZ &#123;  x: any;  y: any;  z: any;&#125;function dropXYZ&lt;T extends XYZ&gt;(obj: T) &#123;  let &#123; x, y, z, ...rest &#125; = obj;  return rest;&#125;\n객체에서 x, y, z를 빼다가 나머지를 리턴하는 함수이다. 객체에서 x, y, z가 없다면 컴파일 단계에서 에러가 날 것이고, x, y, z 가 있다면 어떤 타입이든 상관없이 x, y, z를 제거하고 리턴해줄 것이다.\n만약 x, y, z가 없는 리턴타입까지 정확하게 명사히고 싶다면 이런 짓도 가능하다.\n1234567891011121314interface XYZ &#123;  x: any;  y: any;  z: any;&#125;// Pick&lt;T, a&gt;는 T에서 a만 받는 다는 것이다// Exclude&lt;keyof T, keyof XYZ&gt;는 앞에 타입에서 뒤에 있는 타입을 제외해준다.type DropXYZ&lt;T&gt; = Pick&lt;T, Exclude&lt;keyof T, keyof XYZ&gt;&gt;;function dropXYZ&lt;T extends XYZ&gt;(obj: T): DropXYZ&lt;T&gt; &#123;  let &#123; x, y, z, ...rest &#125; = obj;  return rest;&#125;\nconditional types에 대해서도 알아봐야 겠다.\n","dateCreated":"2019-09-19T15:10:14+09:00","dateModified":"2019-09-19T16:11:02+09:00","datePublished":"2019-09-19T15:10:14+09:00","description":"¶제네릭이란\n제네릭은 클래스 내부에서 사용하는 데이터의 타입을 외부에서 지정하는 것을 의미한다. 어떤 타입의 데이터를 쓸지를, 클래스 선언부가 아니라 외부에서 결정하는 것이다. 일단 자바 코드로 한번 살펴보자.\n\n1\n2\n3\n4\n5\n6\n\n\nclass Person{\n    public T name;\n}\n\nPerson p1 = new Person();\nPerson p1 = new Person();\n\n\nT라는 데이터 타입은 존재하지 않는다. T는 nam","headline":"타입스크립트 제네릭","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/09/19/typescript-generic/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/09/19/typescript-generic/","keywords":"typescript"}</script>
-    <meta name="description" content="¶제네릭이란 제네릭은 클래스 내부에서 사용하는 데이터의 타입을 외부에서 지정하는 것을 의미한다. 어떤 타입의 데이터를 쓸지를, 클래스 선언부가 아니라 외부에서 결정하는 것이다. 일단 자바 코드로 한번 살펴보자.  1 2 3 4 5 6   class Person{     public T name; }  Person p1 = new Person(); Perso">
-<meta name="keywords" content="typescript">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"제네릭이란제네릭은 클래스 내부에서 사용하는 데이터의 타입을 외부에서 지정하는 것을 의미한다. 어떤 타입의 데이터를 쓸지를, 클래스 선언부가 아니라 외부에서 결정하는 것이다. 일단 자바 코드로 한번 살펴보자.\n123456class Person&lt;T&gt;&#123;    public T name;&#125;Person&lt;String&gt; p1 = new Person&lt;String&gt;();Person&lt;StringBuilder&gt; p1 = new Person&lt;StringBuilder&gt;();\nT라는 데이터 타입은 존재하지 않는다. T는 name의 타입으로, 아래 처럼 Person을 사용하는 곳에서 정해진다. 따라서 string이 될수도, stringbuilder가 될수도 있는 것이다.\n하지만 자바스크립트에서는 제네릭을 쓸일이 없다. 타입이 없기 때문에, 타입에 맞지 않는 코딩을 한다면 런타임에서 에러가 발생한다. 하지만 타입스크립트는 정적타입 언어이기 때문에 제네릭이 필요하게 되었다.\nany를 그냥 쓰면 안되나?아래 코드를 살펴보자.\n12345678910111213class School &#123;  private students: any[] = [];  constructor() &#123;&#125;  go(student: any): void &#123;    this.students.push(student);  &#125;  bye(): void &#123;    this.students.pop();  &#125;&#125;\n12345const school = new School();stack.push(\"라이오넬 멧시\");stack.push(10);stack.pop().substring(0);stack.pop().substring(0); // 에러\nstring에 이어서 number도 일일이 대응하기 위해서는 any를 쓰거나, 상속을 받아야 할 것이다.\ntypescript 문법12345678910111213class School&lt;T&gt; &#123;  private students: T[] = [];  constructor() &#123;&#125;  go(student: T): void &#123;    this.students.push(student);  &#125;  bye(): T &#123;    return this.students.pop();  &#125;&#125;\n&lt;T&gt;는 제네릭을 의미하며, 그안에 타입으로 사용될 T를 넣었다. 다른 문자도 되지만, 대게는 T를 쓰고 Type Variables라고 한다.\n123const numberSchool = new School&lt;number&gt;();const stringSchool = new School&lt;string&gt;();const stringSchool = new School&lt;boolean&gt;();\n이제 각각의 타입이 선언되어 사용될 수 가 있다.\n함수에 써보기다양한 타입의 array를 받아서 그 array의 첫번쨰를 리턴하는 함수를 만든다고 가정해보자. any를 사용한다면\n123function returnFirstItem(items: any[]): any &#123;  return items[0];&#125;\n하지만 제네릭을 쓴다면\n12345function returnFirstItem&lt;T&gt;(items: T[]): T &#123;  return items[0];&#125;returnFirstItem&lt;number&gt; [0, 1, 2, 3];\n이 된다.\n여러개 Generic12345function multipleGeneric&lt;T, U&gt;(a1: T, a2: U): [T, U] &#123;  return [a1, a2];&#125;multipleGeneric&lt;string, boolean&gt;(\"true\", true);\nrest에서 제네릭12345678910interface XYZ &#123;  x: any;  y: any;  z: any;&#125;function dropXYZ&lt;T extends XYZ&gt;(obj: T) &#123;  let &#123; x, y, z, ...rest &#125; = obj;  return rest;&#125;\n객체에서 x, y, z를 빼다가 나머지를 리턴하는 함수이다. 객체에서 x, y, z가 없다면 컴파일 단계에서 에러가 날 것이고, x, y, z 가 있다면 어떤 타입이든 상관없이 x, y, z를 제거하고 리턴해줄 것이다.\n만약 x, y, z가 없는 리턴타입까지 정확하게 명사히고 싶다면 이런 짓도 가능하다.\n1234567891011121314interface XYZ &#123;  x: any;  y: any;  z: any;&#125;// Pick&lt;T, a&gt;는 T에서 a만 받는 다는 것이다// Exclude&lt;keyof T, keyof XYZ&gt;는 앞에 타입에서 뒤에 있는 타입을 제외해준다.type DropXYZ&lt;T&gt; = Pick&lt;T, Exclude&lt;keyof T, keyof XYZ&gt;&gt;;function dropXYZ&lt;T extends XYZ&gt;(obj: T): DropXYZ&lt;T&gt; &#123;  let &#123; x, y, z, ...rest &#125; = obj;  return rest;&#125;\nconditional types에 대해서도 알아봐야 겠다.\n","dateCreated":"2019-09-19T15:10:14+09:00","dateModified":"2019-09-19T16:11:02+09:00","datePublished":"2019-09-19T15:10:14+09:00","description":"제네릭이란\n제네릭은 클래스 내부에서 사용하는 데이터의 타입을 외부에서 지정하는 것을 의미한다. 어떤 타입의 데이터를 쓸지를, 클래스 선언부가 아니라 외부에서 결정하는 것이다. 일단 자바 코드로 한번 살펴보자.\n\n1\n2\n3\n4\n5\n6\n\n\nclass Person{\n    public T name;\n}\n\nPerson p1 = new Person();\nPerson p1 = new Person();\n\n\nT라는 데이터 타입은 존재하지 않는다. T는 name","headline":"타입스크립트 제네릭","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/09/19/typescript-generic/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/09/19/typescript-generic/","keywords":"typescript"}</script>
+    <meta name="description" content="제네릭이란 제네릭은 클래스 내부에서 사용하는 데이터의 타입을 외부에서 지정하는 것을 의미한다. 어떤 타입의 데이터를 쓸지를, 클래스 선언부가 아니라 외부에서 결정하는 것이다. 일단 자바 코드로 한번 살펴보자.  1 2 3 4 5 6   class Person{     public T name; }  Person p1 &#x3D; new Person(); Person">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="타입스크립트 제네릭">
 <meta property="og:url" content="https://www.yceffort.kr/2019/09/19/typescript-generic/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="¶제네릭이란 제네릭은 클래스 내부에서 사용하는 데이터의 타입을 외부에서 지정하는 것을 의미한다. 어떤 타입의 데이터를 쓸지를, 클래스 선언부가 아니라 외부에서 결정하는 것이다. 일단 자바 코드로 한번 살펴보자.  1 2 3 4 5 6   class Person{     public T name; }  Person p1 = new Person(); Perso">
-<meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-09-19T07:11:02.993Z">
+<meta property="og:description" content="제네릭이란 제네릭은 클래스 내부에서 사용하는 데이터의 타입을 외부에서 지정하는 것을 의미한다. 어떤 타입의 데이터를 쓸지를, 클래스 선언부가 아니라 외부에서 결정하는 것이다. 일단 자바 코드로 한번 살펴보자.  1 2 3 4 5 6   class Person{     public T name; }  Person p1 &#x3D; new Person(); Person">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-09-19T06:10:14.000Z">
+<meta property="article:modified_time" content="2019-09-19T07:11:02.993Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="typescript">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="타입스크립트 제네릭">
-<meta name="twitter:description" content="¶제네릭이란 제네릭은 클래스 내부에서 사용하는 데이터의 타입을 외부에서 지정하는 것을 의미한다. 어떤 타입의 데이터를 쓸지를, 클래스 선언부가 아니라 외부에서 결정하는 것이다. 일단 자바 코드로 한번 살펴보자.  1 2 3 4 5 6   class Person{     public T name; }  Person p1 = new Person(); Perso">
     
     
     
@@ -58,7 +58,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -85,7 +87,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -124,8 +126,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -261,31 +262,25 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h2 id="제네릭이란"><a class="header-anchor" href="#제네릭이란">¶</a>제네릭이란</h2>
-<p>제네릭은 클래스 내부에서 사용하는 데이터의 타입을 외부에서 지정하는 것을 의미한다. 어떤 타입의 데이터를 쓸지를, 클래스 선언부가 아니라 외부에서 결정하는 것이다. 일단 자바 코드로 한번 살펴보자.</p>
+            <h2 id="제네릭이란"><a href="#제네릭이란" class="headerlink" title="제네릭이란"></a>제네릭이란</h2><p>제네릭은 클래스 내부에서 사용하는 데이터의 타입을 외부에서 지정하는 것을 의미한다. 어떤 타입의 데이터를 쓸지를, 클래스 선언부가 아니라 외부에서 결정하는 것이다. 일단 자바 코드로 한번 살펴보자.</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span>&lt;<span class="title">T</span>&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> T name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person&lt;String&gt; p1 = <span class="keyword">new</span> Person&lt;String&gt;();</span><br><span class="line">Person&lt;StringBuilder&gt; p1 = <span class="keyword">new</span> Person&lt;StringBuilder&gt;();</span><br></pre></td></tr></table></figure>
 <p><code>T</code>라는 데이터 타입은 존재하지 않는다. <code>T</code>는 name의 타입으로, 아래 처럼 Person을 사용하는 곳에서 정해진다. 따라서 <code>string</code>이 될수도, <code>stringbuilder</code>가 될수도 있는 것이다.</p>
 <p>하지만 자바스크립트에서는 제네릭을 쓸일이 없다. 타입이 없기 때문에, 타입에 맞지 않는 코딩을 한다면 런타임에서 에러가 발생한다. 하지만 타입스크립트는 정적타입 언어이기 때문에 제네릭이 필요하게 되었다.</p>
-<h3 id="any를-그냥-쓰면-안되나"><a class="header-anchor" href="#any를-그냥-쓰면-안되나">¶</a>any를 그냥 쓰면 안되나?</h3>
-<p>아래 코드를 살펴보자.</p>
+<h3 id="any를-그냥-쓰면-안되나"><a href="#any를-그냥-쓰면-안되나" class="headerlink" title="any를 그냥 쓰면 안되나?"></a>any를 그냥 쓰면 안되나?</h3><p>아래 코드를 살펴보자.</p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> School &#123;</span><br><span class="line">  <span class="keyword">private</span> students: <span class="built_in">any</span>[] = [];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  go(student: <span class="built_in">any</span>): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.students.push(student);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  bye(): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.students.pop();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> school = <span class="keyword">new</span> School();</span><br><span class="line">stack.push(<span class="string">"라이오넬 멧시"</span>);</span><br><span class="line">stack.push(<span class="number">10</span>);</span><br><span class="line">stack.pop().substring(<span class="number">0</span>);</span><br><span class="line">stack.pop().substring(<span class="number">0</span>); <span class="comment">// 에러</span></span><br></pre></td></tr></table></figure>
 <p><code>string</code>에 이어서 <code>number</code>도 일일이 대응하기 위해서는 <code>any</code>를 쓰거나, 상속을 받아야 할 것이다.</p>
-<h3 id="typescript-문법"><a class="header-anchor" href="#typescript-문법">¶</a>typescript 문법</h3>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> School&lt;T&gt; &#123;</span><br><span class="line">  <span class="keyword">private</span> students: T[] = [];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  go(student: T): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.students.push(student);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  bye(): T &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.students.pop();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="typescript-문법"><a href="#typescript-문법" class="headerlink" title="typescript 문법"></a>typescript 문법</h3><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> School&lt;T&gt; &#123;</span><br><span class="line">  <span class="keyword">private</span> students: T[] = [];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">constructor</span>(<span class="params"></span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  go(student: T): <span class="built_in">void</span> &#123;</span><br><span class="line">    <span class="keyword">this</span>.students.push(student);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  bye(): T &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.students.pop();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>&lt;T&gt;</code>는 제네릭을 의미하며, 그안에 타입으로 사용될 <code>T</code>를 넣었다. 다른 문자도 되지만, 대게는 <code>T</code>를 쓰고 <code>Type Variables</code>라고 한다.</p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> numberSchool = <span class="keyword">new</span> School&lt;<span class="built_in">number</span>&gt;();</span><br><span class="line"><span class="keyword">const</span> stringSchool = <span class="keyword">new</span> School&lt;<span class="built_in">string</span>&gt;();</span><br><span class="line"><span class="keyword">const</span> stringSchool = <span class="keyword">new</span> School&lt;<span class="built_in">boolean</span>&gt;();</span><br></pre></td></tr></table></figure>
 <p>이제 각각의 타입이 선언되어 사용될 수 가 있다.</p>
-<h3 id="함수에-써보기"><a class="header-anchor" href="#함수에-써보기">¶</a>함수에 써보기</h3>
-<p>다양한 타입의 array를 받아서 그 array의 첫번쨰를 리턴하는 함수를 만든다고 가정해보자. any를 사용한다면</p>
+<h3 id="함수에-써보기"><a href="#함수에-써보기" class="headerlink" title="함수에 써보기"></a>함수에 써보기</h3><p>다양한 타입의 array를 받아서 그 array의 첫번쨰를 리턴하는 함수를 만든다고 가정해보자. any를 사용한다면</p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">returnFirstItem</span>(<span class="params">items: <span class="built_in">any</span>[]</span>): <span class="title">any</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> items[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>하지만 제네릭을 쓴다면</p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">returnFirstItem</span>&lt;<span class="title">T</span>&gt;(<span class="params">items: T[]</span>): <span class="title">T</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> items[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">returnFirstItem&lt;<span class="built_in">number</span>&gt; [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br></pre></td></tr></table></figure>
 <p>이 된다.</p>
-<h3 id="여러개-generic"><a class="header-anchor" href="#여러개-generic">¶</a>여러개 Generic</h3>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">multipleGeneric</span>&lt;<span class="title">T</span>, <span class="title">U</span>&gt;(<span class="params">a1: T, a2: U</span>): [<span class="title">T</span>, <span class="title">U</span>] </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> [a1, a2];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">multipleGeneric&lt;<span class="built_in">string</span>, <span class="built_in">boolean</span>&gt;(<span class="string">"true"</span>, <span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
-<h3 id="rest에서-제네릭"><a class="header-anchor" href="#rest에서-제네릭">¶</a>rest에서 제네릭</h3>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> XYZ &#123;</span><br><span class="line">  x: <span class="built_in">any</span>;</span><br><span class="line">  y: <span class="built_in">any</span>;</span><br><span class="line">  z: <span class="built_in">any</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">dropXYZ</span>&lt;<span class="title">T</span> <span class="title">extends</span> <span class="title">XYZ</span>&gt;(<span class="params">obj: T</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> &#123; x, y, z, ...rest &#125; = obj;</span><br><span class="line">  <span class="keyword">return</span> rest;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="여러개-Generic"><a href="#여러개-Generic" class="headerlink" title="여러개 Generic"></a>여러개 Generic</h3><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">multipleGeneric</span>&lt;<span class="title">T</span>, <span class="title">U</span>&gt;(<span class="params">a1: T, a2: U</span>): [<span class="title">T</span>, <span class="title">U</span>] </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> [a1, a2];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">multipleGeneric&lt;<span class="built_in">string</span>, <span class="built_in">boolean</span>&gt;(<span class="string">"true"</span>, <span class="literal">true</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="rest에서-제네릭"><a href="#rest에서-제네릭" class="headerlink" title="rest에서 제네릭"></a>rest에서 제네릭</h3><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> XYZ &#123;</span><br><span class="line">  x: <span class="built_in">any</span>;</span><br><span class="line">  y: <span class="built_in">any</span>;</span><br><span class="line">  z: <span class="built_in">any</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">dropXYZ</span>&lt;<span class="title">T</span> <span class="title">extends</span> <span class="title">XYZ</span>&gt;(<span class="params">obj: T</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> &#123; x, y, z, ...rest &#125; = obj;</span><br><span class="line">  <span class="keyword">return</span> rest;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>객체에서 x, y, z를 빼다가 나머지를 리턴하는 함수이다. 객체에서 x, y, z가 없다면 컴파일 단계에서 에러가 날 것이고, x, y, z 가 있다면 어떤 타입이든 상관없이 x, y, z를 제거하고 리턴해줄 것이다.</p>
 <p>만약 x, y, z가 없는 리턴타입까지 정확하게 명사히고 싶다면 이런 짓도 가능하다.</p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> XYZ &#123;</span><br><span class="line">  x: <span class="built_in">any</span>;</span><br><span class="line">  y: <span class="built_in">any</span>;</span><br><span class="line">  z: <span class="built_in">any</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Pick&lt;T, a&gt;는 T에서 a만 받는 다는 것이다</span></span><br><span class="line"><span class="comment">// Exclude&lt;keyof T, keyof XYZ&gt;는 앞에 타입에서 뒤에 있는 타입을 제외해준다.</span></span><br><span class="line"><span class="keyword">type</span> DropXYZ&lt;T&gt; = Pick&lt;T, Exclude&lt;keyof T, keyof XYZ&gt;&gt;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">dropXYZ</span>&lt;<span class="title">T</span> <span class="title">extends</span> <span class="title">XYZ</span>&gt;(<span class="params">obj: T</span>): <span class="title">DropXYZ</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> &#123; x, y, z, ...rest &#125; = obj;</span><br><span class="line">  <span class="keyword">return</span> rest;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -305,7 +300,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/typescript/">typescript</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/typescript/" rel="tag">typescript</a>
 
             </div>
         
@@ -358,12 +353,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -378,10 +367,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -445,12 +430,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -589,8 +568,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -608,8 +587,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -665,8 +644,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -684,8 +663,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -745,7 +724,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -755,26 +734,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/09/19/typescript-generic/';
-                 
-                    this.page.identifier = '2019/09/19/typescript-generic/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

@@ -34,15 +34,14 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"앞서 CNN네트워크를 진행하면서 모르는 부분이 좀 있어서, 이론적인 측면을 좀더 강조해서 글을 써보려고 한다.\n¶구조\n일단 중간층이 Convolutional Layer, Pooling Layer, Fully-connted Layer로 구성되어 있다. 그리고 마지막엔 Dropouut Layer를 넣는 경우도 있고, Softmax 함수로 마무리 한다.\n\n¶Convolutional Layer\n이른바 합성곱층이다. 입력데이터에 필터를 적용해서 특징값을 추출하는 레이어다. 필터를 적용해서 특징값을 추출하고, 이 필터의 값을 비선형 값으로 바꾸어주는 Activation 함수 (일반적으로 ReLU)로 이루어져 있다.\n{:width=“200px”}\n¶Filter\n필터는 찾으려는 특징이 입력 데이터에 존재하는지 여부를 검출해주는 함수다.\n{:width=“600px”}\n먼저 왼쪽 과 같은 그림 이 있다고 가정하자. 그리고 해당 특징을 찾으려는 필터를 곱하면 (Convolutaionl) 일정한 결과 값이 나오게 될 것이다. 찾으려는 특징이 존재한다면 큰값이 나오고, 찾으려는 특징이 존재하지 않으면 0에 가까운 값이 나올 것이다. (Activation Layer로 처리하겠지만)\n물론 적용하는 필터는 단순히 한개가 아니다. 여러 다양한 필터를 조합한다면, 원본 입력 데이터가 어떤 형태의 특징을 가지고 있는지를 판단할 수 있다.\n¶Stride\n\n필터를 적용하는 간격의 값을 Stride라고 한다. 그리고 필터를 적용해서 얻어낸 결과를 Feature Map이라고 한다.\n¶Padding\n위 움짤에서 보이는 것처럼, 필터를 적용하고 나면 그 크기가 필터 적용 이전보다 작아지게 된다. 5X5이미지는 3X3 필터의 1 stride를 적용하고 났더니, 결과 크기는 3X3으로 쪼그라 들었다. 그러나 문제는 단 한개의 레이어가 아니고, 여러개의 필터를 적용해서 특징을 추출해 나간다는 것이다. 이 과정이 반복되서 결과 크기가 줄어들게 되면, 처음에 비해서 그 특징을 많이 잃어버릴 수 가 있다. 이를 방지 하기 위한 기법으로 Padding을 쓴다. Padding은 입력값 주위로 특정 값을 넣어서 크기가 줄어드는 것을 인위적으로 방지한다. Padding에는 주로 0을 쓰는 Zero Padding을 많이 쓰게 된다.\n{:width=“600px”}\n32x32x3의 입력값에서 5x5x3 필터를 적용 시키게 되면, feature map의 크기는 28x28x3이 된다. 이렇게 사이즈가 작아지는 걸 막기 위해서 Padding을 쓴다. 입력데이터 주위에 2의 두께로 0을 둘러 쌓아주면, 36x36x3이 되고, 5x5x3 필터를 적용하더라도 결과값은 32x32x3 로 유지된다.\n이러한 패딩은 특징이 유실되는 것을 방지해주고, 또한 과적합도 방지하는 효과가 있다.\n¶Activation Function\n이렇게 해서 나온 Feature Map에 Activation Function을 적용한다. 신경망에는 보통 sigmoid 함수보다는 ReLU를 많이 쓴다. 신경망이 깊어질 수록 학습이 어려워 지기 때문에 역전파를 통해 오차를 다시 계산한다. 만약 sigmoid를 활성함수로 사용시, 레이어가 깊어지게 되면 역전파가 제대로 되지 않기 때문에 (Gradient Vanishing) ReLU를 보통 많이 쓴다.\n\n¶Pooling Layer\n이전에 Covolutional Layer에서 특징을 추출했다면, 그 특징을 어떻게 판단할지가 중요하다. 이렇게 인위적으로 추출된 Actiavtion Map을 인위적으로 줄이는 작업을 Pooling 이라고 한다. 이러한 Pooling에는 Max Pooling, Average Pooling등 다양한 것이 있는데, 보통 Max를 많이 사용한다.\n\nMax Pooling 의 예다. 각 섹션 별로 큰 값만 추출해 낸 모습이다. Average Pooling 이라면 평균값을 추출 할 것이다. 이렇게 함으로써, 큰 값이 다른 주변의 값을 (특징을) 대표한다는 개념을 적용시킬 수 있다. 이렇게 Pooling 을 적용하여 과적합을 방지하고, 리소스를 어느정도 줄일 수 있다.\n¶Convolutaionl Layer\n\n자동차 인식을 위해 CNN을 적용한 모습이다. Conv-Relu-Conv-Relu-Pool-Conv-Relu-Conv-Relu-Pool-Conv-Relu-Conv-Relu-Pool를 적용해서 인식을 해낸 모습이다.\n¶Softmax Function\n마지막에는 최종적으로 Softmax함수를 적용한다. Softmax도 일종의 Activation 함수인데, Sigmoid와 ReLU가 True, False (0, 1)만 표현한다면, Softmax Function은 여러개의 분류를 가질 수 있는 함수다.\n¶Dropout\n드롭아웃은 Overfitting을 방지하기 위한 방법이다.\n\n일부 노드들을 훈련에 참여시키지 않고 몇개의 노드를 끊어서, 남은 노드들을 통해서만 훈련시키는 방식이다. 이 때 끊어버리는 노드는 랜덤으로 선택한다. pytorch에서는 기본값이 0.5 다. 즉 절반의 노드를 dropout하고 계산한다. 이렇게 함으로써, training하는 과정에서 Overfitting이 발생하지 않게 할 수 있다.\n","dateCreated":"2019-01-30T00:00:00+09:00","dateModified":"2019-01-30T09:17:08+09:00","datePublished":"2019-01-30T00:00:00+09:00","description":"앞서 CNN네트워크를 진행하면서 모르는 부분이 좀 있어서, 이론적인 측면을 좀더 강조해서 글을 써보려고 한다.\n\n¶구조\n일단 중간층이 Convolutional Layer, Pooling Layer, Fully-connted Layer로 구성되어 있다. 그리고 마지막엔 Dropouut Layer를 넣는 경우도 있고, Softmax 함수로 마무리 한다.\n\n\n\n¶Convolutional Layer\n이른바 합성곱층이다. 입력데이터에 필터를 적용해서 특징값을 추출하는 레이어다. 필터를 적용해서 특징값을 추출하고, 이 필터의 값을 비선형 값으","headline":"Pytorch (3-2) - CNN: Convolutional Neural Network ","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/01/30/pytorch-3-convolutional-neural-network(3)/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/01/30/pytorch-3-convolutional-neural-network(3)/","keywords":"pytorch"}</script>
-    <meta name="description" content="앞서 CNN네트워크를 진행하면서 모르는 부분이 좀 있어서, 이론적인 측면을 좀더 강조해서 글을 써보려고 한다.  ¶구조 일단 중간층이 Convolutional Layer, Pooling Layer, Fully-connted Layer로 구성되어 있다. 그리고 마지막엔 Dropouut Layer를 넣는 경우도 있고, Softmax 함수로 마무리 한다.">
-<meta name="keywords" content="pytorch">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"앞서 CNN네트워크를 진행하면서 모르는 부분이 좀 있어서, 이론적인 측면을 좀더 강조해서 글을 써보려고 한다.\n구조일단 중간층이 Convolutional Layer, Pooling Layer, Fully-connted Layer로 구성되어 있다. 그리고 마지막엔 Dropouut Layer를 넣는 경우도 있고, Softmax 함수로 마무리 한다.\n\nConvolutional Layer이른바 합성곱층이다. 입력데이터에 필터를 적용해서 특징값을 추출하는 레이어다. 필터를 적용해서 특징값을 추출하고, 이 필터의 값을 비선형 값으로 바꾸어주는 Activation 함수 (일반적으로 ReLU)로 이루어져 있다.\n{:width=”200px”}\nFilter필터는 찾으려는 특징이 입력 데이터에 존재하는지 여부를 검출해주는 함수다.\n{:width=”600px”}\n먼저 왼쪽 과 같은 그림 이 있다고 가정하자. 그리고 해당 특징을 찾으려는 필터를 곱하면 (Convolutaionl) 일정한 결과 값이 나오게 될 것이다. 찾으려는 특징이 존재한다면 큰값이 나오고, 찾으려는 특징이 존재하지 않으면 0에 가까운 값이 나올 것이다. (Activation Layer로 처리하겠지만)\n물론 적용하는 필터는 단순히 한개가 아니다. 여러 다양한 필터를 조합한다면, 원본 입력 데이터가 어떤 형태의 특징을 가지고 있는지를 판단할 수 있다.\nStride\n필터를 적용하는 간격의 값을 Stride라고 한다. 그리고 필터를 적용해서 얻어낸 결과를 Feature Map이라고 한다.\nPadding위 움짤에서 보이는 것처럼, 필터를 적용하고 나면 그 크기가 필터 적용 이전보다 작아지게 된다. 5X5이미지는 3X3 필터의 1 stride를 적용하고 났더니, 결과 크기는 3X3으로 쪼그라 들었다. 그러나 문제는 단 한개의 레이어가 아니고, 여러개의 필터를 적용해서 특징을 추출해 나간다는 것이다. 이 과정이 반복되서 결과 크기가 줄어들게 되면, 처음에 비해서 그 특징을 많이 잃어버릴 수 가 있다. 이를 방지 하기 위한 기법으로 Padding을 쓴다. Padding은 입력값 주위로 특정 값을 넣어서 크기가 줄어드는 것을 인위적으로 방지한다. Padding에는 주로 0을 쓰는 Zero Padding을 많이 쓰게 된다.\n{:width=”600px”}\n32x32x3의 입력값에서 5x5x3 필터를 적용 시키게 되면, feature map의 크기는 28x28x3이 된다. 이렇게 사이즈가 작아지는 걸 막기 위해서 Padding을 쓴다. 입력데이터 주위에 2의 두께로 0을 둘러 쌓아주면, 36x36x3이 되고, 5x5x3 필터를 적용하더라도 결과값은 32x32x3 로 유지된다.\n이러한 패딩은 특징이 유실되는 것을 방지해주고, 또한 과적합도 방지하는 효과가 있다.\nActivation Function이렇게 해서 나온 Feature Map에 Activation Function을 적용한다. 신경망에는 보통 sigmoid 함수보다는 ReLU를 많이 쓴다. 신경망이 깊어질 수록 학습이 어려워 지기 때문에 역전파를 통해 오차를 다시 계산한다. 만약 sigmoid를 활성함수로 사용시, 레이어가 깊어지게 되면 역전파가 제대로 되지 않기 때문에 (Gradient Vanishing) ReLU를 보통 많이 쓴다.\n\nPooling Layer이전에 Covolutional Layer에서 특징을 추출했다면, 그 특징을 어떻게 판단할지가 중요하다. 이렇게 인위적으로 추출된 Actiavtion Map을 인위적으로 줄이는 작업을 Pooling 이라고 한다. 이러한 Pooling에는 Max Pooling, Average Pooling등 다양한 것이 있는데, 보통 Max를 많이 사용한다.\n\nMax Pooling 의 예다. 각 섹션 별로 큰 값만 추출해 낸 모습이다. Average Pooling 이라면 평균값을 추출 할 것이다. 이렇게 함으로써, 큰 값이 다른 주변의 값을 (특징을) 대표한다는 개념을 적용시킬 수 있다. 이렇게 Pooling 을 적용하여 과적합을 방지하고, 리소스를 어느정도 줄일 수 있다.\nConvolutaionl Layer\n자동차 인식을 위해 CNN을 적용한 모습이다. Conv-Relu-Conv-Relu-Pool-Conv-Relu-Conv-Relu-Pool-Conv-Relu-Conv-Relu-Pool를 적용해서 인식을 해낸 모습이다.\nSoftmax Function마지막에는 최종적으로 Softmax함수를 적용한다. Softmax도 일종의 Activation 함수인데, Sigmoid와 ReLU가 True, False (0, 1)만 표현한다면, Softmax Function은 여러개의 분류를 가질 수 있는 함수다.\nDropout드롭아웃은 Overfitting을 방지하기 위한 방법이다.\n\n일부 노드들을 훈련에 참여시키지 않고 몇개의 노드를 끊어서, 남은 노드들을 통해서만 훈련시키는 방식이다. 이 때 끊어버리는 노드는 랜덤으로 선택한다. pytorch에서는 기본값이 0.5 다. 즉 절반의 노드를 dropout하고 계산한다. 이렇게 함으로써, training하는 과정에서 Overfitting이 발생하지 않게 할 수 있다.\n","dateCreated":"2019-01-30T00:00:00+09:00","dateModified":"2019-01-30T09:17:08+09:00","datePublished":"2019-01-30T00:00:00+09:00","description":"앞서 CNN네트워크를 진행하면서 모르는 부분이 좀 있어서, 이론적인 측면을 좀더 강조해서 글을 써보려고 한다.\n\n구조\n일단 중간층이 Convolutional Layer, Pooling Layer, Fully-connted Layer로 구성되어 있다. 그리고 마지막엔 Dropouut Layer를 넣는 경우도 있고, Softmax 함수로 마무리 한다.\n\n\n\nConvolutional Layer\n이른바 합성곱층이다. 입력데이터에 필터를 적용해서 특징값을 추출하는 레이어다. 필터를 적용해서 특징값을 추출하고, 이 필터의 값을 비선형 값으로 ","headline":"Pytorch (3-2) - CNN: Convolutional Neural Network ","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/01/30/pytorch-3-convolutional-neural-network(3)/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/01/30/pytorch-3-convolutional-neural-network(3)/","keywords":"pytorch"}</script>
+    <meta name="description" content="앞서 CNN네트워크를 진행하면서 모르는 부분이 좀 있어서, 이론적인 측면을 좀더 강조해서 글을 써보려고 한다.  구조 일단 중간층이 Convolutional Layer, Pooling Layer, Fully-connted Layer로 구성되어 있다. 그리고 마지막엔 Dropouut Layer를 넣는 경우도 있고, Softmax 함수로 마무리 한다.    C">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Pytorch (3-2) - CNN: Convolutional Neural Network ">
 <meta property="og:url" content="https://www.yceffort.kr/2019/01/30/pytorch-3-convolutional-neural-network(3)/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="앞서 CNN네트워크를 진행하면서 모르는 부분이 좀 있어서, 이론적인 측면을 좀더 강조해서 글을 써보려고 한다.  ¶구조 일단 중간층이 Convolutional Layer, Pooling Layer, Fully-connted Layer로 구성되어 있다. 그리고 마지막엔 Dropouut Layer를 넣는 경우도 있고, Softmax 함수로 마무리 한다.">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="앞서 CNN네트워크를 진행하면서 모르는 부분이 좀 있어서, 이론적인 측면을 좀더 강조해서 글을 써보려고 한다.  구조 일단 중간층이 Convolutional Layer, Pooling Layer, Fully-connted Layer로 구성되어 있다. 그리고 마지막엔 Dropouut Layer를 넣는 경우도 있고, Softmax 함수로 마무리 한다.    C">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://navoshta.com/images/posts/traffic-signs-classification/traffic-signs-architecture.png">
 <meta property="og:image" content="https://t1.daumcdn.net/cfile/tistory/23561441583ED6AB29">
 <meta property="og:image" content="https://cdn-images-1.medium.com/max/1600/1*7S266Kq-UCExS25iX_I_AQ.png">
@@ -52,10 +51,11 @@
 <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/e/e9/Max_pooling.png">
 <meta property="og:image" content="https://image.slidesharecdn.com/deeplearning-161020090534/95/deep-learning-stm-6-19-638.jpg?cb=1476964837">
 <meta property="og:image" content="https://cdn-images-1.medium.com/max/1200/1*iWQzxhVlvadk6VAJjsgXgg.png">
-<meta property="og:updated_time" content="2019-01-30T00:17:08.000Z">
+<meta property="article:published_time" content="2019-01-29T15:00:00.000Z">
+<meta property="article:modified_time" content="2019-01-30T00:17:08.000Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="pytorch">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Pytorch (3-2) - CNN: Convolutional Neural Network ">
-<meta name="twitter:description" content="앞서 CNN네트워크를 진행하면서 모르는 부분이 좀 있어서, 이론적인 측면을 좀더 강조해서 글을 써보려고 한다.  ¶구조 일단 중간층이 Convolutional Layer, Pooling Layer, Fully-connted Layer로 구성되어 있다. 그리고 마지막엔 Dropouut Layer를 넣는 경우도 있고, Softmax 함수로 마무리 한다.">
 <meta name="twitter:image" content="https://navoshta.com/images/posts/traffic-signs-classification/traffic-signs-architecture.png">
     
     
@@ -68,7 +68,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -95,7 +97,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -134,8 +136,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -272,39 +273,29 @@
     <div class="post-content markdown">
         <div class="main-content-wrap">
             <p>앞서 CNN네트워크를 진행하면서 모르는 부분이 좀 있어서, 이론적인 측면을 좀더 강조해서 글을 써보려고 한다.</p>
-<h2 id="구조"><a class="header-anchor" href="#구조">¶</a>구조</h2>
-<p>일단 중간층이 Convolutional Layer, Pooling Layer, Fully-connted Layer로 구성되어 있다. 그리고 마지막엔 Dropouut Layer를 넣는 경우도 있고, Softmax 함수로 마무리 한다.</p>
+<h2 id="구조"><a href="#구조" class="headerlink" title="구조"></a>구조</h2><p>일단 중간층이 Convolutional Layer, Pooling Layer, Fully-connted Layer로 구성되어 있다. 그리고 마지막엔 Dropouut Layer를 넣는 경우도 있고, Softmax 함수로 마무리 한다.</p>
 <p><img src="https://navoshta.com/images/posts/traffic-signs-classification/traffic-signs-architecture.png" alt="structure"></p>
-<h3 id="convolutional-layer"><a class="header-anchor" href="#convolutional-layer">¶</a>Convolutional Layer</h3>
-<p>이른바 합성곱층이다. 입력데이터에 필터를 적용해서 특징값을 추출하는 레이어다. 필터를 적용해서 특징값을 추출하고, 이 필터의 값을 비선형 값으로 바꾸어주는 Activation 함수 (일반적으로 ReLU)로 이루어져 있다.</p>
-<p><img src="https://t1.daumcdn.net/cfile/tistory/23561441583ED6AB29" alt="convolutional-layer">{:width=“200px”}</p>
-<h3 id="filter"><a class="header-anchor" href="#filter">¶</a>Filter</h3>
-<p>필터는 찾으려는 특징이 입력 데이터에 존재하는지 여부를 검출해주는 함수다.</p>
-<p><img src="https://cdn-images-1.medium.com/max/1600/1*7S266Kq-UCExS25iX_I_AQ.png" alt="filter">{:width=“600px”}</p>
+<h3 id="Convolutional-Layer"><a href="#Convolutional-Layer" class="headerlink" title="Convolutional Layer"></a>Convolutional Layer</h3><p>이른바 합성곱층이다. 입력데이터에 필터를 적용해서 특징값을 추출하는 레이어다. 필터를 적용해서 특징값을 추출하고, 이 필터의 값을 비선형 값으로 바꾸어주는 Activation 함수 (일반적으로 ReLU)로 이루어져 있다.</p>
+<p><img src="https://t1.daumcdn.net/cfile/tistory/23561441583ED6AB29" alt="convolutional-layer">{:width=”200px”}</p>
+<h3 id="Filter"><a href="#Filter" class="headerlink" title="Filter"></a>Filter</h3><p>필터는 찾으려는 특징이 입력 데이터에 존재하는지 여부를 검출해주는 함수다.</p>
+<p><img src="https://cdn-images-1.medium.com/max/1600/1*7S266Kq-UCExS25iX_I_AQ.png" alt="filter">{:width=”600px”}</p>
 <p>먼저 왼쪽 과 같은 그림 이 있다고 가정하자. 그리고 해당 특징을 찾으려는 필터를 곱하면 (Convolutaionl) 일정한 결과 값이 나오게 될 것이다. 찾으려는 특징이 존재한다면 큰값이 나오고, 찾으려는 특징이 존재하지 않으면 0에 가까운 값이 나올 것이다. (Activation Layer로 처리하겠지만)</p>
 <p>물론 적용하는 필터는 단순히 한개가 아니다. 여러 다양한 필터를 조합한다면, 원본 입력 데이터가 어떤 형태의 특징을 가지고 있는지를 판단할 수 있다.</p>
-<h3 id="stride"><a class="header-anchor" href="#stride">¶</a>Stride</h3>
-<p><img src="http://deeplearning.stanford.edu/wiki/images/6/6c/Convolution_schematic.gif" alt="image-filter"></p>
+<h3 id="Stride"><a href="#Stride" class="headerlink" title="Stride"></a>Stride</h3><p><img src="http://deeplearning.stanford.edu/wiki/images/6/6c/Convolution_schematic.gif" alt="image-filter"></p>
 <p>필터를 적용하는 간격의 값을 Stride라고 한다. 그리고 필터를 적용해서 얻어낸 결과를 Feature Map이라고 한다.</p>
-<h3 id="padding"><a class="header-anchor" href="#padding">¶</a>Padding</h3>
-<p>위 움짤에서 보이는 것처럼, 필터를 적용하고 나면 그 크기가 필터 적용 이전보다 작아지게 된다. 5X5이미지는 3X3 필터의 1 stride를 적용하고 났더니, 결과 크기는 3X3으로 쪼그라 들었다. 그러나 문제는 단 한개의 레이어가 아니고, 여러개의 필터를 적용해서 특징을 추출해 나간다는 것이다. 이 과정이 반복되서 결과 크기가 줄어들게 되면, 처음에 비해서 그 특징을 많이 잃어버릴 수 가 있다. 이를 방지 하기 위한 기법으로 Padding을 쓴다. Padding은 입력값 주위로 특정 값을 넣어서 크기가 줄어드는 것을 인위적으로 방지한다. Padding에는 주로 0을 쓰는 Zero Padding을 많이 쓰게 된다.</p>
-<p><img src="https://adeshpande3.github.io/assets/Pad.png" alt="padding">{:width=“600px”}</p>
+<h3 id="Padding"><a href="#Padding" class="headerlink" title="Padding"></a>Padding</h3><p>위 움짤에서 보이는 것처럼, 필터를 적용하고 나면 그 크기가 필터 적용 이전보다 작아지게 된다. 5X5이미지는 3X3 필터의 1 stride를 적용하고 났더니, 결과 크기는 3X3으로 쪼그라 들었다. 그러나 문제는 단 한개의 레이어가 아니고, 여러개의 필터를 적용해서 특징을 추출해 나간다는 것이다. 이 과정이 반복되서 결과 크기가 줄어들게 되면, 처음에 비해서 그 특징을 많이 잃어버릴 수 가 있다. 이를 방지 하기 위한 기법으로 Padding을 쓴다. Padding은 입력값 주위로 특정 값을 넣어서 크기가 줄어드는 것을 인위적으로 방지한다. Padding에는 주로 0을 쓰는 Zero Padding을 많이 쓰게 된다.</p>
+<p><img src="https://adeshpande3.github.io/assets/Pad.png" alt="padding">{:width=”600px”}</p>
 <p>32x32x3의 입력값에서 5x5x3 필터를 적용 시키게 되면, feature map의 크기는 28x28x3이 된다. 이렇게 사이즈가 작아지는 걸 막기 위해서 Padding을 쓴다. 입력데이터 주위에 2의 두께로 0을 둘러 쌓아주면, 36x36x3이 되고, 5x5x3 필터를 적용하더라도 결과값은 32x32x3 로 유지된다.</p>
 <p>이러한 패딩은 특징이 유실되는 것을 방지해주고, 또한 과적합도 방지하는 효과가 있다.</p>
-<h3 id="activation-function"><a class="header-anchor" href="#activation-function">¶</a>Activation Function</h3>
-<p>이렇게 해서 나온 Feature Map에 Activation Function을 적용한다. 신경망에는 보통 sigmoid 함수보다는 ReLU를 많이 쓴다. 신경망이 깊어질 수록 학습이 어려워 지기 때문에 역전파를 통해 오차를 다시 계산한다. 만약 sigmoid를 활성함수로 사용시, 레이어가 깊어지게 되면 역전파가 제대로 되지 않기 때문에 (Gradient Vanishing) ReLU를 보통 많이 쓴다.</p>
+<h3 id="Activation-Function"><a href="#Activation-Function" class="headerlink" title="Activation Function"></a>Activation Function</h3><p>이렇게 해서 나온 Feature Map에 Activation Function을 적용한다. 신경망에는 보통 sigmoid 함수보다는 ReLU를 많이 쓴다. 신경망이 깊어질 수록 학습이 어려워 지기 때문에 역전파를 통해 오차를 다시 계산한다. 만약 sigmoid를 활성함수로 사용시, 레이어가 깊어지게 되면 역전파가 제대로 되지 않기 때문에 (Gradient Vanishing) ReLU를 보통 많이 쓴다.</p>
 <p><img src="https://cdn-images-1.medium.com/max/1600/1*DfMRHwxY1gyyDmrIAd-gjQ.png" alt="relu"></p>
-<h3 id="pooling-layer"><a class="header-anchor" href="#pooling-layer">¶</a>Pooling Layer</h3>
-<p>이전에 Covolutional Layer에서 특징을 추출했다면, 그 특징을 어떻게 판단할지가 중요하다. 이렇게 인위적으로 추출된 Actiavtion Map을 인위적으로 줄이는 작업을 Pooling 이라고 한다. 이러한 Pooling에는 Max Pooling, Average Pooling등 다양한 것이 있는데, 보통 Max를 많이 사용한다.</p>
+<h3 id="Pooling-Layer"><a href="#Pooling-Layer" class="headerlink" title="Pooling Layer"></a>Pooling Layer</h3><p>이전에 Covolutional Layer에서 특징을 추출했다면, 그 특징을 어떻게 판단할지가 중요하다. 이렇게 인위적으로 추출된 Actiavtion Map을 인위적으로 줄이는 작업을 Pooling 이라고 한다. 이러한 Pooling에는 Max Pooling, Average Pooling등 다양한 것이 있는데, 보통 Max를 많이 사용한다.</p>
 <p><img src="https://upload.wikimedia.org/wikipedia/commons/e/e9/Max_pooling.png" alt="max-pooling"></p>
 <p>Max Pooling 의 예다. 각 섹션 별로 큰 값만 추출해 낸 모습이다. Average Pooling 이라면 평균값을 추출 할 것이다. 이렇게 함으로써, 큰 값이 다른 주변의 값을 (특징을) 대표한다는 개념을 적용시킬 수 있다. 이렇게 Pooling 을 적용하여 과적합을 방지하고, 리소스를 어느정도 줄일 수 있다.</p>
-<h2 id="convolutaionl-layer"><a class="header-anchor" href="#convolutaionl-layer">¶</a>Convolutaionl Layer</h2>
-<p><img src="https://image.slidesharecdn.com/deeplearning-161020090534/95/deep-learning-stm-6-19-638.jpg?cb=1476964837" alt="example"></p>
+<h2 id="Convolutaionl-Layer"><a href="#Convolutaionl-Layer" class="headerlink" title="Convolutaionl Layer"></a>Convolutaionl Layer</h2><p><img src="https://image.slidesharecdn.com/deeplearning-161020090534/95/deep-learning-stm-6-19-638.jpg?cb=1476964837" alt="example"></p>
 <p>자동차 인식을 위해 CNN을 적용한 모습이다. Conv-Relu-Conv-Relu-Pool-Conv-Relu-Conv-Relu-Pool-Conv-Relu-Conv-Relu-Pool를 적용해서 인식을 해낸 모습이다.</p>
-<h3 id="softmax-function"><a class="header-anchor" href="#softmax-function">¶</a>Softmax Function</h3>
-<p>마지막에는 최종적으로 Softmax함수를 적용한다. Softmax도 일종의 Activation 함수인데, Sigmoid와 ReLU가 True, False (0, 1)만 표현한다면, Softmax Function은 여러개의 분류를 가질 수 있는 함수다.</p>
-<h3 id="dropout"><a class="header-anchor" href="#dropout">¶</a>Dropout</h3>
-<p>드롭아웃은 Overfitting을 방지하기 위한 방법이다.</p>
+<h3 id="Softmax-Function"><a href="#Softmax-Function" class="headerlink" title="Softmax Function"></a>Softmax Function</h3><p>마지막에는 최종적으로 Softmax함수를 적용한다. Softmax도 일종의 Activation 함수인데, Sigmoid와 ReLU가 True, False (0, 1)만 표현한다면, Softmax Function은 여러개의 분류를 가질 수 있는 함수다.</p>
+<h3 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h3><p>드롭아웃은 Overfitting을 방지하기 위한 방법이다.</p>
 <p><img src="https://cdn-images-1.medium.com/max/1200/1*iWQzxhVlvadk6VAJjsgXgg.png" alt="drop-out"></p>
 <p>일부 노드들을 훈련에 참여시키지 않고 몇개의 노드를 끊어서, 남은 노드들을 통해서만 훈련시키는 방식이다. 이 때 끊어버리는 노드는 랜덤으로 선택한다. pytorch에서는 기본값이 0.5 다. 즉 절반의 노드를 dropout하고 계산한다. 이렇게 함으로써, training하는 과정에서 Overfitting이 발생하지 않게 할 수 있다.</p>
 <!-- ## 이미지 구별하기 예제
@@ -312,8 +303,7 @@
 옷 이미지를 구별하는 예제에 CNN을 적용해 보려고 한다. 데이터 출처는 [여기](https://github.com/zalandoresearch/fashion-mnist)다.
 
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> gzip.open(path + image_file_name, <span class="string">'rb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">  mnist_data = np.frombuffer(f.read(), np.uint8, offset=<span class="number">16</span>)</span><br><span class="line">  mnist_data = mnist_data.reshape(<span class="number">-1</span>, <span class="number">28</span>*<span class="number">28</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 데이터 0, 1로 정규화</span></span><br><span class="line">mnist_data = mnist_data / <span class="number">255</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> gzip.open(path + label_file_name, <span class="string">'rb'</span>) <span class="keyword">as</span> f:</span><br><span class="line">  mnist_label = np.frombuffer(f.read(), np.uint8, offset=<span class="number">8</span>)</span><br><span class="line"></span><br><span class="line">device = torch.device(<span class="string">"cuda:0"</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">"cpu"</span>)<span class="number">3</span></span><br><span class="line">train_X, test_X, train_Y, test_Y = model_selection.train_test_split(mnist_data, mnist_label, test_size=<span class="number">0.2</span>)</span><br><span class="line"></span><br><span class="line">train_X = train_X.reshape((len(train_X), <span class="number">1</span>, <span class="number">28</span>, <span class="number">28</span>))</span><br><span class="line">test_X = test_X.reshape((len(test_X), <span class="number">1</span>, <span class="number">28</span>, <span class="number">28</span>))</span><br><span class="line"></span><br><span class="line">train_X = torch.from_numpy(train_X).float().to(device)</span><br><span class="line">train_Y = torch.from_numpy(train_Y).long().to(device)</span><br><span class="line"></span><br><span class="line">test_X = torch.from_numpy(test_X).float().to(device)</span><br><span class="line">test_Y = torch.from_numpy(test_Y).long().to(device)</span><br><span class="line"></span><br><span class="line">train = TensorDataset(train_X, train_Y)</span><br><span class="line">train_loader = DataLoader(train, batch_size=<span class="number">100</span>, shuffle=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="신경망"><a class="header-anchor" href="#신경망">¶</a>신경망</h3>
-<ul>
+<h3 id="신경망"><a href="#신경망" class="headerlink" title="신경망"></a>신경망</h3><ul>
 <li>입력 데이터 높이: H = 28</li>
 <li>입력 데이터 폭: W = 28</li>
 <li>필터 높이: FH = 5</li>
@@ -321,17 +311,13 @@
 <li>stride 크기: S = 1</li>
 </ul>
 <p>padding 크기는 출력결과가 원본과 같은 크기를 만들 수 있다면 얼마든지 가능하다.</p>
-<p>$$ \text{Padding} = \frac{\text{FilterSize}-1}{2}  = 2 $$</p>
-<ul>
+<script type="math/tex; mode=display">\text{Padding} = \frac{\text{FilterSize}-1}{2}  = 2</script><ul>
 <li>패딩사이즈: P = 2</li>
 </ul>
 <p>이를 기반으로 출력 크기를 계산해보자.</p>
-<p>$$ \text{OutputHeight} =  \frac{(H + 2P - FH)}{S} + 1  $$</p>
-<p>$$ \text{OutputHeight} = \frac{28 + 2 * 2 - 5 }{1}  + 1 = 28  $$</p>
-<p>두번째 출력은 필터 사이즈를 조금더 줄이고 (2), stride를 (2)로 설정한다.</p>
-<p>$$ \text{OutputHeight} = \frac{28 + 2 * 2 - 2 }{2}  + 1 = 16 $$</p>
-<p>도 같을 것이다.</p>
-<p><code>Conv-Relu-Pool-Conv-Relu-Pool</code> 이정도 느낌으로 만들어보자. --&gt;</p>
+<script type="math/tex; mode=display">\text{OutputHeight} =  \frac{(H + 2P - FH)}{S} + 1</script><script type="math/tex; mode=display">\text{OutputHeight} = \frac{28 + 2 * 2 - 5 }{1}  + 1 = 28</script><p>두번째 출력은 필터 사이즈를 조금더 줄이고 (2), stride를 (2)로 설정한다.</p>
+<script type="math/tex; mode=display">\text{OutputHeight} = \frac{28 + 2 * 2 - 2 }{2}  + 1 = 16</script><p>도 같을 것이다.</p>
+<p><code>Conv-Relu-Pool-Conv-Relu-Pool</code> 이정도 느낌으로 만들어보자. —&gt;</p>
 -->
             
 
@@ -347,7 +333,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/">pytorch</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/" rel="tag">pytorch</a>
 
             </div>
         
@@ -400,12 +386,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -420,10 +400,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -487,12 +463,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -631,8 +601,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -650,8 +620,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -707,8 +677,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -726,8 +696,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -787,7 +757,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -797,26 +767,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/01/30/pytorch-3-convolutional-neural-network(3)/';
-                 
-                    this.page.identifier = '2019/01/30/pytorch-3-convolutional-neural-network(3)/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

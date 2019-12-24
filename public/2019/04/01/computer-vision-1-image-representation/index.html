@@ -34,15 +34,14 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"¶Image Representation &amp; Classification\n¶Images as Grids of Pixels\n12345678910import numpy as npfrom skimage import ioimport matplotlib.image as mpimgimport matplotlib.pyplot as pltimport cv2import urllib%matplotlib inline\n먼저 이미지를 불러온다.\n12345waymo_car_url = 'https://zdnet2.cbsistatic.com/hub/i/r/2018/01/22/e270d68c-c028-421a-bc5b-5d2a9a9458d1/resize/770xauto/50e9d2f0fc86841ba455489d50651291/google-waymo-self-driving-atlanta.png'f = urllib.request.urlopen(waymo_car_url)image = mpimg.imread(f)print('Image dimensions:', image.shape)\n1Image dimensions: (410, 770, 4)\n123# 이미지를 회색으로 바꾼다.gray_image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)plt.imshow(gray_image, cmap='gray')\n\n12345# 특정 좌표의 grayscalex = 400y = 300print(gray_image[y,x])\n10.543404\n1234567# 맥시멈 / 미니멈 grayscalemax_val = np.amax(gray_image)min_val = np.amin(gray_image)print('Max: ', max_val)print('Min: ', min_val)\n12Max:  0.9646824Min:  0.040556863\n¶RGB colorspace\n1plt.imshow(image)\n\n1234## 각각의 RGB영역 확보r = image[:,:,0]g = image[:,:,1]b = image[:,:,2]\n1234567fx, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20,10))ax1.set_title('R channel')ax1.imshow(r, cmap='gray')ax2.set_title('G channel')ax2.imshow(g, cmap='gray')ax3.set_title('B channel')ax3.imshow(b, cmap='gray')\n\n¶Color Threshold, Bluescreen\n파란색 크로마키에 있는 사진을 합성하는 과정이다.\n\n1234cromakey_blue = 'https://ak5.picdn.net/shutterstock/videos/548875/thumb/1.jpg'f = urllib.request.urlopen(cromakey_blue)image = mpimg.imread(f, 0)print('This image is:', type(image), 'with dimensions:', image.shape)\n1This image is: &lt;class &apos;numpy.ndarray&apos;&gt; with dimensions: (480, 852, 3)\n12345678# 이미지 복사image_copy = np.copy(image)# BGR이미지를 RGB로 변환image_copy = cv2.cvtColor(image_copy, cv2.COLOR_BGR2RGB)# 복사된 이미지 보여주기plt.imshow(image_copy)\n\n12345678lower_blue = np.array([0,0,200]) upper_blue = np.array([250,250,255])# 마스킹될 영역을 선택한다.mask = cv2.inRange(image, lower_blue, upper_blue)# 마스킹 이미지 표시plt.imshow(mask, cmap='gray')\n\n12345# 이미지를 카피한다음masked_image = np.copy(image_copy)# 마스킹 영역을 제외하고 모두 검정색으로 바꾼다면masked_image[mask != 0] = [0, 0, 0]plt.imshow(masked_image)\n\n효과적으로 파란색 영역을 제거한 것을 알 수 있다. 여기에 배경을 합성해보자.\n12345678910space_url = 'https://images.unsplash.com/photo-1496715976403-7e36dc43f17b?ixlib=rb-1.2.1&amp;w=1000&amp;q=80'sf = urllib.request.urlopen(space_url)image = np.asarray(bytearray(sf.read()), dtype=\"uint8\")background_image = cv2.imdecode(image, cv2.IMREAD_COLOR)background_image = cv2.cvtColor(background_image, cv2.COLOR_BGR2RGB)crop_background = background_image[0:480, 0:852]# 이번엔 반대로 마스킹 해야할 영역을 검정색으로 처리한다.crop_background[mask == 0] = [0, 0, 0]plt.imshow(crop_background)\n\n123# 두 이미지를 합치면complete_image = masked_image + crop_backgroundplt.imshow(complete_image)\n\n","dateCreated":"2019-04-01T00:00:00+09:00","dateModified":"2019-04-01T09:35:16+09:00","datePublished":"2019-04-01T00:00:00+09:00","description":"¶Image Representation & Classification\n¶Images as Grids of Pixels\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n\n\nimport numpy as np\nfrom skimage import io\nimport matplotlib.image as mpimg\n\nimport matplotlib.pyplot as plt\nimport cv2\n\nimport urllib\n\n%matplotlib inline\n\n\n먼저 이미지를 불러온다.\n\n1\n2\n3\n4\n5\n\n\nwaymo_car_url = 'https://zdn","headline":"Computer Vision 01) - Image Representation","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/04/01/computer-vision-1-image-representation/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/04/01/computer-vision-1-image-representation/","keywords":"computer-vision"}</script>
-    <meta name="description" content="¶Image Representation &amp; Classification ¶Images as Grids of Pixels 1 2 3 4 5 6 7 8 9 10   import numpy as np from skimage import io import matplotlib.image as mpimg  import matplotlib.pyplot as plt imp">
-<meta name="keywords" content="computer-vision">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Image Representation &amp; ClassificationImages as Grids of Pixels12345678910import numpy as npfrom skimage import ioimport matplotlib.image as mpimgimport matplotlib.pyplot as pltimport cv2import urllib%matplotlib inline\n먼저 이미지를 불러온다.\n12345waymo_car_url = 'https://zdnet2.cbsistatic.com/hub/i/r/2018/01/22/e270d68c-c028-421a-bc5b-5d2a9a9458d1/resize/770xauto/50e9d2f0fc86841ba455489d50651291/google-waymo-self-driving-atlanta.png'f = urllib.request.urlopen(waymo_car_url)image = mpimg.imread(f)print('Image dimensions:', image.shape)\n1Image dimensions: (410, 770, 4)\n123# 이미지를 회색으로 바꾼다.gray_image = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)plt.imshow(gray_image, cmap='gray')\n\n12345# 특정 좌표의 grayscalex = 400y = 300print(gray_image[y,x])\n10.543404\n1234567# 맥시멈 / 미니멈 grayscalemax_val = np.amax(gray_image)min_val = np.amin(gray_image)print('Max: ', max_val)print('Min: ', min_val)\n12Max:  0.9646824Min:  0.040556863\nRGB colorspace1plt.imshow(image)\n\n1234## 각각의 RGB영역 확보r = image[:,:,0]g = image[:,:,1]b = image[:,:,2]\n1234567fx, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(20,10))ax1.set_title('R channel')ax1.imshow(r, cmap='gray')ax2.set_title('G channel')ax2.imshow(g, cmap='gray')ax3.set_title('B channel')ax3.imshow(b, cmap='gray')\n\nColor Threshold, Bluescreen파란색 크로마키에 있는 사진을 합성하는 과정이다.\n\n1234cromakey_blue = 'https://ak5.picdn.net/shutterstock/videos/548875/thumb/1.jpg'f = urllib.request.urlopen(cromakey_blue)image = mpimg.imread(f, 0)print('This image is:', type(image), 'with dimensions:', image.shape)\n1This image is: &lt;class &apos;numpy.ndarray&apos;&gt; with dimensions: (480, 852, 3)\n12345678# 이미지 복사image_copy = np.copy(image)# BGR이미지를 RGB로 변환image_copy = cv2.cvtColor(image_copy, cv2.COLOR_BGR2RGB)# 복사된 이미지 보여주기plt.imshow(image_copy)\n\n12345678lower_blue = np.array([0,0,200]) upper_blue = np.array([250,250,255])# 마스킹될 영역을 선택한다.mask = cv2.inRange(image, lower_blue, upper_blue)# 마스킹 이미지 표시plt.imshow(mask, cmap='gray')\n\n12345# 이미지를 카피한다음masked_image = np.copy(image_copy)# 마스킹 영역을 제외하고 모두 검정색으로 바꾼다면masked_image[mask != 0] = [0, 0, 0]plt.imshow(masked_image)\n\n효과적으로 파란색 영역을 제거한 것을 알 수 있다. 여기에 배경을 합성해보자.\n12345678910space_url = 'https://images.unsplash.com/photo-1496715976403-7e36dc43f17b?ixlib=rb-1.2.1&amp;w=1000&amp;q=80'sf = urllib.request.urlopen(space_url)image = np.asarray(bytearray(sf.read()), dtype=\"uint8\")background_image = cv2.imdecode(image, cv2.IMREAD_COLOR)background_image = cv2.cvtColor(background_image, cv2.COLOR_BGR2RGB)crop_background = background_image[0:480, 0:852]# 이번엔 반대로 마스킹 해야할 영역을 검정색으로 처리한다.crop_background[mask == 0] = [0, 0, 0]plt.imshow(crop_background)\n\n123# 두 이미지를 합치면complete_image = masked_image + crop_backgroundplt.imshow(complete_image)\n\n","dateCreated":"2019-04-01T00:00:00+09:00","dateModified":"2019-04-01T09:35:16+09:00","datePublished":"2019-04-01T00:00:00+09:00","description":"Image Representation & Classification\nImages as Grids of Pixels\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n\n\nimport numpy as np\nfrom skimage import io\nimport matplotlib.image as mpimg\n\nimport matplotlib.pyplot as plt\nimport cv2\n\nimport urllib\n\n%matplotlib inline\n\n\n먼저 이미지를 불러온다.\n\n1\n2\n3\n4\n5\n\n\nwaymo_car_url = 'https://zdnet","headline":"Computer Vision 01) - Image Representation","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/04/01/computer-vision-1-image-representation/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/04/01/computer-vision-1-image-representation/","keywords":"computer-vision"}</script>
+    <meta name="description" content="Image Representation &amp; Classification Images as Grids of Pixels 1 2 3 4 5 6 7 8 9 10   import numpy as np from skimage import io import matplotlib.image as mpimg  import matplotlib.pyplot as plt impor">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Computer Vision 01) - Image Representation">
 <meta property="og:url" content="https://www.yceffort.kr/2019/04/01/computer-vision-1-image-representation/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="¶Image Representation &amp; Classification ¶Images as Grids of Pixels 1 2 3 4 5 6 7 8 9 10   import numpy as np from skimage import io import matplotlib.image as mpimg  import matplotlib.pyplot as plt imp">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="Image Representation &amp; Classification Images as Grids of Pixels 1 2 3 4 5 6 7 8 9 10   import numpy as np from skimage import io import matplotlib.image as mpimg  import matplotlib.pyplot as plt impor">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/computer-vision/01.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/computer-vision/02.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/computer-vision/03.png">
@@ -52,10 +51,11 @@
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/computer-vision/06.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/computer-vision/07.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/computer-vision/08.png">
-<meta property="og:updated_time" content="2019-04-01T00:35:16.000Z">
+<meta property="article:published_time" content="2019-03-31T15:00:00.000Z">
+<meta property="article:modified_time" content="2019-04-01T00:35:16.000Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="computer-vision">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Computer Vision 01) - Image Representation">
-<meta name="twitter:description" content="¶Image Representation &amp; Classification ¶Images as Grids of Pixels 1 2 3 4 5 6 7 8 9 10   import numpy as np from skimage import io import matplotlib.image as mpimg  import matplotlib.pyplot as plt imp">
 <meta name="twitter:image" content="https://www.yceffort.kr/images/2019/computer-vision/01.png">
     
     
@@ -68,7 +68,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -95,7 +97,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -134,8 +136,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -271,9 +272,7 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h2 id="image-representation-classification"><a class="header-anchor" href="#image-representation-classification">¶</a>Image Representation &amp; Classification</h2>
-<h3 id="images-as-grids-of-pixels"><a class="header-anchor" href="#images-as-grids-of-pixels">¶</a>Images as Grids of Pixels</h3>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> skimage <span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">import</span> matplotlib.image <span class="keyword">as</span> mpimg</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"></span><br><span class="line">%matplotlib inline</span><br></pre></td></tr></table></figure>
+            <h2 id="Image-Representation-amp-Classification"><a href="#Image-Representation-amp-Classification" class="headerlink" title="Image Representation &amp; Classification"></a>Image Representation &amp; Classification</h2><h3 id="Images-as-Grids-of-Pixels"><a href="#Images-as-Grids-of-Pixels" class="headerlink" title="Images as Grids of Pixels"></a>Images as Grids of Pixels</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> skimage <span class="keyword">import</span> io</span><br><span class="line"><span class="keyword">import</span> matplotlib.image <span class="keyword">as</span> mpimg</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urllib</span><br><span class="line"></span><br><span class="line">%matplotlib inline</span><br></pre></td></tr></table></figure>
 <p>먼저 이미지를 불러온다.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">waymo_car_url = <span class="string">'https://zdnet2.cbsistatic.com/hub/i/r/2018/01/22/e270d68c-c028-421a-bc5b-5d2a9a9458d1/resize/770xauto/50e9d2f0fc86841ba455489d50651291/google-waymo-self-driving-atlanta.png'</span></span><br><span class="line">f = urllib.request.urlopen(waymo_car_url)</span><br><span class="line">image = mpimg.imread(f)</span><br><span class="line"></span><br><span class="line">print(<span class="string">'Image dimensions:'</span>, image.shape)</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Image dimensions: (410, 770, 4)</span><br></pre></td></tr></table></figure>
@@ -283,14 +282,12 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0.543404</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 맥시멈 / 미니멈 grayscale</span></span><br><span class="line"></span><br><span class="line">max_val = np.amax(gray_image)</span><br><span class="line">min_val = np.amin(gray_image)</span><br><span class="line"></span><br><span class="line">print(<span class="string">'Max: '</span>, max_val)</span><br><span class="line">print(<span class="string">'Min: '</span>, min_val)</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Max:  0.9646824</span><br><span class="line">Min:  0.040556863</span><br></pre></td></tr></table></figure>
-<h3 id="rgb-colorspace"><a class="header-anchor" href="#rgb-colorspace">¶</a>RGB colorspace</h3>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plt.imshow(image)</span><br></pre></td></tr></table></figure>
+<h3 id="RGB-colorspace"><a href="#RGB-colorspace" class="headerlink" title="RGB colorspace"></a>RGB colorspace</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plt.imshow(image)</span><br></pre></td></tr></table></figure>
 <p><img src="/images/2019/computer-vision/02.png" alt="waymo"></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 각각의 RGB영역 확보</span></span><br><span class="line">r = image[:,:,<span class="number">0</span>]</span><br><span class="line">g = image[:,:,<span class="number">1</span>]</span><br><span class="line">b = image[:,:,<span class="number">2</span>]</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">fx, (ax1, ax2, ax3) = plt.subplots(<span class="number">1</span>, <span class="number">3</span>, figsize=(<span class="number">20</span>,<span class="number">10</span>))</span><br><span class="line">ax1.set_title(<span class="string">'R channel'</span>)</span><br><span class="line">ax1.imshow(r, cmap=<span class="string">'gray'</span>)</span><br><span class="line">ax2.set_title(<span class="string">'G channel'</span>)</span><br><span class="line">ax2.imshow(g, cmap=<span class="string">'gray'</span>)</span><br><span class="line">ax3.set_title(<span class="string">'B channel'</span>)</span><br><span class="line">ax3.imshow(b, cmap=<span class="string">'gray'</span>)</span><br></pre></td></tr></table></figure>
 <p><img src="/images/2019/computer-vision/03.png" alt="waymo-rgb"></p>
-<h3 id="color-threshold-bluescreen"><a class="header-anchor" href="#color-threshold-bluescreen">¶</a>Color Threshold, Bluescreen</h3>
-<p>파란색 크로마키에 있는 사진을 합성하는 과정이다.</p>
+<h3 id="Color-Threshold-Bluescreen"><a href="#Color-Threshold-Bluescreen" class="headerlink" title="Color Threshold, Bluescreen"></a>Color Threshold, Bluescreen</h3><p>파란색 크로마키에 있는 사진을 합성하는 과정이다.</p>
 <p><img src="https://ak5.picdn.net/shutterstock/videos/548875/thumb/1.jpg" alt="image"></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cromakey_blue = <span class="string">'https://ak5.picdn.net/shutterstock/videos/548875/thumb/1.jpg'</span></span><br><span class="line">f = urllib.request.urlopen(cromakey_blue)</span><br><span class="line">image = mpimg.imread(f, <span class="number">0</span>)</span><br><span class="line">print(<span class="string">'This image is:'</span>, type(image), <span class="string">'with dimensions:'</span>, image.shape)</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">This image is: &lt;class &apos;numpy.ndarray&apos;&gt; with dimensions: (480, 852, 3)</span><br></pre></td></tr></table></figure>
@@ -320,7 +317,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/computer-vision/">computer-vision</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/computer-vision/" rel="tag">computer-vision</a>
 
             </div>
         
@@ -373,12 +370,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -393,10 +384,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -460,12 +447,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -604,8 +585,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -623,8 +604,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -680,8 +661,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -699,8 +680,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -760,7 +741,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -770,26 +751,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/04/01/computer-vision-1-image-representation/';
-                 
-                    this.page.identifier = '2019/04/01/computer-vision-1-image-representation/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

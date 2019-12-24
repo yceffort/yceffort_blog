@@ -34,22 +34,23 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"ERC20: The Basis of Most ICOs\n원문\n대다수의 ICO는 이더리움의 ERC20 표준을 기반으로 한다. 코인마켓캡이 토큰 목록을 살펴보면, 상위 20개 토큰 중 19개가 이더리움을 기반 플랫폼으로 사용하고 있는 것을 확인할 수 있다. 상위 100개의 토큰을 살펴보면, 이더리움을 사용하지 않는 경우가 더 예외적인 상황이라는 것을 알 수 있다.\n\n왜 그럴까? 왜 이더리움은 블록체인 토큰의 표준이 되었을까? 정답은 ERC20 표준에서 확인할 수 있다. 이전에, ERC20이전에는 블록체인에서 토큰이 어떻게 만들어졌는지를 확인해보자.\n¶Colored Coin: 비트코인 기반의 토큰\n현재 암호화폐 시장에서 가장 핫한 주제는 ICO 다. 이는 마이너들이 토큰이나 코인을 만들기 이전에, 투자자들에게 먼저 코인을 파는 것을 의미한다. 그렇게 하기 위해서는 일단 비트코인이나 이더리움과 같은 네이티브 블록체인 통화처럼 작동하지만, 마이너들에 의해 만들어지지 않은 블록체인 토큰을 몇개 두는 것이 유용하다.\n이러한 개념은 2013년에 비트코인의 블록체인에 토큰을 가져오는 방법을 만들어냈다. 그 주인공은 MasterCoin과 ColoredCoin이다. MasterCoin은 Counterparty와 Omni등으로 변형되었으며, ColredCoin은 OpenAssets이나 Coinprisim과 같은 여러 하위 프로토콜 등으로 분리되었다. 약간의 사소한 차이점 외에, 이 모든 개념은 비트코인 거래에서 토큰을 새기기 위해 몇가지 기술을 사용한다는 공통점이 있다. 이를 위해 비트코인의 OP_RETURN을 사용하여 트랜잭션에 데이터를 추가하였다.\n\n\n\n\n\n\n\n\nColoredCoin의 예제\n\n\n\nOP_RETURN을 통해 비트코인 블록체인에 작성된 코인엔 여러가지가 있다. Tether의 경우에는, Omni를 사용하여 비트코인 블록체인에서 유로, 달러 등을 전송한다. 누군가 달러 지폐에 ‘나는 유로다’ 라고 쓰는 것을 상상해보자. 일부 특별한 지갑은 이러한 메시지를 해석할 수 있다.\n비트코인에 대한 이러한 토큰들은 어느 정도 효과가 있다. 그러나 이들은 몇가지 단점을 공유한다. 가장 심각한 문제는, 블록체인에 기본적으로 저장이 되지 않는 다는 것이다. 이는 단지 거래에 첨부된 메시지 수준에 불과하며, 그리고 이들 대부분은 메시지의 진위성을 증명하기 위한 메시지 해시다. 비트코인 거래의 서명이나, 이전 비트코인의 amount 이외에, 이 메시지는 블록체인의 기본정보가 아니다. 위 예제에서의 글자들은 복사하거나, 붙여넣거나, 철자가 확인되는 등의 부가작업을 할수 없다.\n그 결과 비트코인 네트워크는 비트코인 트랜잭션을 검사하는 것과 동일한 방식으로 토큰 전송 (메시지 확인)을 검사하지 않는다. 비트코인 노드와 마이너들은 보내진 금액이 잔액에 의해서 뒷받침 되는지 (잔고가 남았는지 확인하는지) 확인하지 않는다. 심지어 토큰이 위조되거나, 이중으로 사용되는지 알지 못한다. 또한 토큰이 올바르게 생성되었는지 확인하지 않는다.\n물론, 이러한 문제는 비트코인 위에 프로토콜을 얹어서 확인할 수 있다. 특수 지갑 소프트웨어는 비트코인 외부의 데이터베이스로 토큰의 유효성을 검사할 수도 있다.\n¶ERC20은 무슨 차이를 만드는가?\n이더리움 개발자들은 ERC20 토큰 표준을 발표했다. 이더리움 블록체인 상에서 작동하는 '토큰을 위한 표준 인터페이스’다. 토큰을 전송할 수 있는 기본 기능을 제공하고, 토큰을 승인하여 다른 체인 써드파티에서도 사용가능하게 한다. 이더리움의 모든 토큰이 다른 응용 프로그램에서 재사용되도록 허용하는 것이다.\nERC20의 성공은 부정할 수 없다. 이들은 거의 모든 이더리움 지갑을 지원한다. 수백개의 ERC20 토큰이 만들어졌으며, 이는 다른 대부분의 암호 화폐보다 가치가 있다. 의심하라 여지 없이, 이 형식은 암호화폐의 가장 성공적인 구현 중 하나가 되었다. 이는 토큰업계에서 승자가 되었다. 그러나 비트코인은 그렇지 못했다.\n왜 그런지, 이 질문에 대답하기 위해서는 ERC20 토큰이 Colored Coin이나 Omni 토큰과 거의 공통점이 없다는 것을 알아야 한다. 이더리움의 가상 머신 (EVM)을 이용하면, 복잡한 스마트 컨트랙트를 만들어 지갑이 이 컨트랙트와 상호작용할 수 있다. 비트코인은 지폐에 토큰을 새겨 놓은 것을 상상할 수 있다면, ERC20은 블록체인의 회계사와 같은 것이다.\nERC20 컨트랙트는 토큰의 모든 소유자에 대한 내역을 보유한다. 토큰의 수를 정의하고, 토큰을 보유하고 있는 주소도 나타낸다. 아래는 ICONOMI 토큰을 나타내는 방법이다.\n\nERC 20 토큰을 다른 주소로 전송하면, 비트코인 토근과 마찬가지로 이 주소에 트랜잭션을 저장하지 않는다. 대신 ERC20 컨트랙트에 소유자 목록을 변경하도록 지시한다. 이는 사용자가 가지고 있던 토큰을 제거하고, 새로운 주인에게 추가한다. 이 모든 것은 거래 당사자와 상호작용하는 것이 아니라, 컨트랙트 상에서만 상호작용 하게 된다.\n이 차이가 굉장이 중요하다. 이는 블록체인의 데이터 구조에서 토큰을 기본요소로 만드는 것이다. 마이너가 계약을 올바르게 실행한 경우, 이더리움 네트워크의 모든 노드가 이를 확인한다. 토큰 컨트랙트가 올바른 잔액을 유지하거나, 트랜잭션이 올바르게 처리되는 경우, 유효성을 검사한다. ERC20 토큰의 모든 단일 활동은 네트워크의 모든 피어에서 기본적으로 유효하다.\n피어는 그러므로 외부데이터베이스와 상호작용할 필요가 없다. 거래를 추적하기 위해 비트코인의 경우 처럼 이더리움 외부의 프로토콜을 따를 필요가 없다. 다른 모든 표준 트랜잭션과 마찬가지로 상태를 확인해야 한다. 그래서, ERC20 토큰을 사용하는 것이 매끄럽다.\n블록체인에서 토큰을 만들고 처리하기 위해 ERC20을 사용하는 것이 매우 편리하다. 지난 2년 동안 이러한 힘을 인상적으로 보여주었다. 블록체인 토큰은 ERC20이전에는 거의 영향을 미치지 못했지만, 이더리움이 이 표준을 발표한 이후 암호 화폐 생태계에서 그 역할이 폭발적으로 증가했다. ICO에 대한 과대 광고로 20억 달러가 스타트업 예산으로 쏟아진 것은 ERC20의 토큰 표준화의 결과다.\n","dateCreated":"2018-08-27T00:00:00+09:00","dateModified":"2018-08-27T03:22:16+09:00","datePublished":"2018-08-27T00:00:00+09:00","description":"ERC20: The Basis of Most ICOs\n\n원문\n\n대다수의 ICO는 이더리움의 ERC20 표준을 기반으로 한다. 코인마켓캡이 토큰 목록을 살펴보면, 상위 20개 토큰 중 19개가 이더리움을 기반 플랫폼으로 사용하고 있는 것을 확인할 수 있다. 상위 100개의 토큰을 살펴보면, 이더리움을 사용하지 않는 경우가 더 예외적인 상황이라는 것을 알 수 있다.\n\n\n\n왜 그럴까? 왜 이더리움은 블록체인 토큰의 표준이 되었을까? 정답은 ERC20 표준에서 확인할 수 있다. 이전에, ERC20이전에는 블록체인에서 토큰이 어떻게 만들어졌","headline":"ICO의 토양이 되는 ERC 20","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/08/27/erc20-basis-icos/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/08/27/erc20-basis-icos/","keywords":"blockchain, ethereum"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"ERC20: The Basis of Most ICOs\n원문\n대다수의 ICO는 이더리움의 ERC20 표준을 기반으로 한다. 코인마켓캡이 토큰 목록을 살펴보면, 상위 20개 토큰 중 19개가 이더리움을 기반 플랫폼으로 사용하고 있는 것을 확인할 수 있다. 상위 100개의 토큰을 살펴보면, 이더리움을 사용하지 않는 경우가 더 예외적인 상황이라는 것을 알 수 있다.\n\n왜 그럴까? 왜 이더리움은 블록체인 토큰의 표준이 되었을까? 정답은 ERC20 표준에서 확인할 수 있다. 이전에, ERC20이전에는 블록체인에서 토큰이 어떻게 만들어졌는지를 확인해보자.\nColored Coin: 비트코인 기반의 토큰현재 암호화폐 시장에서 가장 핫한 주제는 ICO 다. 이는 마이너들이 토큰이나 코인을 만들기 이전에, 투자자들에게 먼저 코인을 파는 것을 의미한다. 그렇게 하기 위해서는 일단 비트코인이나 이더리움과 같은 네이티브 블록체인 통화처럼 작동하지만, 마이너들에 의해 만들어지지 않은 블록체인 토큰을 몇개 두는 것이 유용하다. \n이러한 개념은 2013년에 비트코인의 블록체인에 토큰을 가져오는 방법을 만들어냈다. 그 주인공은 MasterCoin과 ColoredCoin이다. MasterCoin은 Counterparty와 Omni등으로 변형되었으며, ColredCoin은 OpenAssets이나 Coinprisim과 같은 여러 하위 프로토콜 등으로 분리되었다. 약간의 사소한 차이점 외에, 이 모든 개념은 비트코인 거래에서 토큰을 새기기 위해 몇가지 기술을 사용한다는 공통점이 있다. 이를 위해 비트코인의 OP_RETURN을 사용하여 트랜잭션에 데이터를 추가하였다. \n\n\n\n\n\n\n\n\n\nColoredCoin의 예제\n\n\n\n\nOP_RETURN을 통해 비트코인 블록체인에 작성된 코인엔 여러가지가 있다. Tether의 경우에는, Omni를 사용하여 비트코인 블록체인에서 유로, 달러 등을 전송한다. 누군가 달러 지폐에 ‘나는 유로다’ 라고 쓰는 것을 상상해보자. 일부 특별한 지갑은 이러한 메시지를 해석할 수 있다.\n비트코인에 대한 이러한 토큰들은 어느 정도 효과가 있다. 그러나 이들은 몇가지 단점을 공유한다. 가장 심각한 문제는, 블록체인에 기본적으로 저장이 되지 않는 다는 것이다. 이는 단지 거래에 첨부된 메시지 수준에 불과하며, 그리고 이들 대부분은 메시지의 진위성을 증명하기 위한 메시지 해시다. 비트코인 거래의 서명이나, 이전 비트코인의 amount 이외에, 이 메시지는 블록체인의 기본정보가 아니다. 위 예제에서의 글자들은 복사하거나, 붙여넣거나, 철자가 확인되는 등의 부가작업을 할수 없다.\n그 결과 비트코인 네트워크는 비트코인 트랜잭션을 검사하는 것과 동일한 방식으로 토큰 전송 (메시지 확인)을 검사하지 않는다. 비트코인 노드와 마이너들은 보내진 금액이 잔액에 의해서 뒷받침 되는지 (잔고가 남았는지 확인하는지) 확인하지 않는다. 심지어 토큰이 위조되거나, 이중으로 사용되는지 알지 못한다. 또한 토큰이 올바르게 생성되었는지 확인하지 않는다. \n물론, 이러한 문제는 비트코인 위에 프로토콜을 얹어서 확인할 수 있다. 특수 지갑 소프트웨어는 비트코인 외부의 데이터베이스로 토큰의 유효성을 검사할 수도 있다.\nERC20은 무슨 차이를 만드는가?이더리움 개발자들은 ERC20 토큰 표준을 발표했다. 이더리움 블록체인 상에서 작동하는 ‘토큰을 위한 표준 인터페이스’다. 토큰을 전송할 수 있는 기본 기능을 제공하고, 토큰을 승인하여 다른 체인 써드파티에서도 사용가능하게 한다. 이더리움의 모든 토큰이 다른 응용 프로그램에서 재사용되도록 허용하는 것이다.\nERC20의 성공은 부정할 수 없다. 이들은 거의 모든 이더리움 지갑을 지원한다. 수백개의 ERC20 토큰이 만들어졌으며, 이는 다른 대부분의 암호 화폐보다 가치가 있다. 의심하라 여지 없이, 이 형식은 암호화폐의 가장 성공적인 구현 중 하나가 되었다. 이는 토큰업계에서 승자가 되었다. 그러나 비트코인은 그렇지 못했다.\n왜 그런지, 이 질문에 대답하기 위해서는 ERC20 토큰이 Colored Coin이나 Omni 토큰과 거의 공통점이 없다는 것을 알아야 한다. 이더리움의 가상 머신 (EVM)을 이용하면, 복잡한 스마트 컨트랙트를 만들어 지갑이 이 컨트랙트와 상호작용할 수 있다. 비트코인은 지폐에 토큰을 새겨 놓은 것을 상상할 수 있다면, ERC20은 블록체인의 회계사와 같은 것이다.\nERC20 컨트랙트는 토큰의 모든 소유자에 대한 내역을 보유한다. 토큰의 수를 정의하고, 토큰을 보유하고 있는 주소도 나타낸다. 아래는 ICONOMI 토큰을 나타내는 방법이다.\n\nERC 20 토큰을 다른 주소로 전송하면, 비트코인 토근과 마찬가지로 이 주소에 트랜잭션을 저장하지 않는다. 대신 ERC20 컨트랙트에 소유자 목록을 변경하도록 지시한다. 이는 사용자가 가지고 있던 토큰을 제거하고, 새로운 주인에게 추가한다. 이 모든 것은 거래 당사자와 상호작용하는 것이 아니라, 컨트랙트 상에서만 상호작용 하게 된다.\n이 차이가 굉장이 중요하다. 이는 블록체인의 데이터 구조에서 토큰을 기본요소로 만드는 것이다. 마이너가 계약을 올바르게 실행한 경우, 이더리움 네트워크의 모든 노드가 이를 확인한다. 토큰 컨트랙트가 올바른 잔액을 유지하거나, 트랜잭션이 올바르게 처리되는 경우, 유효성을 검사한다. ERC20 토큰의 모든 단일 활동은 네트워크의 모든 피어에서 기본적으로 유효하다.\n피어는 그러므로 외부데이터베이스와 상호작용할 필요가 없다. 거래를 추적하기 위해 비트코인의 경우 처럼 이더리움 외부의 프로토콜을 따를 필요가 없다. 다른 모든 표준 트랜잭션과 마찬가지로 상태를 확인해야 한다. 그래서, ERC20 토큰을 사용하는 것이 매끄럽다.\n블록체인에서 토큰을 만들고 처리하기 위해 ERC20을 사용하는 것이 매우 편리하다. 지난 2년 동안 이러한 힘을 인상적으로 보여주었다. 블록체인 토큰은 ERC20이전에는 거의 영향을 미치지 못했지만, 이더리움이 이 표준을 발표한 이후 암호 화폐 생태계에서 그 역할이 폭발적으로 증가했다. ICO에 대한 과대 광고로 20억 달러가 스타트업 예산으로 쏟아진 것은 ERC20의 토큰 표준화의 결과다.\n","dateCreated":"2018-08-27T00:00:00+09:00","dateModified":"2018-08-27T03:22:16+09:00","datePublished":"2018-08-27T00:00:00+09:00","description":"ERC20: The Basis of Most ICOs\n\n원문\n\n대다수의 ICO는 이더리움의 ERC20 표준을 기반으로 한다. 코인마켓캡이 토큰 목록을 살펴보면, 상위 20개 토큰 중 19개가 이더리움을 기반 플랫폼으로 사용하고 있는 것을 확인할 수 있다. 상위 100개의 토큰을 살펴보면, 이더리움을 사용하지 않는 경우가 더 예외적인 상황이라는 것을 알 수 있다.\n\n\n\n왜 그럴까? 왜 이더리움은 블록체인 토큰의 표준이 되었을까? 정답은 ERC20 표준에서 확인할 수 있다. 이전에, ERC20이전에는 블록체인에서 토큰이 어떻게 만들어졌","headline":"ICO의 토양이 되는 ERC 20","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/08/27/erc20-basis-icos/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/08/27/erc20-basis-icos/","keywords":"blockchain, ethereum"}</script>
     <meta name="description" content="ERC20: The Basis of Most ICOs  원문  대다수의 ICO는 이더리움의 ERC20 표준을 기반으로 한다. 코인마켓캡이 토큰 목록을 살펴보면, 상위 20개 토큰 중 19개가 이더리움을 기반 플랫폼으로 사용하고 있는 것을 확인할 수 있다. 상위 100개의 토큰을 살펴보면, 이더리움을 사용하지 않는 경우가 더 예외적인 상황이라는 것을 알 수">
-<meta name="keywords" content="blockchain,ethereum">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="ICO의 토양이 되는 ERC 20">
 <meta property="og:url" content="https://www.yceffort.kr/2018/08/27/erc20-basis-icos/index.html">
 <meta property="og:site_name" content="yceffort">
 <meta property="og:description" content="ERC20: The Basis of Most ICOs  원문  대다수의 ICO는 이더리움의 ERC20 표준을 기반으로 한다. 코인마켓캡이 토큰 목록을 살펴보면, 상위 20개 토큰 중 19개가 이더리움을 기반 플랫폼으로 사용하고 있는 것을 확인할 수 있다. 상위 100개의 토큰을 살펴보면, 이더리움을 사용하지 않는 경우가 더 예외적인 상황이라는 것을 알 수">
-<meta property="og:locale" content="en">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.yceffort.kr/images/2018/08/coin-market-cap-token.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2018/08/colored-coin-example.png">
 <meta property="og:image" content="https://btcoins.files.wordpress.com/2017/10/ico-3.png">
-<meta property="og:updated_time" content="2018-08-26T18:22:16.000Z">
+<meta property="article:published_time" content="2018-08-26T15:00:00.000Z">
+<meta property="article:modified_time" content="2018-08-26T18:22:16.000Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="blockchain">
+<meta property="article:tag" content="ethereum">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ICO의 토양이 되는 ERC 20">
-<meta name="twitter:description" content="ERC20: The Basis of Most ICOs  원문  대다수의 ICO는 이더리움의 ERC20 표준을 기반으로 한다. 코인마켓캡이 토큰 목록을 살펴보면, 상위 20개 토큰 중 19개가 이더리움을 기반 플랫폼으로 사용하고 있는 것을 확인할 수 있다. 상위 100개의 토큰을 살펴보면, 이더리움을 사용하지 않는 경우가 더 예외적인 상황이라는 것을 알 수">
 <meta name="twitter:image" content="https://www.yceffort.kr/images/2018/08/coin-market-cap-token.png">
     
     
@@ -62,7 +63,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -89,7 +92,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -128,8 +131,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -270,9 +272,9 @@
 <p>대다수의 ICO는 이더리움의 <a href="https://en.wikipedia.org/wiki/ERC-20" target="_blank" rel="noopener">ERC20</a> 표준을 기반으로 한다. <a href="https://coinmarketcap.com/tokens/" target="_blank" rel="noopener">코인마켓캡이 토큰 목록</a>을 살펴보면, 상위 20개 토큰 중 19개가 이더리움을 기반 플랫폼으로 사용하고 있는 것을 확인할 수 있다. 상위 100개의 토큰을 살펴보면, 이더리움을 사용하지 않는 경우가 더 예외적인 상황이라는 것을 알 수 있다.</p>
 <p><img src="/images/2018/08/coin-market-cap-token.png" alt="coin-market-cap-token"></p>
 <p>왜 그럴까? 왜 이더리움은 블록체인 토큰의 표준이 되었을까? 정답은 ERC20 표준에서 확인할 수 있다. 이전에, ERC20이전에는 블록체인에서 토큰이 어떻게 만들어졌는지를 확인해보자.</p>
-<h2 id="colored-coin-비트코인-기반의-토큰"><a class="header-anchor" href="#colored-coin-비트코인-기반의-토큰">¶</a>Colored Coin: 비트코인 기반의 토큰</h2>
-<p>현재 암호화폐 시장에서 가장 핫한 주제는 ICO 다. 이는 마이너들이 토큰이나 코인을 만들기 이전에, 투자자들에게 먼저 코인을 파는 것을 의미한다. 그렇게 하기 위해서는 일단 비트코인이나 이더리움과 같은 네이티브 블록체인 통화처럼 작동하지만, 마이너들에 의해 만들어지지 않은 블록체인 토큰을 몇개 두는 것이 유용하다.</p>
-<p>이러한 개념은 2013년에 비트코인의 블록체인에 토큰을 가져오는 방법을 만들어냈다. 그 주인공은 MasterCoin과 ColoredCoin이다. MasterCoin은 Counterparty와 Omni등으로 변형되었으며, ColredCoin은 OpenAssets이나 Coinprisim과 같은 여러 하위 프로토콜 등으로 분리되었다. 약간의 사소한 차이점 외에, 이 모든 개념은 비트코인 거래에서 토큰을 새기기 위해 몇가지 기술을 사용한다는 공통점이 있다. 이를 위해 비트코인의 OP_RETURN을 사용하여 트랜잭션에 데이터를 추가하였다.</p>
+<h2 id="Colored-Coin-비트코인-기반의-토큰"><a href="#Colored-Coin-비트코인-기반의-토큰" class="headerlink" title="Colored Coin: 비트코인 기반의 토큰"></a>Colored Coin: 비트코인 기반의 토큰</h2><p>현재 암호화폐 시장에서 가장 핫한 주제는 ICO 다. 이는 마이너들이 토큰이나 코인을 만들기 이전에, 투자자들에게 먼저 코인을 파는 것을 의미한다. 그렇게 하기 위해서는 일단 비트코인이나 이더리움과 같은 네이티브 블록체인 통화처럼 작동하지만, 마이너들에 의해 만들어지지 않은 블록체인 토큰을 몇개 두는 것이 유용하다. </p>
+<p>이러한 개념은 2013년에 비트코인의 블록체인에 토큰을 가져오는 방법을 만들어냈다. 그 주인공은 MasterCoin과 ColoredCoin이다. MasterCoin은 Counterparty와 Omni등으로 변형되었으며, ColredCoin은 OpenAssets이나 Coinprisim과 같은 여러 하위 프로토콜 등으로 분리되었다. 약간의 사소한 차이점 외에, 이 모든 개념은 비트코인 거래에서 토큰을 새기기 위해 몇가지 기술을 사용한다는 공통점이 있다. 이를 위해 비트코인의 OP_RETURN을 사용하여 트랜잭션에 데이터를 추가하였다. </p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -285,12 +287,12 @@
 </tr>
 </tbody>
 </table>
+</div>
 <p>OP_RETURN을 통해 비트코인 블록체인에 작성된 코인엔 여러가지가 있다. Tether의 경우에는, Omni를 사용하여 비트코인 블록체인에서 유로, 달러 등을 전송한다. 누군가 달러 지폐에 ‘나는 유로다’ 라고 쓰는 것을 상상해보자. 일부 특별한 지갑은 이러한 메시지를 해석할 수 있다.</p>
 <p>비트코인에 대한 이러한 토큰들은 어느 정도 효과가 있다. 그러나 이들은 몇가지 단점을 공유한다. 가장 심각한 문제는, 블록체인에 기본적으로 저장이 되지 않는 다는 것이다. 이는 단지 거래에 첨부된 메시지 수준에 불과하며, 그리고 이들 대부분은 메시지의 진위성을 증명하기 위한 메시지 해시다. 비트코인 거래의 서명이나, 이전 비트코인의 amount 이외에, 이 메시지는 블록체인의 기본정보가 아니다. 위 예제에서의 글자들은 복사하거나, 붙여넣거나, 철자가 확인되는 등의 부가작업을 할수 없다.</p>
-<p>그 결과 비트코인 네트워크는 비트코인 트랜잭션을 검사하는 것과 동일한 방식으로 토큰 전송 (메시지 확인)을 검사하지 않는다. 비트코인 노드와 마이너들은 보내진 금액이 잔액에 의해서 뒷받침 되는지 (잔고가 남았는지 확인하는지) 확인하지 않는다. 심지어 토큰이 위조되거나, 이중으로 사용되는지 알지 못한다. 또한 토큰이 올바르게 생성되었는지 확인하지 않는다.</p>
+<p>그 결과 비트코인 네트워크는 비트코인 트랜잭션을 검사하는 것과 동일한 방식으로 토큰 전송 (메시지 확인)을 검사하지 않는다. 비트코인 노드와 마이너들은 보내진 금액이 잔액에 의해서 뒷받침 되는지 (잔고가 남았는지 확인하는지) 확인하지 않는다. 심지어 토큰이 위조되거나, 이중으로 사용되는지 알지 못한다. 또한 토큰이 올바르게 생성되었는지 확인하지 않는다. </p>
 <p>물론, 이러한 문제는 비트코인 위에 프로토콜을 얹어서 확인할 수 있다. 특수 지갑 소프트웨어는 비트코인 외부의 데이터베이스로 토큰의 유효성을 검사할 수도 있다.</p>
-<h2 id="erc20은-무슨-차이를-만드는가"><a class="header-anchor" href="#erc20은-무슨-차이를-만드는가">¶</a>ERC20은 무슨 차이를 만드는가?</h2>
-<p>이더리움 개발자들은 ERC20 토큰 표준을 발표했다. 이더리움 블록체인 상에서 작동하는 '토큰을 위한 표준 인터페이스’다. 토큰을 전송할 수 있는 기본 기능을 제공하고, 토큰을 승인하여 다른 체인 써드파티에서도 사용가능하게 한다. 이더리움의 모든 토큰이 다른 응용 프로그램에서 재사용되도록 허용하는 것이다.</p>
+<h2 id="ERC20은-무슨-차이를-만드는가"><a href="#ERC20은-무슨-차이를-만드는가" class="headerlink" title="ERC20은 무슨 차이를 만드는가?"></a>ERC20은 무슨 차이를 만드는가?</h2><p>이더리움 개발자들은 ERC20 토큰 표준을 발표했다. 이더리움 블록체인 상에서 작동하는 ‘토큰을 위한 표준 인터페이스’다. 토큰을 전송할 수 있는 기본 기능을 제공하고, 토큰을 승인하여 다른 체인 써드파티에서도 사용가능하게 한다. 이더리움의 모든 토큰이 다른 응용 프로그램에서 재사용되도록 허용하는 것이다.</p>
 <p>ERC20의 성공은 부정할 수 없다. 이들은 거의 모든 이더리움 지갑을 지원한다. 수백개의 ERC20 토큰이 만들어졌으며, 이는 다른 대부분의 암호 화폐보다 가치가 있다. 의심하라 여지 없이, 이 형식은 암호화폐의 가장 성공적인 구현 중 하나가 되었다. 이는 토큰업계에서 승자가 되었다. 그러나 비트코인은 그렇지 못했다.</p>
 <p>왜 그런지, 이 질문에 대답하기 위해서는 ERC20 토큰이 Colored Coin이나 Omni 토큰과 거의 공통점이 없다는 것을 알아야 한다. 이더리움의 가상 머신 (EVM)을 이용하면, 복잡한 스마트 컨트랙트를 만들어 지갑이 이 컨트랙트와 상호작용할 수 있다. 비트코인은 지폐에 토큰을 새겨 놓은 것을 상상할 수 있다면, ERC20은 블록체인의 회계사와 같은 것이다.</p>
 <p>ERC20 컨트랙트는 토큰의 모든 소유자에 대한 내역을 보유한다. 토큰의 수를 정의하고, 토큰을 보유하고 있는 주소도 나타낸다. 아래는 ICONOMI 토큰을 나타내는 방법이다.</p>
@@ -314,7 +316,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/blockchain/">blockchain</a> <a class="tag tag--primary tag--small t-link" href="/tags/ethereum/">ethereum</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/blockchain/" rel="tag">blockchain</a> <a class="tag tag--primary tag--small t-link" href="/tags/ethereum/" rel="tag">ethereum</a>
 
             </div>
         
@@ -325,7 +327,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/28/how-blockchain-could-close-the-gender-pay-gap/" data-tooltip="블록체인으로 성별간 임금 격차를 좁히는 법" aria-label="PREVIOUS: 블록체인으로 성별간 임금 격차를 좁히는 법">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/28/bitcoin-lightning-network/" data-tooltip="비트코인 라이트닝 네트워크" aria-label="PREVIOUS: 비트코인 라이트닝 네트워크">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -334,7 +336,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/23/blockchain’s-scaling-problem/" data-tooltip="블록체인 스케일링 문제" aria-label="NEXT: 블록체인 스케일링 문제">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/23/blockchain%E2%80%99s-scaling-problem/" data-tooltip="블록체인 스케일링 문제" aria-label="NEXT: 블록체인 스케일링 문제">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -367,12 +369,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -387,10 +383,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -413,7 +405,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/28/how-blockchain-could-close-the-gender-pay-gap/" data-tooltip="블록체인으로 성별간 임금 격차를 좁히는 법" aria-label="PREVIOUS: 블록체인으로 성별간 임금 격차를 좁히는 법">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/28/bitcoin-lightning-network/" data-tooltip="비트코인 라이트닝 네트워크" aria-label="PREVIOUS: 비트코인 라이트닝 네트워크">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -422,7 +414,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/23/blockchain’s-scaling-problem/" data-tooltip="블록체인 스케일링 문제" aria-label="NEXT: 블록체인 스케일링 문제">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/08/23/blockchain%E2%80%99s-scaling-problem/" data-tooltip="블록체인 스케일링 문제" aria-label="NEXT: 블록체인 스케일링 문제">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -454,12 +446,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -598,8 +584,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -617,8 +603,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -674,8 +660,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -693,8 +679,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -754,7 +740,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -764,26 +750,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2018/08/27/erc20-basis-icos/';
-                 
-                    this.page.identifier = '2018/08/27/erc20-basis-icos/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

@@ -35,17 +35,18 @@
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
     <script type="application/ld+json">{"@context":"http://schema.org","@type":"Website","@id":"https://www.yceffort.kr","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"name":"yceffort","description":"this is the yceffort's private blog","url":"https://www.yceffort.kr","keywords":"programming, innovation, technology"}</script>
-    <meta name="description" content="this is the yceffort&apos;s private blog">
-<meta name="keywords" content="programming,innovation,technology">
+    <meta name="description" content="this is the yceffort&#39;s private blog">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="yceffort">
 <meta property="og:url" content="https://www.yceffort.kr/page/2/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="this is the yceffort&apos;s private blog">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="this is the yceffort&#39;s private blog">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="programming">
+<meta property="article:tag" content="innovation">
+<meta property="article:tag" content="technology">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="yceffort">
-<meta name="twitter:description" content="this is the yceffort&apos;s private blog">
     
     
     
@@ -57,7 +58,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -84,7 +87,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -123,8 +126,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -243,6 +245,50 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title">
                     
+                        <a class="link-unstyled" href="/2019/09/06/javascript-event-loop/">
+                            자바스크립트의 이벤트루프, 태스크, 그리고 마이크로 태스크
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-09-06T09:51:26+09:00">
+	
+		    Sep 06, 2019
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    자바스크립트는 단일 스레드 기반의 언어
+자바스크립트는 ‘단일 스레드’ 기반의 언어다. 즉, 스레드가 하나이기 때문에 동시에 하나의 작업만 처리할 수 있다. 그러나 자바스크립트가 사용되는 웹을 곰곰히 생각해보면 동시에 여러개의 작업을 처리하는 모습을 볼 수 있다. 스레드가 하나인 자바스크립트는 동시성을 어떻게 처리할까? 먼저 브라우저 구동환경을 살펴보자.
+
+
+
+
+
+위 이미지에서, 자바스크립트 엔진은 메모리 할당을 관리하는 heap과 call stack만 존재하는 것을 알 수 있다. 즉, 동시성에 대한 처리는 자바스크립트 외부에서 처리
+                    
+                        <a href="/2019/09/06/javascript-event-loop/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
                         <a class="link-unstyled" href="/2019/08/21/reactjs-interview-questions-2/">
                             리액트 인터뷰 질문 &amp; 답 (2)
                         </a>
@@ -262,8 +308,8 @@
                 <div class="postShorten-excerpt">
                     목차
 
-¶Table of Contents
-No.QuestionsReact Router129What is React Router?130How React Router is different from history library?131What are the <Router> components of React Router v4?132What is the purpose of push and replace methods of history?133How do you programmatically navigate using React router
+Table of Contents
+No.QuestionsReact Router129What is React Router?130How React Router is different from history library?131What are the \ components of React Router v4?132What is the purpose of push and replace methods of history?133How do you programmatically navigate using React router v4?134H
                     
                         <a href="/2019/08/21/reactjs-interview-questions-2/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -339,7 +385,7 @@ No.QuestionsCore React1리액트란 무엇인가?2리액트의 주요 기능은 
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶문제의 시작
+                    문제의 시작
 문제의 시작은 여기 였다.
 
 내가 사용하는 코드는 아래와 같았다.
@@ -371,7 +417,7 @@ const enum ConstGlobalColorSet {
   Black = "44, 44, 44"
 }
 
-// red, blue
+// red, blue,
                     
                         <a href="/2019/08/20/typescript-type-assertion/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -488,7 +534,7 @@ nextjs와 react 만 깔끔하게 쓰고 싶지만, 그러기엔 현실적인 문
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶🚧작성중 🚧
+                    🚧작성중 🚧
 원문-How Browsers Work: Behind the scenes of modern web browsers
 
 이 글을 요약/번역한 더 좋은 글이 네이버 d2에 있습니다. 개인적인 공부 차원에서 이 원문을 fully 한글로 번역하고 있습니다.
@@ -496,8 +542,8 @@ nextjs와 react 만 깔끔하게 쓰고 싶지만, 그러기엔 현실적인 문
 소개
 웹 브라우저는 가장 널리 쓰이는 소프트웨어다. 이 글에서는, 브라우저가 어떻게 동작하는지 소개할 것이다. 이 글을 읽고 나면, google.com을 타이핑 한 시점 부터 구글페이지가 브라우저에 보이기 까지, 어떤 일련의 과정이 있는지 알게 될 것이다.
 
-¶목차
- 1
+목차
+ 1. 
                     
                         <a href="/2019/08/12/how-browser-work/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -534,7 +580,7 @@ nextjs와 react 만 깔끔하게 쓰고 싶지만, 그러기엔 현실적인 문
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶useReducer
+                    useReducer
 1
 
 
@@ -559,7 +605,7 @@ useState를 쓰기전
 
 
 function Counter({ initialCount }) {
-  const [count, setCount] = useState(init
+  const [count, setCount] = useState(initi
                     
                         <a href="/2019/08/12/react-hooks-api-2/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -599,8 +645,8 @@ function Counter({ initialCount }) {
                     Hooks API
 Hook은 react 16.8에서 추가된 개념으로, Hook을 시용하면 class를 갖성하지 않아도 state관리와 같은 react의 기능을 사용할 수 있다.
 
-¶기본 Hook
-¶useState
+기본 Hook
+useState
 1
 2
 
@@ -624,7 +670,7 @@ setState(newState);
 11
 
 
-function Counter
+function Counter({
                     
                         <a href="/2019/08/08/react-hooks-api-1/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -661,55 +707,15 @@ function Counter
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶로드밸런서
+                    로드밸런서
 로드 밸런싱이란, 부하 분산을 위해서 가상 IP를 통해 여러 서버에 접속하도록 분배하는 기능을 말한다.
 
 로드 밸런싱에서 사용하는 주요 기술은
 
  * NAT(Network Address Translation): 사설 IP 주소를 공인 IP 주소로 바꾸는 데 사용하는 통신망의 주소 변조기이다.
- * DSR(Dynamic Source Routing protocol): 로드 밸런서 사용 시 서버에서 클라이언트로 되돌아가는 경우 목적지 주소를 스위치의 IP 주소가 아닌 클라이언트의 IP 주소로 전달해서 네트워크 스위치를 거치지
+ * DSR(Dynamic Source Routing protocol): 로드 밸런서 사용 시 서버에서 클라이언트로 되돌아가는 경우 목적지 주소를 스위치의 IP 주소가 아닌 클라이언트의 IP 주소로 전달해서 네트워크 스위치를 거치지 
                     
                         <a href="/2019/08/07/haproxy/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a class="link-unstyled" href="/2019/08/06/experience-docker-aws-ecs/">
-                            Docker와 ECR, ECS 경험
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-08-06T08:55:52+09:00">
-	
-		    Aug 06, 2019
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    제법 규모가 있었던 전 회사에서는 특별하게 인프라에 대해 고민을 별로 할 필요가 없었다. 많은 부분이 자동화되어 있었고, 또 적당한 툴로 잘 만들어져 있었기 때문에 개발에 온전히 집중할 수 있었다. 하지만 새롭게 온 스타트업은 (당연하게도) 그런게 없으므로, 회사에서 사용하고 있는 AWS 인프라와 배포 시스템에 대해서 직접 공부할 필요가 있었다. 그 중에서도 처음 접하는 것이 docker 였다.
-
-¶Docker
-예전 부터 이름은 많이 들어봤지만 이런저런 이유로 (귀찮아서) 한번도 써본적이 없었다. docker는 컨테이너 기반의 오픈
-                    
-                        <a href="/2019/08/06/experience-docker-aws-ecs/" class="postShorten-excerpt_link link">
                             Continue reading
                         </a>
                         
@@ -851,8 +857,8 @@ function Counter
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -870,8 +876,8 @@ function Counter
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -927,8 +933,8 @@ function Counter
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -946,8 +952,8 @@ function Counter
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -1007,7 +1013,7 @@ function Counter
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -1017,7 +1023,9 @@ function Counter
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
 

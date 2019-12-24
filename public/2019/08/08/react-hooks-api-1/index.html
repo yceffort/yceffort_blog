@@ -34,19 +34,20 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Hooks API\nHook은 react 16.8에서 추가된 개념으로, Hook을 시용하면 class를 갖성하지 않아도 state관리와 같은 react의 기능을 사용할 수 있다.\n¶기본 Hook\n¶useState\n12const [state, setState] = useState(initialState);setState(newState);\n상태 유지값, 그리고 그 값을 수정하는 함수를 반환한다. 이전의 state값을 받아다가 수정할 수도 있다.\n1234567891011function Counter(&#123; initialCount &#125;) &#123;  const [count, setCount] = useState(initialCount);  return (    &lt;&gt;      Count: &#123;count&#125;      &lt;button onClick=&#123;() =&gt; setCount(initialCount)&#125;&gt;Reset&lt;/button&gt;      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount + 1)&#125;&gt;+&lt;/button&gt;      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount - 1)&#125;&gt;-&lt;/button&gt;    &lt;/&gt;  );&#125;\n동일한 값으로 갱신하는 경우(Object.is) 값이 업데이트 하지 않고 처리를 종료한다.\n¶useEffect\n1useEffect(didUpdate);\n화면에 렌더링이 완료된 이후에 수행한다. 또한, 컴포넌트가 화면에서 제거 될 때 정리 해야할 리소스도 선언할 수 있다.\n123456useEffect(() =&gt; &#123;  const subscription = props.source.subscribe();  return () =&gt; &#123;    subscription.unsubscribe();  &#125;;&#125;);\nunsubscribe는 이제 ui에서 컴포넌트를 제거하기 직전에 수행한다. 그리고 만약, 컴포넌트가 여러번 렌더링 된다면 다음 effect가 수행되기 전에 이전 effect가 정리된다.\n만약 조건부로 실행하기 위해서는 아래와 같은 방법을 활용할 수도 있다.\n123456useEffect(() =&gt; &#123;  const subscription = props.source.subscribe();  return () =&gt; &#123;    subscription.unsubscribe();  &#125;;&#125;, [props.source]);\n그럼 이제 props.source값이 변경 될때 만 useEffect가 발생하게 된다.\n¶useContext\n¶Context\ncontext를 이용하면, 매번 일일이 props를 넘겨주지 않아도, 컴포넌트 트리전체에 데이터를 제공할 수 있다. 즉, context는 react 컴포넌트 트리안에서 전역적으로 대이터를 공유할 수 있도록 고안된 방법이다.\n123456789&lt;Page user=&#123;user&#125; avatarSize=&#123;avatarSize&#125; /&gt;  &lt;PageLayout user=&#123;user&#125; avatarSize=&#123;avatarSize&#125; /&gt;    &lt;NavigationBar user=&#123;user&#125; avatarSize=&#123;avatarSize&#125; /&gt;      &lt;Link href=&#123;user.permalink&#125;&gt;        &lt;Avatar user=&#123;user&#125; size=&#123;avatarSize&#125; /&gt;      &lt;/Link&gt;    &lt;/NavigatorBar&gt;  &lt;/PageLayout&gt;&lt;/Page&gt;\n실제로 user와 avatarSize를 사용하는 곳은 Link컴포넌트 인데, page 온갖 컴포넌트를 거치면서 값을 내려주는 것을 볼 수 있다. 이게 더 심해지는 경우, 같은 데이터를 트리안의 여러 레벨의 컴포넌트에게 주어야 할 때도 있다. 이렇게 데이터가 변할 때 마다 모든 하위 컴포넌트에게 해당 값을 알려주는 것이 context이다.\n1const MyContext = React.createContext(defaultValue);\nContext객체를 만든다. Context 객체를 구독하고, 컴포넌트를 렌더링 할 때 트리 상위에서 가장 가까이 짝이 맞는 Provider로 부터 현재 값을 읽는다. 여기서 선언된 defaultValue는 트리안에서 적절한 Provider를 찾지 못했을 때에만 쓰는 값이다.\n123&lt;MyContext.provider value=\"&#123;someValue&#125;\"&gt;  &lt;SomeComponent /&gt;&lt;/MyContext.provider&gt;\nProvider는 context를 구독하는 컴포넌트들에게 context의 변화를 알리는 역할을 한다. Provider는 value에 있는 prop을 받아서 이 값을 하위 컴포넌트에 전달한다.\n123&lt;MyContext.Consumer&gt;  &#123;value =&gt; /* context 값을 이용한 렌더링 */&#125;&lt;/MyContext.Consumer&gt;\ncontext 변화를 구독하는 React Component다. 반드시 Context.Consumer의 자식은 함수여야만 한다. 이 함수는 context의 현재 값을 받고, React 노드를 반환해야 한다.\n1const value = useContext(MyContext);\n를 사용하면, context객체를 받아서, 현재 context의 값을 반환한다.\n","dateCreated":"2019-08-08T17:01:07+09:00","dateModified":"2019-08-14T11:05:21+09:00","datePublished":"2019-08-08T17:01:07+09:00","description":"Hooks API\nHook은 react 16.8에서 추가된 개념으로, Hook을 시용하면 class를 갖성하지 않아도 state관리와 같은 react의 기능을 사용할 수 있다.\n\n¶기본 Hook\n¶useState\n1\n2\n\n\nconst [state, setState] = useState(initialState);\nsetState(newState);\n\n\n상태 유지값, 그리고 그 값을 수정하는 함수를 반환한다. 이전의 state값을 받아다가 수정할 수도 있다.\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n\n\nfunction Counter","headline":"React Hooks Api (1)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/08/08/react-hooks-api-1/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/08/08/react-hooks-api-1/","keywords":"react, javascript"}</script>
-    <meta name="description" content="Hooks API Hook은 react 16.8에서 추가된 개념으로, Hook을 시용하면 class를 갖성하지 않아도 state관리와 같은 react의 기능을 사용할 수 있다.  ¶기본 Hook ¶useState 1 2   const [state, setState] = useState(initialState); setState(newState);   상태">
-<meta name="keywords" content="react,javascript">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Hooks APIHook은 react 16.8에서 추가된 개념으로, Hook을 시용하면 class를 갖성하지 않아도 state관리와 같은 react의 기능을 사용할 수 있다.\n기본 HookuseState12const [state, setState] = useState(initialState);setState(newState);\n상태 유지값, 그리고 그 값을 수정하는 함수를 반환한다. 이전의 state값을 받아다가 수정할 수도 있다.\n1234567891011function Counter(&#123; initialCount &#125;) &#123;  const [count, setCount] = useState(initialCount);  return (    &lt;&gt;      Count: &#123;count&#125;      &lt;button onClick=&#123;() =&gt; setCount(initialCount)&#125;&gt;Reset&lt;/button&gt;      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount + 1)&#125;&gt;+&lt;/button&gt;      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount - 1)&#125;&gt;-&lt;/button&gt;    &lt;/&gt;  );&#125;\n동일한 값으로 갱신하는 경우(Object.is) 값이 업데이트 하지 않고 처리를 종료한다.\nuseEffect1useEffect(didUpdate);\n화면에 렌더링이 완료된 이후에 수행한다. 또한, 컴포넌트가 화면에서 제거 될 때 정리 해야할 리소스도 선언할 수 있다.\n123456useEffect(() =&gt; &#123;  const subscription = props.source.subscribe();  return () =&gt; &#123;    subscription.unsubscribe();  &#125;;&#125;);\nunsubscribe는 이제 ui에서 컴포넌트를 제거하기 직전에 수행한다. 그리고 만약, 컴포넌트가 여러번 렌더링 된다면 다음 effect가 수행되기 전에 이전 effect가 정리된다.\n만약 조건부로 실행하기 위해서는 아래와 같은 방법을 활용할 수도 있다.\n123456useEffect(() =&gt; &#123;  const subscription = props.source.subscribe();  return () =&gt; &#123;    subscription.unsubscribe();  &#125;;&#125;, [props.source]);\n그럼 이제 props.source값이 변경 될때 만 useEffect가 발생하게 된다.\nuseContextContextcontext를 이용하면, 매번 일일이 props를 넘겨주지 않아도, 컴포넌트 트리전체에 데이터를 제공할 수 있다. 즉, context는 react 컴포넌트 트리안에서 전역적으로 대이터를 공유할 수 있도록 고안된 방법이다.\n123456789&lt;Page user=&#123;user&#125; avatarSize=&#123;avatarSize&#125; /&gt;  &lt;PageLayout user=&#123;user&#125; avatarSize=&#123;avatarSize&#125; /&gt;    &lt;NavigationBar user=&#123;user&#125; avatarSize=&#123;avatarSize&#125; /&gt;      &lt;Link href=&#123;user.permalink&#125;&gt;        &lt;Avatar user=&#123;user&#125; size=&#123;avatarSize&#125; /&gt;      &lt;/Link&gt;    &lt;/NavigatorBar&gt;  &lt;/PageLayout&gt;&lt;/Page&gt;\n실제로 user와 avatarSize를 사용하는 곳은 Link컴포넌트 인데, page 온갖 컴포넌트를 거치면서 값을 내려주는 것을 볼 수 있다. 이게 더 심해지는 경우, 같은 데이터를 트리안의 여러 레벨의 컴포넌트에게 주어야 할 때도 있다. 이렇게 데이터가 변할 때 마다 모든 하위 컴포넌트에게 해당 값을 알려주는 것이 context이다.\n1const MyContext = React.createContext(defaultValue);\nContext객체를 만든다. Context 객체를 구독하고, 컴포넌트를 렌더링 할 때 트리 상위에서 가장 가까이 짝이 맞는 Provider로 부터 현재 값을 읽는다. 여기서 선언된 defaultValue는 트리안에서 적절한 Provider를 찾지 못했을 때에만 쓰는 값이다.\n123&lt;MyContext.provider value=\"&#123;someValue&#125;\"&gt;  &lt;SomeComponent /&gt;&lt;/MyContext.provider&gt;\nProvider는 context를 구독하는 컴포넌트들에게 context의 변화를 알리는 역할을 한다. Provider는 value에 있는 prop을 받아서 이 값을 하위 컴포넌트에 전달한다.\n123&lt;MyContext.Consumer&gt;  &#123;value =&gt; /* context 값을 이용한 렌더링 */&#125;&lt;/MyContext.Consumer&gt;\ncontext 변화를 구독하는 React Component다. 반드시 Context.Consumer의 자식은 함수여야만 한다. 이 함수는 context의 현재 값을 받고, React 노드를 반환해야 한다.\n1const value = useContext(MyContext);\n를 사용하면, context객체를 받아서, 현재 context의 값을 반환한다.\n","dateCreated":"2019-08-08T17:01:07+09:00","dateModified":"2019-08-14T11:05:21+09:00","datePublished":"2019-08-08T17:01:07+09:00","description":"Hooks API\nHook은 react 16.8에서 추가된 개념으로, Hook을 시용하면 class를 갖성하지 않아도 state관리와 같은 react의 기능을 사용할 수 있다.\n\n기본 Hook\nuseState\n1\n2\n\n\nconst [state, setState] = useState(initialState);\nsetState(newState);\n\n\n상태 유지값, 그리고 그 값을 수정하는 함수를 반환한다. 이전의 state값을 받아다가 수정할 수도 있다.\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n\n\nfunction Counter({","headline":"React Hooks Api (1)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/08/08/react-hooks-api-1/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/08/08/react-hooks-api-1/","keywords":"react, javascript"}</script>
+    <meta name="description" content="Hooks API Hook은 react 16.8에서 추가된 개념으로, Hook을 시용하면 class를 갖성하지 않아도 state관리와 같은 react의 기능을 사용할 수 있다.  기본 Hook useState 1 2   const [state, setState] &#x3D; useState(initialState); setState(newState);   상태 유지">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="React Hooks Api (1)">
 <meta property="og:url" content="https://www.yceffort.kr/2019/08/08/react-hooks-api-1/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="Hooks API Hook은 react 16.8에서 추가된 개념으로, Hook을 시용하면 class를 갖성하지 않아도 state관리와 같은 react의 기능을 사용할 수 있다.  ¶기본 Hook ¶useState 1 2   const [state, setState] = useState(initialState); setState(newState);   상태">
-<meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-08-14T02:05:21.889Z">
+<meta property="og:description" content="Hooks API Hook은 react 16.8에서 추가된 개념으로, Hook을 시용하면 class를 갖성하지 않아도 state관리와 같은 react의 기능을 사용할 수 있다.  기본 Hook useState 1 2   const [state, setState] &#x3D; useState(initialState); setState(newState);   상태 유지">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-08-08T08:01:07.000Z">
+<meta property="article:modified_time" content="2019-08-14T02:05:21.889Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="react">
+<meta property="article:tag" content="javascript">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="React Hooks Api (1)">
-<meta name="twitter:description" content="Hooks API Hook은 react 16.8에서 추가된 개념으로, Hook을 시용하면 class를 갖성하지 않아도 state관리와 같은 react의 기능을 사용할 수 있다.  ¶기본 Hook ¶useState 1 2   const [state, setState] = useState(initialState); setState(newState);   상태">
     
     
     
@@ -58,7 +59,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -85,7 +88,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -124,8 +127,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -261,25 +263,19 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h1>Hooks API</h1>
-<p>Hook은 react 16.8에서 추가된 개념으로, Hook을 시용하면 class를 갖성하지 않아도 state관리와 같은 react의 기능을 사용할 수 있다.</p>
-<h2 id="기본-hook"><a class="header-anchor" href="#기본-hook">¶</a>기본 Hook</h2>
-<h3 id="usestate"><a class="header-anchor" href="#usestate">¶</a>useState</h3>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, setState] = useState(initialState);</span><br><span class="line">setState(newState);</span><br></pre></td></tr></table></figure>
+            <h1 id="Hooks-API"><a href="#Hooks-API" class="headerlink" title="Hooks API"></a>Hooks API</h1><p>Hook은 react 16.8에서 추가된 개념으로, Hook을 시용하면 class를 갖성하지 않아도 state관리와 같은 react의 기능을 사용할 수 있다.</p>
+<h2 id="기본-Hook"><a href="#기본-Hook" class="headerlink" title="기본 Hook"></a>기본 Hook</h2><h3 id="useState"><a href="#useState" class="headerlink" title="useState"></a>useState</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [state, setState] = useState(initialState);</span><br><span class="line">setState(newState);</span><br></pre></td></tr></table></figure>
 <p>상태 유지값, 그리고 그 값을 수정하는 함수를 반환한다. 이전의 <code>state</code>값을 받아다가 수정할 수도 있다.</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Counter</span>(<span class="params">&#123; initialCount &#125;</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> [count, setCount] = useState(initialCount);</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      Count: &#123;count&#125;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; setCount(initialCount)&#125;&gt;Reset&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">      &lt;button onClick=&#123;() =&gt; setCount(prevCount =&gt; prevCount + 1)&#125;&gt;+&lt;/</span>button&gt;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; setCount(<span class="function"><span class="params">prevCount</span> =&gt;</span> prevCount - <span class="number">1</span>)&#125;&gt;-<span class="xml"><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">    &lt;<span class="regexp">/&gt;</span></span><br><span class="line"><span class="regexp">  );</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
 <p>동일한 값으로 갱신하는 경우(<code>Object.is</code>) 값이 업데이트 하지 않고 처리를 종료한다.</p>
-<h3 id="useeffect"><a class="header-anchor" href="#useeffect">¶</a>useEffect</h3>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useEffect(didUpdate);</span><br></pre></td></tr></table></figure>
+<h3 id="useEffect"><a href="#useEffect" class="headerlink" title="useEffect"></a>useEffect</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">useEffect(didUpdate);</span><br></pre></td></tr></table></figure>
 <p>화면에 렌더링이 완료된 이후에 수행한다. 또한, 컴포넌트가 화면에서 제거 될 때 정리 해야할 리소스도 선언할 수 있다.</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> subscription = props.source.subscribe();</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    subscription.unsubscribe();</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 <p><code>unsubscribe</code>는 이제 ui에서 컴포넌트를 제거하기 직전에 수행한다. 그리고 만약, 컴포넌트가 여러번 렌더링 된다면 다음 effect가 수행되기 전에 이전 effect가 정리된다.</p>
 <p>만약 조건부로 실행하기 위해서는 아래와 같은 방법을 활용할 수도 있다.</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">useEffect(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> subscription = props.source.subscribe();</span><br><span class="line">  <span class="keyword">return</span> <span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    subscription.unsubscribe();</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;, [props.source]);</span><br></pre></td></tr></table></figure>
 <p>그럼 이제 <code>props.source</code>값이 변경 될때 만 <code>useEffect</code>가 발생하게 된다.</p>
-<h3 id="usecontext"><a class="header-anchor" href="#usecontext">¶</a>useContext</h3>
-<h4 id="context"><a class="header-anchor" href="#context">¶</a>Context</h4>
-<p><code>context</code>를 이용하면, 매번 일일이 props를 넘겨주지 않아도, 컴포넌트 트리전체에 데이터를 제공할 수 있다. 즉, context는 react 컴포넌트 트리안에서 전역적으로 대이터를 공유할 수 있도록 고안된 방법이다.</p>
+<h3 id="useContext"><a href="#useContext" class="headerlink" title="useContext"></a>useContext</h3><h4 id="Context"><a href="#Context" class="headerlink" title="Context"></a>Context</h4><p><code>context</code>를 이용하면, 매번 일일이 props를 넘겨주지 않아도, 컴포넌트 트리전체에 데이터를 제공할 수 있다. 즉, context는 react 컴포넌트 트리안에서 전역적으로 대이터를 공유할 수 있도록 고안된 방법이다.</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Page</span> <span class="attr">user</span>=<span class="string">&#123;user&#125;</span> <span class="attr">avatarSize</span>=<span class="string">&#123;avatarSize&#125;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">PageLayout</span> <span class="attr">user</span>=<span class="string">&#123;user&#125;</span> <span class="attr">avatarSize</span>=<span class="string">&#123;avatarSize&#125;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">NavigationBar</span> <span class="attr">user</span>=<span class="string">&#123;user&#125;</span> <span class="attr">avatarSize</span>=<span class="string">&#123;avatarSize&#125;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">Link</span> <span class="attr">href</span>=<span class="string">&#123;user.permalink&#125;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Avatar</span> <span class="attr">user</span>=<span class="string">&#123;user&#125;</span> <span class="attr">size</span>=<span class="string">&#123;avatarSize&#125;</span> /&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">Link</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">NavigatorBar</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">PageLayout</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">Page</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>실제로 <code>user</code>와 <code>avatarSize</code>를 사용하는 곳은 <code>Link</code>컴포넌트 인데, page 온갖 컴포넌트를 거치면서 값을 내려주는 것을 볼 수 있다. 이게 더 심해지는 경우, 같은 데이터를 트리안의 여러 레벨의 컴포넌트에게 주어야 할 때도 있다. 이렇게 <strong>데이터가 변할 때 마다 모든 하위 컴포넌트에게 해당 값을 알려주는 것이 <code>context</code>이다.</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> MyContext = React.createContext(defaultValue);</span><br></pre></td></tr></table></figure>
@@ -305,7 +301,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/">javascript</a> <a class="tag tag--primary tag--small t-link" href="/tags/react/">react</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/" rel="tag">javascript</a> <a class="tag tag--primary tag--small t-link" href="/tags/react/" rel="tag">react</a>
 
             </div>
         
@@ -358,12 +354,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -378,10 +368,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -445,12 +431,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -589,8 +569,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -608,8 +588,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -665,8 +645,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -684,8 +664,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -745,7 +725,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -755,26 +735,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/08/08/react-hooks-api-1/';
-                 
-                    this.page.identifier = '2019/08/08/react-hooks-api-1/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

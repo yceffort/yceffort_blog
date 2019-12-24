@@ -36,17 +36,18 @@
     
     <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Golang에는 클래스가 없는 대신, 아래와 같은 구조체가 존재한다.\n 12345678910111213141516package main import \"fmt\"type work struct &#123;  mission string  time int  boss string  salary int&#125;func main() &#123;  programming := work&#123;\"잡일\", 5, \"김악덕\", 100&#125;  fmt.Println(programming)  fmt.Println(programming.time)  programming.time = 100  fmt.Println(programming.time)&#125;\n1$ go run GoStructure.go &#123;잡일 5 김악덕 100&#125; 5 100\n위에 struct 를 mission, boss String 이런식으로도 쓸 수 있다.\n메소드는 어떻게 구현할 수 있을까?\n1234567func (total *work) getTotal() int &#123;  return total.time * total.salary&#125;func main() &#123;  fmt.Println(programming.getTotal())&#125;\n이런식으로 할 수 있다.\n특별한 건 여기서, work 는 구조체를 total이라는 변수명을 사용해서 (리시버 변수) 접근하고 있고, work에 *을 붙였다는 것아다.\n*은 모두가 예상한 바로 그것이다. 포인터.\n*이 지정되지 않으면(주소값을 할당해주지 않으면) 저 메소드는 구조체 내부의 값에 영향을 미치지 않게 된다.\n암튼 쓰는건 여타 언어와 크게 다를 바는 없다.\n다만 클래스가 없기 때문에 상속이라는 개념도 없다.\n그렇다면 GoLang에서 상속을 흉내내려면 어떻게 해야할까?\n바로 그것은 임베딩이다.\n1234567891011121314151617181920212223242526272829303132333435package main import \"fmt\"type work struct &#123;  mission string  time int  boss string  salary int&#125;func (total *work) getTotal() int &#123;  return total.time * total.salary&#125;func (total *hardWork) getTotal() int &#123;  return total.w.time * total.w.salary - 100000&#125;type hardWork struct &#123;  w work  level int  yaguen bool&#125;func main() &#123;  var spring hardWork  spring.w.boss = \"김악마\"  spring.w.time = 100  spring.w.mission = \"의미없이 스프링 문서를 보고 있을 것\"  spring.w.salary = -100  spring.level = 10000  spring.yaguen = true  fmt.Println(spring)  fmt.Println(spring.w.getTotal())  fmt.Println(spring.getTotal())&#125;\n대충 보면 느낌이 올 것이다. hardwork는 work를 임베딩 하고 있으며, 변수명을 w 로 work를 가지고 있다. 변수명은 생략가능하다.\n그리고 명칭이 같은 메소드를 오버라이딩하고 있는데, 이 두개에 대한 동작이 다른 것을 볼 수 있다.\n","dateCreated":"2018-06-01T00:00:00+09:00","dateModified":"2018-06-01T10:57:05+09:00","datePublished":"2018-06-01T00:00:00+09:00","description":"Golang에는 클래스가 없는 대신, 아래와 같은 구조체가 존재한다.\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n\n\npackage main import \"fmt\"\n\ntype work struct {\n  mission string\n  time int\n  boss string\n  salary int\n}\n\nfunc main() {\n  programming := work{\"잡일\", 5, \"김악덕\", 100}\n  fmt.Println(programming)\n  fmt.Println(programming.time)","headline":"GoLang) 구조체와 임베딩","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/06/01/golang-structure-embedding/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/06/01/golang-structure-embedding/","keywords":"development, GO"}</script>
     <meta name="description" content="Golang에는 클래스가 없는 대신, 아래와 같은 구조체가 존재한다.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16   package main import &quot;fmt&quot;  type work struct {   mission string   time int   boss string   salary int }  func main() {">
-<meta name="keywords" content="development,GO">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="GoLang) 구조체와 임베딩">
 <meta property="og:url" content="https://www.yceffort.kr/2018/06/01/golang-structure-embedding/index.html">
 <meta property="og:site_name" content="yceffort">
 <meta property="og:description" content="Golang에는 클래스가 없는 대신, 아래와 같은 구조체가 존재한다.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16   package main import &quot;fmt&quot;  type work struct {   mission string   time int   boss string   salary int }  func main() {">
-<meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-06-01T01:57:05.000Z">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-05-31T15:00:00.000Z">
+<meta property="article:modified_time" content="2018-06-01T01:57:05.000Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="development">
+<meta property="article:tag" content="GO">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="GoLang) 구조체와 임베딩">
-<meta name="twitter:description" content="Golang에는 클래스가 없는 대신, 아래와 같은 구조체가 존재한다.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16   package main import &quot;fmt&quot;  type work struct {   mission string   time int   boss string   salary int }  func main() {">
     
     
     
@@ -58,7 +59,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -85,7 +88,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -124,8 +127,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -293,7 +295,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/GO/">GO</a> <a class="tag tag--primary tag--small t-link" href="/tags/development/">development</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/GO/" rel="tag">GO</a> <a class="tag tag--primary tag--small t-link" href="/tags/development/" rel="tag">development</a>
 
             </div>
         
@@ -346,12 +348,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -366,10 +362,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -433,12 +425,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -577,8 +563,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -596,8 +582,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -653,8 +639,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -672,8 +658,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -733,7 +719,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -743,26 +729,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2018/06/01/golang-structure-embedding/';
-                 
-                    this.page.identifier = '2018/06/01/golang-structure-embedding/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

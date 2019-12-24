@@ -34,19 +34,21 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"블록체인 합의 프로토콜의 종류\n블록체인이 세상을 어떻게 변화시킬 것 인지에 대한 논의가 많아지고 있지만, 이를 글로벌한 규모로 확대하기 위해서는 공유된 공공 원장이 효율적이며 안전한 합의 알고리즘을 필요로 한다.\n일례로 비트코인의 작업증명과 같은 합의 알고리즘은 두 가지 일을 한다. 하나는 블록체인의 다음 블록이 올바른 유일한 버전임을 보장하고, 다른 하나는 외부에서 함부로 침입하지 못하게 하는 역할을 하는 것이다. 작업 증명에서 채굴자들은, 매우 어려운 암호화 퍼즐을 해결하기 위한 경주를 통해, 체인에 다음블록을 추가하고 이를 통해 발굴되는 수익을 얻기 위해 노력한다. 그러나 이런 작업증명은 완벽하지 못하다.\n일반적인 비판은, 엄청난 양의 컴퓨팅 파워가 필요하고, 시간이 오래 걸리며 (10~60분), 대부분의 채굴이 전기가 저렴한 지역에서 집중되고 있다는 것이다.\n이를 해결 하기 위해, 다양한 합의 프로토콜이 등장하기 시작했다.\n¶Proof of Stake (지분 증명)\n작업 증명의 일반적인 대안으로 알려진, Proof of Stake (지분 증명) 이다. 비싼 컴퓨팅 파워로 채굴을 하는 대신, '검증자’는 시스템의 코인에 투자하게 된다. 지분 증명하에서는 코인이 생성(채굴) 되지 않는다. 지분의 증거로, 다음 블록을 만들 확률은 자신이 소유한 시스템의 코인의 양에 달려 있다. 300개를 갖고 있는 사람은, 100개를 가진 사람 보다 선택될 확률이 3배다. 지분소유자가 블록을 작성하면, 해당블록은 블록체인에 커밋된다. 이 후는 각 시스템 마다 다르다. Tendermint에서는 시스템의 모든 노드가 다수 표결에 도달 할 때까지 서명되어야 하며 (비잔틴 합의 알고리즘), 다른 시스템에서는 랜덤한 서명 그룹이 선택된다.\n\nPeerCoin (최초로 채택)\nblackcoin\nNXT\nethereum\n\n¶Proof of Stake Anonymous (익명 지분 증명)\n거래를 다른 사람이 볼 수 없도록 익명으로 만든 사용자가 보상을 받는 방식이다. 한 사용자가 거래를 요청하게 되면, 이른바 'Cloaker’들이 등장하여, 이 거래를 추적할 수 없도록 무작위로 여러 참가자를 섞는 것이다. 그리고 이에 따른 보상을 받게 된다.\n\nCloakcoin\n\n¶Delegated Proof of Stake (위임 지분 증명)\n전체 노드를 실행하고, 이득을 얻을 수 있는 '위임자’에게 투표하여 이익을 얻을 수 있는 권한을 부여받는 방식이다.\n\nBitshares\n\n¶Proof of Activity (활동 증명)\n인플레이션을 피하기 위해, 비트코인은 21m개만 생산되도록 되어 있다. 즉, 이 후에는 보상이 끝나고 비트코인 마이너들은 거래 수수료만 받게 된다.\n그러나 이것이 '공유지의 비극’으로 인한 보안 문제를 일으킬 수 있다고 추측하는 사람들도 있다. (여기를 참조하세요.) 그래서 이에 대한 대안으로 나오는 것이 Proof of Activity (활동 증명) 이다. 활동에 대한 증거로, 채굴자는 기존 작업 증명 방식으로 컴퓨팅 퍼즐을 풀면서 마이닝을 시작한다. 다만 이렇게 채굴한 블록에는 (구현에 따라 다르지만)트랜잭션이 없고, 오로지 헤더와 마이너의 보상 주소만 포함 되어 있다.\n이 시점에서 지분 증명 시스템으로 바뀌게 된다. 헤더의 정보를 기반으로 새블록에 서명하기 위해 임의의 검증자 그룹이 선택된다. 검증자가 코인이 더 많을 수록 이것이 선택 될 가능성이 더 커진다. 이 검증 이 끝나면, 본격적인 블록이 되는 것이다. 수수료는 채굴자와 검증자가 적절히 나눠 갖게 된다.\n\nDecred\n\n¶Proof of Burn (소각 증명)\n값비싼 컴퓨팅 장비에 투자하는 대신, 동전을 회수 할 수없는 주소로 보내서 ‘소각’ 하는 방식이다. 누구도 소유할 수 없는 주소로 코인을 보냄으로서, 무작위 선택 프로세스에 따라서 시스템에서 마이닝을 평생에 걸쳐 할 수 있는 권리를 얻는 것이다.\n채굴자들은 해당 코인, 또는 비트 코인과 같은 코인을 태워버림으로써 다음 블록을 채굴할 확률을 높이는 것이다. 시간이 흐를수록, 돈을 더 소각 시켜서 마이닝에 당첨될 확률을 높이기 위해 더더 코인을 태우게 된다. (이는 마이닝을 위해 컴퓨팅 장비를 사는 것과 유사하다.)\n하지만 이는 여전히 자원을 낭비하며, 단순히 더 돈을 많이 태우는 사람에게 유리하다는 이슈가 있다.\n\nslimcoin\n\n¶Proof of Capacity (Proof of storage, Proof of space) (용량 증명)\n간단히 말해, 하드드라이브 공간을 지불하는 것이다. 하드드라이브 공간이 많을 수록, 다음 블록을 채굴하고 블록 보상을 얻을 확률이 높아진다. 이 시스템 하에서는, 마이닝하기전에 알고리즘을 통해 하드드라이브에 저장할 ‘플롯’ 이라고 불리는 대규모 데이터 세트를 생성한다. 플롯이 많을 수록, 체인에서 다음 블록을 찾을 확률이 높아진다.\n\nBurstCoin\n\n¶Proof of elapsed time (경과 시간 증명)\n인텔에서 만든 자체적인 대체 합의 프로토콜이다. 이는 작업증명과 유사하지만, 전기를 적게 소비한다. 참가자는 암호화 퍼즐을 푸는 대신, SGX와 같은 신뢰실행환경 (Trusted Execution Enviroment) 내에서 작동된다. 네트워크의 참여자들은 무작위로 선택된 기간을 기다려야 하며, 가장 먼저 이 경과시간을 완료하는 첫 번째 노드가 블록에서 승리하는 것이다. 블록체인 네트워크의 각 노드는 임의의 대기시간을 생성하고, 대기 상태로 있게 된다. 먼저 꺠어난 사람, 즉 가장 짧은 경과 시간을 가진 노드가 깨어나 새로운 블록을 투입하고, 필요한 정보를 전체 네트워크에 전파한다.\n한 가지 문제점은, 블록체인은 제 3자의 신뢰를 없애기 위해 만든 건데, Intel을 믿어야 한다.\n¶Proof of Importance (중요도 증명)\n중요도 증명은 어떤 네트워크 참여자(노드) 가 블록체인에 블록을 추가할 자격이 있는지 결정하는데 사용되는 메커니즘이다. (이 프로세스를 수확이라고 한다) 블록을 수확하는 대가로, 노드는 블록 안에 있는 트랜잭션 수수료를 거둘 수 있다. 중요도 점수가 높은 어카운트는 블록을 수확할 확률이 더 높다. 중요도 계산의 적격성을 확보하기 위해, 수확자격을 얻으려면 어카운트에 최소 10,000개의 XEM(화폐단위)를 보유해야하고, 다른 사람들과 거래를 많이 할 수록 이러한 수확을 할 확률이 높아진다. 즉, 해당 코인의 경제를 적극적으로 도와주는 사람들이 (중요도가 높은 사람) 더 많은 보상을 얻는 것이다.\n\nNEM\n\n¶Proof of Stake Time (지분 시간 증명)\n지분의 양을 확인하는 대신, 지분을 가지고 있었던 시간 (특정 주소에서 보유되고 있었던 시간)을 활용하는 것이다.\n\nVericoin\n\n¶Proof of Stake Velocity (지분 속도 증명)\n얼마나 많은 지분을, 얼마나 적극적으로 사용하는지 에 따라 달려있다.\n\nReddcoin\n\n","dateCreated":"2018-07-04T00:00:00+09:00","dateModified":"2018-07-04T20:41:56+09:00","datePublished":"2018-07-04T00:00:00+09:00","description":"블록체인 합의 프로토콜의 종류\n\n블록체인이 세상을 어떻게 변화시킬 것 인지에 대한 논의가 많아지고 있지만, 이를 글로벌한 규모로 확대하기 위해서는 공유된 공공 원장이 효율적이며 안전한 합의 알고리즘을 필요로 한다.\n\n일례로 비트코인의 작업증명과 같은 합의 알고리즘은 두 가지 일을 한다. 하나는 블록체인의 다음 블록이 올바른 유일한 버전임을 보장하고, 다른 하나는 외부에서 함부로 침입하지 못하게 하는 역할을 하는 것이다. 작업 증명에서 채굴자들은, 매우 어려운 암호화 퍼즐을 해결하기 위한 경주를 통해, 체인에 다음블록을 추가하고 이를","headline":"블록체인 합의 프로토콜의 종류","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/07/04/type-of-blockchain-consensus-protocol/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/07/04/type-of-blockchain-consensus-protocol/"}</script>
-    <meta name="description" content="블록체인 합의 프로토콜의 종류  블록체인이 세상을 어떻게 변화시킬 것 인지에 대한 논의가 많아지고 있지만, 이를 글로벌한 규모로 확대하기 위해서는 공유된 공공 원장이 효율적이며 안전한 합의 알고리즘을 필요로 한다.  일례로 비트코인의 작업증명과 같은 합의 알고리즘은 두 가지 일을 한다. 하나는 블록체인의 다음 블록이 올바른 유일한 버전임을 보장하고, 다른">
-<meta name="keywords" content="programming,innovation,technology">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"블록체인 합의 프로토콜의 종류\n블록체인이 세상을 어떻게 변화시킬 것 인지에 대한 논의가 많아지고 있지만, 이를 글로벌한 규모로 확대하기 위해서는 공유된 공공 원장이 효율적이며 안전한 합의 알고리즘을 필요로 한다. \n일례로 비트코인의 작업증명과 같은 합의 알고리즘은 두 가지 일을 한다. 하나는 블록체인의 다음 블록이 올바른 유일한 버전임을 보장하고, 다른 하나는 외부에서 함부로 침입하지 못하게 하는 역할을 하는 것이다. 작업 증명에서 채굴자들은, 매우 어려운 암호화 퍼즐을 해결하기 위한 경주를 통해, 체인에 다음블록을 추가하고 이를 통해 발굴되는 수익을 얻기 위해 노력한다. 그러나 이런 작업증명은 완벽하지 못하다.\n일반적인 비판은, 엄청난 양의 컴퓨팅 파워가 필요하고, 시간이 오래 걸리며 (10~60분), 대부분의 채굴이 전기가 저렴한 지역에서 집중되고 있다는 것이다. \n이를 해결 하기 위해, 다양한 합의 프로토콜이 등장하기 시작했다.\nProof of Stake (지분 증명)작업 증명의 일반적인 대안으로 알려진, Proof of Stake (지분 증명) 이다. 비싼 컴퓨팅 파워로 채굴을 하는 대신, ‘검증자’는 시스템의 코인에 투자하게 된다. 지분 증명하에서는 코인이 생성(채굴) 되지 않는다. 지분의 증거로, 다음 블록을 만들 확률은 자신이 소유한 시스템의 코인의 양에 달려 있다. 300개를 갖고 있는 사람은, 100개를 가진 사람 보다 선택될 확률이 3배다. 지분소유자가 블록을 작성하면, 해당블록은 블록체인에 커밋된다. 이 후는 각 시스템 마다 다르다. Tendermint에서는 시스템의 모든 노드가 다수 표결에 도달 할 때까지 서명되어야 하며 (비잔틴 합의 알고리즘), 다른 시스템에서는 랜덤한 서명 그룹이 선택된다.\n\nPeerCoin (최초로 채택)\nblackcoin\nNXT\nethereum\n\nProof of Stake Anonymous (익명 지분 증명)거래를 다른 사람이 볼 수 없도록 익명으로 만든 사용자가 보상을 받는 방식이다. 한 사용자가 거래를 요청하게 되면, 이른바 ‘Cloaker’들이 등장하여, 이 거래를 추적할 수 없도록 무작위로 여러 참가자를 섞는 것이다. 그리고 이에 따른 보상을 받게 된다.\n\nCloakcoin\n\nDelegated Proof of Stake (위임 지분 증명)전체 노드를 실행하고, 이득을 얻을 수 있는 ‘위임자’에게 투표하여 이익을 얻을 수 있는 권한을 부여받는 방식이다. \n\nBitshares\n\nProof of Activity (활동 증명)인플레이션을 피하기 위해, 비트코인은 21m개만 생산되도록 되어 있다. 즉, 이 후에는 보상이 끝나고 비트코인 마이너들은 거래 수수료만 받게 된다.\n그러나 이것이 ‘공유지의 비극’으로 인한 보안 문제를 일으킬 수 있다고 추측하는 사람들도 있다. (여기를 참조하세요.) 그래서 이에 대한 대안으로 나오는 것이 Proof of Activity (활동 증명) 이다. 활동에 대한 증거로, 채굴자는 기존 작업 증명 방식으로 컴퓨팅 퍼즐을 풀면서 마이닝을 시작한다. 다만 이렇게 채굴한 블록에는 (구현에 따라 다르지만)트랜잭션이 없고, 오로지 헤더와 마이너의 보상 주소만 포함 되어 있다. \n이 시점에서 지분 증명 시스템으로 바뀌게 된다. 헤더의 정보를 기반으로 새블록에 서명하기 위해 임의의 검증자 그룹이 선택된다. 검증자가 코인이 더 많을 수록 이것이 선택 될 가능성이 더 커진다. 이 검증 이 끝나면, 본격적인 블록이 되는 것이다. 수수료는 채굴자와 검증자가 적절히 나눠 갖게 된다.\n\nDecred\n\nProof of Burn (소각 증명)값비싼 컴퓨팅 장비에 투자하는 대신, 동전을 회수 할 수없는 주소로 보내서 ‘소각’ 하는 방식이다. 누구도 소유할 수 없는 주소로 코인을 보냄으로서, 무작위 선택 프로세스에 따라서 시스템에서 마이닝을 평생에 걸쳐 할 수 있는 권리를 얻는 것이다.\n채굴자들은 해당 코인, 또는 비트 코인과 같은 코인을 태워버림으로써 다음 블록을 채굴할 확률을 높이는 것이다. 시간이 흐를수록, 돈을 더 소각 시켜서 마이닝에 당첨될 확률을 높이기 위해 더더 코인을 태우게 된다. (이는 마이닝을 위해 컴퓨팅 장비를 사는 것과 유사하다.) \n하지만 이는 여전히 자원을 낭비하며, 단순히 더 돈을 많이 태우는 사람에게 유리하다는 이슈가 있다.\n\nslimcoin\n\nProof of Capacity (Proof of storage, Proof of space) (용량 증명)간단히 말해, 하드드라이브 공간을 지불하는 것이다. 하드드라이브 공간이 많을 수록, 다음 블록을 채굴하고 블록 보상을 얻을 확률이 높아진다. 이 시스템 하에서는, 마이닝하기전에 알고리즘을 통해 하드드라이브에 저장할 ‘플롯’ 이라고 불리는 대규모 데이터 세트를 생성한다. 플롯이 많을 수록, 체인에서 다음 블록을 찾을 확률이 높아진다.\n\nBurstCoin\n\nProof of elapsed time (경과 시간 증명)인텔에서 만든 자체적인 대체 합의 프로토콜이다. 이는 작업증명과 유사하지만, 전기를 적게 소비한다. 참가자는 암호화 퍼즐을 푸는 대신, SGX와 같은 신뢰실행환경 (Trusted Execution Enviroment) 내에서 작동된다. 네트워크의 참여자들은 무작위로 선택된 기간을 기다려야 하며, 가장 먼저 이 경과시간을 완료하는 첫 번째 노드가 블록에서 승리하는 것이다. 블록체인 네트워크의 각 노드는 임의의 대기시간을 생성하고, 대기 상태로 있게 된다. 먼저 꺠어난 사람, 즉 가장 짧은 경과 시간을 가진 노드가 깨어나 새로운 블록을 투입하고, 필요한 정보를 전체 네트워크에 전파한다. \n한 가지 문제점은, 블록체인은 제 3자의 신뢰를 없애기 위해 만든 건데, Intel을 믿어야 한다.\nProof of Importance (중요도 증명)중요도 증명은 어떤 네트워크 참여자(노드) 가 블록체인에 블록을 추가할 자격이 있는지 결정하는데 사용되는 메커니즘이다. (이 프로세스를 수확이라고 한다) 블록을 수확하는 대가로, 노드는 블록 안에 있는 트랜잭션 수수료를 거둘 수 있다. 중요도 점수가 높은 어카운트는 블록을 수확할 확률이 더 높다. 중요도 계산의 적격성을 확보하기 위해, 수확자격을 얻으려면 어카운트에 최소 10,000개의 XEM(화폐단위)를 보유해야하고, 다른 사람들과 거래를 많이 할 수록 이러한 수확을 할 확률이 높아진다. 즉, 해당 코인의 경제를 적극적으로 도와주는 사람들이 (중요도가 높은 사람) 더 많은 보상을 얻는 것이다. \n\nNEM\n\nProof of Stake Time (지분 시간 증명)지분의 양을 확인하는 대신, 지분을 가지고 있었던 시간 (특정 주소에서 보유되고 있었던 시간)을 활용하는 것이다. \n\nVericoin\n\nProof of Stake Velocity (지분 속도 증명)얼마나 많은 지분을, 얼마나 적극적으로 사용하는지 에 따라 달려있다.\n\nReddcoin\n\n","dateCreated":"2018-07-04T00:00:00+09:00","dateModified":"2018-07-04T20:41:56+09:00","datePublished":"2018-07-04T00:00:00+09:00","description":"블록체인 합의 프로토콜의 종류\n\n블록체인이 세상을 어떻게 변화시킬 것 인지에 대한 논의가 많아지고 있지만, 이를 글로벌한 규모로 확대하기 위해서는 공유된 공공 원장이 효율적이며 안전한 합의 알고리즘을 필요로 한다. \n\n일례로 비트코인의 작업증명과 같은 합의 알고리즘은 두 가지 일을 한다. 하나는 블록체인의 다음 블록이 올바른 유일한 버전임을 보장하고, 다른 하나는 외부에서 함부로 침입하지 못하게 하는 역할을 하는 것이다. 작업 증명에서 채굴자들은, 매우 어려운 암호화 퍼즐을 해결하기 위한 경주를 통해, 체인에 다음블록을 추가하고 이","headline":"블록체인 합의 프로토콜의 종류","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/07/04/type-of-blockchain-consensus-protocol/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/07/04/type-of-blockchain-consensus-protocol/"}</script>
+    <meta name="description" content="블록체인 합의 프로토콜의 종류  블록체인이 세상을 어떻게 변화시킬 것 인지에 대한 논의가 많아지고 있지만, 이를 글로벌한 규모로 확대하기 위해서는 공유된 공공 원장이 효율적이며 안전한 합의 알고리즘을 필요로 한다.   일례로 비트코인의 작업증명과 같은 합의 알고리즘은 두 가지 일을 한다. 하나는 블록체인의 다음 블록이 올바른 유일한 버전임을 보장하고, 다른">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="블록체인 합의 프로토콜의 종류">
 <meta property="og:url" content="https://www.yceffort.kr/2018/07/04/type-of-blockchain-consensus-protocol/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="블록체인 합의 프로토콜의 종류  블록체인이 세상을 어떻게 변화시킬 것 인지에 대한 논의가 많아지고 있지만, 이를 글로벌한 규모로 확대하기 위해서는 공유된 공공 원장이 효율적이며 안전한 합의 알고리즘을 필요로 한다.  일례로 비트코인의 작업증명과 같은 합의 알고리즘은 두 가지 일을 한다. 하나는 블록체인의 다음 블록이 올바른 유일한 버전임을 보장하고, 다른">
-<meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-07-04T11:41:56.000Z">
+<meta property="og:description" content="블록체인 합의 프로토콜의 종류  블록체인이 세상을 어떻게 변화시킬 것 인지에 대한 논의가 많아지고 있지만, 이를 글로벌한 규모로 확대하기 위해서는 공유된 공공 원장이 효율적이며 안전한 합의 알고리즘을 필요로 한다.   일례로 비트코인의 작업증명과 같은 합의 알고리즘은 두 가지 일을 한다. 하나는 블록체인의 다음 블록이 올바른 유일한 버전임을 보장하고, 다른">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-07-03T15:00:00.000Z">
+<meta property="article:modified_time" content="2018-07-04T11:41:56.000Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="programming">
+<meta property="article:tag" content="innovation">
+<meta property="article:tag" content="technology">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="블록체인 합의 프로토콜의 종류">
-<meta name="twitter:description" content="블록체인 합의 프로토콜의 종류  블록체인이 세상을 어떻게 변화시킬 것 인지에 대한 논의가 많아지고 있지만, 이를 글로벌한 규모로 확대하기 위해서는 공유된 공공 원장이 효율적이며 안전한 합의 알고리즘을 필요로 한다.  일례로 비트코인의 작업증명과 같은 합의 알고리즘은 두 가지 일을 한다. 하나는 블록체인의 다음 블록이 올바른 유일한 버전임을 보장하고, 다른">
     
     
     
@@ -58,7 +60,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -85,7 +89,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -124,8 +128,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -262,62 +265,52 @@
     <div class="post-content markdown">
         <div class="main-content-wrap">
             <p>블록체인 합의 프로토콜의 종류</p>
-<p>블록체인이 세상을 어떻게 변화시킬 것 인지에 대한 논의가 많아지고 있지만, 이를 글로벌한 규모로 확대하기 위해서는 공유된 공공 원장이 효율적이며 안전한 합의 알고리즘을 필요로 한다.</p>
+<p>블록체인이 세상을 어떻게 변화시킬 것 인지에 대한 논의가 많아지고 있지만, 이를 글로벌한 규모로 확대하기 위해서는 공유된 공공 원장이 효율적이며 안전한 합의 알고리즘을 필요로 한다. </p>
 <p>일례로 비트코인의 작업증명과 같은 합의 알고리즘은 두 가지 일을 한다. 하나는 블록체인의 다음 블록이 올바른 유일한 버전임을 보장하고, 다른 하나는 외부에서 함부로 침입하지 못하게 하는 역할을 하는 것이다. 작업 증명에서 채굴자들은, 매우 어려운 암호화 퍼즐을 해결하기 위한 경주를 통해, 체인에 다음블록을 추가하고 이를 통해 발굴되는 수익을 얻기 위해 노력한다. 그러나 이런 작업증명은 완벽하지 못하다.</p>
-<p>일반적인 비판은, 엄청난 양의 컴퓨팅 파워가 필요하고, 시간이 오래 걸리며 (10~60분), 대부분의 채굴이 전기가 저렴한 지역에서 집중되고 있다는 것이다.</p>
+<p>일반적인 비판은, 엄청난 양의 컴퓨팅 파워가 필요하고, 시간이 오래 걸리며 (10~60분), 대부분의 채굴이 전기가 저렴한 지역에서 집중되고 있다는 것이다. </p>
 <p>이를 해결 하기 위해, 다양한 합의 프로토콜이 등장하기 시작했다.</p>
-<h2 id="proof-of-stake-지분-증명"><a class="header-anchor" href="#proof-of-stake-지분-증명">¶</a>Proof of Stake (지분 증명)</h2>
-<p>작업 증명의 일반적인 대안으로 알려진, Proof of Stake (지분 증명) 이다. 비싼 컴퓨팅 파워로 채굴을 하는 대신, '검증자’는 시스템의 코인에 투자하게 된다. 지분 증명하에서는 코인이 생성(채굴) 되지 않는다. 지분의 증거로, 다음 블록을 만들 확률은 자신이 소유한 시스템의 코인의 양에 달려 있다. 300개를 갖고 있는 사람은, 100개를 가진 사람 보다 선택될 확률이 3배다. 지분소유자가 블록을 작성하면, 해당블록은 블록체인에 커밋된다. 이 후는 각 시스템 마다 다르다. Tendermint에서는 시스템의 모든 노드가 다수 표결에 도달 할 때까지 서명되어야 하며 (비잔틴 합의 알고리즘), 다른 시스템에서는 랜덤한 서명 그룹이 선택된다.</p>
+<h2 id="Proof-of-Stake-지분-증명"><a href="#Proof-of-Stake-지분-증명" class="headerlink" title="Proof of Stake (지분 증명)"></a>Proof of Stake (지분 증명)</h2><p>작업 증명의 일반적인 대안으로 알려진, Proof of Stake (지분 증명) 이다. 비싼 컴퓨팅 파워로 채굴을 하는 대신, ‘검증자’는 시스템의 코인에 투자하게 된다. 지분 증명하에서는 코인이 생성(채굴) 되지 않는다. 지분의 증거로, 다음 블록을 만들 확률은 자신이 소유한 시스템의 코인의 양에 달려 있다. 300개를 갖고 있는 사람은, 100개를 가진 사람 보다 선택될 확률이 3배다. 지분소유자가 블록을 작성하면, 해당블록은 블록체인에 커밋된다. 이 후는 각 시스템 마다 다르다. Tendermint에서는 시스템의 모든 노드가 다수 표결에 도달 할 때까지 서명되어야 하며 (비잔틴 합의 알고리즘), 다른 시스템에서는 랜덤한 서명 그룹이 선택된다.</p>
 <ul>
 <li><a href="https://peercoin.net/" target="_blank" rel="noopener">PeerCoin</a> (최초로 채택)</li>
 <li><a href="https://blackcoin.org/" target="_blank" rel="noopener">blackcoin</a></li>
 <li><a href="https://nxtplatform.org/" target="_blank" rel="noopener">NXT</a></li>
 <li><a href="https://ethereum.org/" target="_blank" rel="noopener">ethereum</a></li>
 </ul>
-<h2 id="proof-of-stake-anonymous-익명-지분-증명"><a class="header-anchor" href="#proof-of-stake-anonymous-익명-지분-증명">¶</a>Proof of Stake Anonymous (익명 지분 증명)</h2>
-<p>거래를 다른 사람이 볼 수 없도록 익명으로 만든 사용자가 보상을 받는 방식이다. 한 사용자가 거래를 요청하게 되면, 이른바 'Cloaker’들이 등장하여, 이 거래를 추적할 수 없도록 무작위로 여러 참가자를 섞는 것이다. 그리고 이에 따른 보상을 받게 된다.</p>
+<h2 id="Proof-of-Stake-Anonymous-익명-지분-증명"><a href="#Proof-of-Stake-Anonymous-익명-지분-증명" class="headerlink" title="Proof of Stake Anonymous (익명 지분 증명)"></a>Proof of Stake Anonymous (익명 지분 증명)</h2><p>거래를 다른 사람이 볼 수 없도록 익명으로 만든 사용자가 보상을 받는 방식이다. 한 사용자가 거래를 요청하게 되면, 이른바 ‘Cloaker’들이 등장하여, 이 거래를 추적할 수 없도록 무작위로 여러 참가자를 섞는 것이다. 그리고 이에 따른 보상을 받게 된다.</p>
 <ul>
 <li><a href="https://www.cloakcoin.com/" target="_blank" rel="noopener">Cloakcoin</a></li>
 </ul>
-<h2 id="delegated-proof-of-stake-위임-지분-증명"><a class="header-anchor" href="#delegated-proof-of-stake-위임-지분-증명">¶</a>Delegated Proof of Stake (위임 지분 증명)</h2>
-<p>전체 노드를 실행하고, 이득을 얻을 수 있는 '위임자’에게 투표하여 이익을 얻을 수 있는 권한을 부여받는 방식이다.</p>
+<h2 id="Delegated-Proof-of-Stake-위임-지분-증명"><a href="#Delegated-Proof-of-Stake-위임-지분-증명" class="headerlink" title="Delegated Proof of Stake (위임 지분 증명)"></a>Delegated Proof of Stake (위임 지분 증명)</h2><p>전체 노드를 실행하고, 이득을 얻을 수 있는 ‘위임자’에게 투표하여 이익을 얻을 수 있는 권한을 부여받는 방식이다. </p>
 <ul>
 <li><a href="https://bitshares.org/" target="_blank" rel="noopener">Bitshares</a></li>
 </ul>
-<h2 id="proof-of-activity-활동-증명"><a class="header-anchor" href="#proof-of-activity-활동-증명">¶</a>Proof of Activity (활동 증명)</h2>
-<p>인플레이션을 피하기 위해, 비트코인은 21m개만 생산되도록 되어 있다. 즉, 이 후에는 보상이 끝나고 비트코인 마이너들은 거래 수수료만 받게 된다.</p>
-<p>그러나 이것이 '공유지의 비극’으로 인한 보안 문제를 일으킬 수 있다고 추측하는 사람들도 있다. (<a href="https://yceffort.github.io/2018/06/27/Instability-of-Bitcoin-Without-the-Block-Reward.html" target="_blank" rel="noopener">여기</a>를 참조하세요.) 그래서 이에 대한 대안으로 나오는 것이 Proof of Activity (활동 증명) 이다. 활동에 대한 증거로, 채굴자는 기존 작업 증명 방식으로 컴퓨팅 퍼즐을 풀면서 마이닝을 시작한다. 다만 이렇게 채굴한 블록에는 (구현에 따라 다르지만)트랜잭션이 없고, 오로지 헤더와 마이너의 보상 주소만 포함 되어 있다.</p>
+<h2 id="Proof-of-Activity-활동-증명"><a href="#Proof-of-Activity-활동-증명" class="headerlink" title="Proof of Activity (활동 증명)"></a>Proof of Activity (활동 증명)</h2><p>인플레이션을 피하기 위해, 비트코인은 21m개만 생산되도록 되어 있다. 즉, 이 후에는 보상이 끝나고 비트코인 마이너들은 거래 수수료만 받게 된다.</p>
+<p>그러나 이것이 ‘공유지의 비극’으로 인한 보안 문제를 일으킬 수 있다고 추측하는 사람들도 있다. (<a href="https://yceffort.github.io/2018/06/27/Instability-of-Bitcoin-Without-the-Block-Reward.html" target="_blank" rel="noopener">여기</a>를 참조하세요.) 그래서 이에 대한 대안으로 나오는 것이 Proof of Activity (활동 증명) 이다. 활동에 대한 증거로, 채굴자는 기존 작업 증명 방식으로 컴퓨팅 퍼즐을 풀면서 마이닝을 시작한다. 다만 이렇게 채굴한 블록에는 (구현에 따라 다르지만)트랜잭션이 없고, 오로지 헤더와 마이너의 보상 주소만 포함 되어 있다. </p>
 <p>이 시점에서 지분 증명 시스템으로 바뀌게 된다. 헤더의 정보를 기반으로 새블록에 서명하기 위해 임의의 검증자 그룹이 선택된다. 검증자가 코인이 더 많을 수록 이것이 선택 될 가능성이 더 커진다. 이 검증 이 끝나면, 본격적인 블록이 되는 것이다. 수수료는 채굴자와 검증자가 적절히 나눠 갖게 된다.</p>
 <ul>
 <li><a href="https://www.decred.org/" target="_blank" rel="noopener">Decred</a></li>
 </ul>
-<h2 id="proof-of-burn-소각-증명"><a class="header-anchor" href="#proof-of-burn-소각-증명">¶</a>Proof of Burn (소각 증명)</h2>
-<p>값비싼 컴퓨팅 장비에 투자하는 대신, 동전을 회수 할 수없는 주소로 보내서 ‘소각’ 하는 방식이다. 누구도 소유할 수 없는 주소로 코인을 보냄으로서, 무작위 선택 프로세스에 따라서 시스템에서 마이닝을 평생에 걸쳐 할 수 있는 권리를 얻는 것이다.</p>
-<p>채굴자들은 해당 코인, 또는 비트 코인과 같은 코인을 태워버림으로써 다음 블록을 채굴할 확률을 높이는 것이다. 시간이 흐를수록, 돈을 더 소각 시켜서 마이닝에 당첨될 확률을 높이기 위해 더더 코인을 태우게 된다. (이는 마이닝을 위해 컴퓨팅 장비를 사는 것과 유사하다.)</p>
+<h2 id="Proof-of-Burn-소각-증명"><a href="#Proof-of-Burn-소각-증명" class="headerlink" title="Proof of Burn (소각 증명)"></a>Proof of Burn (소각 증명)</h2><p>값비싼 컴퓨팅 장비에 투자하는 대신, 동전을 회수 할 수없는 주소로 보내서 ‘소각’ 하는 방식이다. 누구도 소유할 수 없는 주소로 코인을 보냄으로서, 무작위 선택 프로세스에 따라서 시스템에서 마이닝을 평생에 걸쳐 할 수 있는 권리를 얻는 것이다.</p>
+<p>채굴자들은 해당 코인, 또는 비트 코인과 같은 코인을 태워버림으로써 다음 블록을 채굴할 확률을 높이는 것이다. 시간이 흐를수록, 돈을 더 소각 시켜서 마이닝에 당첨될 확률을 높이기 위해 더더 코인을 태우게 된다. (이는 마이닝을 위해 컴퓨팅 장비를 사는 것과 유사하다.) </p>
 <p>하지만 이는 여전히 자원을 낭비하며, 단순히 더 돈을 많이 태우는 사람에게 유리하다는 이슈가 있다.</p>
 <ul>
 <li><a href="http://slimco.in/" target="_blank" rel="noopener">slimcoin</a></li>
 </ul>
-<h2 id="proof-of-capacity-proof-of-storage-proof-of-space-용량-증명"><a class="header-anchor" href="#proof-of-capacity-proof-of-storage-proof-of-space-용량-증명">¶</a>Proof of Capacity (Proof of storage, Proof of space) (용량 증명)</h2>
-<p>간단히 말해, 하드드라이브 공간을 지불하는 것이다. 하드드라이브 공간이 많을 수록, 다음 블록을 채굴하고 블록 보상을 얻을 확률이 높아진다. 이 시스템 하에서는, 마이닝하기전에 알고리즘을 통해 하드드라이브에 저장할 ‘플롯’ 이라고 불리는 대규모 데이터 세트를 생성한다. 플롯이 많을 수록, 체인에서 다음 블록을 찾을 확률이 높아진다.</p>
+<h2 id="Proof-of-Capacity-Proof-of-storage-Proof-of-space-용량-증명"><a href="#Proof-of-Capacity-Proof-of-storage-Proof-of-space-용량-증명" class="headerlink" title="Proof of Capacity (Proof of storage, Proof of space) (용량 증명)"></a>Proof of Capacity (Proof of storage, Proof of space) (용량 증명)</h2><p>간단히 말해, 하드드라이브 공간을 지불하는 것이다. 하드드라이브 공간이 많을 수록, 다음 블록을 채굴하고 블록 보상을 얻을 확률이 높아진다. 이 시스템 하에서는, 마이닝하기전에 알고리즘을 통해 하드드라이브에 저장할 ‘플롯’ 이라고 불리는 대규모 데이터 세트를 생성한다. 플롯이 많을 수록, 체인에서 다음 블록을 찾을 확률이 높아진다.</p>
 <ul>
 <li><a href="https://www.burst-coin.org/" target="_blank" rel="noopener">BurstCoin</a></li>
 </ul>
-<h2 id="proof-of-elapsed-time-경과-시간-증명"><a class="header-anchor" href="#proof-of-elapsed-time-경과-시간-증명">¶</a>Proof of elapsed time (경과 시간 증명)</h2>
-<p>인텔에서 만든 자체적인 대체 합의 프로토콜이다. 이는 작업증명과 유사하지만, 전기를 적게 소비한다. 참가자는 암호화 퍼즐을 푸는 대신, <a href="https://software.intel.com/en-us/sgx" target="_blank" rel="noopener">SGX</a>와 같은 <a href="http://www.tta.or.kr/data/weeklyNoticeView.jsp?pk_num=5522" target="_blank" rel="noopener">신뢰실행환경 (Trusted Execution Enviroment)</a> 내에서 작동된다. 네트워크의 참여자들은 무작위로 선택된 기간을 기다려야 하며, 가장 먼저 이 경과시간을 완료하는 첫 번째 노드가 블록에서 승리하는 것이다. 블록체인 네트워크의 각 노드는 임의의 대기시간을 생성하고, 대기 상태로 있게 된다. 먼저 꺠어난 사람, 즉 가장 짧은 경과 시간을 가진 노드가 깨어나 새로운 블록을 투입하고, 필요한 정보를 전체 네트워크에 전파한다.</p>
+<h2 id="Proof-of-elapsed-time-경과-시간-증명"><a href="#Proof-of-elapsed-time-경과-시간-증명" class="headerlink" title="Proof of elapsed time (경과 시간 증명)"></a>Proof of elapsed time (경과 시간 증명)</h2><p>인텔에서 만든 자체적인 대체 합의 프로토콜이다. 이는 작업증명과 유사하지만, 전기를 적게 소비한다. 참가자는 암호화 퍼즐을 푸는 대신, <a href="https://software.intel.com/en-us/sgx" target="_blank" rel="noopener">SGX</a>와 같은 <a href="http://www.tta.or.kr/data/weeklyNoticeView.jsp?pk_num=5522" target="_blank" rel="noopener">신뢰실행환경 (Trusted Execution Enviroment)</a> 내에서 작동된다. 네트워크의 참여자들은 무작위로 선택된 기간을 기다려야 하며, 가장 먼저 이 경과시간을 완료하는 첫 번째 노드가 블록에서 승리하는 것이다. 블록체인 네트워크의 각 노드는 임의의 대기시간을 생성하고, 대기 상태로 있게 된다. 먼저 꺠어난 사람, 즉 가장 짧은 경과 시간을 가진 노드가 깨어나 새로운 블록을 투입하고, 필요한 정보를 전체 네트워크에 전파한다. </p>
 <p>한 가지 문제점은, 블록체인은 제 3자의 신뢰를 없애기 위해 만든 건데, Intel을 믿어야 한다.</p>
-<h2 id="proof-of-importance-중요도-증명"><a class="header-anchor" href="#proof-of-importance-중요도-증명">¶</a>Proof of Importance (중요도 증명)</h2>
-<p>중요도 증명은 어떤 네트워크 참여자(노드) 가 블록체인에 블록을 추가할 자격이 있는지 결정하는데 사용되는 메커니즘이다. (이 프로세스를 수확이라고 한다) 블록을 수확하는 대가로, 노드는 블록 안에 있는 트랜잭션 수수료를 거둘 수 있다. 중요도 점수가 높은 어카운트는 블록을 수확할 확률이 더 높다. 중요도 계산의 적격성을 확보하기 위해, 수확자격을 얻으려면 어카운트에 최소 10,000개의 XEM(화폐단위)를 보유해야하고, 다른 사람들과 거래를 많이 할 수록 이러한 수확을 할 확률이 높아진다. 즉, 해당 코인의 경제를 적극적으로 도와주는 사람들이 (중요도가 높은 사람) 더 많은 보상을 얻는 것이다.</p>
+<h2 id="Proof-of-Importance-중요도-증명"><a href="#Proof-of-Importance-중요도-증명" class="headerlink" title="Proof of Importance (중요도 증명)"></a>Proof of Importance (중요도 증명)</h2><p>중요도 증명은 어떤 네트워크 참여자(노드) 가 블록체인에 블록을 추가할 자격이 있는지 결정하는데 사용되는 메커니즘이다. (이 프로세스를 수확이라고 한다) 블록을 수확하는 대가로, 노드는 블록 안에 있는 트랜잭션 수수료를 거둘 수 있다. 중요도 점수가 높은 어카운트는 블록을 수확할 확률이 더 높다. 중요도 계산의 적격성을 확보하기 위해, 수확자격을 얻으려면 어카운트에 최소 10,000개의 XEM(화폐단위)를 보유해야하고, 다른 사람들과 거래를 많이 할 수록 이러한 수확을 할 확률이 높아진다. 즉, 해당 코인의 경제를 적극적으로 도와주는 사람들이 (중요도가 높은 사람) 더 많은 보상을 얻는 것이다. </p>
 <ul>
 <li><a href="https://nem.io/" target="_blank" rel="noopener">NEM</a></li>
 </ul>
-<h2 id="proof-of-stake-time-지분-시간-증명"><a class="header-anchor" href="#proof-of-stake-time-지분-시간-증명">¶</a>Proof of Stake Time (지분 시간 증명)</h2>
-<p>지분의 양을 확인하는 대신, 지분을 가지고 있었던 시간 (특정 주소에서 보유되고 있었던 시간)을 활용하는 것이다.</p>
+<h2 id="Proof-of-Stake-Time-지분-시간-증명"><a href="#Proof-of-Stake-Time-지분-시간-증명" class="headerlink" title="Proof of Stake Time (지분 시간 증명)"></a>Proof of Stake Time (지분 시간 증명)</h2><p>지분의 양을 확인하는 대신, 지분을 가지고 있었던 시간 (특정 주소에서 보유되고 있었던 시간)을 활용하는 것이다. </p>
 <ul>
 <li><a href="https://vericoin.info/" target="_blank" rel="noopener">Vericoin</a></li>
 </ul>
-<h2 id="proof-of-stake-velocity-지분-속도-증명"><a class="header-anchor" href="#proof-of-stake-velocity-지분-속도-증명">¶</a>Proof of Stake Velocity (지분 속도 증명)</h2>
-<p>얼마나 많은 지분을, 얼마나 적극적으로 사용하는지 에 따라 달려있다.</p>
+<h2 id="Proof-of-Stake-Velocity-지분-속도-증명"><a href="#Proof-of-Stake-Velocity-지분-속도-증명" class="headerlink" title="Proof of Stake Velocity (지분 속도 증명)"></a>Proof of Stake Velocity (지분 속도 증명)</h2><p>얼마나 많은 지분을, 얼마나 적극적으로 사용하는지 에 따라 달려있다.</p>
 <ul>
 <li><a href="https://reddcoin.com/" target="_blank" rel="noopener">Reddcoin</a></li>
 </ul>
@@ -382,12 +375,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -402,10 +389,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -469,12 +452,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -613,8 +590,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -632,8 +609,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -689,8 +666,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -708,8 +685,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -769,7 +746,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -779,26 +756,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2018/07/04/type-of-blockchain-consensus-protocol/';
-                 
-                    this.page.identifier = '2018/07/04/type-of-blockchain-consensus-protocol/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

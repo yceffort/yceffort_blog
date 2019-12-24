@@ -35,17 +35,18 @@
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
     <script type="application/ld+json">{}</script>
-    <meta name="description" content="this is the yceffort&apos;s private blog">
-<meta name="keywords" content="programming,innovation,technology">
+    <meta name="description" content="this is the yceffort&#39;s private blog">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="yceffort">
 <meta property="og:url" content="https://www.yceffort.kr/archives/page/3/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="this is the yceffort&apos;s private blog">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="this is the yceffort&#39;s private blog">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="programming">
+<meta property="article:tag" content="innovation">
+<meta property="article:tag" content="technology">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="yceffort">
-<meta name="twitter:description" content="this is the yceffort&apos;s private blog">
     
     
     
@@ -57,7 +58,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -84,7 +87,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -123,8 +126,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -244,6 +246,46 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title">
                     
+                        <a class="link-unstyled" href="/2019/08/06/experience-docker-aws-ecs/">
+                            Docker와 ECR, ECS 경험
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-08-06T08:55:52+09:00">
+	
+		    Aug 06, 2019
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    제법 규모가 있었던 전 회사에서는 특별하게 인프라에 대해 고민을 별로 할 필요가 없었다. 많은 부분이 자동화되어 있었고, 또 적당한 툴로 잘 만들어져 있었기 때문에 개발에 온전히 집중할 수 있었다. 하지만 새롭게 온 스타트업은 (당연하게도) 그런게 없으므로, 회사에서 사용하고 있는 AWS 인프라와 배포 시스템에 대해서 직접 공부할 필요가 있었다. 그 중에서도 처음 접하는 것이 docker 였다.
+
+Docker
+예전 부터 이름은 많이 들어봤지만 이런저런 이유로 (귀찮아서) 한번도 써본적이 없었다. docker는 컨테이너 기반의 오픈소
+                    
+                        <a href="/2019/08/06/experience-docker-aws-ecs/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
                         <a class="link-unstyled" href="/2019/07/22/javascript-reduce/">
                             Javascript Reduce
                         </a>
@@ -263,7 +305,7 @@
                 <div class="postShorten-excerpt">
                     멍청이라 그런지 reduce 함수가 잘 이해 되지 않았다.
 
-¶Reduce
+Reduce
 1
 2
 3
@@ -291,7 +333,7 @@ const totalSum = list.reduce(
 
 
  * currentValue: 처리할 현재 요소
- * cu
+ * cur
                     
                         <a href="/2019/07/22/javascript-reduce/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -328,7 +370,7 @@ const totalSum = list.reduce(
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶근데 사실… 컬렉션 필요없지 않을까
+                    근데 사실.. 컬렉션 필요없지 않을까
 자바스크립트에서 일반적인 Object는 key-value쌍을 끊임 없이 추가할 수 있는 형태로 구성되어 있다. 그래서 사실 컬렉션이 필요하지 않은 것 처럼 보일 수도 있다. 그러나 이따금씩 object로 부족할 때가 있다.
 
  * key 충돌 위험이 존재하는 경우
@@ -373,7 +415,7 @@ es6에 추가
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶Javascript Primitive
+                    Javascript Primitive
 기존에 자바스크립트는 6가지의 primitive가 있었다.
 
  * Object
@@ -385,7 +427,7 @@ es6에 추가
 
 그러나 es6가 들어서면서 symbol이라는 7번째 primitive가 추가되었다.
 
-¶Symbol
+Symbol
 1
 2
 
@@ -394,7 +436,7 @@ const helloSymbol = Symbol();
 const hiSymbol = Symbol();
 
 
-새로운 심볼 값을 생성했다. 이 심볼로 생성한 값은 변경할 수 없으므로 const에 할당에도 상관없다. 그리
+새로운 심볼 값을 생성했다. 이 심볼로 생성한 값은 변경할 수 없으므로 const에 할당에도 상관없다. 그리고 
                     
                         <a href="/2019/07/18/javascript-symbol/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -431,13 +473,13 @@ const hiSymbol = Symbol();
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶Javascript Event Capturing
+                    Javascript Event Capturing
  See the Pen Event Capturing by yceffort (@yceffort) on CodePen.
 
 Event Capturing은 특정 요소에서 이벤트가 발생했을 때, 최상위 요소에서 부터 이벤트를 탐색하여 특정요소까지 찾아오는 이벤트 전파 방식을 의미한다. 위 예시에서 가장 내부의 element를 클릭했을 때, 최상위 요소 부터 해당 click이벤트를 전파시켜 이벤트가 실행되는 것을 볼 수 있다.
 
-¶Javascript Event Bubbling
- See the 
+Javascript Event Bubbling
+ See the Pe
                     
                         <a href="/2019/07/17/javascript-event-bubbling-capturing/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -497,13 +539,15 @@ let obj = new Member();
 console.log(obj.getName());
 
 
-¶특징
-¶1. strict 모드에서 실행
+특징
+1. strict 모드에서 실행
 딱히 'use strict';를 선언하지 않아도, 클래스의 코드는 기본적으로 strict모드에서 실행된다. 그렇게 되면, 당연히 strict모드의 여러가지 특징을 자동으로 따르게 된다.
 
-¶2. 클래스 내 메서드 작성
+2. 클래스 내 메서드 작성
 1
 2
+3
+
                     
                         <a href="/2019/07/09/javascript-class/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -542,7 +586,7 @@ console.log(obj.getName());
                 <div class="postShorten-excerpt">
                     ES6에서부터 생긴 arrow function은 일반적으로 ()=>{}의 모양을 하고 있으며, 동작도 비슷해보인다. 하지만 이 두 선언방식은 두가지 분명한 차이를 가지고 있다.
 
-¶1. this와 arguments의 차이
+1. this와 arguments의 차이
 화살표 함수는 this와 arguments를 바인딩하지 않는다. 그 대신, 일반적인 this와 arguments와 동일한 범위를 가지고 있다.
 
 1
@@ -559,7 +603,7 @@ console.log(obj.getName());
 
 
 function createObject() {
-  console.log('Inside `createObject`:', thi
+  console.log('Inside `createObject`:', this
                     
                         <a href="/2019/07/09/difference-between-function-and-arrow/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -596,7 +640,7 @@ function createObject() {
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶Intersection Observer
+                    Intersection Observer
 Intersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여부를 확인해주는 API다. 간단히 말해 브라우저의 어떤 요소가 화면에 노출되고 있는지 안되고 있는지를 확인해주는 라이브러리라고 생각하면 될 것 같다. 이 라이브러리가 없이 엘리먼트가 노출중인지 확인하려면 어떻게 해야할까? 이전까지 주로 사용되던 API는 getBoundingClientRect다. 이 메서드는 해당 엘리먼트의 크기와 viewport에서의 상대적인 위치를 알려준다.
 
 1
@@ -606,7 +650,7 @@ Intersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여�
 5
 6
 7
-
+8
                     
                         <a href="/2019/06/24/intersection-observer/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -643,15 +687,15 @@ Intersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여�
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶사용한 오픈소스
-¶React
+                    사용한 오픈소스
+React
 자세한 설명은 생략 한다
 
-¶Nextjs
-NextJs 리액트에서 서버사이드 렌더링을 할 수 있도록 해주는 프레임워크다. angular나 react 등은 SPA라서 불편한 점이 더러 있는데, React에서 NextJS를 활용하면 react를 ssr(server side rendering)이 되도록 바꿔줄 수 있다. 그리고 자동으로 code splitting이 되고, 파일 시스템을 기준으로 라우팅이 되며, … 뭐 이런저런 장점이 있다.
+Nextjs
+NextJs 리액트에서 서버사이드 렌더링을 할 수 있도록 해주는 프레임워크다. angular나 react 등은 SPA라서 불편한 점이 더러 있는데, React에서 NextJS를 활용하면 react를 ssr(server side rendering)이 되도록 바꿔줄 수 있다. 그리고 자동으로 code splitting이 되고, 파일 시스템을 기준으로 라우팅이 되며, .. 뭐 이런저런 장점이 있다.
 
-¶koa
-express를 만든 개발자들이 따로 떨어져 나와서 만든 w
+koa
+express를 만든 개발자들이 따로 떨어져 나와서 만든 web 
                     
                         <a href="/2019/06/20/react-nextjs-koa/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -688,13 +732,13 @@ express를 만든 개발자들이 따로 떨어져 나와서 만든 w
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶고민지점
+                    고민지점
  * Global 로 관리하는 Colorset Red, Blue, Green, Black이 있다.
  * 이 색들은 각각 지정된 칼라코드가 있다
  * 그러나 때로는 그 컬러코드에 맞게 안쓰는 경우도 있다
  * 그러나 때로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.
 
-¶Union types
+Union types
 Union Type
 
 어떤 라이브러리에서 받는 파라미터의 값을 number와 string으로 제한한다고 하자. 그렇다면 코드는 아래와 같을 것이다.
@@ -711,58 +755,9 @@ Union Type
 10
 
 
-function numberOrStr
+function numberOrStrin
                     
                         <a href="/2019/06/17/typescript-type-enum-partial-record/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a class="link-unstyled" href="/2019/05/21/javascript-promise/">
-                            Javascript - Promise
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-05-21T14:42:41+09:00">
-	
-		    May 21, 2019
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    ¶Promise
-1
-
-
-new Promise(executor)
-
-
-executor는 resolve및 reject 인수를 전달할 실행함수를 의미한다. 실행함수는 resolve와 reject를 받아 즉시 실행된다. 실행함수는 보통 비동기 작업을 시작한 후, 모든 작업을 끝내면 resolve를 호출해서 Promise를 이행하고, 오류가 발생한 경우 reject를 호출해 거부된다.
-
-Promise는 다음 중 하나의 상태를 가진다.
-
- * 대기(pending): 이행되거나 거부되지 않는 초기 상태
- * 이행(fullfiled): 연산이 성공
-                    
-                        <a href="/2019/05/21/javascript-promise/" class="postShorten-excerpt_link link">
                             Continue reading
                         </a>
                         
@@ -905,8 +900,8 @@ Promise는 다음 중 하나의 상태를 가진다.
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -924,8 +919,8 @@ Promise는 다음 중 하나의 상태를 가진다.
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -981,8 +976,8 @@ Promise는 다음 중 하나의 상태를 가진다.
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -1000,8 +995,8 @@ Promise는 다음 중 하나의 상태를 가진다.
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -1061,7 +1056,7 @@ Promise는 다음 중 하나의 상태를 가진다.
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -1071,7 +1066,9 @@ Promise는 다음 중 하나의 상태를 가진다.
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
 

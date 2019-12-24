@@ -34,19 +34,19 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"¶Intersection Observer\nIntersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여부를 확인해주는 API다. 간단히 말해 브라우저의 어떤 요소가 화면에 노출되고 있는지 안되고 있는지를 확인해주는 라이브러리라고 생각하면 될 것 같다. 이 라이브러리가 없이 엘리먼트가 노출중인지 확인하려면 어떻게 해야할까? 이전까지 주로 사용되던 API는 getBoundingClientRect다. 이 메서드는 해당 엘리먼트의 크기와 viewport에서의 상대적인 위치를 알려준다.\n123456789101112131415161718function isInViewport(element) &#123;  // viewport의 height, width  const viewportHeight = document.documentElement.clientHeight;  const viewportWidth = document.documentElement.clientWidth;  // 엘리먼트의 rect  const rect = element.getBoundingClientRect();  if (!rect.width || !rect.height) &#123;    return false;  &#125;  var top = rect.top &gt;= 0 &amp;&amp; rect.top &lt; viewportHeight;  var bottom = rect.bottom &gt;= 0 &amp;&amp; rect.bottom &lt; viewportHeight;  var left = rect.left &gt;= 0 &amp;&amp; rect.left &lt; viewportWidth;  var right = rect.right &gt;= 0 &amp;&amp; rect.right &lt; viewportWidth;  return (top || bottom) &amp;&amp; (left || right);&#125;\n물론 이 함수로도 충분히 확인이 가능하다. 그러나 문제는 이 함수를 시도 때도 없이 불러야 할것이다. 문서가 처음로딩 되었을때, 스크롤 이벤트가 발생했을때, 브라우저 크키가 변경되었을때, (모바일의 경우) 화면이 회전 됐을 때 등 고려해야할 사황이 너무나도 많다. 그리고 결정적으로 getBoudingClientRect()는 호출이 될 때 마다 레이아웃을 다시 그리기 때문에 성능에 매우 부담이 간다. 참고\n¶사용법\n1234567var options = &#123;  root: document.querySelector(\"#scrollArea\"),  rootMargin: \"0px\",  threshold: 1.0&#125;;var observer = new IntersectionObserver(callback, options);\nroot: 엘리먼트 노출을 감시할 viewport 영역이다. null이 기본값이고, null이라면 브라우저 전체를 감시하게 된다.\nrootMargin: css의 margin property와 사용법이 같다. root에 margin 값을 주는 것이다.\nthreshold: number, 또는 array of number가 가능하다. 여기서 숫자는 viewport의 n%가 되었을 때 이벤트를 호출할 것인지 결정하는 것이다. array라면 해당 숫자만큼 노출될때 마다 이벤트가 발생하게 된다. 기본값은 0 으로, 단 1픽셀이라도 노출될 경우 이벤트가 발생된다.\ncallback: 타겟이 노출될때 실행되는 콜백함수다. 여기서는 두개의 값을 반환한다.\nentries: IntersectionObserverEntry의 array이며, 각각 얼마나 노출되었는지 값이 나온다.\nobserver: callback을 호출한 IntersectionObserver\n12var target = document.querySelector(\"#listItem\");observer.observe(target);\n\n\n\n  See the Pen \n  basic intersect example by yceffort (@yceffort)\n  on CodePen.\n\n\n\n콘솔창을 보면, 50% 이상 나온 엘리먼트가 찍히는 것을 볼 수 있다.\n¶활용해보기\n¶무한스크롤\n\n\n\n  See the Pen \n  Infinite Scroll by Intersection Observer by yceffort (@yceffort)\n  on CodePen.\n\n\n\n문서의 맨 마지막에 height가 10px인 #watch_end_of_document를 넣어서, 이 엘리먼트가 브라우저에 노출되게 되면 스크롤의 마지막에 온것으로 간주하고 그 때마다 새로운 아이템들을 로딩하도록 명령을 내렸다.\n¶이미지 레이지 로딩\n\n\n\n  See the Pen \n  YoVvya by yceffort (@yceffort)\n  on CodePen.\n\n\n\n콘솔 - 네트워크 창으로 가보면 이미지가 동적으로 로딩되는 것을 알 수 있다. 각각의 엘리먼트들에 observer를 걸어두고, viewport에 걸칠때 마다 backgroundImage를 줘서 이미지가 로딩되도록 하였다.\n","dateCreated":"2019-06-24T09:01:35+09:00","dateModified":"2019-08-14T11:05:21+09:00","datePublished":"2019-06-24T09:01:35+09:00","description":"¶Intersection Observer\nIntersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여부를 확인해주는 API다. 간단히 말해 브라우저의 어떤 요소가 화면에 노출되고 있는지 안되고 있는지를 확인해주는 라이브러리라고 생각하면 될 것 같다. 이 라이브러리가 없이 엘리먼트가 노출중인지 확인하려면 어떻게 해야할까? 이전까지 주로 사용되던 API는 getBoundingClientRect다. 이 메서드는 해당 엘리먼트의 크기와 viewport에서의 상대적인 위치를 알려준다.\n\n1\n2\n3\n4\n5\n6\n7\n","headline":"Intersection Observer","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/06/24/intersection-observer/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/06/24/intersection-observer/","keywords":"javascript"}</script>
-    <meta name="description" content="¶Intersection Observer Intersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여부를 확인해주는 API다. 간단히 말해 브라우저의 어떤 요소가 화면에 노출되고 있는지 안되고 있는지를 확인해주는 라이브러리라고 생각하면 될 것 같다. 이 라이브러리가 없이 엘리먼트가 노출중인지 확인하려면 어떻게 해야할까? 이전까지">
-<meta name="keywords" content="javascript">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Intersection ObserverIntersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여부를 확인해주는 API다. 간단히 말해 브라우저의 어떤 요소가 화면에 노출되고 있는지 안되고 있는지를 확인해주는 라이브러리라고 생각하면 될 것 같다. 이 라이브러리가 없이 엘리먼트가 노출중인지 확인하려면 어떻게 해야할까? 이전까지 주로 사용되던 API는 getBoundingClientRect다. 이 메서드는 해당 엘리먼트의 크기와 viewport에서의 상대적인 위치를 알려준다.\n123456789101112131415161718function isInViewport(element) &#123;  // viewport의 height, width  const viewportHeight = document.documentElement.clientHeight;  const viewportWidth = document.documentElement.clientWidth;  // 엘리먼트의 rect  const rect = element.getBoundingClientRect();  if (!rect.width || !rect.height) &#123;    return false;  &#125;  var top = rect.top &gt;= 0 &amp;&amp; rect.top &lt; viewportHeight;  var bottom = rect.bottom &gt;= 0 &amp;&amp; rect.bottom &lt; viewportHeight;  var left = rect.left &gt;= 0 &amp;&amp; rect.left &lt; viewportWidth;  var right = rect.right &gt;= 0 &amp;&amp; rect.right &lt; viewportWidth;  return (top || bottom) &amp;&amp; (left || right);&#125;\n물론 이 함수로도 충분히 확인이 가능하다. 그러나 문제는 이 함수를 시도 때도 없이 불러야 할것이다. 문서가 처음로딩 되었을때, 스크롤 이벤트가 발생했을때, 브라우저 크키가 변경되었을때, (모바일의 경우) 화면이 회전 됐을 때 등 고려해야할 사황이 너무나도 많다. 그리고 결정적으로 getBoudingClientRect()는 호출이 될 때 마다 레이아웃을 다시 그리기 때문에 성능에 매우 부담이 간다. 참고\n사용법1234567var options = &#123;  root: document.querySelector(\"#scrollArea\"),  rootMargin: \"0px\",  threshold: 1.0&#125;;var observer = new IntersectionObserver(callback, options);\nroot: 엘리먼트 노출을 감시할 viewport 영역이다. null이 기본값이고, null이라면 브라우저 전체를 감시하게 된다.\nrootMargin: css의 margin property와 사용법이 같다. root에 margin 값을 주는 것이다.\nthreshold: number, 또는 array of number가 가능하다. 여기서 숫자는 viewport의 n%가 되었을 때 이벤트를 호출할 것인지 결정하는 것이다. array라면 해당 숫자만큼 노출될때 마다 이벤트가 발생하게 된다. 기본값은 0 으로, 단 1픽셀이라도 노출될 경우 이벤트가 발생된다.\ncallback: 타겟이 노출될때 실행되는 콜백함수다. 여기서는 두개의 값을 반환한다.\nentries: IntersectionObserverEntry의 array이며, 각각 얼마나 노출되었는지 값이 나온다.\nobserver: callback을 호출한 IntersectionObserver\n12var target = document.querySelector(\"#listItem\");observer.observe(target);\n\n\n\n  See the Pen \n  basic intersect example by yceffort (@yceffort)\n  on CodePen.\n\n\n\n콘솔창을 보면, 50% 이상 나온 엘리먼트가 찍히는 것을 볼 수 있다.\n활용해보기무한스크롤\n\n\n  See the Pen \n  Infinite Scroll by Intersection Observer by yceffort (@yceffort)\n  on CodePen.\n\n\n\n문서의 맨 마지막에 height가 10px인 #watch_end_of_document를 넣어서, 이 엘리먼트가 브라우저에 노출되게 되면 스크롤의 마지막에 온것으로 간주하고 그 때마다 새로운 아이템들을 로딩하도록 명령을 내렸다.\n이미지 레이지 로딩\n\n\n  See the Pen \n  YoVvya by yceffort (@yceffort)\n  on CodePen.\n\n\n\n콘솔 - 네트워크 창으로 가보면 이미지가 동적으로 로딩되는 것을 알 수 있다. 각각의 엘리먼트들에 observer를 걸어두고, viewport에 걸칠때 마다 backgroundImage를 줘서 이미지가 로딩되도록 하였다.\n","dateCreated":"2019-06-24T09:01:35+09:00","dateModified":"2019-08-14T11:05:21+09:00","datePublished":"2019-06-24T09:01:35+09:00","description":"Intersection Observer\nIntersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여부를 확인해주는 API다. 간단히 말해 브라우저의 어떤 요소가 화면에 노출되고 있는지 안되고 있는지를 확인해주는 라이브러리라고 생각하면 될 것 같다. 이 라이브러리가 없이 엘리먼트가 노출중인지 확인하려면 어떻게 해야할까? 이전까지 주로 사용되던 API는 getBoundingClientRect다. 이 메서드는 해당 엘리먼트의 크기와 viewport에서의 상대적인 위치를 알려준다.\n\n1\n2\n3\n4\n5\n6\n7\n8","headline":"Intersection Observer","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/06/24/intersection-observer/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/06/24/intersection-observer/","keywords":"javascript"}</script>
+    <meta name="description" content="Intersection Observer Intersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여부를 확인해주는 API다. 간단히 말해 브라우저의 어떤 요소가 화면에 노출되고 있는지 안되고 있는지를 확인해주는 라이브러리라고 생각하면 될 것 같다. 이 라이브러리가 없이 엘리먼트가 노출중인지 확인하려면 어떻게 해야할까? 이전까지">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Intersection Observer">
 <meta property="og:url" content="https://www.yceffort.kr/2019/06/24/intersection-observer/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="¶Intersection Observer Intersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여부를 확인해주는 API다. 간단히 말해 브라우저의 어떤 요소가 화면에 노출되고 있는지 안되고 있는지를 확인해주는 라이브러리라고 생각하면 될 것 같다. 이 라이브러리가 없이 엘리먼트가 노출중인지 확인하려면 어떻게 해야할까? 이전까지">
-<meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-08-14T02:05:21.896Z">
+<meta property="og:description" content="Intersection Observer Intersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여부를 확인해주는 API다. 간단히 말해 브라우저의 어떤 요소가 화면에 노출되고 있는지 안되고 있는지를 확인해주는 라이브러리라고 생각하면 될 것 같다. 이 라이브러리가 없이 엘리먼트가 노출중인지 확인하려면 어떻게 해야할까? 이전까지">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-06-24T00:01:35.000Z">
+<meta property="article:modified_time" content="2019-08-14T02:05:21.896Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="javascript">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Intersection Observer">
-<meta name="twitter:description" content="¶Intersection Observer Intersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여부를 확인해주는 API다. 간단히 말해 브라우저의 어떤 요소가 화면에 노출되고 있는지 안되고 있는지를 확인해주는 라이브러리라고 생각하면 될 것 같다. 이 라이브러리가 없이 엘리먼트가 노출중인지 확인하려면 어떻게 해야할까? 이전까지">
     
     
     
@@ -58,7 +58,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -85,7 +87,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -124,8 +126,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -261,12 +262,10 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h2 id="intersection-observer"><a class="header-anchor" href="#intersection-observer">¶</a>Intersection Observer</h2>
-<p>Intersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여부를 확인해주는 API다. 간단히 말해 브라우저의 어떤 요소가 화면에 노출되고 있는지 안되고 있는지를 확인해주는 라이브러리라고 생각하면 될 것 같다. 이 라이브러리가 없이 엘리먼트가 노출중인지 확인하려면 어떻게 해야할까? 이전까지 주로 사용되던 API는 <a href="https://developer.mozilla.org/ko/docs/Web/API/Element/getBoundingClientRect" target="_blank" rel="noopener">getBoundingClientRect</a>다. 이 메서드는 해당 엘리먼트의 크기와 viewport에서의 상대적인 위치를 알려준다.</p>
+            <h2 id="Intersection-Observer"><a href="#Intersection-Observer" class="headerlink" title="Intersection Observer"></a>Intersection Observer</h2><p>Intersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여부를 확인해주는 API다. 간단히 말해 브라우저의 어떤 요소가 화면에 노출되고 있는지 안되고 있는지를 확인해주는 라이브러리라고 생각하면 될 것 같다. 이 라이브러리가 없이 엘리먼트가 노출중인지 확인하려면 어떻게 해야할까? 이전까지 주로 사용되던 API는 <a href="https://developer.mozilla.org/ko/docs/Web/API/Element/getBoundingClientRect" target="_blank" rel="noopener">getBoundingClientRect</a>다. 이 메서드는 해당 엘리먼트의 크기와 viewport에서의 상대적인 위치를 알려준다.</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">isInViewport</span>(<span class="params">element</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// viewport의 height, width</span></span><br><span class="line">  <span class="keyword">const</span> viewportHeight = <span class="built_in">document</span>.documentElement.clientHeight;</span><br><span class="line">  <span class="keyword">const</span> viewportWidth = <span class="built_in">document</span>.documentElement.clientWidth;</span><br><span class="line">  <span class="comment">// 엘리먼트의 rect</span></span><br><span class="line">  <span class="keyword">const</span> rect = element.getBoundingClientRect();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!rect.width || !rect.height) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> top = rect.top &gt;= <span class="number">0</span> &amp;&amp; rect.top &lt; viewportHeight;</span><br><span class="line">  <span class="keyword">var</span> bottom = rect.bottom &gt;= <span class="number">0</span> &amp;&amp; rect.bottom &lt; viewportHeight;</span><br><span class="line">  <span class="keyword">var</span> left = rect.left &gt;= <span class="number">0</span> &amp;&amp; rect.left &lt; viewportWidth;</span><br><span class="line">  <span class="keyword">var</span> right = rect.right &gt;= <span class="number">0</span> &amp;&amp; rect.right &lt; viewportWidth;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> (top || bottom) &amp;&amp; (left || right);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>물론 이 함수로도 충분히 확인이 가능하다. 그러나 문제는 이 함수를 시도 때도 없이 불러야 할것이다. 문서가 처음로딩 되었을때, 스크롤 이벤트가 발생했을때, 브라우저 크키가 변경되었을때, (모바일의 경우) 화면이 회전 됐을 때 등 고려해야할 사황이 너무나도 많다. 그리고 결정적으로 <code>getBoudingClientRect()</code>는 호출이 될 때 마다 레이아웃을 다시 그리기 때문에 성능에 매우 부담이 간다. <a href="https://gist.github.com/paulirish/5d52fb081b3570c81e3a" target="_blank" rel="noopener">참고</a></p>
-<h2 id="사용법"><a class="header-anchor" href="#사용법">¶</a>사용법</h2>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> options = &#123;</span><br><span class="line">  root: <span class="built_in">document</span>.querySelector(<span class="string">"#scrollArea"</span>),</span><br><span class="line">  rootMargin: <span class="string">"0px"</span>,</span><br><span class="line">  threshold: <span class="number">1.0</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> observer = <span class="keyword">new</span> IntersectionObserver(callback, options);</span><br></pre></td></tr></table></figure>
+<h2 id="사용법"><a href="#사용법" class="headerlink" title="사용법"></a>사용법</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> options = &#123;</span><br><span class="line">  root: <span class="built_in">document</span>.querySelector(<span class="string">"#scrollArea"</span>),</span><br><span class="line">  rootMargin: <span class="string">"0px"</span>,</span><br><span class="line">  threshold: <span class="number">1.0</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> observer = <span class="keyword">new</span> IntersectionObserver(callback, options);</span><br></pre></td></tr></table></figure>
 <p><code>root</code>: 엘리먼트 노출을 감시할 viewport 영역이다. null이 기본값이고, null이라면 브라우저 전체를 감시하게 된다.</p>
 <p><code>rootMargin</code>: css의 margin property와 사용법이 같다. root에 margin 값을 주는 것이다.</p>
 <p><code>threshold</code>: number, 또는 array of number가 가능하다. 여기서 숫자는 viewport의 n%가 되었을 때 이벤트를 호출할 것인지 결정하는 것이다. array라면 해당 숫자만큼 노출될때 마다 이벤트가 발생하게 된다. 기본값은 0 으로, 단 1픽셀이라도 노출될 경우 이벤트가 발생된다.</p>
@@ -284,9 +283,7 @@
 <script async src="https://static.codepen.io/assets/embed/ei.js"></script>
 
 <p>콘솔창을 보면, 50% 이상 나온 엘리먼트가 찍히는 것을 볼 수 있다.</p>
-<h2 id="활용해보기"><a class="header-anchor" href="#활용해보기">¶</a>활용해보기</h2>
-<h3 id="무한스크롤"><a class="header-anchor" href="#무한스크롤">¶</a>무한스크롤</h3>
-
+<h2 id="활용해보기"><a href="#활용해보기" class="headerlink" title="활용해보기"></a>활용해보기</h2><h3 id="무한스크롤"><a href="#무한스크롤" class="headerlink" title="무한스크롤"></a>무한스크롤</h3>
 
 <p class="codepen" data-height="500" data-theme-id="dark" data-default-tab="js,result" data-user="yceffort" data-slug-hash="VJbxNM" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="Infinite Scroll by Intersection Observer">
   <span>See the Pen <a href="https://codepen.io/yceffort/pen/VJbxNM/" target="_blank" rel="noopener">
@@ -296,8 +293,7 @@
 <script async src="https://static.codepen.io/assets/embed/ei.js"></script>
 
 <p>문서의 맨 마지막에 height가 10px인 <code>#watch_end_of_document</code>를 넣어서, 이 엘리먼트가 브라우저에 노출되게 되면 스크롤의 마지막에 온것으로 간주하고 그 때마다 새로운 아이템들을 로딩하도록 명령을 내렸다.</p>
-<h3 id="이미지-레이지-로딩"><a class="header-anchor" href="#이미지-레이지-로딩">¶</a>이미지 레이지 로딩</h3>
-
+<h3 id="이미지-레이지-로딩"><a href="#이미지-레이지-로딩" class="headerlink" title="이미지 레이지 로딩"></a>이미지 레이지 로딩</h3>
 
 <p class="codepen" data-height="500" data-theme-id="dark" data-default-tab="js,result" data-user="yceffort" data-slug-hash="YoVvya" style="height: 408px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="YoVvya">
   <span>See the Pen <a href="https://codepen.io/yceffort/pen/YoVvya/" target="_blank" rel="noopener">
@@ -322,7 +318,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/">javascript</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/" rel="tag">javascript</a>
 
             </div>
         
@@ -375,12 +371,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -395,10 +385,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -462,12 +448,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -606,8 +586,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -625,8 +605,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -682,8 +662,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -701,8 +681,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -762,7 +742,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -772,26 +752,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/06/24/intersection-observer/';
-                 
-                    this.page.identifier = '2019/06/24/intersection-observer/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

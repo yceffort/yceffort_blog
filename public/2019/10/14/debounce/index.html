@@ -34,19 +34,19 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"\nCreates a debounced function that delays invoking func until after wait milliseconds have elapsed since the last time the debounced function was invoked. The debounced function comes with a cancel method to cancel delayed func invocations and a flush method to immediately invoke them. Provide options to indicate whether func should be invoked on the leading and/or trailing edge of the wait timeout. The func is invoked with the last arguments provided to the debounced function. Subsequent calls to the debounced function return the result of the last func invocation.\n\n출처\n디바운스는 과다한 이벤트 로직이 실행되는 것을 방지하는 함수로, 호출이 반복되는 동안에는 반복해서 로직이 실행되는 것을 막고, 설정한 시간이 지나고 나서야 로직이 실행하게 하는 함수다.\n123456789101112export function debounce&lt;Params extends any[]&gt;(  func: (...args: Params) =&gt; any,  timeout: number): (...args: Params) =&gt; void &#123;  let timer: NodeJS.Timeout;  return (...args: Params) =&gt; &#123;    clearTimeout(timer);    timer = setTimeout(() =&gt; &#123;      func(...args);    &#125;, timeout);  &#125;;&#125;\n즉, 반복되는 이벤트가 계속해서 실행될 때, 매번 그 이벤트를 실행하는 것이 아니라, timeout 만큼의 시간이 흐른뒤에, 이전의 이벤트를 무시하고 이벤트 하나만 실행하는 것이다.\n","dateCreated":"2019-10-14T09:17:00+09:00","dateModified":"2019-12-18T14:23:29+09:00","datePublished":"2019-10-14T09:17:00+09:00","description":"Creates a debounced function that delays invoking func until after wait milliseconds have elapsed since the last time the debounced function was invoked. The debounced function comes with a cancel method to cancel delayed func invocations and a flush method to immediately invoke them. Provide option","headline":"typescript debounce","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/10/14/debounce/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/10/14/debounce/","keywords":"typescript"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"\nCreates a debounced function that delays invoking func until after wait milliseconds have elapsed since the last time the debounced function was invoked. The debounced function comes with a cancel method to cancel delayed func invocations and a flush method to immediately invoke them. Provide options to indicate whether func should be invoked on the leading and/or trailing edge of the wait timeout. The func is invoked with the last arguments provided to the debounced function. Subsequent calls to the debounced function return the result of the last func invocation.\n\n출처\n디바운스는 과다한 이벤트 로직이 실행되는 것을 방지하는 함수로, 호출이 반복되는 동안에는 반복해서 로직이 실행되는 것을 막고, 설정한 시간이 지나고 나서야 로직이 실행하게 하는 함수다. \n123456789101112export function debounce&lt;Params extends any[]&gt;(  func: (...args: Params) =&gt; any,  timeout: number): (...args: Params) =&gt; void &#123;  let timer: NodeJS.Timeout;  return (...args: Params) =&gt; &#123;    clearTimeout(timer);    timer = setTimeout(() =&gt; &#123;      func(...args);    &#125;, timeout);  &#125;;&#125;\n즉, 반복되는 이벤트가 계속해서 실행될 때, 매번 그 이벤트를 실행하는 것이 아니라, timeout 만큼의 시간이 흐른뒤에, 이전의 이벤트를 무시하고 이벤트 하나만 실행하는 것이다.\n","dateCreated":"2019-10-14T09:17:00+09:00","dateModified":"2019-12-18T14:23:29+09:00","datePublished":"2019-10-14T09:17:00+09:00","description":"Creates a debounced function that delays invoking func until after wait milliseconds have elapsed since the last time the debounced function was invoked. The debounced function comes with a cancel method to cancel delayed func invocations and a flush method to immediately invoke them. Provide option","headline":"typescript debounce","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/10/14/debounce/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/10/14/debounce/","keywords":"typescript"}</script>
     <meta name="description" content="Creates a debounced function that delays invoking func until after wait milliseconds have elapsed since the last time the debounced function was invoked. The debounced function comes with a cancel met">
-<meta name="keywords" content="typescript">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="typescript debounce">
 <meta property="og:url" content="https://www.yceffort.kr/2019/10/14/debounce/index.html">
 <meta property="og:site_name" content="yceffort">
 <meta property="og:description" content="Creates a debounced function that delays invoking func until after wait milliseconds have elapsed since the last time the debounced function was invoked. The debounced function comes with a cancel met">
-<meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-12-18T05:23:29.702Z">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-10-14T00:17:00.000Z">
+<meta property="article:modified_time" content="2019-12-18T05:23:29.702Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="typescript">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="typescript debounce">
-<meta name="twitter:description" content="Creates a debounced function that delays invoking func until after wait milliseconds have elapsed since the last time the debounced function was invoked. The debounced function comes with a cancel met">
     
     
     
@@ -58,7 +58,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -85,7 +87,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -124,8 +126,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -265,7 +266,7 @@
 <p>Creates a debounced function that delays invoking func until after wait milliseconds have elapsed since the last time the debounced function was invoked. The debounced function comes with a cancel method to cancel delayed func invocations and a flush method to immediately invoke them. Provide options to indicate whether func should be invoked on the leading and/or trailing edge of the wait timeout. The func is invoked with the last arguments provided to the debounced function. Subsequent calls to the debounced function return the result of the last func invocation.</p>
 </blockquote>
 <p><a href="https://lodash.com/docs/4.17.15#debounce" target="_blank" rel="noopener">출처</a></p>
-<p>디바운스는 과다한 이벤트 로직이 실행되는 것을 방지하는 함수로, 호출이 반복되는 동안에는 반복해서 로직이 실행되는 것을 막고, 설정한 시간이 지나고 나서야 로직이 실행하게 하는 함수다.</p>
+<p>디바운스는 과다한 이벤트 로직이 실행되는 것을 방지하는 함수로, 호출이 반복되는 동안에는 반복해서 로직이 실행되는 것을 막고, 설정한 시간이 지나고 나서야 로직이 실행하게 하는 함수다. </p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">debounce</span>&lt;<span class="title">Params</span> <span class="title">extends</span> <span class="title">any</span>[]&gt;(<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  func: (...args: Params) =&gt; <span class="built_in">any</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">  timeout: <span class="built_in">number</span></span></span></span><br><span class="line"><span class="function"><span class="params"></span>): (<span class="params">...args: Params</span>) =&gt; <span class="title">void</span> </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> timer: NodeJS.Timeout;</span><br><span class="line">  <span class="keyword">return</span> <span class="function">(<span class="params">...args: Params</span>) =&gt;</span> &#123;</span><br><span class="line">    clearTimeout(timer);</span><br><span class="line">    timer = setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">      func(...args);</span><br><span class="line">    &#125;, timeout);</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>즉, 반복되는 이벤트가 계속해서 실행될 때, 매번 그 이벤트를 실행하는 것이 아니라, timeout 만큼의 시간이 흐른뒤에, 이전의 이벤트를 무시하고 이벤트 하나만 실행하는 것이다.</p>
 
@@ -283,7 +284,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/typescript/">typescript</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/typescript/" rel="tag">typescript</a>
 
             </div>
         
@@ -336,12 +337,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -356,10 +351,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -423,12 +414,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -567,8 +552,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -586,8 +571,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -643,8 +628,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -662,8 +647,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -723,7 +708,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -733,26 +718,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/10/14/debounce/';
-                 
-                    this.page.identifier = '2019/10/14/debounce/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

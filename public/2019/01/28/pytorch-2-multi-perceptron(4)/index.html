@@ -34,15 +34,14 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"다층 퍼셉트론 마지막 예제로 이상 날씨 탐지를 진행해보자.\n2011년 1월 1일 부터 2016년 12월 31일까지 서울시의 일 평균 기온데이터를 활용해 본다. 여기에서 데이터를 받을 수 있다.\n\n12345678910111213141516171819202122import torchfrom torch.autograd import Variableimport torch.nn as nnimport torch.nn.functional as Fimport torch.optim as optimfrom torch.utils.data import DataLoader, TensorDatasetimport pandas as pdimport numpy as npfrom matplotlib import pyplot as plt%matplotlib inlinefrom google.colab import filesupload = files.upload()import iostring_csv = io.StringIO(upload['ta_20190128205219.csv'].decode('euc-kr'))data = pd.read_csv(string_csv, skiprows=[0, 1, 2, 3, 4, 5])data.head()\n\n  \n    \n      \n      날짜\n      지점\n      평균기온(℃)\n      최저기온(℃)\n      최고기온(℃)\n    \n  \n  \n    \n      0\n      2009-01-01\n      108\n      -5.8\n      -9.5\n      -2.5\n    \n    \n      1\n      2009-01-02\n      108\n      -2.8\n      -6.9\n      1.2\n    \n    \n      2\n      2009-01-03\n      108\n      -1.0\n      -5.6\n      4.0\n    \n    \n      3\n      2009-01-04\n      108\n      0.4\n      -2.8\n      4.5\n    \n    \n      4\n      2009-01-05\n      108\n      -1.6\n      -3.4\n      1.2\n    \n  \n\n123temp = data['평균기온(℃)']temp.plot()plt.show()\n\n시계열로 데이터가 보인다.\n123456train_index = round(len(temp) * 0.8)train_x = temp[:train_index]test_x = temp[train_index:]train_x = np.array(train_x)test_x = np.array(test_x)\n시계열 데이터에서는 훈련데이터를 어떻게 만들어야 할까? 위에서 본 그래프에 따르면, 우리나라는 아름다운 4계절 국가이기 때문에 파도 형태로 온도가 요동치고 있다. (ㅠㅠ) 또한 당연한 얘기지만 부드럽게 움직이는 것이아니고, 요동치고 있기 때문에 이 데이터를 그대로 사용하게 되면 overfitting 문제가 발생할 가능성이 크다.\n따라서 시계열 데이터를 다룰 때는, 일정 폭의 윈도우를 정의하고, 이 데이터를 따라 윈도우를 슬라이드 시켜 얻는 연속열을 통해서 훈련데이터로 삼아야 한다.\n\n대략 이런 느낌\n123456789101112# 윈도우 크기 (180일, 6개월)WINDOW_SIZE = 180tmp = []train_X = []for i in range(0, len(train_x) - WINDOW_SIZE):  tmp.append(train_x[i:i+WINDOW_SIZE])train_X = np.array(tmp)pd.DataFrame(train_X).head()\n\n  \n    \n      \n      0\n      1\n      2\n      3\n      4\n      5\n      6\n      7\n      8\n      9\n      ...\n      170\n      171\n      172\n      173\n      174\n      175\n      176\n      177\n      178\n      179\n    \n  \n  \n    \n      0\n      -5.8\n      -2.8\n      -1.0\n      0.4\n      -1.6\n      -2.0\n      -0.5\n      -0.9\n      -3.5\n      -7.5\n      ...\n      22.7\n      25.1\n      23.0\n      23.4\n      24.5\n      24.8\n      24.4\n      26.1\n      26.0\n      26.1\n    \n    \n      1\n      -2.8\n      -1.0\n      0.4\n      -1.6\n      -2.0\n      -0.5\n      -0.9\n      -3.5\n      -7.5\n      -8.0\n      ...\n      25.1\n      23.0\n      23.4\n      24.5\n      24.8\n      24.4\n      26.1\n      26.0\n      26.1\n      24.4\n    \n    \n      2\n      -1.0\n      0.4\n      -1.6\n      -2.0\n      -0.5\n      -0.9\n      -3.5\n      -7.5\n      -8.0\n      -7.8\n      ...\n      23.0\n      23.4\n      24.5\n      24.8\n      24.4\n      26.1\n      26.0\n      26.1\n      24.4\n      23.5\n    \n    \n      3\n      0.4\n      -1.6\n      -2.0\n      -0.5\n      -0.9\n      -3.5\n      -7.5\n      -8.0\n      -7.8\n      -5.5\n      ...\n      23.4\n      24.5\n      24.8\n      24.4\n      26.1\n      26.0\n      26.1\n      24.4\n      23.5\n      20.7\n    \n    \n      4\n      -1.6\n      -2.0\n      -0.5\n      -0.9\n      -3.5\n      -7.5\n      -8.0\n      -7.8\n      -5.5\n      -6.6\n      ...\n      24.5\n      24.8\n      24.4\n      26.1\n      26.0\n      26.1\n      24.4\n      23.5\n      20.7\n      22.5\n    \n  \n\n이제 신경망을 구성하려고 한다. 이상탐지를 위해서, 자기부호화기 (auto encoder)를 사용하려고 한다. 다시한번 자기부호화기를 설명하자면, 입력층의 데이터를 압축하여 크기를 축소하고, 그렇게 해서 축소된 정보를 바탕으로 다시 원래 데이터를 복구하는 방법이다. 즉 이 신경망의 목표는 입력층을 암호화하고 다시 바로 복호화 했을때, 이 입력을 다시 제대로 복호화 할 수 있는 파라미터를 찾는 것이다.\n\n여기서 우리가 할 것은, 입력층과 출력층은 똑같이 (180개), 그리고 중간 층 3개에서 128, 64로 압축한뒤, 다시 128개, 180개로 복호화 하는 것이다.\n123456789101112131415161718class Net(nn.Module):  def __init__(self):    super(Net, self).__init__()    self.fc1 = nn.Linear(180, 128)    self.fc2 = nn.Linear(128, 64)    self.fc3 = nn.Linear(64, 128)    self.fc4 = nn.Linear(128, 180)  def forward(self, x):    x = F.relu(self.fc1(x))    x = self.fc2(x)    x = F.relu(self.fc3(x))    x = self.fc4(x)    return x;  model = Net()\n모형학습\n123456789101112131415161718192021222324252627282930313233343536# 평균제곱 오차를 구한다.criterion = nn.MSELoss()# adam optimizeroptimizer = optim.Adam(model.parameters(), lr=0.001)for epoch in range(1000):    total_loss = 0  d = []    # 훈련 데이터를 미니 배치로 분할  for i in range(100):    # 훈련 데이터에 인덱스    index = np.random.randint(0, 1281)    # 미니 배치로 구성    d.append(train_X[index])  # numpy로 변환후 다시 Variable로  d = np.array(d, dtype='float32')  d = Variable(torch.from_numpy(d))    optimizer.zero_grad()  # 순전파  output = model(d)  # 오차   loss = criterion(output, d)  # 역전파  loss.backward()  # 가중치 업데이트  optimizer.step()    total_loss += loss.data.item()    if (epoch+1) % 100 == 0:    print(epoch+1, total_loss)\n12345678910100 9.88106632232666200 9.357300758361816300 9.327717781066895400 8.321449279785156500 7.5223541259765625600 7.002117156982422700 6.586050033569336800 6.0552496910095215900 5.2733039855957031000 5.39844274520874\n결과값과 원래 데이터를 그래프로 보자.\n1234plt.plot(d.data[0].numpy(), label='original')plt.plot(output.data[0].numpy(), label='output')plt.legend(loc='upper right')plt.show()\n\n테스트 데이터 값과 테스트 데이터에 모형을 적용하고, 출력된 값을 확인\n1234567891011121314151617tmp = []test_X = []tmp.append(test_x[0:180])tmp.append(test_x[180:360])tmp.append(test_x[360:540])tmp.append(test_x[540:720])test_X = np.array(tmp, dtype='float32')d = Variable(torch.from_numpy(test_X))output = model(d)plt.plot(test_X.flatten(), label='original')plt.plot(output.data.numpy().flatten(), label='prediction')plt.legend(loc='upper right')plt.show()\n\n12345678910111213141516test = test_X.flatten()pred = output.data.numpy().flatten()total_score = []for i in range(0, 720):  dist = (test[i] - pred[i])  score = pow(dist, 2)  total_score.append(score)  # 점수를 0과 1로 정규화  total_score = np.array(total_score)max_score = np.max(total_score)total_score = total_score / max_scoreplt.plot(total_score)plt.show()\n\n","dateCreated":"2019-01-28T00:00:00+09:00","dateModified":"2019-01-28T14:14:46+09:00","datePublished":"2019-01-28T00:00:00+09:00","description":"다층 퍼셉트론 마지막 예제로 이상 날씨 탐지를 진행해보자.\n\n2011년 1월 1일 부터 2016년 12월 31일까지 서울시의 일 평균 기온데이터를 활용해 본다. 여기에서 데이터를 받을 수 있다.\n\n\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n\n\nimport torch\nfrom torch.autograd import Variable\nimport torch.nn as nn\nimport torch.nn.functional as F\nimport torch.optim as opti","headline":"Pytorch (2-4) - 이상 날씨 탐지","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/01/28/pytorch-2-multi-perceptron(4)/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/01/28/pytorch-2-multi-perceptron(4)/","keywords":"pytorch"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"다층 퍼셉트론 마지막 예제로 이상 날씨 탐지를 진행해보자.\n2011년 1월 1일 부터 2016년 12월 31일까지 서울시의 일 평균 기온데이터를 활용해 본다. 여기에서 데이터를 받을 수 있다.\n\n12345678910111213141516171819202122import torchfrom torch.autograd import Variableimport torch.nn as nnimport torch.nn.functional as Fimport torch.optim as optimfrom torch.utils.data import DataLoader, TensorDatasetimport pandas as pdimport numpy as npfrom matplotlib import pyplot as plt%matplotlib inlinefrom google.colab import filesupload = files.upload()import iostring_csv = io.StringIO(upload['ta_20190128205219.csv'].decode('euc-kr'))data = pd.read_csv(string_csv, skiprows=[0, 1, 2, 3, 4, 5])data.head()\n\n  \n    \n      \n      날짜\n      지점\n      평균기온(℃)\n      최저기온(℃)\n      최고기온(℃)\n    \n  \n  \n    \n      0\n      2009-01-01\n      108\n      -5.8\n      -9.5\n      -2.5\n    \n    \n      1\n      2009-01-02\n      108\n      -2.8\n      -6.9\n      1.2\n    \n    \n      2\n      2009-01-03\n      108\n      -1.0\n      -5.6\n      4.0\n    \n    \n      3\n      2009-01-04\n      108\n      0.4\n      -2.8\n      4.5\n    \n    \n      4\n      2009-01-05\n      108\n      -1.6\n      -3.4\n      1.2\n    \n  \n\n\n\n123temp = data['평균기온(℃)']temp.plot()plt.show()\n\n시계열로 데이터가 보인다.\n123456train_index = round(len(temp) * 0.8)train_x = temp[:train_index]test_x = temp[train_index:]train_x = np.array(train_x)test_x = np.array(test_x)\n시계열 데이터에서는 훈련데이터를 어떻게 만들어야 할까? 위에서 본 그래프에 따르면, 우리나라는 아름다운 4계절 국가이기 때문에 파도 형태로 온도가 요동치고 있다. (ㅠㅠ) 또한 당연한 얘기지만 부드럽게 움직이는 것이아니고, 요동치고 있기 때문에 이 데이터를 그대로 사용하게 되면 overfitting 문제가 발생할 가능성이 크다.\n따라서 시계열 데이터를 다룰 때는, 일정 폭의 윈도우를 정의하고, 이 데이터를 따라 윈도우를 슬라이드 시켜 얻는 연속열을 통해서 훈련데이터로 삼아야 한다.\n\n대략 이런 느낌\n123456789101112# 윈도우 크기 (180일, 6개월)WINDOW_SIZE = 180tmp = []train_X = []for i in range(0, len(train_x) - WINDOW_SIZE):  tmp.append(train_x[i:i+WINDOW_SIZE])train_X = np.array(tmp)pd.DataFrame(train_X).head()\n\n  \n    \n      \n      0\n      1\n      2\n      3\n      4\n      5\n      6\n      7\n      8\n      9\n      ...\n      170\n      171\n      172\n      173\n      174\n      175\n      176\n      177\n      178\n      179\n    \n  \n  \n    \n      0\n      -5.8\n      -2.8\n      -1.0\n      0.4\n      -1.6\n      -2.0\n      -0.5\n      -0.9\n      -3.5\n      -7.5\n      ...\n      22.7\n      25.1\n      23.0\n      23.4\n      24.5\n      24.8\n      24.4\n      26.1\n      26.0\n      26.1\n    \n    \n      1\n      -2.8\n      -1.0\n      0.4\n      -1.6\n      -2.0\n      -0.5\n      -0.9\n      -3.5\n      -7.5\n      -8.0\n      ...\n      25.1\n      23.0\n      23.4\n      24.5\n      24.8\n      24.4\n      26.1\n      26.0\n      26.1\n      24.4\n    \n    \n      2\n      -1.0\n      0.4\n      -1.6\n      -2.0\n      -0.5\n      -0.9\n      -3.5\n      -7.5\n      -8.0\n      -7.8\n      ...\n      23.0\n      23.4\n      24.5\n      24.8\n      24.4\n      26.1\n      26.0\n      26.1\n      24.4\n      23.5\n    \n    \n      3\n      0.4\n      -1.6\n      -2.0\n      -0.5\n      -0.9\n      -3.5\n      -7.5\n      -8.0\n      -7.8\n      -5.5\n      ...\n      23.4\n      24.5\n      24.8\n      24.4\n      26.1\n      26.0\n      26.1\n      24.4\n      23.5\n      20.7\n    \n    \n      4\n      -1.6\n      -2.0\n      -0.5\n      -0.9\n      -3.5\n      -7.5\n      -8.0\n      -7.8\n      -5.5\n      -6.6\n      ...\n      24.5\n      24.8\n      24.4\n      26.1\n      26.0\n      26.1\n      24.4\n      23.5\n      20.7\n      22.5\n    \n  \n\n\n이제 신경망을 구성하려고 한다. 이상탐지를 위해서, 자기부호화기 (auto encoder)를 사용하려고 한다. 다시한번 자기부호화기를 설명하자면, 입력층의 데이터를 압축하여 크기를 축소하고, 그렇게 해서 축소된 정보를 바탕으로 다시 원래 데이터를 복구하는 방법이다. 즉 이 신경망의 목표는 입력층을 암호화하고 다시 바로 복호화 했을때, 이 입력을 다시 제대로 복호화 할 수 있는 파라미터를 찾는 것이다.\n\n여기서 우리가 할 것은, 입력층과 출력층은 똑같이 (180개), 그리고 중간 층 3개에서 128, 64로 압축한뒤, 다시 128개, 180개로 복호화 하는 것이다.\n123456789101112131415161718class Net(nn.Module):  def __init__(self):    super(Net, self).__init__()    self.fc1 = nn.Linear(180, 128)    self.fc2 = nn.Linear(128, 64)    self.fc3 = nn.Linear(64, 128)    self.fc4 = nn.Linear(128, 180)  def forward(self, x):    x = F.relu(self.fc1(x))    x = self.fc2(x)    x = F.relu(self.fc3(x))    x = self.fc4(x)    return x;  model = Net()\n모형학습\n123456789101112131415161718192021222324252627282930313233343536# 평균제곱 오차를 구한다.criterion = nn.MSELoss()# adam optimizeroptimizer = optim.Adam(model.parameters(), lr=0.001)for epoch in range(1000):    total_loss = 0  d = []    # 훈련 데이터를 미니 배치로 분할  for i in range(100):    # 훈련 데이터에 인덱스    index = np.random.randint(0, 1281)    # 미니 배치로 구성    d.append(train_X[index])  # numpy로 변환후 다시 Variable로  d = np.array(d, dtype='float32')  d = Variable(torch.from_numpy(d))    optimizer.zero_grad()  # 순전파  output = model(d)  # 오차   loss = criterion(output, d)  # 역전파  loss.backward()  # 가중치 업데이트  optimizer.step()    total_loss += loss.data.item()    if (epoch+1) % 100 == 0:    print(epoch+1, total_loss)\n12345678910100 9.88106632232666200 9.357300758361816300 9.327717781066895400 8.321449279785156500 7.5223541259765625600 7.002117156982422700 6.586050033569336800 6.0552496910095215900 5.2733039855957031000 5.39844274520874\n결과값과 원래 데이터를 그래프로 보자.\n1234plt.plot(d.data[0].numpy(), label='original')plt.plot(output.data[0].numpy(), label='output')plt.legend(loc='upper right')plt.show()\n\n테스트 데이터 값과 테스트 데이터에 모형을 적용하고, 출력된 값을 확인\n1234567891011121314151617tmp = []test_X = []tmp.append(test_x[0:180])tmp.append(test_x[180:360])tmp.append(test_x[360:540])tmp.append(test_x[540:720])test_X = np.array(tmp, dtype='float32')d = Variable(torch.from_numpy(test_X))output = model(d)plt.plot(test_X.flatten(), label='original')plt.plot(output.data.numpy().flatten(), label='prediction')plt.legend(loc='upper right')plt.show()\n\n12345678910111213141516test = test_X.flatten()pred = output.data.numpy().flatten()total_score = []for i in range(0, 720):  dist = (test[i] - pred[i])  score = pow(dist, 2)  total_score.append(score)  # 점수를 0과 1로 정규화  total_score = np.array(total_score)max_score = np.max(total_score)total_score = total_score / max_scoreplt.plot(total_score)plt.show()\n\n","dateCreated":"2019-01-28T00:00:00+09:00","dateModified":"2019-01-28T14:14:46+09:00","datePublished":"2019-01-28T00:00:00+09:00","description":"다층 퍼셉트론 마지막 예제로 이상 날씨 탐지를 진행해보자.\n\n2011년 1월 1일 부터 2016년 12월 31일까지 서울시의 일 평균 기온데이터를 활용해 본다. 여기에서 데이터를 받을 수 있다.\n\n\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19\n20\n21\n22\n\n\nimport torch\nfrom torch.autograd import Variable\nimport torch.nn as nn\nimport torch.nn.functional as F\nimport torch.optim as opti","headline":"Pytorch (2-4) - 이상 날씨 탐지","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/01/28/pytorch-2-multi-perceptron(4)/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/01/28/pytorch-2-multi-perceptron(4)/","keywords":"pytorch"}</script>
     <meta name="description" content="다층 퍼셉트론 마지막 예제로 이상 날씨 탐지를 진행해보자.  2011년 1월 1일 부터 2016년 12월 31일까지 서울시의 일 평균 기온데이터를 활용해 본다. 여기에서 데이터를 받을 수 있다.    1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22   import torch from torch.autog">
-<meta name="keywords" content="pytorch">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Pytorch (2-4) - 이상 날씨 탐지">
 <meta property="og:url" content="https://www.yceffort.kr/2019/01/28/pytorch-2-multi-perceptron(4)/index.html">
 <meta property="og:site_name" content="yceffort">
 <meta property="og:description" content="다층 퍼셉트론 마지막 예제로 이상 날씨 탐지를 진행해보자.  2011년 1월 1일 부터 2016년 12월 31일까지 서울시의 일 평균 기온데이터를 활용해 본다. 여기에서 데이터를 받을 수 있다.    1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22   import torch from torch.autog">
-<meta property="og:locale" content="en">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/01/seoul-temperature.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/01/weather1.png">
 <meta property="og:image" content="https://scaleoutsoftware.github.io/TimeWindowingDotNet/images/sliding.jpg">
@@ -50,10 +49,11 @@
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/01/weather2.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/01/weather3.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/01/weather4.png">
-<meta property="og:updated_time" content="2019-01-28T05:14:46.000Z">
+<meta property="article:published_time" content="2019-01-27T15:00:00.000Z">
+<meta property="article:modified_time" content="2019-01-28T05:14:46.000Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="pytorch">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Pytorch (2-4) - 이상 날씨 탐지">
-<meta name="twitter:description" content="다층 퍼셉트론 마지막 예제로 이상 날씨 탐지를 진행해보자.  2011년 1월 1일 부터 2016년 12월 31일까지 서울시의 일 평균 기온데이터를 활용해 본다. 여기에서 데이터를 받을 수 있다.    1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22   import torch from torch.autog">
 <meta name="twitter:image" content="https://www.yceffort.kr/images/2019/01/seoul-temperature.png">
     
     
@@ -66,7 +66,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -93,7 +95,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -132,8 +134,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -327,6 +328,8 @@
     </tr>
   </tbody>
 </table>
+
+
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">temp = data[<span class="string">'평균기온(℃)'</span>]</span><br><span class="line">temp.plot()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
 <p><img src="/images/2019/01/weather1.png" alt="weather1"></p>
 <p>시계열로 데이터가 보인다.</p>
@@ -486,6 +489,7 @@
     </tr>
   </tbody>
 </table>
+
 <p>이제 신경망을 구성하려고 한다. 이상탐지를 위해서, 자기부호화기 (auto encoder)를 사용하려고 한다. 다시한번 자기부호화기를 설명하자면, 입력층의 데이터를 압축하여 크기를 축소하고, 그렇게 해서 축소된 정보를 바탕으로 다시 원래 데이터를 복구하는 방법이다. 즉 이 신경망의 목표는 입력층을 암호화하고 다시 바로 복호화 했을때, 이 입력을 다시 제대로 복호화 할 수 있는 파라미터를 찾는 것이다.</p>
 <p><img src="https://cdn-images-1.medium.com/max/1600/1*44eDEuZBEsmG_TCAKRI3Kw@2x.png" alt="auto-encoder"></p>
 <p>여기서 우리가 할 것은, 입력층과 출력층은 똑같이 (180개), 그리고 중간 층 3개에서 128, 64로 압축한뒤, 다시 128개, 180개로 복호화 하는 것이다.</p>
@@ -516,7 +520,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/">pytorch</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/" rel="tag">pytorch</a>
 
             </div>
         
@@ -536,7 +540,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/01/27/pytorch-2-multi-perceptron(1)/" data-tooltip="Pytorch (2-1) - 다층 퍼셉트론" aria-label="NEXT: Pytorch (2-1) - 다층 퍼셉트론">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/01/27/pytorch-1-perceptron-nerual-network/" data-tooltip="Pytorch (1) - 퍼셉트론 알고리즘과 신경망 알고리즘" aria-label="NEXT: Pytorch (1) - 퍼셉트론 알고리즘과 신경망 알고리즘">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -569,12 +573,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -589,10 +587,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -624,7 +618,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/01/27/pytorch-2-multi-perceptron(1)/" data-tooltip="Pytorch (2-1) - 다층 퍼셉트론" aria-label="NEXT: Pytorch (2-1) - 다층 퍼셉트론">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/01/27/pytorch-1-perceptron-nerual-network/" data-tooltip="Pytorch (1) - 퍼셉트론 알고리즘과 신경망 알고리즘" aria-label="NEXT: Pytorch (1) - 퍼셉트론 알고리즘과 신경망 알고리즘">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -656,12 +650,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -800,8 +788,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -819,8 +807,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -876,8 +864,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -895,8 +883,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -956,7 +944,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -966,26 +954,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/01/28/pytorch-2-multi-perceptron(4)/';
-                 
-                    this.page.identifier = '2019/01/28/pytorch-2-multi-perceptron(4)/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

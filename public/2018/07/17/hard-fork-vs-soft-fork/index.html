@@ -34,21 +34,21 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Hard Fork vs Soft Fork\n원문\n프로그래밍 용어로, '포크’는 오픈 소스 코드 수정을 의미한다. 일반적으로 포크는 원본 소스 코드 수정을 위해 이루어지며, 두 개 버전은 각기 따로 공존하게 된다. 때로는 포크가 프로세스를 테스트 하는 데도 사용하지만 (원본 코드에 영향을 미치지 않기 위해) 암호화폐에서는, 근본적인 변경을 만들어내거나, 혹은 원본과 비슷한 (그러나 동일하지 않은) 특성의 새로운 자산을 만드는데 사용한다.\n모든 포크가 의도적으로 되는 이루어 지는 것은 아니다. 널리 사용되고 있는 오픈소스 코드 베이스를 사용하다보면, 모든 노드가 동일한 정보를 복제하지 않을 때 실수로 포크가 발생할 수도 있다. 그러나 일반적으로 포크는 식별되며, 대부분의 암호화폐 포크는 내부 특성에 대한 의견 차이로 인해 발생한다.\n포크에서 염두해야 할 정보는 포크가 '원본의 공유된 역사’를 가지고 있다는 것이다. 각 체인의 기록은 분할이전에는 동일하다.\n¶하드포크\n하드 포크는 이전 버전을 무효로 만드는 프로토콜로 변경하는 것이다. 예를 들어 포크 되기 이전 버전이 계속해서 실행되면, 새로운 프로토콜과는 다른 데이터가 제공된다. 이로 인해 상당한 혼란과 오류가 발생할 수 있다.\n비트 코인을 사용하다보면, 블록 크기, 작업증명을 위해 쓰이는 암호 퍼즐의 어려움, 추가 할 수 있는 정보 제한 등과 같은 정의 매개 변수를 변경하기 위해 하드 포크가 필요하다. 이러한 규칙 중 하나를 변경하면, 새로운 프로토콜에 의해 블록이 허용되지만, 이전 버전에서는 거부되어 심각한 문제로 이어질 수 있다.\n예를 들어, 블록 크기 제한을 1MB에서 4MB로 늘린다고 가정해보자. 새로운 버전에서는 4MB 크기의 블록이 허용되지만, 구 버전에서는 거부되어 심각한 문제로 이어질 수 있다.\n\n비트코인 블록 크기에 대한 논란은 여기를 참조하자.\n\n이 4MB 블록이 새롭게 포크되어 업데이트 된 노드에 의해 유효성을 검사하고 블록체인에 추가되었다고 가정해 보자. 이 블록이 포크 되기 이전 버전 프로토콜에 의해 유효성 검사를 한다면 어떻게 될까? 블록을 추가하려고 시도하지만 최신 블록이 유효하지 않다고 결론 내릴 것이다. 그래서 해당 블록을 무시하고, 이전 블록에 유요하다고 판단되는 블록을 추가할 것이다. 이렇게 되면 갑자기 구형 버전의 블록과 새로운 버전의 블록체인 총 두가지가 생기게 된다. 이는 두개 이상의 체인이 무기한으로 평행하게 커질 수 있다는 것을 의미한다.\n하드포크는 굉장히 어렵고, 잠재적으로 지저분해질 수도 있다. 그리고 새로운 블록에 소비된 비트코인을 오래된 블록에 다시 사용할 수 있기 때문에 위험하다. (이전 코드를 실행하는 사용자는 새로운 코드에 대한 거래를 감지하지 못하므로 사용된 비트코인을 무효로 간주한다.) 이에 대해 유일한 해결책은 포크 된 지점에서 부터 이전 지점을 포기하는 것이며, 이는 일부 채굴자를 잃어버리게 된다. (거래 자체는 손실되지 않고 다시 할당 된다) 이렇게 하거나, 모든 노드들이 동일하게 새롭게 하드 포크된 프로토콜로 동시에 업데이트 하는 방법이 있다.\n대표적인 예가 바로, 비트코인 캐시다.\n\n¶소프트 포크\n하드포크와 달리, 소프트 포크는 이전 버전과 호환이 가능하다. 예를 들어 특정 룰을 강화하거나, 구조에 영향을 미치지 않는 기능을 추가하는 방식으로 프로토콜이 변경되면, 새 버전 블록이 이전 버전 노드에서 허용된다.\n비트코인의 경우, 오래된 버전의 채굴자들은 자신들의 블록이 거부될 수 도 있다는 사실을 인지하고 업그레이드 할 것이다. 더 많은 채굴자들이 업그레이드 함에 따라서, 새로운 블록들이 체인에서 가장 길어지고, 오래된 버전의 블록은 분리됨에 따라서 채굴자들은 노드를 업그레이드 할 것이고, 결국 시스템 자체적으로 수정이 이뤄지게 된다. 새버전 블록은 이전 노드와 업그레이드 된 노드 모두에서 허용되므로 새 버전 블록이 결국 승리한다.\n예를 들어, 블록크기를 줄이기로 결정했다고 가정해보자. 새로운 버전 노드는 큰 블록을 거부하고 이전 블록 (업데이트 된 버전으로 채굴된)에서 빌드되어 임시 포크를 만든다.\n소프트 포크는 이미 여러번 일어 났다. 처음에는 비트코인 블록 크기에 제한이 없었다. 새로운 규칙이 이전 규칙 보다 엄격헀으므로, 블록 크기 1MB 를 제한 두는 것은 소프트 포크를 통해 이루어졌다. 구조를 변경하지 않고 코드를 향상시키는 pay-to-script-hash함수도 소프트 포크를 통해 추가되었다. 이러한 수정은 모두가 아닌 대다수만 업그레이드 해도되므로 실현가능하고, 파괴적이지 않다.\n그리고 또한 소프트 포크는 오래된 노드를 실행하는 사용자가 새버전 과 이전 버전 블록을 모두 읽을 것이므로 하드포크에서 발생할 수도 있는 이중 지출 문제가 발생하지 않는다.\n\n","dateCreated":"2018-07-17T00:00:00+09:00","dateModified":"2018-07-17T11:25:50+09:00","datePublished":"2018-07-17T00:00:00+09:00","description":"Hard Fork vs Soft Fork\n\n원문\n\n프로그래밍 용어로, '포크’는 오픈 소스 코드 수정을 의미한다. 일반적으로 포크는 원본 소스 코드 수정을 위해 이루어지며, 두 개 버전은 각기 따로 공존하게 된다. 때로는 포크가 프로세스를 테스트 하는 데도 사용하지만 (원본 코드에 영향을 미치지 않기 위해) 암호화폐에서는, 근본적인 변경을 만들어내거나, 혹은 원본과 비슷한 (그러나 동일하지 않은) 특성의 새로운 자산을 만드는데 사용한다.\n\n모든 포크가 의도적으로 되는 이루어 지는 것은 아니다. 널리 사용되고 있는 오픈소스 코드 베이","headline":"하드포크와 소프트포크","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/07/17/hard-fork-vs-soft-fork/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/07/17/hard-fork-vs-soft-fork/","keywords":"blockchain"}</script>
-    <meta name="description" content="Hard Fork vs Soft Fork  원문  프로그래밍 용어로, &apos;포크’는 오픈 소스 코드 수정을 의미한다. 일반적으로 포크는 원본 소스 코드 수정을 위해 이루어지며, 두 개 버전은 각기 따로 공존하게 된다. 때로는 포크가 프로세스를 테스트 하는 데도 사용하지만 (원본 코드에 영향을 미치지 않기 위해) 암호화폐에서는, 근본적인 변경을 만들어내거나, 혹">
-<meta name="keywords" content="blockchain">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Hard Fork vs Soft Fork\n원문\n프로그래밍 용어로, ‘포크’는 오픈 소스 코드 수정을 의미한다. 일반적으로 포크는 원본 소스 코드 수정을 위해 이루어지며, 두 개 버전은 각기 따로 공존하게 된다. 때로는 포크가 프로세스를 테스트 하는 데도 사용하지만 (원본 코드에 영향을 미치지 않기 위해) 암호화폐에서는, 근본적인 변경을 만들어내거나, 혹은 원본과 비슷한 (그러나 동일하지 않은) 특성의 새로운 자산을 만드는데 사용한다.\n모든 포크가 의도적으로 되는 이루어 지는 것은 아니다. 널리 사용되고 있는 오픈소스 코드 베이스를 사용하다보면, 모든 노드가 동일한 정보를 복제하지 않을 때 실수로 포크가 발생할 수도 있다. 그러나 일반적으로 포크는 식별되며, 대부분의 암호화폐 포크는 내부 특성에 대한 의견 차이로 인해 발생한다. \n포크에서 염두해야 할 정보는 포크가 ‘원본의 공유된 역사’를 가지고 있다는 것이다. 각 체인의 기록은 분할이전에는 동일하다.\n하드포크하드 포크는 이전 버전을 무효로 만드는 프로토콜로 변경하는 것이다. 예를 들어 포크 되기 이전 버전이 계속해서 실행되면, 새로운 프로토콜과는 다른 데이터가 제공된다. 이로 인해 상당한 혼란과 오류가 발생할 수 있다.\n비트 코인을 사용하다보면, 블록 크기, 작업증명을 위해 쓰이는 암호 퍼즐의 어려움, 추가 할 수 있는 정보 제한 등과 같은 정의 매개 변수를 변경하기 위해 하드 포크가 필요하다. 이러한 규칙 중 하나를 변경하면, 새로운 프로토콜에 의해 블록이 허용되지만, 이전 버전에서는 거부되어 심각한 문제로 이어질 수 있다. \n예를 들어, 블록 크기 제한을 1MB에서 4MB로 늘린다고 가정해보자. 새로운 버전에서는 4MB 크기의 블록이 허용되지만, 구 버전에서는 거부되어 심각한 문제로 이어질 수 있다.\n\n비트코인 블록 크기에 대한 논란은 여기를 참조하자.\n\n이 4MB 블록이 새롭게 포크되어 업데이트 된 노드에 의해 유효성을 검사하고 블록체인에 추가되었다고 가정해 보자. 이 블록이 포크 되기 이전 버전 프로토콜에 의해 유효성 검사를 한다면 어떻게 될까? 블록을 추가하려고 시도하지만 최신 블록이 유효하지 않다고 결론 내릴 것이다. 그래서 해당 블록을 무시하고, 이전 블록에 유요하다고 판단되는 블록을 추가할 것이다. 이렇게 되면 갑자기 구형 버전의 블록과 새로운 버전의 블록체인 총 두가지가 생기게 된다. 이는 두개 이상의 체인이 무기한으로 평행하게 커질 수 있다는 것을 의미한다.\n하드포크는 굉장히 어렵고, 잠재적으로 지저분해질 수도 있다. 그리고 새로운 블록에 소비된 비트코인을 오래된 블록에 다시 사용할 수 있기 때문에 위험하다. (이전 코드를 실행하는 사용자는 새로운 코드에 대한 거래를 감지하지 못하므로 사용된 비트코인을 무효로 간주한다.) 이에 대해 유일한 해결책은 포크 된 지점에서 부터 이전 지점을 포기하는 것이며, 이는 일부 채굴자를 잃어버리게 된다. (거래 자체는 손실되지 않고 다시 할당 된다) 이렇게 하거나, 모든 노드들이 동일하게 새롭게 하드 포크된 프로토콜로 동시에 업데이트 하는 방법이 있다.\n대표적인 예가 바로, 비트코인 캐시다.\n\n소프트 포크하드포크와 달리, 소프트 포크는 이전 버전과 호환이 가능하다. 예를 들어 특정 룰을 강화하거나, 구조에 영향을 미치지 않는 기능을 추가하는 방식으로 프로토콜이 변경되면, 새 버전 블록이 이전 버전 노드에서 허용된다.\n비트코인의 경우, 오래된 버전의 채굴자들은 자신들의 블록이 거부될 수 도 있다는 사실을 인지하고 업그레이드 할 것이다. 더 많은 채굴자들이 업그레이드 함에 따라서, 새로운 블록들이 체인에서 가장 길어지고, 오래된 버전의 블록은 분리됨에 따라서 채굴자들은 노드를 업그레이드 할 것이고, 결국 시스템 자체적으로 수정이 이뤄지게 된다. 새버전 블록은 이전 노드와 업그레이드 된 노드 모두에서 허용되므로 새 버전 블록이 결국 승리한다.\n예를 들어, 블록크기를 줄이기로 결정했다고 가정해보자. 새로운 버전 노드는 큰 블록을 거부하고 이전 블록 (업데이트 된 버전으로 채굴된)에서 빌드되어 임시 포크를 만든다.\n소프트 포크는 이미 여러번 일어 났다. 처음에는 비트코인 블록 크기에 제한이 없었다. 새로운 규칙이 이전 규칙 보다 엄격헀으므로, 블록 크기 1MB 를 제한 두는 것은 소프트 포크를 통해 이루어졌다. 구조를 변경하지 않고 코드를 향상시키는 pay-to-script-hash함수도 소프트 포크를 통해 추가되었다. 이러한 수정은 모두가 아닌 대다수만 업그레이드 해도되므로 실현가능하고, 파괴적이지 않다.\n그리고 또한 소프트 포크는 오래된 노드를 실행하는 사용자가 새버전 과 이전 버전 블록을 모두 읽을 것이므로 하드포크에서 발생할 수도 있는 이중 지출 문제가 발생하지 않는다.\n\n","dateCreated":"2018-07-17T00:00:00+09:00","dateModified":"2018-07-17T11:25:50+09:00","datePublished":"2018-07-17T00:00:00+09:00","description":"Hard Fork vs Soft Fork\n\n원문\n\n프로그래밍 용어로, ‘포크’는 오픈 소스 코드 수정을 의미한다. 일반적으로 포크는 원본 소스 코드 수정을 위해 이루어지며, 두 개 버전은 각기 따로 공존하게 된다. 때로는 포크가 프로세스를 테스트 하는 데도 사용하지만 (원본 코드에 영향을 미치지 않기 위해) 암호화폐에서는, 근본적인 변경을 만들어내거나, 혹은 원본과 비슷한 (그러나 동일하지 않은) 특성의 새로운 자산을 만드는데 사용한다.\n\n모든 포크가 의도적으로 되는 이루어 지는 것은 아니다. 널리 사용되고 있는 오픈소스 코드 베이","headline":"하드포크와 소프트포크","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/07/17/hard-fork-vs-soft-fork/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/07/17/hard-fork-vs-soft-fork/","keywords":"blockchain"}</script>
+    <meta name="description" content="Hard Fork vs Soft Fork  원문  프로그래밍 용어로, ‘포크’는 오픈 소스 코드 수정을 의미한다. 일반적으로 포크는 원본 소스 코드 수정을 위해 이루어지며, 두 개 버전은 각기 따로 공존하게 된다. 때로는 포크가 프로세스를 테스트 하는 데도 사용하지만 (원본 코드에 영향을 미치지 않기 위해) 암호화폐에서는, 근본적인 변경을 만들어내거나, 혹">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="하드포크와 소프트포크">
 <meta property="og:url" content="https://www.yceffort.kr/2018/07/17/hard-fork-vs-soft-fork/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="Hard Fork vs Soft Fork  원문  프로그래밍 용어로, &apos;포크’는 오픈 소스 코드 수정을 의미한다. 일반적으로 포크는 원본 소스 코드 수정을 위해 이루어지며, 두 개 버전은 각기 따로 공존하게 된다. 때로는 포크가 프로세스를 테스트 하는 데도 사용하지만 (원본 코드에 영향을 미치지 않기 위해) 암호화폐에서는, 근본적인 변경을 만들어내거나, 혹">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="Hard Fork vs Soft Fork  원문  프로그래밍 용어로, ‘포크’는 오픈 소스 코드 수정을 의미한다. 일반적으로 포크는 원본 소스 코드 수정을 위해 이루어지며, 두 개 버전은 각기 따로 공존하게 된다. 때로는 포크가 프로세스를 테스트 하는 데도 사용하지만 (원본 코드에 영향을 미치지 않기 위해) 암호화폐에서는, 근본적인 변경을 만들어내거나, 혹">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://bitcoin.org/img/dev/en-hard-fork.svg">
 <meta property="og:image" content="https://bitcoin.org/img/dev/en-soft-fork.svg">
-<meta property="og:updated_time" content="2018-07-17T02:25:50.000Z">
+<meta property="article:published_time" content="2018-07-16T15:00:00.000Z">
+<meta property="article:modified_time" content="2018-07-17T02:25:50.000Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="blockchain">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="하드포크와 소프트포크">
-<meta name="twitter:description" content="Hard Fork vs Soft Fork  원문  프로그래밍 용어로, &apos;포크’는 오픈 소스 코드 수정을 의미한다. 일반적으로 포크는 원본 소스 코드 수정을 위해 이루어지며, 두 개 버전은 각기 따로 공존하게 된다. 때로는 포크가 프로세스를 테스트 하는 데도 사용하지만 (원본 코드에 영향을 미치지 않기 위해) 암호화폐에서는, 근본적인 변경을 만들어내거나, 혹">
 <meta name="twitter:image" content="https://bitcoin.org/img/dev/en-hard-fork.svg">
     
     
@@ -61,7 +61,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -88,7 +90,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -127,8 +129,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -266,12 +267,11 @@
         <div class="main-content-wrap">
             <p>Hard Fork vs Soft Fork</p>
 <p><a href="https://www.coindesk.com/information/hard-fork-vs-soft-fork/" target="_blank" rel="noopener">원문</a></p>
-<p>프로그래밍 용어로, '포크’는 오픈 소스 코드 수정을 의미한다. 일반적으로 포크는 원본 소스 코드 수정을 위해 이루어지며, 두 개 버전은 각기 따로 공존하게 된다. 때로는 포크가 프로세스를 테스트 하는 데도 사용하지만 (원본 코드에 영향을 미치지 않기 위해) 암호화폐에서는, 근본적인 변경을 만들어내거나, 혹은 원본과 비슷한 (그러나 동일하지 않은) 특성의 새로운 자산을 만드는데 사용한다.</p>
-<p>모든 포크가 의도적으로 되는 이루어 지는 것은 아니다. 널리 사용되고 있는 오픈소스 코드 베이스를 사용하다보면, 모든 노드가 동일한 정보를 복제하지 않을 때 실수로 포크가 발생할 수도 있다. 그러나 일반적으로 포크는 식별되며, 대부분의 암호화폐 포크는 내부 특성에 대한 의견 차이로 인해 발생한다.</p>
-<p>포크에서 염두해야 할 정보는 포크가 '원본의 공유된 역사’를 가지고 있다는 것이다. 각 체인의 기록은 분할이전에는 동일하다.</p>
-<h2 id="하드포크"><a class="header-anchor" href="#하드포크">¶</a>하드포크</h2>
-<p>하드 포크는 이전 버전을 무효로 만드는 프로토콜로 변경하는 것이다. 예를 들어 포크 되기 이전 버전이 계속해서 실행되면, 새로운 프로토콜과는 다른 데이터가 제공된다. 이로 인해 상당한 혼란과 오류가 발생할 수 있다.</p>
-<p>비트 코인을 사용하다보면, 블록 크기, 작업증명을 위해 쓰이는 암호 퍼즐의 어려움, 추가 할 수 있는 정보 제한 등과 같은 정의 매개 변수를 변경하기 위해 하드 포크가 필요하다. 이러한 규칙 중 하나를 변경하면, 새로운 프로토콜에 의해 블록이 허용되지만, 이전 버전에서는 거부되어 심각한 문제로 이어질 수 있다.</p>
+<p>프로그래밍 용어로, ‘포크’는 오픈 소스 코드 수정을 의미한다. 일반적으로 포크는 원본 소스 코드 수정을 위해 이루어지며, 두 개 버전은 각기 따로 공존하게 된다. 때로는 포크가 프로세스를 테스트 하는 데도 사용하지만 (원본 코드에 영향을 미치지 않기 위해) 암호화폐에서는, 근본적인 변경을 만들어내거나, 혹은 원본과 비슷한 (그러나 동일하지 않은) 특성의 새로운 자산을 만드는데 사용한다.</p>
+<p>모든 포크가 의도적으로 되는 이루어 지는 것은 아니다. 널리 사용되고 있는 오픈소스 코드 베이스를 사용하다보면, 모든 노드가 동일한 정보를 복제하지 않을 때 실수로 포크가 발생할 수도 있다. 그러나 일반적으로 포크는 식별되며, 대부분의 암호화폐 포크는 내부 특성에 대한 의견 차이로 인해 발생한다. </p>
+<p>포크에서 염두해야 할 정보는 포크가 ‘원본의 공유된 역사’를 가지고 있다는 것이다. 각 체인의 기록은 분할이전에는 동일하다.</p>
+<h2 id="하드포크"><a href="#하드포크" class="headerlink" title="하드포크"></a>하드포크</h2><p>하드 포크는 이전 버전을 무효로 만드는 프로토콜로 변경하는 것이다. 예를 들어 포크 되기 이전 버전이 계속해서 실행되면, 새로운 프로토콜과는 다른 데이터가 제공된다. 이로 인해 상당한 혼란과 오류가 발생할 수 있다.</p>
+<p>비트 코인을 사용하다보면, 블록 크기, 작업증명을 위해 쓰이는 암호 퍼즐의 어려움, 추가 할 수 있는 정보 제한 등과 같은 정의 매개 변수를 변경하기 위해 하드 포크가 필요하다. 이러한 규칙 중 하나를 변경하면, 새로운 프로토콜에 의해 블록이 허용되지만, 이전 버전에서는 거부되어 심각한 문제로 이어질 수 있다. </p>
 <p>예를 들어, 블록 크기 제한을 1MB에서 4MB로 늘린다고 가정해보자. 새로운 버전에서는 4MB 크기의 블록이 허용되지만, 구 버전에서는 거부되어 심각한 문제로 이어질 수 있다.</p>
 <blockquote>
 <p>비트코인 블록 크기에 대한 논란은 <a href="https://en.bitcoin.it/wiki/Block_size_limit_controversy" target="_blank" rel="noopener">여기</a>를 참조하자.</p>
@@ -280,8 +280,7 @@
 <p>하드포크는 굉장히 어렵고, 잠재적으로 지저분해질 수도 있다. 그리고 새로운 블록에 소비된 비트코인을 오래된 블록에 다시 사용할 수 있기 때문에 위험하다. (이전 코드를 실행하는 사용자는 새로운 코드에 대한 거래를 감지하지 못하므로 사용된 비트코인을 무효로 간주한다.) 이에 대해 유일한 해결책은 포크 된 지점에서 부터 이전 지점을 포기하는 것이며, 이는 일부 채굴자를 잃어버리게 된다. (거래 자체는 손실되지 않고 다시 할당 된다) 이렇게 하거나, 모든 노드들이 동일하게 새롭게 하드 포크된 프로토콜로 동시에 업데이트 하는 방법이 있다.</p>
 <p>대표적인 예가 바로, 비트코인 캐시다.</p>
 <p><img src="https://bitcoin.org/img/dev/en-hard-fork.svg" alt="hard-fork"></p>
-<h2 id="소프트-포크"><a class="header-anchor" href="#소프트-포크">¶</a>소프트 포크</h2>
-<p>하드포크와 달리, 소프트 포크는 이전 버전과 호환이 가능하다. 예를 들어 특정 룰을 강화하거나, 구조에 영향을 미치지 않는 기능을 추가하는 방식으로 프로토콜이 변경되면, 새 버전 블록이 이전 버전 노드에서 허용된다.</p>
+<h2 id="소프트-포크"><a href="#소프트-포크" class="headerlink" title="소프트 포크"></a>소프트 포크</h2><p>하드포크와 달리, 소프트 포크는 이전 버전과 호환이 가능하다. 예를 들어 특정 룰을 강화하거나, 구조에 영향을 미치지 않는 기능을 추가하는 방식으로 프로토콜이 변경되면, 새 버전 블록이 이전 버전 노드에서 허용된다.</p>
 <p>비트코인의 경우, 오래된 버전의 채굴자들은 자신들의 블록이 거부될 수 도 있다는 사실을 인지하고 업그레이드 할 것이다. 더 많은 채굴자들이 업그레이드 함에 따라서, 새로운 블록들이 체인에서 가장 길어지고, 오래된 버전의 블록은 분리됨에 따라서 채굴자들은 노드를 업그레이드 할 것이고, 결국 시스템 자체적으로 수정이 이뤄지게 된다. 새버전 블록은 이전 노드와 업그레이드 된 노드 모두에서 허용되므로 새 버전 블록이 결국 승리한다.</p>
 <p>예를 들어, 블록크기를 줄이기로 결정했다고 가정해보자. 새로운 버전 노드는 큰 블록을 거부하고 이전 블록 (업데이트 된 버전으로 채굴된)에서 빌드되어 임시 포크를 만든다.</p>
 <p>소프트 포크는 이미 여러번 일어 났다. 처음에는 비트코인 블록 크기에 제한이 없었다. 새로운 규칙이 이전 규칙 보다 엄격헀으므로, 블록 크기 1MB 를 제한 두는 것은 소프트 포크를 통해 이루어졌다. 구조를 변경하지 않고 코드를 향상시키는 pay-to-script-hash함수도 소프트 포크를 통해 추가되었다. 이러한 수정은 모두가 아닌 대다수만 업그레이드 해도되므로 실현가능하고, 파괴적이지 않다.</p>
@@ -302,7 +301,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/blockchain/">blockchain</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/blockchain/" rel="tag">blockchain</a>
 
             </div>
         
@@ -313,7 +312,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/07/18/how-blockchain-is-changing-finance/" data-tooltip="블록체인은 어떻게 금융을 바꾸고 있는가" aria-label="PREVIOUS: 블록체인은 어떻게 금융을 바꾸고 있는가">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/07/18/DAOs-DACs-DAs-and-More/" data-tooltip="탈중앙화 자율조직, 탈중앙화 자율 회사, 탈중앙화 어플리케이션 등 - 용어에 대한 불완전한 가이드" aria-label="PREVIOUS: 탈중앙화 자율조직, 탈중앙화 자율 회사, 탈중앙화 어플리케이션 등 - 용어에 대한 불완전한 가이드">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -355,12 +354,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -375,10 +368,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -401,7 +390,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/07/18/how-blockchain-is-changing-finance/" data-tooltip="블록체인은 어떻게 금융을 바꾸고 있는가" aria-label="PREVIOUS: 블록체인은 어떻게 금융을 바꾸고 있는가">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/07/18/DAOs-DACs-DAs-and-More/" data-tooltip="탈중앙화 자율조직, 탈중앙화 자율 회사, 탈중앙화 어플리케이션 등 - 용어에 대한 불완전한 가이드" aria-label="PREVIOUS: 탈중앙화 자율조직, 탈중앙화 자율 회사, 탈중앙화 어플리케이션 등 - 용어에 대한 불완전한 가이드">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -442,12 +431,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -586,8 +569,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -605,8 +588,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -662,8 +645,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -681,8 +664,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -742,7 +725,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -752,26 +735,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2018/07/17/hard-fork-vs-soft-fork/';
-                 
-                    this.page.identifier = '2018/07/17/hard-fork-vs-soft-fork/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

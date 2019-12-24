@@ -34,21 +34,23 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"¶고민지점\n\nGlobal 로 관리하는 Colorset Red, Blue, Green, Black이 있다.\n이 색들은 각각 지정된 칼라코드가 있다\n그러나 때로는 그 컬러코드에 맞게 안쓰는 경우도 있다\n그러나 때로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.\n\n¶Union types\nUnion Type\n어떤 라이브러리에서 받는 파라미터의 값을 number와 string으로 제한한다고 하자. 그렇다면 코드는 아래와 같을 것이다.\n12345678910function numberOrString(parameter: any) &#123;    if (typeof parameter === \"number\") &#123;        return console.log(\"this is number\")    &#125;     if (typeof parameter === \"string\") &#123;        return console.log(\"this is string\")    &#125;       throw new Error(`Expecting number of string, but got $&#123;typeof parameter&#125;`)&#125;\n물론 이런식으로 처리할수도 있다. 그러나 문제는 컴파일 상에서만 괜찮다는 것이다. any는 typescript에서 어떤 값이든 들어갈 수 있으므로, 이 에러는 런타임상에서만 발생하게 된다.\n일반적인 객체지향 코드에서는, 두 타입으로 하나 hierarchy 를 만들어서 처리할 수도 있지만, 약간 그건 과한 느낌이 있기도 하다. 이 코드를 이렇게 처리할 수도 있다.\n123function numberOrString(parameter: string|number) &#123;    // do something...&#125;\n이런 방식을 Union Type 이라고 한다. Union Type는 하나의 값에 여러가지 타입을 표현할 수 있게 해준다. 사용할 값을 |로 구별해서 넣어주면 된다.\n처음 문제로 돌아와서, Global한 컬러로 지정하려는 값이 네개 있다고 헀다. 이제 이것은 이렇게 처리하면 된다.\n1export type GlobalColors = 'Red' | 'Blue' | 'Green' | 'Black'\n자 그럼 이것이 어떻게 동작하는지 보자.\n123function getColor(parameter: GlobalColors) &#123;    console.log(parameter)&#125;\ngetColor()에 GlobalColors가 아닌 다른 값을 넣으면\n\nvscode에서 (물론 plugin덕분이지만) 네개의 값만 강제하는 것을 볼 수 있다. 만약 다른 값을 넣는다면 컴파일상에서 에러가 난다.\n\n한 가지 신기 (당연) 한점은, 이 코드는 자바스크립트로 컴파일 되지 않는다는 것이다. 이점은 enum이랑 다른데, 암튼 지간에 저건 자바스크립트에서 처리할 수 없는 일이다. 이러한 타입체크는 나중에 컴파일 하게 된다면, *.d.ts에서 처리해준다는 것이다.\n¶enum\nenum은 열거형이다. 그렇다.\n123456enum GlobalColorSet &#123;  Red,  Blue,  Green,  Black&#125;\n를 컴파일하면\n1234567var GlobalColorSet;(function (GlobalColorSet) &#123;    GlobalColorSet[GlobalColorSet[\"Red\"] = 0] = \"Red\";    GlobalColorSet[GlobalColorSet[\"Blue\"] = 1] = \"Blue\";    GlobalColorSet[GlobalColorSet[\"Green\"] = 2] = \"Green\";    GlobalColorSet[GlobalColorSet[\"Black\"] = 3] = \"Black\";&#125;)(GlobalColorSet || (GlobalColorSet = &#123;&#125;));\n로 나온다. 복잡한데, 결과적으로는 아래와 같다.\n1var GlobalColorSet = &#123;0: \"Red\", 1: \"Blue\", 2: \"Green\", 3: \"Black\", Red: 0, Blue: 1, Green: 2, Black: 3&#125;\n일반적인 map과 다르게 key로 값을 얻을 수 있고, 값으로도 key를 얻을 수 있다.\n그러나 enum은 const로 선언될 경우 컴파일 결과가 조금다르다.\n123456const enum ConstGlobalColorSet &#123;  Red,  Blue,  Green,  Black&#125;\n다른게 아니고, 사실 아무것도 컴파일 되지 않는다. 이는 읽기 전용으로 생성된 객체이기 때문에 (const) 수정할 객체 자체가 생성되지 않는 것이다. 또한 앞서 보았던 값으로 키를 얻는 행위 또한 불가능해진다.\n아무튼, 글로벌하게 쓸 색상을 enum으로 선언했다.\n123456const enum ConstGlobalColorSet &#123;  Red = '11, 11, 11',  Blue = '22, 22, 22',  Green = '33, 33, 33',  Black = '44, 44, 44',&#125;\n¶Record\nRecord&lt;K, V&gt;로 쓰인다. 여기서 K는 key이고, V는 Value다. keyof Record&lt;K, T&gt;는 k로, Record&lt;K, T&gt;[K]는 T다. (느낌이 그렇다는 것) 밑에 예시를 보자.\n이거는\n1234//이거는type ColorProperties = Record&lt;GlobalColors, string&gt;//이거와 같다type ColorProperties = &#123; red: string, blue: string, green: string, black: string &#125;\n(말보다 코드가 쉽다) 위에 경우와 마찬가지로, js로 컴파일 됐을 때는 위 두 코드는 아무런 js로 변환되지 않는다.\n12colorProp1['purple'] = 1;colorProp1['orange']\n위의 코드는 당연히 타입스크립트 컴파일에서 에러가 난다.\n¶Partial\nPartial은 key를 옵셔널하게 해준다.\n1234// 이거는let PartialColorProperties = Partial&lt;ColorProperties&gt;// 이거와 같다.let PartialColorProperties = &#123; red?: string, blue?: string, green?: string, black?: string &#125;\n¶정리\n123456789101112131415// 글로벌 색으로 4가지를 선언한다.export type GlobalColors = 'Red' | 'Blue' | 'Green' | 'Black'// 기본값으로 색상을 선언한다.const enum ConstGlobalColorSet &#123;  Red = '11, 11, 11',  Blue = '22, 22, 22',  Green = '33, 33, 33',  Black = '44, 44, 44',&#125;// 기본 색상값외에 다른 색상을 사용하고 싶다면 const CUSTOM_COLORS: Partial&lt;Record&lt;GlobalColors, string&gt;&gt; = &#123;  gray: '55, 55, 55',&#125;\n","dateCreated":"2019-06-17T16:20:52+09:00","dateModified":"2019-08-14T11:05:21+09:00","datePublished":"2019-06-17T16:20:52+09:00","description":"¶고민지점\n * Global 로 관리하는 Colorset Red, Blue, Green, Black이 있다.\n * 이 색들은 각각 지정된 칼라코드가 있다\n * 그러나 때로는 그 컬러코드에 맞게 안쓰는 경우도 있다\n * 그러나 때로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.\n\n¶Union types\nUnion Type\n\n어떤 라이브러리에서 받는 파라미터의 값을 number와 string으로 제한한다고 하자. 그렇다면 코드는 아래와 같을 것이다.\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n\n\nfunction numberOrStr","headline":"Typescript Type, Enum, Partial, Record로 글로벌 변수 관리하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/06/17/typescript-type-enum-partial-record/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/06/17/typescript-type-enum-partial-record/","keywords":"react, javascript, typescript"}</script>
-    <meta name="description" content="¶고민지점  * Global 로 관리하는 Colorset Red, Blue, Green, Black이 있다.  * 이 색들은 각각 지정된 칼라코드가 있다  * 그러나 때로는 그 컬러코드에 맞게 안쓰는 경우도 있다  * 그러나 때로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.  ¶Union types Union Type  어떤 라이브러리에서 받는 파">
-<meta name="keywords" content="react,javascript,typescript">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"고민지점\nGlobal 로 관리하는 Colorset Red, Blue, Green, Black이 있다.\n이 색들은 각각 지정된 칼라코드가 있다\n그러나 때로는 그 컬러코드에 맞게 안쓰는 경우도 있다\n그러나 때로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.\n\nUnion typesUnion Type\n어떤 라이브러리에서 받는 파라미터의 값을 number와 string으로 제한한다고 하자. 그렇다면 코드는 아래와 같을 것이다.\n12345678910function numberOrString(parameter: any) &#123;    if (typeof parameter === \"number\") &#123;        return console.log(\"this is number\")    &#125;     if (typeof parameter === \"string\") &#123;        return console.log(\"this is string\")    &#125;       throw new Error(`Expecting number of string, but got $&#123;typeof parameter&#125;`)&#125;\n물론 이런식으로 처리할수도 있다. 그러나 문제는 컴파일 상에서만 괜찮다는 것이다. any는 typescript에서 어떤 값이든 들어갈 수 있으므로, 이 에러는 런타임상에서만 발생하게 된다.\n일반적인 객체지향 코드에서는, 두 타입으로 하나 hierarchy 를 만들어서 처리할 수도 있지만, 약간 그건 과한 느낌이 있기도 하다. 이 코드를 이렇게 처리할 수도 있다.\n123function numberOrString(parameter: string|number) &#123;    // do something...&#125;\n이런 방식을 Union Type 이라고 한다. Union Type는 하나의 값에 여러가지 타입을 표현할 수 있게 해준다. 사용할 값을 |로 구별해서 넣어주면 된다.\n처음 문제로 돌아와서, Global한 컬러로 지정하려는 값이 네개 있다고 헀다. 이제 이것은 이렇게 처리하면 된다.\n1export type GlobalColors = 'Red' | 'Blue' | 'Green' | 'Black'\n자 그럼 이것이 어떻게 동작하는지 보자.\n123function getColor(parameter: GlobalColors) &#123;    console.log(parameter)&#125;\ngetColor()에 GlobalColors가 아닌 다른 값을 넣으면 \n\nvscode에서 (물론 plugin덕분이지만) 네개의 값만 강제하는 것을 볼 수 있다. 만약 다른 값을 넣는다면 컴파일상에서 에러가 난다.\n\n한 가지 신기 (당연) 한점은, 이 코드는 자바스크립트로 컴파일 되지 않는다는 것이다. 이점은 enum이랑 다른데, 암튼 지간에 저건 자바스크립트에서 처리할 수 없는 일이다. 이러한 타입체크는 나중에 컴파일 하게 된다면, *.d.ts에서 처리해준다는 것이다.\nenumenum은 열거형이다. 그렇다.\n123456enum GlobalColorSet &#123;  Red,  Blue,  Green,  Black&#125;\n를 컴파일하면\n1234567var GlobalColorSet;(function (GlobalColorSet) &#123;    GlobalColorSet[GlobalColorSet[\"Red\"] = 0] = \"Red\";    GlobalColorSet[GlobalColorSet[\"Blue\"] = 1] = \"Blue\";    GlobalColorSet[GlobalColorSet[\"Green\"] = 2] = \"Green\";    GlobalColorSet[GlobalColorSet[\"Black\"] = 3] = \"Black\";&#125;)(GlobalColorSet || (GlobalColorSet = &#123;&#125;));\n로 나온다. 복잡한데, 결과적으로는 아래와 같다.\n1var GlobalColorSet = &#123;0: \"Red\", 1: \"Blue\", 2: \"Green\", 3: \"Black\", Red: 0, Blue: 1, Green: 2, Black: 3&#125;\n일반적인 map과 다르게 key로 값을 얻을 수 있고, 값으로도 key를 얻을 수 있다.\n그러나 enum은 const로 선언될 경우 컴파일 결과가 조금다르다.\n123456const enum ConstGlobalColorSet &#123;  Red,  Blue,  Green,  Black&#125;\n다른게 아니고, 사실 아무것도 컴파일 되지 않는다. 이는 읽기 전용으로 생성된 객체이기 때문에 (const) 수정할 객체 자체가 생성되지 않는 것이다. 또한 앞서 보았던 값으로 키를 얻는 행위 또한 불가능해진다. \n아무튼, 글로벌하게 쓸 색상을 enum으로 선언했다.\n123456const enum ConstGlobalColorSet &#123;  Red = '11, 11, 11',  Blue = '22, 22, 22',  Green = '33, 33, 33',  Black = '44, 44, 44',&#125;\nRecordRecord&lt;K, V&gt;로 쓰인다. 여기서 K는 key이고, V는 Value다. keyof Record&lt;K, T&gt;는 k로, Record&lt;K, T&gt;[K]는 T다. (느낌이 그렇다는 것) 밑에 예시를 보자.\n이거는 \n1234//이거는type ColorProperties = Record&lt;GlobalColors, string&gt;//이거와 같다type ColorProperties = &#123; red: string, blue: string, green: string, black: string &#125;\n(말보다 코드가 쉽다) 위에 경우와 마찬가지로, js로 컴파일 됐을 때는 위 두 코드는 아무런 js로 변환되지 않는다. \n12colorProp1['purple'] = 1;colorProp1['orange']\n위의 코드는 당연히 타입스크립트 컴파일에서 에러가 난다.\nPartialPartial은 key를 옵셔널하게 해준다. \n1234// 이거는let PartialColorProperties = Partial&lt;ColorProperties&gt;// 이거와 같다.let PartialColorProperties = &#123; red?: string, blue?: string, green?: string, black?: string &#125;\n정리123456789101112131415// 글로벌 색으로 4가지를 선언한다.export type GlobalColors = 'Red' | 'Blue' | 'Green' | 'Black'// 기본값으로 색상을 선언한다.const enum ConstGlobalColorSet &#123;  Red = '11, 11, 11',  Blue = '22, 22, 22',  Green = '33, 33, 33',  Black = '44, 44, 44',&#125;// 기본 색상값외에 다른 색상을 사용하고 싶다면 const CUSTOM_COLORS: Partial&lt;Record&lt;GlobalColors, string&gt;&gt; = &#123;  gray: '55, 55, 55',&#125;\n","dateCreated":"2019-06-17T16:20:52+09:00","dateModified":"2019-08-14T11:05:21+09:00","datePublished":"2019-06-17T16:20:52+09:00","description":"고민지점\n * Global 로 관리하는 Colorset Red, Blue, Green, Black이 있다.\n * 이 색들은 각각 지정된 칼라코드가 있다\n * 그러나 때로는 그 컬러코드에 맞게 안쓰는 경우도 있다\n * 그러나 때로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.\n\nUnion types\nUnion Type\n\n어떤 라이브러리에서 받는 파라미터의 값을 number와 string으로 제한한다고 하자. 그렇다면 코드는 아래와 같을 것이다.\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n\n\nfunction numberOrStrin","headline":"Typescript Type, Enum, Partial, Record로 글로벌 변수 관리하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/06/17/typescript-type-enum-partial-record/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/06/17/typescript-type-enum-partial-record/","keywords":"react, javascript, typescript"}</script>
+    <meta name="description" content="고민지점  * Global 로 관리하는 Colorset Red, Blue, Green, Black이 있다.  * 이 색들은 각각 지정된 칼라코드가 있다  * 그러나 때로는 그 컬러코드에 맞게 안쓰는 경우도 있다  * 그러나 때로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.  Union types Union Type  어떤 라이브러리에서 받는 파라미">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Typescript Type, Enum, Partial, Record로 글로벌 변수 관리하기">
 <meta property="og:url" content="https://www.yceffort.kr/2019/06/17/typescript-type-enum-partial-record/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="¶고민지점  * Global 로 관리하는 Colorset Red, Blue, Green, Black이 있다.  * 이 색들은 각각 지정된 칼라코드가 있다  * 그러나 때로는 그 컬러코드에 맞게 안쓰는 경우도 있다  * 그러나 때로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.  ¶Union types Union Type  어떤 라이브러리에서 받는 파">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="고민지점  * Global 로 관리하는 Colorset Red, Blue, Green, Black이 있다.  * 이 색들은 각각 지정된 칼라코드가 있다  * 그러나 때로는 그 컬러코드에 맞게 안쓰는 경우도 있다  * 그러나 때로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.  Union types Union Type  어떤 라이브러리에서 받는 파라미">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/06/ts1.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/06/ts2.png">
-<meta property="og:updated_time" content="2019-08-14T02:05:21.896Z">
+<meta property="article:published_time" content="2019-06-17T07:20:52.000Z">
+<meta property="article:modified_time" content="2019-08-14T02:05:21.896Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="react">
+<meta property="article:tag" content="javascript">
+<meta property="article:tag" content="typescript">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Typescript Type, Enum, Partial, Record로 글로벌 변수 관리하기">
-<meta name="twitter:description" content="¶고민지점  * Global 로 관리하는 Colorset Red, Blue, Green, Black이 있다.  * 이 색들은 각각 지정된 칼라코드가 있다  * 그러나 때로는 그 컬러코드에 맞게 안쓰는 경우도 있다  * 그러나 때로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.  ¶Union types Union Type  어떤 라이브러리에서 받는 파">
 <meta name="twitter:image" content="https://www.yceffort.kr/images/2019/06/ts1.png">
     
     
@@ -61,7 +63,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -88,7 +92,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -127,8 +131,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -264,15 +267,13 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h2 id="고민지점"><a class="header-anchor" href="#고민지점">¶</a>고민지점</h2>
-<ul>
+            <h2 id="고민지점"><a href="#고민지점" class="headerlink" title="고민지점"></a>고민지점</h2><ul>
 <li>Global 로 관리하는 Colorset Red, Blue, Green, Black이 있다.</li>
 <li>이 색들은 각각 지정된 칼라코드가 있다</li>
 <li>그러나 때로는 그 컬러코드에 맞게 안쓰는 경우도 있다</li>
 <li>그러나 때로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.</li>
 </ul>
-<h2 id="union-types"><a class="header-anchor" href="#union-types">¶</a>Union types</h2>
-<p><a href="https://www.typescriptlang.org/docs/handbook/advanced-types.html#union-types" target="_blank" rel="noopener">Union Type</a></p>
+<h2 id="Union-types"><a href="#Union-types" class="headerlink" title="Union types"></a>Union types</h2><p><a href="https://www.typescriptlang.org/docs/handbook/advanced-types.html#union-types" target="_blank" rel="noopener">Union Type</a></p>
 <p>어떤 라이브러리에서 받는 파라미터의 값을 number와 string으로 제한한다고 하자. 그렇다면 코드는 아래와 같을 것이다.</p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">numberOrString</span>(<span class="params">parameter: <span class="built_in">any</span></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> parameter === <span class="string">"number"</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">console</span>.log(<span class="string">"this is number"</span>)</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">typeof</span> parameter === <span class="string">"string"</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">console</span>.log(<span class="string">"this is string"</span>)</span><br><span class="line">    &#125;   </span><br><span class="line"></span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">`Expecting number of string, but got <span class="subst">$&#123;typeof parameter&#125;</span>`</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>물론 이런식으로 처리할수도 있다. 그러나 문제는 컴파일 상에서만 괜찮다는 것이다. any는 typescript에서 어떤 값이든 들어갈 수 있으므로, 이 에러는 런타임상에서만 발생하게 된다.</p>
@@ -283,13 +284,12 @@
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> GlobalColors = <span class="string">'Red'</span> | <span class="string">'Blue'</span> | <span class="string">'Green'</span> | <span class="string">'Black'</span></span><br></pre></td></tr></table></figure>
 <p>자 그럼 이것이 어떻게 동작하는지 보자.</p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getColor</span>(<span class="params">parameter: GlobalColors</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(parameter)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>getColor()</code>에 <code>GlobalColors</code>가 아닌 다른 값을 넣으면</p>
+<p><code>getColor()</code>에 <code>GlobalColors</code>가 아닌 다른 값을 넣으면 </p>
 <p><img src="/images/2019/06/ts1.png" alt="ts1"></p>
 <p>vscode에서 (물론 plugin덕분이지만) 네개의 값만 강제하는 것을 볼 수 있다. 만약 다른 값을 넣는다면 컴파일상에서 에러가 난다.</p>
 <p><img src="/images/2019/06/ts2.png" alt="ts2"></p>
 <p>한 가지 신기 (당연) 한점은, 이 코드는 자바스크립트로 컴파일 되지 않는다는 것이다. 이점은 <code>enum</code>이랑 다른데, 암튼 지간에 저건 자바스크립트에서 처리할 수 없는 일이다. 이러한 타입체크는 나중에 컴파일 하게 된다면, <code>*.d.ts</code>에서 처리해준다는 것이다.</p>
-<h2 id="enum"><a class="header-anchor" href="#enum">¶</a>enum</h2>
-<p><code>enum</code>은 열거형이다. 그렇다.</p>
+<h2 id="enum"><a href="#enum" class="headerlink" title="enum"></a>enum</h2><p><code>enum</code>은 열거형이다. 그렇다.</p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> GlobalColorSet &#123;</span><br><span class="line">  Red,</span><br><span class="line">  Blue,</span><br><span class="line">  Green,</span><br><span class="line">  Black</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>를 컴파일하면</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> GlobalColorSet;</span><br><span class="line">(<span class="function"><span class="keyword">function</span> (<span class="params">GlobalColorSet</span>) </span>&#123;</span><br><span class="line">    GlobalColorSet[GlobalColorSet[<span class="string">"Red"</span>] = <span class="number">0</span>] = <span class="string">"Red"</span>;</span><br><span class="line">    GlobalColorSet[GlobalColorSet[<span class="string">"Blue"</span>] = <span class="number">1</span>] = <span class="string">"Blue"</span>;</span><br><span class="line">    GlobalColorSet[GlobalColorSet[<span class="string">"Green"</span>] = <span class="number">2</span>] = <span class="string">"Green"</span>;</span><br><span class="line">    GlobalColorSet[GlobalColorSet[<span class="string">"Black"</span>] = <span class="number">3</span>] = <span class="string">"Black"</span>;</span><br><span class="line">&#125;)(GlobalColorSet || (GlobalColorSet = &#123;&#125;));</span><br></pre></td></tr></table></figure>
@@ -298,21 +298,18 @@
 <p>일반적인 map과 다르게 key로 값을 얻을 수 있고, 값으로도 key를 얻을 수 있다.</p>
 <p>그러나 <code>enum</code>은 const로 선언될 경우 컴파일 결과가 조금다르다.</p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">enum</span> ConstGlobalColorSet &#123;</span><br><span class="line">  Red,</span><br><span class="line">  Blue,</span><br><span class="line">  Green,</span><br><span class="line">  Black</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>다른게 아니고, 사실 아무것도 컴파일 되지 않는다. 이는 읽기 전용으로 생성된 객체이기 때문에 (const) 수정할 객체 자체가 생성되지 않는 것이다. 또한 앞서 보았던 값으로 키를 얻는 행위 또한 불가능해진다.</p>
+<p>다른게 아니고, 사실 아무것도 컴파일 되지 않는다. 이는 읽기 전용으로 생성된 객체이기 때문에 (const) 수정할 객체 자체가 생성되지 않는 것이다. 또한 앞서 보았던 값으로 키를 얻는 행위 또한 불가능해진다. </p>
 <p>아무튼, 글로벌하게 쓸 색상을 enum으로 선언했다.</p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">enum</span> ConstGlobalColorSet &#123;</span><br><span class="line">  Red = <span class="string">'11, 11, 11'</span>,</span><br><span class="line">  Blue = <span class="string">'22, 22, 22'</span>,</span><br><span class="line">  Green = <span class="string">'33, 33, 33'</span>,</span><br><span class="line">  Black = <span class="string">'44, 44, 44'</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="record"><a class="header-anchor" href="#record">¶</a>Record</h2>
-<p><code>Record&lt;K, V&gt;</code>로 쓰인다. 여기서 K는 key이고, V는 Value다. <code>keyof Record&lt;K, T&gt;</code>는 <code>k</code>로, <code>Record&lt;K, T&gt;[K]</code>는 <code>T</code>다. (느낌이 그렇다는 것) 밑에 예시를 보자.</p>
-<p>이거는</p>
+<h2 id="Record"><a href="#Record" class="headerlink" title="Record"></a>Record</h2><p><code>Record&lt;K, V&gt;</code>로 쓰인다. 여기서 K는 key이고, V는 Value다. <code>keyof Record&lt;K, T&gt;</code>는 <code>k</code>로, <code>Record&lt;K, T&gt;[K]</code>는 <code>T</code>다. (느낌이 그렇다는 것) 밑에 예시를 보자.</p>
+<p>이거는 </p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//이거는</span></span><br><span class="line"><span class="keyword">type</span> ColorProperties = Record&lt;GlobalColors, <span class="built_in">string</span>&gt;</span><br><span class="line"><span class="comment">//이거와 같다</span></span><br><span class="line"><span class="keyword">type</span> ColorProperties = &#123; red: <span class="built_in">string</span>, blue: <span class="built_in">string</span>, green: <span class="built_in">string</span>, black: <span class="built_in">string</span> &#125;</span><br></pre></td></tr></table></figure>
-<p>(말보다 코드가 쉽다) 위에 경우와 마찬가지로, js로 컴파일 됐을 때는 위 두 코드는 아무런 js로 변환되지 않는다.</p>
+<p>(말보다 코드가 쉽다) 위에 경우와 마찬가지로, js로 컴파일 됐을 때는 위 두 코드는 아무런 js로 변환되지 않는다. </p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">colorProp1[<span class="string">'purple'</span>] = <span class="number">1</span>;</span><br><span class="line">colorProp1[<span class="string">'orange'</span>]</span><br></pre></td></tr></table></figure>
 <p>위의 코드는 당연히 타입스크립트 컴파일에서 에러가 난다.</p>
-<h2 id="partial"><a class="header-anchor" href="#partial">¶</a>Partial</h2>
-<p>Partial은 key를 옵셔널하게 해준다.</p>
+<h2 id="Partial"><a href="#Partial" class="headerlink" title="Partial"></a>Partial</h2><p>Partial은 key를 옵셔널하게 해준다. </p>
 <figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 이거는</span></span><br><span class="line"><span class="keyword">let</span> PartialColorProperties = Partial&lt;ColorProperties&gt;</span><br><span class="line"><span class="comment">// 이거와 같다.</span></span><br><span class="line"><span class="keyword">let</span> PartialColorProperties = &#123; red?: <span class="built_in">string</span>, blue?: <span class="built_in">string</span>, green?: <span class="built_in">string</span>, black?: <span class="built_in">string</span> &#125;</span><br></pre></td></tr></table></figure>
-<h2 id="정리"><a class="header-anchor" href="#정리">¶</a>정리</h2>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 글로벌 색으로 4가지를 선언한다.</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> GlobalColors = <span class="string">'Red'</span> | <span class="string">'Blue'</span> | <span class="string">'Green'</span> | <span class="string">'Black'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 기본값으로 색상을 선언한다.</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">enum</span> ConstGlobalColorSet &#123;</span><br><span class="line">  Red = <span class="string">'11, 11, 11'</span>,</span><br><span class="line">  Blue = <span class="string">'22, 22, 22'</span>,</span><br><span class="line">  Green = <span class="string">'33, 33, 33'</span>,</span><br><span class="line">  Black = <span class="string">'44, 44, 44'</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 기본 색상값외에 다른 색상을 사용하고 싶다면 </span></span><br><span class="line"><span class="keyword">const</span> CUSTOM_COLORS: Partial&lt;Record&lt;GlobalColors, <span class="built_in">string</span>&gt;&gt; = &#123;</span><br><span class="line">  gray: <span class="string">'55, 55, 55'</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="정리"><a href="#정리" class="headerlink" title="정리"></a>정리</h2><figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 글로벌 색으로 4가지를 선언한다.</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> GlobalColors = <span class="string">'Red'</span> | <span class="string">'Blue'</span> | <span class="string">'Green'</span> | <span class="string">'Black'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 기본값으로 색상을 선언한다.</span></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">enum</span> ConstGlobalColorSet &#123;</span><br><span class="line">  Red = <span class="string">'11, 11, 11'</span>,</span><br><span class="line">  Blue = <span class="string">'22, 22, 22'</span>,</span><br><span class="line">  Green = <span class="string">'33, 33, 33'</span>,</span><br><span class="line">  Black = <span class="string">'44, 44, 44'</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 기본 색상값외에 다른 색상을 사용하고 싶다면 </span></span><br><span class="line"><span class="keyword">const</span> CUSTOM_COLORS: Partial&lt;Record&lt;GlobalColors, <span class="built_in">string</span>&gt;&gt; = &#123;</span><br><span class="line">  gray: <span class="string">'55, 55, 55'</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
             
 
@@ -328,7 +325,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/">javascript</a> <a class="tag tag--primary tag--small t-link" href="/tags/react/">react</a> <a class="tag tag--primary tag--small t-link" href="/tags/typescript/">typescript</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/" rel="tag">javascript</a> <a class="tag tag--primary tag--small t-link" href="/tags/react/" rel="tag">react</a> <a class="tag tag--primary tag--small t-link" href="/tags/typescript/" rel="tag">typescript</a>
 
             </div>
         
@@ -381,12 +378,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -401,10 +392,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -468,12 +455,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -612,8 +593,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -631,8 +612,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -688,8 +669,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -707,8 +688,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -768,7 +749,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -778,26 +759,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/06/17/typescript-type-enum-partial-record/';
-                 
-                    this.page.identifier = '2019/06/17/typescript-type-enum-partial-record/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

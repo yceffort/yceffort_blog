@@ -35,17 +35,18 @@
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
     <script type="application/ld+json">{}</script>
-    <meta name="description" content="this is the yceffort&apos;s private blog">
-<meta name="keywords" content="programming,innovation,technology">
+    <meta name="description" content="this is the yceffort&#39;s private blog">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="yceffort">
 <meta property="og:url" content="https://www.yceffort.kr/archives/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="this is the yceffort&apos;s private blog">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="this is the yceffort&#39;s private blog">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="programming">
+<meta property="article:tag" content="innovation">
+<meta property="article:tag" content="technology">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="yceffort">
-<meta name="twitter:description" content="this is the yceffort&apos;s private blog">
     
     
     
@@ -57,7 +58,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -84,7 +87,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -123,8 +126,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -244,6 +246,61 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title">
                     
+                        <a class="link-unstyled" href="/2019/12/23/tensorflowjs-03-linear_regression/">
+                            Tensorflow.js - 03. Linear Regression
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-12-23T10:30:29+09:00">
+	
+		    Dec 23, 2019
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    Linear Regression
+몇 번째 선형 회귀인지 알 수 없다.
+
+01. 2d data로 예측해보기
+이번 튜토리얼에서는 자동차 세트를 표현한 숫자 데이터로 예측하는 모델을 훈련시켜 봅니다.
+
+이 연습에서는 다양한 종류의 모델을 훈련하는 공통적인 단계를 보여주고, 이에 따라 작은 데이터 세트와 간단한 모델을 사용합니다. 1차적인 목표는 Tensorflow.js의 훈련 모델과 관련된 기본적인 용어, 개념 및 신택스를 숙지하고, 추가 학습을 위한 발판을 마련하는 것입니다.
+
+02. Set up
+html
+
+1
+2
+3
+4
+5
+6
+7
+8
+                    
+                        <a href="/2019/12/23/tensorflowjs-03-linear_regression/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
                         <a class="link-unstyled" href="/2019/12/20/tensorflowjs-01-get-started/">
                             Tensorflow.js - 01. 시작하기
                         </a>
@@ -262,8 +319,7 @@
             
                 <div class="postShorten-excerpt">
                     <p><a href="https://www.tensorflow.org/js/tutorials" target="_blank" rel="noopener">https://www.tensorflow.org/js/tutorials</a>을 개인적인 학습을 위해 번역한 글입니다. 정확한 번역을 위해서가 아니라, 개인적인 공부를 위해서 하는 것입니다. 오해 ㄴㄴ</p>
-<h2 id="시작하기"><a class="header-anchor" href="#시작하기">¶</a>시작하기</h2>
-<p>Tensorflow.js는 브라우저와 Node.js에서 머신러닝 모델을 사용하고 훈련시킬 수 있는 자바스크립트 라이브러리입니다.</p>
+<h2 id="시작하기"><a href="#시작하기" class="headerlink" title="시작하기"></a>시작하기</h2><p>Tensorflow.js는 브라우저와 Node.js에서 머신러닝 모델을 사용하고 훈련시킬 수 있는 자바스크립트 라이브러리입니다.</p>
 <p>시작하는 다양한 방법은 아래 섹션들을 참고하세요.</p>
                     
                         <a href="/2019/12/20/tensorflowjs-01-get-started/" class="postShorten-excerpt_link link">
@@ -302,9 +358,7 @@
             
                 <div class="postShorten-excerpt">
                     <p><a href="/2019/12/20/tensorflowjs-01-get-started/">이전글 보기</a></p>
-<h2 id="설치"><a class="header-anchor" href="#설치">¶</a>설치</h2>
-<h3 id="브라우저-설치"><a class="header-anchor" href="#브라우저-설치">¶</a>브라우저 설치</h3>
-<p>Tensorflow.js를 설치하는 방법은 두 가지가 있습니다.</p>
+<h2 id="설치"><a href="#설치" class="headerlink" title="설치"></a>설치</h2><h3 id="브라우저-설치"><a href="#브라우저-설치" class="headerlink" title="브라우저 설치"></a>브라우저 설치</h3><p>Tensorflow.js를 설치하는 방법은 두 가지가 있습니다.</p>
 <ul>
 <li>Script tag를 이용하는법</li>
 <li>npm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용</li>
@@ -348,13 +402,13 @@
                 <div class="postShorten-excerpt">
                     Don’t do anything boring
 
-¶Tensorflow JS
+Tensorflow JS
 중요도: ★★★★★
 난이도: ★★★★★
 
 AI가 하고 싶어요 선생님… tensorflowjs 를 튜토리얼부터 따라하면서 배워보자.
 
-¶알고리즘 강의
+알고리즘 강의
 백준강의
 
 이제 알고리즘 정복할 때가 되었다. 자바스크립트와 파이썬으로 진행해볼 예정.
@@ -362,10 +416,10 @@ AI가 하고 싶어요 선생님… tensorflowjs 를 튜토리얼부터 따라�
 중요도: ★★★★
 난이도: ★★
 
-¶Preference 패키지
+Preference 패키지
 terminal과 친숙해지기 위해 alias설정, git 설정 등을 모아 놓은 private repository를 만들어보고자 한다.
 
-https://blog.ap
+https://blog.appkr
                     
                         <a href="/2019/12/18/goal-2020/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -402,12 +456,12 @@ https://blog.ap
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶Commit Message
+                    Commit Message
 좋은 git commit 메시지를 위한 영어사전
 
 좋은 git 커밋 메시지를 작성하기 위한 7가지 약속
 
-¶요약
+요약
 Single Line
 
 1
@@ -429,7 +483,7 @@ Multi Line
 
 
  * Single Line 과 동일하지만, Multi Line 으로 가면 두 번째 라인은 반드시 비워둘 것
- * 세 번째 
+ * 세 번째 라인
                     
                         <a href="/2019/12/18/lets-beautify-git/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -468,8 +522,8 @@ Multi Line
                 <div class="postShorten-excerpt">
                     2019년도 이제 2주가 채 남지 않았습니다. 2019년에 대해 잠시 뒤돌아 보는 시간을 갖도록 하겠습니다.
 
-¶Achievement
-¶1. 퇴사 그리고 이직
+Achievement
+1. 퇴사 그리고 이직
 사실 K사에 있었을 때에는, 나름에 그 다음 이직에 대한 몇가지 원칙이 있었습니다.
 
  * 3년을 채워서 꼭 안식월 1달을 누리기
@@ -479,7 +533,7 @@ Multi Line
 결론은 무엇하나 지키지 못했습니다.
 
  * 3년을 2달 앞두고 퇴사
- * 돈은 더 많이 주는데, 복지가 더 
+ * 돈은 더 많이 주는데, 복지가 더 좋지
                     
                         <a href="/2019/12/13/retrospective-2019/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -516,19 +570,19 @@ Multi Line
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶요구사항
+                    요구사항
 한 엘리먼트안에서 특정한 키워드를 다른 색싱으로 바꿔서 출력하는 것이다.
 
 아래 예시를 살펴보자
 
-¶before
+before
 1
 
 
 <Text>카카오 페이지 카카오 스토리 카카오톡</Text>
 
 
-¶after
+after
 1
 2
 3
@@ -543,8 +597,8 @@ Multi Line
 </Text>
 
 
-¶의식의 흐름
-특정 키워드가 포함되어 있는지, 그리고 그것을 따로 뽑아 낼 수 있는 가장 
+의식의 흐름
+특정 키워드가 포함되어 있는지, 그리고 그것을 따로 뽑아 낼 수 있는 가장 간단한 
                     
                         <a href="/2019/10/15/react-text-highlight/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -618,7 +672,7 @@ Multi Line
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶브라우저 히스토리
+                    브라우저 히스토리
 브라우저의 히스토리는 window.history안에 있다.
 
 History {length: 3, scrollRestoration: "auto", state: null}
@@ -627,8 +681,8 @@ length만 가져올 수 있을 뿐, 실제 내부에 리스트는 가져올 수�
 
 window.history.back() window.history.forward()는 각각 브라우저의 앞으로가기 뒤로 가기와 동일한 역할을 한다.
 
-¶특정 위치로 가기
-window.history.go(n) 현재 페이지의 index는 0 이
+특정 위치로 가기
+window.history.go(n) 현재 페이지의 index는 0 이라고
                     
                         <a href="/2019/09/30/handle-browser-history/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -665,7 +719,7 @@ window.history.go(n) 현재 페이지의 index는 0 이
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶제네릭이란
+                    제네릭이란
 제네릭은 클래스 내부에서 사용하는 데이터의 타입을 외부에서 지정하는 것을 의미한다. 어떤 타입의 데이터를 쓸지를, 클래스 선언부가 아니라 외부에서 결정하는 것이다. 일단 자바 코드로 한번 살펴보자.
 
 1
@@ -684,53 +738,9 @@ Person<String> p1 = new Person<String>();
 Person<StringBuilder> p1 = new Person<StringBuilder>();
 
 
-T라는 데이터 타입은 존재하지 않는다. T는 nam
+T라는 데이터 타입은 존재하지 않는다. T는 name
                     
                         <a href="/2019/09/19/typescript-generic/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
-                        <a class="link-unstyled" href="/2019/09/06/javascript-event-loop/">
-                            자바스크립트의 이벤트루프, 태스크, 그리고 마이크로 태스크
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-09-06T09:51:26+09:00">
-	
-		    Sep 06, 2019
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    ¶자바스크립트는 단일 스레드 기반의 언어
-자바스크립트는 ‘단일 스레드’ 기반의 언어다. 즉, 스레드가 하나이기 때문에 동시에 하나의 작업만 처리할 수 있다. 그러나 자바스크립트가 사용되는 웹을 곰곰히 생각해보면 동시에 여러개의 작업을 처리하는 모습을 볼 수 있다. 스레드가 하나인 자바스크립트는 동시성을 어떻게 처리할까? 먼저 브라우저 구동환경을 살펴보자.
-
-
-
-
-
-위 이미지에서, 자바스크립트 엔진은 메모리 할당을 관리하는 heap과 call stack만 존재하는 것을 알 수 있다. 즉, 동시성에 대한 처리는 자바스크립트 외부에서 처
-                    
-                        <a href="/2019/09/06/javascript-event-loop/" class="postShorten-excerpt_link link">
                             Continue reading
                         </a>
                         
@@ -866,8 +876,8 @@ T라는 데이터 타입은 존재하지 않는다. T는 nam
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -885,8 +895,8 @@ T라는 데이터 타입은 존재하지 않는다. T는 nam
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -942,8 +952,8 @@ T라는 데이터 타입은 존재하지 않는다. T는 nam
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -961,8 +971,8 @@ T라는 데이터 타입은 존재하지 않는다. T는 nam
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -1022,7 +1032,7 @@ T라는 데이터 타입은 존재하지 않는다. T는 nam
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -1032,7 +1042,9 @@ T라는 데이터 타입은 존재하지 않는다. T는 nam
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
 

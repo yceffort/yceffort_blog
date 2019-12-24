@@ -34,20 +34,20 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"\n¶Javascript Event Capturing\n\n\n\n  See the Pen \n  Event Capturing by yceffort (@yceffort)\n  on CodePen.\n\n\n\n\nEvent Capturing은 특정 요소에서 이벤트가 발생했을 때, 최상위 요소에서 부터 이벤트를 탐색하여 특정요소까지 찾아오는 이벤트 전파 방식을 의미한다. 위 예시에서 가장 내부의 element를 클릭했을 때, 최상위 요소 부터 해당 click이벤트를 전파시켜 이벤트가 실행되는 것을 볼 수 있다.\n¶Javascript Event Bubbling\n\n\n\n  See the Pen \n  Event Bubbling by yceffort (@yceffort)\n  on CodePen.\n\n\n\n\n반대로 Event Bubbling은 특정요소에서 이벤트가 발생했을 때, 해당 요소에서 부터 이벤트를 전파시키는 것을 의미한다. 위 예시에서 가장 내부의 three를 클릭했을때, three, two, one으로 이벤트가 전파되는 것을 볼 수 있다.\n¶stopPropagation\nstopPropagation는 이벤트의 전파 (Event Bubbling 및 Capturing)을 막는 것을 의미한다. 즉, 현재까지의 이벤트만 실행하고 이후의 이벤트를 막게된다.\n¶preventDefault\npreventDefault는 해당 DOM에서 내가 원하는 이벤트만 실행하고, 기본적인 (취소할 수 있는) 이벤트를 취소하는 것을 의미한다.\n\n\n\n  See the Pen \n  preventDefault by yceffort (@yceffort)\n  on CodePen.\n\n\n\n\n해다아 예쩨에서는 preventDefault를 이용해서 a tag의 기본 이벤트인 href를 막는 것을 볼 수 있다.\n","dateCreated":"2019-07-17T10:22:22+09:00","dateModified":"2019-07-17T10:55:37+09:00","datePublished":"2019-07-17T10:22:22+09:00","description":"¶Javascript Event Capturing\n See the Pen Event Capturing by yceffort (@yceffort) on CodePen.\n\nEvent Capturing은 특정 요소에서 이벤트가 발생했을 때, 최상위 요소에서 부터 이벤트를 탐색하여 특정요소까지 찾아오는 이벤트 전파 방식을 의미한다. 위 예시에서 가장 내부의 element를 클릭했을 때, 최상위 요소 부터 해당 click이벤트를 전파시켜 이벤트가 실행되는 것을 볼 수 있다.\n\n¶Javascript Event Bubbling\n See the ","headline":"javascript event bubbling & capturing","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/07/17/javascript-event-bubbling-capturing/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/07/17/javascript-event-bubbling-capturing/","keywords":"javascript"}</script>
-    <meta name="description" content="¶Javascript Event Capturing  See the Pen Event Capturing by yceffort (@yceffort) on CodePen.  Event Capturing은 특정 요소에서 이벤트가 발생했을 때, 최상위 요소에서 부터 이벤트를 탐색하여 특정요소까지 찾아오는 이벤트 전파 방식을 의미한다. 위 예시에서 가장 내부의 ele">
-<meta name="keywords" content="javascript">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"\nJavascript Event Capturing\n\n\n  See the Pen \n  Event Capturing by yceffort (@yceffort)\n  on CodePen.\n\n\n\n\nEvent Capturing은 특정 요소에서 이벤트가 발생했을 때, 최상위 요소에서 부터 이벤트를 탐색하여 특정요소까지 찾아오는 이벤트 전파 방식을 의미한다. 위 예시에서 가장 내부의 element를 클릭했을 때, 최상위 요소 부터 해당 click이벤트를 전파시켜 이벤트가 실행되는 것을 볼 수 있다.\nJavascript Event Bubbling\n\n\n  See the Pen \n  Event Bubbling by yceffort (@yceffort)\n  on CodePen.\n\n\n\n\n반대로 Event Bubbling은 특정요소에서 이벤트가 발생했을 때, 해당 요소에서 부터 이벤트를 전파시키는 것을 의미한다. 위 예시에서 가장 내부의 three를 클릭했을때, three, two, one으로 이벤트가 전파되는 것을 볼 수 있다. \nstopPropagationstopPropagation는 이벤트의 전파 (Event Bubbling 및 Capturing)을 막는 것을 의미한다. 즉, 현재까지의 이벤트만 실행하고 이후의 이벤트를 막게된다.\npreventDefaultpreventDefault는 해당 DOM에서 내가 원하는 이벤트만 실행하고, 기본적인 (취소할 수 있는) 이벤트를 취소하는 것을 의미한다.\n\n\n\n  See the Pen \n  preventDefault by yceffort (@yceffort)\n  on CodePen.\n\n\n\n\n해다아 예쩨에서는 preventDefault를 이용해서 a tag의 기본 이벤트인 href를 막는 것을 볼 수 있다.\n","dateCreated":"2019-07-17T10:22:22+09:00","dateModified":"2019-07-17T10:55:37+09:00","datePublished":"2019-07-17T10:22:22+09:00","description":"Javascript Event Capturing\n See the Pen Event Capturing by yceffort (@yceffort) on CodePen.\n\nEvent Capturing은 특정 요소에서 이벤트가 발생했을 때, 최상위 요소에서 부터 이벤트를 탐색하여 특정요소까지 찾아오는 이벤트 전파 방식을 의미한다. 위 예시에서 가장 내부의 element를 클릭했을 때, 최상위 요소 부터 해당 click이벤트를 전파시켜 이벤트가 실행되는 것을 볼 수 있다.\n\nJavascript Event Bubbling\n See the Pe","headline":"javascript event bubbling & capturing","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/07/17/javascript-event-bubbling-capturing/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/07/17/javascript-event-bubbling-capturing/","keywords":"javascript"}</script>
+    <meta name="description" content="Javascript Event Capturing  See the Pen Event Capturing by yceffort (@yceffort) on CodePen.  Event Capturing은 특정 요소에서 이벤트가 발생했을 때, 최상위 요소에서 부터 이벤트를 탐색하여 특정요소까지 찾아오는 이벤트 전파 방식을 의미한다. 위 예시에서 가장 내부의 elem">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="javascript event bubbling &amp; capturing">
 <meta property="og:url" content="https://www.yceffort.kr/2019/07/17/javascript-event-bubbling-capturing/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="¶Javascript Event Capturing  See the Pen Event Capturing by yceffort (@yceffort) on CodePen.  Event Capturing은 특정 요소에서 이벤트가 발생했을 때, 최상위 요소에서 부터 이벤트를 탐색하여 특정요소까지 찾아오는 이벤트 전파 방식을 의미한다. 위 예시에서 가장 내부의 ele">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="Javascript Event Capturing  See the Pen Event Capturing by yceffort (@yceffort) on CodePen.  Event Capturing은 특정 요소에서 이벤트가 발생했을 때, 최상위 요소에서 부터 이벤트를 탐색하여 특정요소까지 찾아오는 이벤트 전파 방식을 의미한다. 위 예시에서 가장 내부의 elem">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://miro.medium.com/max/1200/1*Et5UjVPGLfF1L43T7ErrxQ.png">
-<meta property="og:updated_time" content="2019-07-17T01:55:37.340Z">
+<meta property="article:published_time" content="2019-07-17T01:22:22.000Z">
+<meta property="article:modified_time" content="2019-07-17T01:55:37.340Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="javascript">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="javascript event bubbling &amp; capturing">
-<meta name="twitter:description" content="¶Javascript Event Capturing  See the Pen Event Capturing by yceffort (@yceffort) on CodePen.  Event Capturing은 특정 요소에서 이벤트가 발생했을 때, 최상위 요소에서 부터 이벤트를 탐색하여 특정요소까지 찾아오는 이벤트 전파 방식을 의미한다. 위 예시에서 가장 내부의 ele">
 <meta name="twitter:image" content="https://miro.medium.com/max/1200/1*Et5UjVPGLfF1L43T7ErrxQ.png">
     
     
@@ -60,7 +60,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -87,7 +89,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -126,8 +128,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -264,8 +265,7 @@
     <div class="post-content markdown">
         <div class="main-content-wrap">
             <p><img src="https://miro.medium.com/max/1200/1*Et5UjVPGLfF1L43T7ErrxQ.png" alt="image"></p>
-<h2 id="javascript-event-capturing"><a class="header-anchor" href="#javascript-event-capturing">¶</a>Javascript Event Capturing</h2>
-
+<h2 id="Javascript-Event-Capturing"><a href="#Javascript-Event-Capturing" class="headerlink" title="Javascript Event Capturing"></a>Javascript Event Capturing</h2>
 
 <p class="codepen" data-height="500" data-theme-id="0" data-default-tab="js,result" data-user="yceffort" data-slug-hash="GbVaaY" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="Event Capturing">
   <span>See the Pen <a href="https://codepen.io/yceffort/pen/GbVaaY/" target="_blank" rel="noopener">
@@ -276,8 +276,7 @@
 
 
 <p>Event Capturing은 특정 요소에서 이벤트가 발생했을 때, 최상위 요소에서 부터 이벤트를 탐색하여 특정요소까지 찾아오는 이벤트 전파 방식을 의미한다. 위 예시에서 가장 내부의 element를 클릭했을 때, 최상위 요소 부터 해당 <code>click</code>이벤트를 전파시켜 이벤트가 실행되는 것을 볼 수 있다.</p>
-<h2 id="javascript-event-bubbling"><a class="header-anchor" href="#javascript-event-bubbling">¶</a>Javascript Event Bubbling</h2>
-
+<h2 id="Javascript-Event-Bubbling"><a href="#Javascript-Event-Bubbling" class="headerlink" title="Javascript Event Bubbling"></a>Javascript Event Bubbling</h2>
 
 <p class="codepen" data-height="500" data-theme-id="0" data-default-tab="js,result" data-user="yceffort" data-slug-hash="Prrgob" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="Event Bubbling">
   <span>See the Pen <a href="https://codepen.io/yceffort/pen/Prrgob/" target="_blank" rel="noopener">
@@ -287,11 +286,9 @@
 <script async src="https://static.codepen.io/assets/embed/ei.js"></script>
 
 
-<p>반대로 Event Bubbling은 특정요소에서 이벤트가 발생했을 때, 해당 요소에서 부터 이벤트를 전파시키는 것을 의미한다. 위 예시에서 가장 내부의 <code>three</code>를 클릭했을때, <code>three</code>, <code>two</code>, <code>one</code>으로 이벤트가 전파되는 것을 볼 수 있다.</p>
-<h2 id="stoppropagation"><a class="header-anchor" href="#stoppropagation">¶</a>stopPropagation</h2>
-<p><code>stopPropagation</code>는 이벤트의 전파 (Event Bubbling 및 Capturing)을 막는 것을 의미한다. 즉, 현재까지의 이벤트만 실행하고 이후의 이벤트를 막게된다.</p>
-<h2 id="preventdefault"><a class="header-anchor" href="#preventdefault">¶</a>preventDefault</h2>
-<p><code>preventDefault</code>는 해당 DOM에서 내가 원하는 이벤트만 실행하고, 기본적인 (취소할 수 있는) 이벤트를 취소하는 것을 의미한다.</p>
+<p>반대로 Event Bubbling은 특정요소에서 이벤트가 발생했을 때, 해당 요소에서 부터 이벤트를 전파시키는 것을 의미한다. 위 예시에서 가장 내부의 <code>three</code>를 클릭했을때, <code>three</code>, <code>two</code>, <code>one</code>으로 이벤트가 전파되는 것을 볼 수 있다. </p>
+<h2 id="stopPropagation"><a href="#stopPropagation" class="headerlink" title="stopPropagation"></a>stopPropagation</h2><p><code>stopPropagation</code>는 이벤트의 전파 (Event Bubbling 및 Capturing)을 막는 것을 의미한다. 즉, 현재까지의 이벤트만 실행하고 이후의 이벤트를 막게된다.</p>
+<h2 id="preventDefault"><a href="#preventDefault" class="headerlink" title="preventDefault"></a>preventDefault</h2><p><code>preventDefault</code>는 해당 DOM에서 내가 원하는 이벤트만 실행하고, 기본적인 (취소할 수 있는) 이벤트를 취소하는 것을 의미한다.</p>
 
 
 <p class="codepen" data-height="265" data-theme-id="0" data-default-tab="js,result" data-user="yceffort" data-slug-hash="xovoRp" style="height: 265px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; border: 2px solid; margin: 1em 0; padding: 1em;" data-pen-title="preventDefault">
@@ -318,7 +315,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/">javascript</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/" rel="tag">javascript</a>
 
             </div>
         
@@ -371,12 +368,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -391,10 +382,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -458,12 +445,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -602,8 +583,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -621,8 +602,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -678,8 +659,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -697,8 +678,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -758,7 +739,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -768,26 +749,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/07/17/javascript-event-bubbling-capturing/';
-                 
-                    this.page.identifier = '2019/07/17/javascript-event-bubbling-capturing/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

@@ -35,17 +35,18 @@
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
     <script type="application/ld+json">{}</script>
-    <meta name="description" content="this is the yceffort&apos;s private blog">
-<meta name="keywords" content="programming,innovation,technology">
+    <meta name="description" content="this is the yceffort&#39;s private blog">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="yceffort">
 <meta property="og:url" content="https://www.yceffort.kr/tags/tensorflow/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="this is the yceffort&apos;s private blog">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="this is the yceffort&#39;s private blog">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="programming">
+<meta property="article:tag" content="innovation">
+<meta property="article:tag" content="technology">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="yceffort">
-<meta name="twitter:description" content="this is the yceffort&apos;s private blog">
     
     
     
@@ -57,7 +58,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -84,7 +87,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -123,8 +126,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -244,6 +246,61 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title">
                     
+                        <a class="link-unstyled" href="/2019/12/23/tensorflowjs-03-linear_regression/">
+                            Tensorflow.js - 03. Linear Regression
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-12-23T10:30:29+09:00">
+	
+		    Dec 23, 2019
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    Linear Regression
+몇 번째 선형 회귀인지 알 수 없다.
+
+01. 2d data로 예측해보기
+이번 튜토리얼에서는 자동차 세트를 표현한 숫자 데이터로 예측하는 모델을 훈련시켜 봅니다.
+
+이 연습에서는 다양한 종류의 모델을 훈련하는 공통적인 단계를 보여주고, 이에 따라 작은 데이터 세트와 간단한 모델을 사용합니다. 1차적인 목표는 Tensorflow.js의 훈련 모델과 관련된 기본적인 용어, 개념 및 신택스를 숙지하고, 추가 학습을 위한 발판을 마련하는 것입니다.
+
+02. Set up
+html
+
+1
+2
+3
+4
+5
+6
+7
+8
+                    
+                        <a href="/2019/12/23/tensorflowjs-03-linear_regression/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
                         <a class="link-unstyled" href="/2019/12/20/tensorflowjs-01-get-started/">
                             Tensorflow.js - 01. 시작하기
                         </a>
@@ -262,8 +319,7 @@
             
                 <div class="postShorten-excerpt">
                     <p><a href="https://www.tensorflow.org/js/tutorials" target="_blank" rel="noopener">https://www.tensorflow.org/js/tutorials</a>을 개인적인 학습을 위해 번역한 글입니다. 정확한 번역을 위해서가 아니라, 개인적인 공부를 위해서 하는 것입니다. 오해 ㄴㄴ</p>
-<h2 id="시작하기"><a class="header-anchor" href="#시작하기">¶</a>시작하기</h2>
-<p>Tensorflow.js는 브라우저와 Node.js에서 머신러닝 모델을 사용하고 훈련시킬 수 있는 자바스크립트 라이브러리입니다.</p>
+<h2 id="시작하기"><a href="#시작하기" class="headerlink" title="시작하기"></a>시작하기</h2><p>Tensorflow.js는 브라우저와 Node.js에서 머신러닝 모델을 사용하고 훈련시킬 수 있는 자바스크립트 라이브러리입니다.</p>
 <p>시작하는 다양한 방법은 아래 섹션들을 참고하세요.</p>
                     
                         <a href="/2019/12/20/tensorflowjs-01-get-started/" class="postShorten-excerpt_link link">
@@ -302,9 +358,7 @@
             
                 <div class="postShorten-excerpt">
                     <p><a href="/2019/12/20/tensorflowjs-01-get-started/">이전글 보기</a></p>
-<h2 id="설치"><a class="header-anchor" href="#설치">¶</a>설치</h2>
-<h3 id="브라우저-설치"><a class="header-anchor" href="#브라우저-설치">¶</a>브라우저 설치</h3>
-<p>Tensorflow.js를 설치하는 방법은 두 가지가 있습니다.</p>
+<h2 id="설치"><a href="#설치" class="headerlink" title="설치"></a>설치</h2><h3 id="브라우저-설치"><a href="#브라우저-설치" class="headerlink" title="브라우저 설치"></a>브라우저 설치</h3><p>Tensorflow.js를 설치하는 방법은 두 가지가 있습니다.</p>
 <ul>
 <li>Script tag를 이용하는법</li>
 <li>npm을 이용해서 설치하고, Parcel, Webpack, Rollup 같은 빌드 툴을 사용</li>
@@ -439,8 +493,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -458,8 +512,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -515,8 +569,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -534,8 +588,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -595,7 +649,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -605,7 +659,9 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
 

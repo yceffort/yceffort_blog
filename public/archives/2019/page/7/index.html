@@ -35,17 +35,18 @@
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
     <script type="application/ld+json">{}</script>
-    <meta name="description" content="this is the yceffort&apos;s private blog">
-<meta name="keywords" content="programming,innovation,technology">
+    <meta name="description" content="this is the yceffort&#39;s private blog">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="yceffort">
 <meta property="og:url" content="https://www.yceffort.kr/archives/2019/page/7/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="this is the yceffort&apos;s private blog">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="this is the yceffort&#39;s private blog">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="programming">
+<meta property="article:tag" content="innovation">
+<meta property="article:tag" content="technology">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="yceffort">
-<meta name="twitter:description" content="this is the yceffort&apos;s private blog">
     
     
     
@@ -57,7 +58,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -84,7 +87,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -123,8 +126,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -244,8 +246,8 @@
             <div class="postShorten-header">
                 <h1 class="postShorten-title">
                     
-                        <a class="link-unstyled" href="/2019/02/11/matlab-seaborn-summary/">
-                            Matlab &amp; Seaborn 기본적인 기능 정리
+                        <a class="link-unstyled" href="/2019/02/11/numpy-summary/">
+                            Numpy 기본적인 기능 정리
                         </a>
                     
                 </h1>
@@ -261,9 +263,46 @@
             </div>
             
                 <div class="postShorten-excerpt">
-                    Gist 짱짱맨. 그러나 높이 조절이 잘 안된다. (귀찮…)
+                    귀찮아서 github gist로…
                     
-                        <a href="/2019/02/11/matlab-seaborn-summary/" class="postShorten-excerpt_link link">
+                        <a href="/2019/02/11/numpy-summary/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
+                        <a class="link-unstyled" href="/2019/02/11/pandas-summary/">
+                            Pandas 기본적인 기능 정리
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-02-11T00:00:00+09:00">
+	
+		    Feb 11, 2019
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    이것도 귀찮아서 github gist로…
+                    
+                        <a href="/2019/02/11/pandas-summary/" class="postShorten-excerpt_link link">
                             Continue reading
                         </a>
                         
@@ -368,13 +407,13 @@ from torch.utils.data import DataLoader, TensorDa
                 <div class="postShorten-excerpt">
                     앞서 CNN네트워크를 진행하면서 모르는 부분이 좀 있어서, 이론적인 측면을 좀더 강조해서 글을 써보려고 한다.
 
-¶구조
+구조
 일단 중간층이 Convolutional Layer, Pooling Layer, Fully-connted Layer로 구성되어 있다. 그리고 마지막엔 Dropouut Layer를 넣는 경우도 있고, Softmax 함수로 마무리 한다.
 
 
 
-¶Convolutional Layer
-이른바 합성곱층이다. 입력데이터에 필터를 적용해서 특징값을 추출하는 레이어다. 필터를 적용해서 특징값을 추출하고, 이 필터의 값을 비선형 값으
+Convolutional Layer
+이른바 합성곱층이다. 입력데이터에 필터를 적용해서 특징값을 추출하는 레이어다. 필터를 적용해서 특징값을 추출하고, 이 필터의 값을 비선형 값으로 
                     
                         <a href="/2019/01/30/pytorch-3-convolutional-neural-network(3)/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -561,6 +600,54 @@ import torch.optim as opti
             <div class="postShorten-header">
                 <h1 class="postShorten-title">
                     
+                        <a class="link-unstyled" href="/2019/01/27/pytorch-1-perceptron-nerual-network/">
+                            Pytorch (1) - 퍼셉트론 알고리즘과 신경망 알고리즘
+                        </a>
+                    
+                </h1>
+                <div class="postShorten-meta">
+    <time datetime="2019-01-27T00:00:00+09:00">
+	
+		    Jan 27, 2019
+    	
+    </time>
+    
+</div>
+
+            </div>
+            
+                <div class="postShorten-excerpt">
+                    퍼셉트론 알고리즘
+퍼셉트론 알고리즘은 머신러닝 기법 중 지도학습 기법이자 분류 알고리즘에 속한다.
+
+
+
+각각의 input에 입력값과 가중치를 곱한 값을 합한 다음, 바이어스 (=1)를 더한 값이 된다. 그 다음에는 활성화 함수가 노드에 전달된 값을 변환하여 출력값을 만든다. 퍼셉트론의 경우에는, 활성화 함수로 스텝함수를 쓰는 경우가 많다.
+
+
+
+함수에서도 보이지만, 입력값이 0 이상이면 출력값이 1이 되고, 그렇지 않으면 0이 된다. 
+
+퍼셉트론은 지도학습 알고리즘이다. 따라서 학습데이터는 설명변수와 그에 대한 정답인 목적변수를 포
+                    
+                        <a href="/2019/01/27/pytorch-1-perceptron-nerual-network/" class="postShorten-excerpt_link link">
+                            Continue reading
+                        </a>
+                        
+                    
+                </div>
+            
+        </div>
+        
+    </article>
+    
+    
+    <article class="postShorten postShorten--thumbnailimg-right">
+        <div class="postShorten-wrap">
+            
+            <div class="postShorten-header">
+                <h1 class="postShorten-title">
+                    
                         <a class="link-unstyled" href="/2019/01/27/pytorch-2-multi-perceptron(1)/">
                             Pytorch (2-1) - 다층 퍼셉트론
                         </a>
@@ -604,54 +691,6 @@ import torch.optim as opti
             <div class="postShorten-header">
                 <h1 class="postShorten-title">
                     
-                        <a class="link-unstyled" href="/2019/01/27/pytorch-1-perceptron-nerual-network/">
-                            Pytorch (1) - 퍼셉트론 알고리즘과 신경망 알고리즘
-                        </a>
-                    
-                </h1>
-                <div class="postShorten-meta">
-    <time datetime="2019-01-27T00:00:00+09:00">
-	
-		    Jan 27, 2019
-    	
-    </time>
-    
-</div>
-
-            </div>
-            
-                <div class="postShorten-excerpt">
-                    ¶퍼셉트론 알고리즘
-퍼셉트론 알고리즘은 머신러닝 기법 중 지도학습 기법이자 분류 알고리즘에 속한다.
-
-
-
-각각의 input에 입력값과 가중치를 곱한 값을 합한 다음, 바이어스 (=1)를 더한 값이 된다. 그 다음에는 활성화 함수가 노드에 전달된 값을 변환하여 출력값을 만든다. 퍼셉트론의 경우에는, 활성화 함수로 스텝함수를 쓰는 경우가 많다.
-
-
-
-함수에서도 보이지만, 입력값이 0 이상이면 출력값이 1이 되고, 그렇지 않으면 0이 된다.
-
-퍼셉트론은 지도학습 알고리즘이다. 따라서 학습데이터는 설명변수와 그에 대한 정답인 목적변수를 포
-                    
-                        <a href="/2019/01/27/pytorch-1-perceptron-nerual-network/" class="postShorten-excerpt_link link">
-                            Continue reading
-                        </a>
-                        
-                    
-                </div>
-            
-        </div>
-        
-    </article>
-    
-    
-    <article class="postShorten postShorten--thumbnailimg-right">
-        <div class="postShorten-wrap">
-            
-            <div class="postShorten-header">
-                <h1 class="postShorten-title">
-                    
                         <a class="link-unstyled" href="/2019/01/27/pytorch-2-multi-perceptron(2)/">
                             Pytorch (2-2) - 손 글씨 분류하기
                         </a>
@@ -669,7 +708,7 @@ import torch.optim as opti
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶손글씨 분류하기 (MNIST)
+                    손글씨 분류하기 (MNIST)
 머신러닝의 단골 주제다. 손글씨를 분류해보자. 이전 데이터와 다른 점이라고 한다면, 이전 데이터는 표 형식이었지만, 이제는 이미지 형식으로 구성되어 있다.
 
 1
@@ -695,7 +734,7 @@ from torch.autograd import Variable
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-from torch.utils.data 
+from torch.utils.data i
                     
                         <a href="/2019/01/27/pytorch-2-multi-perceptron(2)/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -833,8 +872,8 @@ from torch.utils.data
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -852,8 +891,8 @@ from torch.utils.data
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -909,8 +948,8 @@ from torch.utils.data
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -928,8 +967,8 @@ from torch.utils.data
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -989,7 +1028,7 @@ from torch.utils.data
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -999,7 +1038,9 @@ from torch.utils.data
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
 

@@ -34,21 +34,21 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Pytorch - 01) Tensor\n¶Tensor\n이제는 더 이상 기초를 다루지 않겠다. (마지막 기초 공부)\n123# 기초적인 배열 선언v = torch.tensor([1, 2, 3])v\n1tensor([1, 2, 3])\n12# 타입 확인v.dtype\n1torch.int64\n1234# pytohn 배열과 마찬가지로 슬라이싱이 가능하다v = torch.tensor([1, 2, 3, 4, 5, 6])v[1:]v[1:4]\n123# Float 형태로 선언f = torch.FloatTensor([1, 2, 3, 4, 5, 6])f\n1tensor([1., 2., 3., 4., 5., 6.])\n12# 크기 확인f.size()\n1torch.Size([6])\n12# view를 써서 배열 형태를 조작할 수도 있다.v.view(6, 1)\n123456tensor([[1],        [2],        [3],        [4],        [5],        [6]])\n12# 3만 줄테니 알아서 사이즈를 조절해라v.view(3, -1)\n123tensor([[1, 2],        [3, 4],        [5, 6]])\n1234# numpy array를 tensor array를  상호간에 변환하는 것이 가능하다.a = np.array([1, 2, 3, 4, 5, ])tensor_cnv = torch.from_numpy(a)print(tensor_cnv, tensor_cnv.type())\n1tensor([1, 2, 3, 4, 5]) torch.LongTensor\n12numpy_cnv = tensor_cnv.numpy()numpy_cnv\n1array([1, 2, 3, 4, 5])\n1234# 0부터 10을 100개로 쪼갠다.torch.linspace(0, 10)# 0부터 10을 5개로 쪼갠다.torch.linspace(0, 10, 5)\n1234# 이런 것도 가능하다.x = torch.linspace(0, 10, 100)y = torch.exp(x)y\n1234567891011121314151617tensor([1.0000e+00, 1.1063e+00, 1.2239e+00, 1.3540e+00, 1.4979e+00, 1.6571e+00,        1.8332e+00, 2.0280e+00, 2.2436e+00, 2.4821e+00, 2.7459e+00, 3.0377e+00,        3.3606e+00, 3.7178e+00, 4.1130e+00, 4.5501e+00, 5.0337e+00, 5.5688e+00,        6.1606e+00, 6.8154e+00, 7.5398e+00, 8.3412e+00, 9.2278e+00, 1.0209e+01,        1.1294e+01, 1.2494e+01, 1.3822e+01, 1.5291e+01, 1.6916e+01, 1.8714e+01,        2.0704e+01, 2.2904e+01, 2.5338e+01, 2.8032e+01, 3.1011e+01, 3.4307e+01,        3.7954e+01, 4.1988e+01, 4.6450e+01, 5.1387e+01, 5.6849e+01, 6.2892e+01,        6.9576e+01, 7.6971e+01, 8.5153e+01, 9.4203e+01, 1.0422e+02, 1.1529e+02,        1.2755e+02, 1.4110e+02, 1.5610e+02, 1.7269e+02, 1.9105e+02, 2.1135e+02,        2.3382e+02, 2.5867e+02, 2.8616e+02, 3.1658e+02, 3.5023e+02, 3.8745e+02,        4.2864e+02, 4.7419e+02, 5.2459e+02, 5.8035e+02, 6.4204e+02, 7.1028e+02,        7.8577e+02, 8.6929e+02, 9.6168e+02, 1.0639e+03, 1.1770e+03, 1.3021e+03,        1.4405e+03, 1.5936e+03, 1.7630e+03, 1.9503e+03, 2.1576e+03, 2.3870e+03,        2.6407e+03, 2.9213e+03, 3.2318e+03, 3.5753e+03, 3.9554e+03, 4.3758e+03,        4.8409e+03, 5.3554e+03, 5.9246e+03, 6.5543e+03, 7.2510e+03, 8.0216e+03,        8.8742e+03, 9.8175e+03, 1.0861e+04, 1.2015e+04, 1.3292e+04, 1.4705e+04,        1.6268e+04, 1.7997e+04, 1.9910e+04, 2.2026e+04])\n1plt.plot(x.numpy(), y.numpy())\n\n123x = torch.linspace(0, 10, 100)y = torch.sin(x)plt.plot(x.numpy(), y.numpy())\n\n¶n차원 배열\n123one_d = torch.arange(0, 9)two_d = one_d.view(3, 3)two_d\n1234tensor([0, 1, 2, 3, 4, 5, 6, 7, 8])tensor([[0, 1, 2],        [3, 4, 5],        [6, 7, 8]])\n12# dim으로 차원을 확인할 수 있다.two_d.dim()\n12\n123# 2개의 블록, 3로우, 3컬럼의 형태로 만들어진다.x = torch.arange(18).view(2, 3, 3)x\n1234567891011tensor([[[ 0,  1],         [ 2,  3],         [ 4,  5]],        [[ 6,  7],         [ 8,  9],         [10, 11]],        [[12, 13],         [14, 15],         [16, 17]]])\n1234mat_a = torch.tensor([0, 3, 5, 5, 5, 2]).view(2, 3)mat_b = torch.tensor([3, 4, 3, -2, 4, -2]).view(3, 2)torch.matmul(mat_a, mat_b)mat_a @ mat_b\nmatmul 과 @ 은 서로 곱할 수 있는 크기의 매트릭스를 곱하는 식이다. 고등학교때 행렬 열심히 하기를 잘했다.\n¶autograd\npytorch의 장점은 자동미분(autograd)을 지원한다는 점이다.\n$$x=2$$\n$$y = 9x^4 + 2x^3 + 3x^2 + 6x+1$$\n이식을 미분해보자.\n12x = torch.tensor(2.0, requires_grad=True)y = 9*x**4 + 2*x**3 + 3*x**2 + 6*x + 1\n12tensor(2., requires_grad=True)tensor(185., grad_fn=&lt;AddBackward0&gt;)\n자동미분을 True로 세팅하여, 모든 연산에 대해 추적을 할 수 있게 해둔 것이다. 계산작업이 모두 수행 되었으므로 (y) .backward를 수행하여, 모든 그라디어트를 자동으로 계산하게 할 수 있다. 그리고 그 그라디언트는 .grad에 누적되어 저장된다.\n12y.backward()x.grad\n$$ 4 \\times 9x^3 + 3 \\times 2x^2 + 2 \\times 3 x + 6$$\n여기에 2를 대입하면\n1tensor(330.)\n1234x = torch.tensor(1.0, requires_grad=True)z = torch.tensor(2.0, requires_grad=True)y = x**2 + z**3y.backward()\n12x.gradz.grad\n각각 2와 12가 나올 것이다.\n","dateCreated":"2019-02-19T00:00:00+09:00","dateModified":"2019-02-19T09:16:25+09:00","datePublished":"2019-02-19T00:00:00+09:00","description":"Pytorch - 01) Tensor\n\n¶Tensor\n이제는 더 이상 기초를 다루지 않겠다. (마지막 기초 공부)\n\n1\n2\n3\n\n\n# 기초적인 배열 선언\nv = torch.tensor([1, 2, 3])\nv\n\n\n1\n\n\ntensor([1, 2, 3])\n\n\n1\n2\n\n\n# 타입 확인\nv.dtype\n\n\n1\n\n\ntorch.int64\n\n\n1\n2\n3\n4\n\n\n# pytohn 배열과 마찬가지로 슬라이싱이 가능하다\nv = torch.tensor([1, 2, 3, 4, 5, 6])\nv[1:]\nv[1:4]\n\n\n1\n2\n3\n\n\n# Float 형태로 선언\nf","headline":"Pytorch 01) - Tensor","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/02/19/pytorch-01-tensor/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/02/19/pytorch-01-tensor/","keywords":"pytorch"}</script>
-    <meta name="description" content="Pytorch - 01) Tensor  ¶Tensor 이제는 더 이상 기초를 다루지 않겠다. (마지막 기초 공부)  1 2 3   # 기초적인 배열 선언 v = torch.tensor([1, 2, 3]) v   1   tensor([1, 2, 3])   1 2   # 타입 확인 v.dtype   1   torch.int64   1 2 3 4   # pyto">
-<meta name="keywords" content="pytorch">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Pytorch - 01) Tensor\nTensor이제는 더 이상 기초를 다루지 않겠다. (마지막 기초 공부)\n123# 기초적인 배열 선언v = torch.tensor([1, 2, 3])v\n1tensor([1, 2, 3])\n12# 타입 확인v.dtype\n1torch.int64\n1234# pytohn 배열과 마찬가지로 슬라이싱이 가능하다v = torch.tensor([1, 2, 3, 4, 5, 6])v[1:]v[1:4]\n123# Float 형태로 선언f = torch.FloatTensor([1, 2, 3, 4, 5, 6])f\n1tensor([1., 2., 3., 4., 5., 6.])\n12# 크기 확인f.size()\n1torch.Size([6])\n12# view를 써서 배열 형태를 조작할 수도 있다.v.view(6, 1)\n123456tensor([[1],        [2],        [3],        [4],        [5],        [6]])\n12# 3만 줄테니 알아서 사이즈를 조절해라v.view(3, -1)\n123tensor([[1, 2],        [3, 4],        [5, 6]])\n1234# numpy array를 tensor array를  상호간에 변환하는 것이 가능하다.a = np.array([1, 2, 3, 4, 5, ])tensor_cnv = torch.from_numpy(a)print(tensor_cnv, tensor_cnv.type())\n1tensor([1, 2, 3, 4, 5]) torch.LongTensor\n12numpy_cnv = tensor_cnv.numpy()numpy_cnv\n1array([1, 2, 3, 4, 5])\n1234# 0부터 10을 100개로 쪼갠다.torch.linspace(0, 10)# 0부터 10을 5개로 쪼갠다.torch.linspace(0, 10, 5)\n1234# 이런 것도 가능하다.x = torch.linspace(0, 10, 100)y = torch.exp(x)y\n1234567891011121314151617tensor([1.0000e+00, 1.1063e+00, 1.2239e+00, 1.3540e+00, 1.4979e+00, 1.6571e+00,        1.8332e+00, 2.0280e+00, 2.2436e+00, 2.4821e+00, 2.7459e+00, 3.0377e+00,        3.3606e+00, 3.7178e+00, 4.1130e+00, 4.5501e+00, 5.0337e+00, 5.5688e+00,        6.1606e+00, 6.8154e+00, 7.5398e+00, 8.3412e+00, 9.2278e+00, 1.0209e+01,        1.1294e+01, 1.2494e+01, 1.3822e+01, 1.5291e+01, 1.6916e+01, 1.8714e+01,        2.0704e+01, 2.2904e+01, 2.5338e+01, 2.8032e+01, 3.1011e+01, 3.4307e+01,        3.7954e+01, 4.1988e+01, 4.6450e+01, 5.1387e+01, 5.6849e+01, 6.2892e+01,        6.9576e+01, 7.6971e+01, 8.5153e+01, 9.4203e+01, 1.0422e+02, 1.1529e+02,        1.2755e+02, 1.4110e+02, 1.5610e+02, 1.7269e+02, 1.9105e+02, 2.1135e+02,        2.3382e+02, 2.5867e+02, 2.8616e+02, 3.1658e+02, 3.5023e+02, 3.8745e+02,        4.2864e+02, 4.7419e+02, 5.2459e+02, 5.8035e+02, 6.4204e+02, 7.1028e+02,        7.8577e+02, 8.6929e+02, 9.6168e+02, 1.0639e+03, 1.1770e+03, 1.3021e+03,        1.4405e+03, 1.5936e+03, 1.7630e+03, 1.9503e+03, 2.1576e+03, 2.3870e+03,        2.6407e+03, 2.9213e+03, 3.2318e+03, 3.5753e+03, 3.9554e+03, 4.3758e+03,        4.8409e+03, 5.3554e+03, 5.9246e+03, 6.5543e+03, 7.2510e+03, 8.0216e+03,        8.8742e+03, 9.8175e+03, 1.0861e+04, 1.2015e+04, 1.3292e+04, 1.4705e+04,        1.6268e+04, 1.7997e+04, 1.9910e+04, 2.2026e+04])\n1plt.plot(x.numpy(), y.numpy())\n\n123x = torch.linspace(0, 10, 100)y = torch.sin(x)plt.plot(x.numpy(), y.numpy())\n\nn차원 배열123one_d = torch.arange(0, 9)two_d = one_d.view(3, 3)two_d\n1234tensor([0, 1, 2, 3, 4, 5, 6, 7, 8])tensor([[0, 1, 2],        [3, 4, 5],        [6, 7, 8]])\n12# dim으로 차원을 확인할 수 있다.two_d.dim()\n12\n123# 2개의 블록, 3로우, 3컬럼의 형태로 만들어진다.x = torch.arange(18).view(2, 3, 3)x\n1234567891011tensor([[[ 0,  1],         [ 2,  3],         [ 4,  5]],        [[ 6,  7],         [ 8,  9],         [10, 11]],        [[12, 13],         [14, 15],         [16, 17]]])\n1234mat_a = torch.tensor([0, 3, 5, 5, 5, 2]).view(2, 3)mat_b = torch.tensor([3, 4, 3, -2, 4, -2]).view(3, 2)torch.matmul(mat_a, mat_b)mat_a @ mat_b\nmatmul 과 @ 은 서로 곱할 수 있는 크기의 매트릭스를 곱하는 식이다. 고등학교때 행렬 열심히 하기를 잘했다.\nautogradpytorch의 장점은 자동미분(autograd)을 지원한다는 점이다.\nx=2y = 9x^4 + 2x^3 + 3x^2 + 6x+1이식을 미분해보자.\n12x = torch.tensor(2.0, requires_grad=True)y = 9*x**4 + 2*x**3 + 3*x**2 + 6*x + 1\n12tensor(2., requires_grad=True)tensor(185., grad_fn=&lt;AddBackward0&gt;)\n자동미분을 True로 세팅하여, 모든 연산에 대해 추적을 할 수 있게 해둔 것이다. 계산작업이 모두 수행 되었으므로 (y) .backward를 수행하여, 모든 그라디어트를 자동으로 계산하게 할 수 있다. 그리고 그 그라디언트는 .grad에 누적되어 저장된다.\n12y.backward()x.grad\n4 \\times 9x^3 + 3 \\times 2x^2 + 2 \\times 3 x + 6여기에 2를 대입하면\n1tensor(330.)\n1234x = torch.tensor(1.0, requires_grad=True)z = torch.tensor(2.0, requires_grad=True)y = x**2 + z**3y.backward()\n12x.gradz.grad\n각각 2와 12가 나올 것이다.\n","dateCreated":"2019-02-19T00:00:00+09:00","dateModified":"2019-02-19T09:16:25+09:00","datePublished":"2019-02-19T00:00:00+09:00","description":"Pytorch - 01) Tensor\n\nTensor\n이제는 더 이상 기초를 다루지 않겠다. (마지막 기초 공부)\n\n1\n2\n3\n\n\n# 기초적인 배열 선언\nv = torch.tensor([1, 2, 3])\nv\n\n\n1\n\n\ntensor([1, 2, 3])\n\n\n1\n2\n\n\n# 타입 확인\nv.dtype\n\n\n1\n\n\ntorch.int64\n\n\n1\n2\n3\n4\n\n\n# pytohn 배열과 마찬가지로 슬라이싱이 가능하다\nv = torch.tensor([1, 2, 3, 4, 5, 6])\nv[1:]\nv[1:4]\n\n\n1\n2\n3\n\n\n# Float 형태로 선언\nf ","headline":"Pytorch 01) - Tensor","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/02/19/pytorch-01-tensor/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/02/19/pytorch-01-tensor/","keywords":"pytorch"}</script>
+    <meta name="description" content="Pytorch - 01) Tensor  Tensor 이제는 더 이상 기초를 다루지 않겠다. (마지막 기초 공부)  1 2 3   # 기초적인 배열 선언 v &#x3D; torch.tensor([1, 2, 3]) v   1   tensor([1, 2, 3])   1 2   # 타입 확인 v.dtype   1   torch.int64   1 2 3 4   # pytoh">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Pytorch 01) - Tensor">
 <meta property="og:url" content="https://www.yceffort.kr/2019/02/19/pytorch-01-tensor/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="Pytorch - 01) Tensor  ¶Tensor 이제는 더 이상 기초를 다루지 않겠다. (마지막 기초 공부)  1 2 3   # 기초적인 배열 선언 v = torch.tensor([1, 2, 3]) v   1   tensor([1, 2, 3])   1 2   # 타입 확인 v.dtype   1   torch.int64   1 2 3 4   # pyto">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="Pytorch - 01) Tensor  Tensor 이제는 더 이상 기초를 다루지 않겠다. (마지막 기초 공부)  1 2 3   # 기초적인 배열 선언 v &#x3D; torch.tensor([1, 2, 3]) v   1   tensor([1, 2, 3])   1 2   # 타입 확인 v.dtype   1   torch.int64   1 2 3 4   # pytoh">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/02/tensor1.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/02/tensor2.png">
-<meta property="og:updated_time" content="2019-02-19T00:16:25.000Z">
+<meta property="article:published_time" content="2019-02-18T15:00:00.000Z">
+<meta property="article:modified_time" content="2019-02-19T00:16:25.000Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="pytorch">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Pytorch 01) - Tensor">
-<meta name="twitter:description" content="Pytorch - 01) Tensor  ¶Tensor 이제는 더 이상 기초를 다루지 않겠다. (마지막 기초 공부)  1 2 3   # 기초적인 배열 선언 v = torch.tensor([1, 2, 3]) v   1   tensor([1, 2, 3])   1 2   # 타입 확인 v.dtype   1   torch.int64   1 2 3 4   # pyto">
 <meta name="twitter:image" content="https://www.yceffort.kr/images/2019/02/tensor1.png">
     
     
@@ -61,7 +61,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -88,7 +90,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -127,8 +129,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -265,8 +266,7 @@
     <div class="post-content markdown">
         <div class="main-content-wrap">
             <p>Pytorch - 01) Tensor</p>
-<h2 id="tensor"><a class="header-anchor" href="#tensor">¶</a>Tensor</h2>
-<p>이제는 더 이상 기초를 다루지 않겠다. (마지막 기초 공부)</p>
+<h2 id="Tensor"><a href="#Tensor" class="headerlink" title="Tensor"></a>Tensor</h2><p>이제는 더 이상 기초를 다루지 않겠다. (마지막 기초 공부)</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 기초적인 배열 선언</span></span><br><span class="line">v = torch.tensor([<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])</span><br><span class="line">v</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tensor([1, 2, 3])</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 타입 확인</span></span><br><span class="line">v.dtype</span><br></pre></td></tr></table></figure>
@@ -291,8 +291,7 @@
 <p><img src="/images/2019/02/tensor1.png" alt="exp"></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x = torch.linspace(<span class="number">0</span>, <span class="number">10</span>, <span class="number">100</span>)</span><br><span class="line">y = torch.sin(x)</span><br><span class="line">plt.plot(x.numpy(), y.numpy())</span><br></pre></td></tr></table></figure>
 <p><img src="/images/2019/02/tensor2.png" alt="sin"></p>
-<h2 id="n차원-배열"><a class="header-anchor" href="#n차원-배열">¶</a>n차원 배열</h2>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">one_d = torch.arange(<span class="number">0</span>, <span class="number">9</span>)</span><br><span class="line">two_d = one_d.view(<span class="number">3</span>, <span class="number">3</span>)</span><br><span class="line">two_d</span><br></pre></td></tr></table></figure>
+<h2 id="n차원-배열"><a href="#n차원-배열" class="headerlink" title="n차원 배열"></a>n차원 배열</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">one_d = torch.arange(<span class="number">0</span>, <span class="number">9</span>)</span><br><span class="line">two_d = one_d.view(<span class="number">3</span>, <span class="number">3</span>)</span><br><span class="line">two_d</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">tensor([0, 1, 2, 3, 4, 5, 6, 7, 8])</span><br><span class="line">tensor([[0, 1, 2],</span><br><span class="line">        [3, 4, 5],</span><br><span class="line">        [6, 7, 8]])</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># dim으로 차원을 확인할 수 있다.</span></span><br><span class="line">two_d.dim()</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">2</span><br></pre></td></tr></table></figure>
@@ -300,17 +299,13 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">tensor([[[ 0,  1],</span><br><span class="line">         [ 2,  3],</span><br><span class="line">         [ 4,  5]],</span><br><span class="line"></span><br><span class="line">        [[ 6,  7],</span><br><span class="line">         [ 8,  9],</span><br><span class="line">         [10, 11]],</span><br><span class="line"></span><br><span class="line">        [[12, 13],</span><br><span class="line">         [14, 15],</span><br><span class="line">         [16, 17]]])</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mat_a = torch.tensor([<span class="number">0</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">5</span>, <span class="number">2</span>]).view(<span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">mat_b = torch.tensor([<span class="number">3</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">-2</span>, <span class="number">4</span>, <span class="number">-2</span>]).view(<span class="number">3</span>, <span class="number">2</span>)</span><br><span class="line">torch.matmul(mat_a, mat_b)</span><br><span class="line">mat_a @ mat_b</span><br></pre></td></tr></table></figure>
 <p>matmul 과 @ 은 서로 곱할 수 있는 크기의 매트릭스를 곱하는 식이다. 고등학교때 행렬 열심히 하기를 잘했다.</p>
-<h2 id="autograd"><a class="header-anchor" href="#autograd">¶</a>autograd</h2>
-<p>pytorch의 장점은 자동미분(autograd)을 지원한다는 점이다.</p>
-<p>$$x=2$$</p>
-<p>$$y = 9x^4 + 2x^3 + 3x^2 + 6x+1$$</p>
-<p>이식을 미분해보자.</p>
+<h2 id="autograd"><a href="#autograd" class="headerlink" title="autograd"></a>autograd</h2><p>pytorch의 장점은 자동미분(autograd)을 지원한다는 점이다.</p>
+<script type="math/tex; mode=display">x=2</script><script type="math/tex; mode=display">y = 9x^4 + 2x^3 + 3x^2 + 6x+1</script><p>이식을 미분해보자.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x = torch.tensor(<span class="number">2.0</span>, requires_grad=<span class="literal">True</span>)</span><br><span class="line">y = <span class="number">9</span>*x**<span class="number">4</span> + <span class="number">2</span>*x**<span class="number">3</span> + <span class="number">3</span>*x**<span class="number">2</span> + <span class="number">6</span>*x + <span class="number">1</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tensor(2., requires_grad=True)</span><br><span class="line">tensor(185., grad_fn=&lt;AddBackward0&gt;)</span><br></pre></td></tr></table></figure>
 <p>자동미분을 True로 세팅하여, 모든 연산에 대해 추적을 할 수 있게 해둔 것이다. 계산작업이 모두 수행 되었으므로 (y) .backward를 수행하여, 모든 그라디어트를 자동으로 계산하게 할 수 있다. 그리고 그 그라디언트는 .grad에 누적되어 저장된다.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">y.backward()</span><br><span class="line">x.grad</span><br></pre></td></tr></table></figure>
-<p>$$ 4 \times 9x^3 + 3 \times 2x^2 + 2 \times 3 x + 6$$</p>
-<p>여기에 2를 대입하면</p>
+<script type="math/tex; mode=display">4 \times 9x^3 + 3 \times 2x^2 + 2 \times 3 x + 6</script><p>여기에 2를 대입하면</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tensor(330.)</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x = torch.tensor(<span class="number">1.0</span>, requires_grad=<span class="literal">True</span>)</span><br><span class="line">z = torch.tensor(<span class="number">2.0</span>, requires_grad=<span class="literal">True</span>)</span><br><span class="line">y = x**<span class="number">2</span> + z**<span class="number">3</span></span><br><span class="line">y.backward()</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">x.grad</span><br><span class="line">z.grad</span><br></pre></td></tr></table></figure>
@@ -330,7 +325,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/">pytorch</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/" rel="tag">pytorch</a>
 
             </div>
         
@@ -341,7 +336,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/20/pytorch-04-deep-neural-network/" data-tooltip="Pytorch 04) - Deep Nueral Network" aria-label="PREVIOUS: Pytorch 04) - Deep Nueral Network">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-02-linear-regression/" data-tooltip="Pytorch 02) - Linear Regression" aria-label="PREVIOUS: Pytorch 02) - Linear Regression">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -350,7 +345,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-02-linear-regression/" data-tooltip="Pytorch 02) - Linear Regression" aria-label="NEXT: Pytorch 02) - Linear Regression">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-03-perceptron/" data-tooltip="Pytorch 03) - Perceptron" aria-label="NEXT: Pytorch 03) - Perceptron">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -383,12 +378,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -403,10 +392,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -429,7 +414,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/20/pytorch-04-deep-neural-network/" data-tooltip="Pytorch 04) - Deep Nueral Network" aria-label="PREVIOUS: Pytorch 04) - Deep Nueral Network">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-02-linear-regression/" data-tooltip="Pytorch 02) - Linear Regression" aria-label="PREVIOUS: Pytorch 02) - Linear Regression">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -438,7 +423,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-02-linear-regression/" data-tooltip="Pytorch 02) - Linear Regression" aria-label="NEXT: Pytorch 02) - Linear Regression">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-03-perceptron/" data-tooltip="Pytorch 03) - Perceptron" aria-label="NEXT: Pytorch 03) - Perceptron">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -470,12 +455,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -614,8 +593,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -633,8 +612,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -690,8 +669,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -709,8 +688,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -770,7 +749,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -780,26 +759,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/02/19/pytorch-01-tensor/';
-                 
-                    this.page.identifier = '2019/02/19/pytorch-01-tensor/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

@@ -34,20 +34,21 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Mempool\n원문\n비트코인 트랜잭션이 네트워크로 전송되면, 사용 가능한 모든 비트코인 노드에서 먼저 확인하게 된다. 성공적으로 검증작업을 통과하면 'Mempool’에 들어가서 마이너가, 그 블록을 선택하여 다음 블록영역에 들어갈 때까지 대기하게 된다. 따라서, Mempool은 기본적으로 블록에 들어가기전에 보류중인 모든 트랜잭션에 대한 노드의 보류의 영역인 것이다.\n모든 노드는 확인되지 않은 트랜잭션을 저장할 수 있는 RAM 용량이 다르다. 결과적으로, 각 노드는 보류중인 트랜잭션을 자체적으로 렌더링하게 된다. 이는 다양한 메모리풀 크기와 서로다른 소스에서 볼 수 있는 트랜잭션 수를 설명하게 된다. 하지만 메모리 풀 크기에 따라 노드가 충돌하지 않기 위해서, 메모리 풀 크기가 RAM용량에 너무 가까워 지게 되면 노드는 최소 수수료 임계값을 설정한다. 이 임계값보다 낮은 kb당 수수료를 가진 거래는 즉시 메모리풀에서 제거되며, kb당 충분한 수수료를 가진 거래만이 메모리 풀에 엑세스 할 수 있다.\n메모리풀은 BIP 35 (Bitcoin Imporvment Proposal)의 일부이며, SPV wallets(경량형 비트코인 지갑)이 트랜잭션을 기록하는 것을 돕는다. 기본적으로 메모리풀은 일종의 비트코인 네트워크의 병목현상이라 볼 수 있다. 블록체인에서 더 빠른 트랜잭션이 확인될 수록, 사용자는 더 나은 경험을 할 수 있게 된다. 신규 트랜잭션 블록 마이닝 비율이 메모리풀에 도착하는 신규 트랜잭션 속도보다 낮으면, 정체현상이 발생하고, 거래가 승인되기까지 오래 걸릴 수 있다. 노드가 새 유효한 블록을 수신하면, 해등 블록에 포함된 모든 트랜잭션이 해당 메모리풀에서 제거된다. 이는 메모리 풀 크기의 감소를 가져온다.\n\n\n현재 메모리 풀의 크기는 여기서 볼 수 있다.\n\n예를들어, 메모리 풀의 크기가 약 3MB인 경우, 트랜잭션이 확인되기 위해 평균 3블록이 소요된다는 것을 의미한다. 메모리풀 거래 중 일부는 ‘dust transactions’ (아주 소량의 비트코인을 보내는 것)과 같이  확인되기까지 오랜 시간이 걸릴 것이라는 사실을 발신자가 알고 있는, 우선순위가 낮은 거래일 것이다.\n","dateCreated":"2018-09-29T00:00:00+09:00","dateModified":"2018-09-29T13:30:57+09:00","datePublished":"2018-09-29T00:00:00+09:00","description":"Mempool\n\n원문\n\n비트코인 트랜잭션이 네트워크로 전송되면, 사용 가능한 모든 비트코인 노드에서 먼저 확인하게 된다. 성공적으로 검증작업을 통과하면 'Mempool’에 들어가서 마이너가, 그 블록을 선택하여 다음 블록영역에 들어갈 때까지 대기하게 된다. 따라서, Mempool은 기본적으로 블록에 들어가기전에 보류중인 모든 트랜잭션에 대한 노드의 보류의 영역인 것이다.\n\n모든 노드는 확인되지 않은 트랜잭션을 저장할 수 있는 RAM 용량이 다르다. 결과적으로, 각 노드는 보류중인 트랜잭션을 자체적으로 렌더링하게 된다. 이는 다양한 ","headline":"비트코인 메모리풀 (Mempool)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/09/29/mempool/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/09/29/mempool/","keywords":"bitcoin, blockchain"}</script>
-    <meta name="description" content="Mempool  원문  비트코인 트랜잭션이 네트워크로 전송되면, 사용 가능한 모든 비트코인 노드에서 먼저 확인하게 된다. 성공적으로 검증작업을 통과하면 &apos;Mempool’에 들어가서 마이너가, 그 블록을 선택하여 다음 블록영역에 들어갈 때까지 대기하게 된다. 따라서, Mempool은 기본적으로 블록에 들어가기전에 보류중인 모든 트랜잭션에 대한 노드의 보류의">
-<meta name="keywords" content="bitcoin,blockchain">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Mempool\n원문\n비트코인 트랜잭션이 네트워크로 전송되면, 사용 가능한 모든 비트코인 노드에서 먼저 확인하게 된다. 성공적으로 검증작업을 통과하면 ‘Mempool’에 들어가서 마이너가, 그 블록을 선택하여 다음 블록영역에 들어갈 때까지 대기하게 된다. 따라서, Mempool은 기본적으로 블록에 들어가기전에 보류중인 모든 트랜잭션에 대한 노드의 보류의 영역인 것이다.\n모든 노드는 확인되지 않은 트랜잭션을 저장할 수 있는 RAM 용량이 다르다. 결과적으로, 각 노드는 보류중인 트랜잭션을 자체적으로 렌더링하게 된다. 이는 다양한 메모리풀 크기와 서로다른 소스에서 볼 수 있는 트랜잭션 수를 설명하게 된다. 하지만 메모리 풀 크기에 따라 노드가 충돌하지 않기 위해서, 메모리 풀 크기가 RAM용량에 너무 가까워 지게 되면 노드는 최소 수수료 임계값을 설정한다. 이 임계값보다 낮은 kb당 수수료를 가진 거래는 즉시 메모리풀에서 제거되며, kb당 충분한 수수료를 가진 거래만이 메모리 풀에 엑세스 할 수 있다.\n메모리풀은 BIP 35 (Bitcoin Imporvment Proposal)의 일부이며, SPV wallets(경량형 비트코인 지갑)이 트랜잭션을 기록하는 것을 돕는다. 기본적으로 메모리풀은 일종의 비트코인 네트워크의 병목현상이라 볼 수 있다. 블록체인에서 더 빠른 트랜잭션이 확인될 수록, 사용자는 더 나은 경험을 할 수 있게 된다. 신규 트랜잭션 블록 마이닝 비율이 메모리풀에 도착하는 신규 트랜잭션 속도보다 낮으면, 정체현상이 발생하고, 거래가 승인되기까지 오래 걸릴 수 있다. 노드가 새 유효한 블록을 수신하면, 해등 블록에 포함된 모든 트랜잭션이 해당 메모리풀에서 제거된다. 이는 메모리 풀 크기의 감소를 가져온다.\n\n\n현재 메모리 풀의 크기는 여기서 볼 수 있다.\n\n예를들어, 메모리 풀의 크기가 약 3MB인 경우, 트랜잭션이 확인되기 위해 평균 3블록이 소요된다는 것을 의미한다. 메모리풀 거래 중 일부는 ‘dust transactions’ (아주 소량의 비트코인을 보내는 것)과 같이  확인되기까지 오랜 시간이 걸릴 것이라는 사실을 발신자가 알고 있는, 우선순위가 낮은 거래일 것이다.\n","dateCreated":"2018-09-29T00:00:00+09:00","dateModified":"2018-09-29T13:30:57+09:00","datePublished":"2018-09-29T00:00:00+09:00","description":"Mempool\n\n원문\n\n비트코인 트랜잭션이 네트워크로 전송되면, 사용 가능한 모든 비트코인 노드에서 먼저 확인하게 된다. 성공적으로 검증작업을 통과하면 ‘Mempool’에 들어가서 마이너가, 그 블록을 선택하여 다음 블록영역에 들어갈 때까지 대기하게 된다. 따라서, Mempool은 기본적으로 블록에 들어가기전에 보류중인 모든 트랜잭션에 대한 노드의 보류의 영역인 것이다.\n\n모든 노드는 확인되지 않은 트랜잭션을 저장할 수 있는 RAM 용량이 다르다. 결과적으로, 각 노드는 보류중인 트랜잭션을 자체적으로 렌더링하게 된다. 이는 다양한 ","headline":"비트코인 메모리풀 (Mempool)","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/09/29/mempool/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/09/29/mempool/","keywords":"bitcoin, blockchain"}</script>
+    <meta name="description" content="Mempool  원문  비트코인 트랜잭션이 네트워크로 전송되면, 사용 가능한 모든 비트코인 노드에서 먼저 확인하게 된다. 성공적으로 검증작업을 통과하면 ‘Mempool’에 들어가서 마이너가, 그 블록을 선택하여 다음 블록영역에 들어갈 때까지 대기하게 된다. 따라서, Mempool은 기본적으로 블록에 들어가기전에 보류중인 모든 트랜잭션에 대한 노드의 보류의">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="비트코인 메모리풀 (Mempool)">
 <meta property="og:url" content="https://www.yceffort.kr/2018/09/29/mempool/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="Mempool  원문  비트코인 트랜잭션이 네트워크로 전송되면, 사용 가능한 모든 비트코인 노드에서 먼저 확인하게 된다. 성공적으로 검증작업을 통과하면 &apos;Mempool’에 들어가서 마이너가, 그 블록을 선택하여 다음 블록영역에 들어갈 때까지 대기하게 된다. 따라서, Mempool은 기본적으로 블록에 들어가기전에 보류중인 모든 트랜잭션에 대한 노드의 보류의">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="Mempool  원문  비트코인 트랜잭션이 네트워크로 전송되면, 사용 가능한 모든 비트코인 노드에서 먼저 확인하게 된다. 성공적으로 검증작업을 통과하면 ‘Mempool’에 들어가서 마이너가, 그 블록을 선택하여 다음 블록영역에 들어갈 때까지 대기하게 된다. 따라서, Mempool은 기본적으로 블록에 들어가기전에 보류중인 모든 트랜잭션에 대한 노드의 보류의">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.yceffort.kr/images/2018/09/mempool.png">
-<meta property="og:updated_time" content="2018-09-29T04:30:57.000Z">
+<meta property="article:published_time" content="2018-09-28T15:00:00.000Z">
+<meta property="article:modified_time" content="2018-09-29T04:30:57.000Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="bitcoin">
+<meta property="article:tag" content="blockchain">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="비트코인 메모리풀 (Mempool)">
-<meta name="twitter:description" content="Mempool  원문  비트코인 트랜잭션이 네트워크로 전송되면, 사용 가능한 모든 비트코인 노드에서 먼저 확인하게 된다. 성공적으로 검증작업을 통과하면 &apos;Mempool’에 들어가서 마이너가, 그 블록을 선택하여 다음 블록영역에 들어갈 때까지 대기하게 된다. 따라서, Mempool은 기본적으로 블록에 들어가기전에 보류중인 모든 트랜잭션에 대한 노드의 보류의">
 <meta name="twitter:image" content="https://www.yceffort.kr/images/2018/09/mempool.png">
     
     
@@ -60,7 +61,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -87,7 +90,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -126,8 +129,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -265,7 +267,7 @@
         <div class="main-content-wrap">
             <p>Mempool</p>
 <p><a href="https://coinsutra.com/bitcoin-mempool/" target="_blank" rel="noopener">원문</a></p>
-<p>비트코인 트랜잭션이 네트워크로 전송되면, 사용 가능한 모든 비트코인 노드에서 먼저 확인하게 된다. 성공적으로 검증작업을 통과하면 'Mempool’에 들어가서 마이너가, 그 블록을 선택하여 다음 블록영역에 들어갈 때까지 대기하게 된다. 따라서, Mempool은 기본적으로 블록에 들어가기전에 보류중인 모든 트랜잭션에 대한 노드의 보류의 영역인 것이다.</p>
+<p>비트코인 트랜잭션이 네트워크로 전송되면, 사용 가능한 모든 비트코인 노드에서 먼저 확인하게 된다. 성공적으로 검증작업을 통과하면 ‘Mempool’에 들어가서 마이너가, 그 블록을 선택하여 다음 블록영역에 들어갈 때까지 대기하게 된다. 따라서, Mempool은 기본적으로 블록에 들어가기전에 보류중인 모든 트랜잭션에 대한 노드의 보류의 영역인 것이다.</p>
 <p>모든 노드는 확인되지 않은 트랜잭션을 저장할 수 있는 RAM 용량이 다르다. 결과적으로, 각 노드는 보류중인 트랜잭션을 자체적으로 렌더링하게 된다. 이는 다양한 메모리풀 크기와 서로다른 소스에서 볼 수 있는 트랜잭션 수를 설명하게 된다. 하지만 메모리 풀 크기에 따라 노드가 충돌하지 않기 위해서, 메모리 풀 크기가 RAM용량에 너무 가까워 지게 되면 노드는 최소 수수료 임계값을 설정한다. 이 임계값보다 낮은 kb당 수수료를 가진 거래는 즉시 메모리풀에서 제거되며, kb당 충분한 수수료를 가진 거래만이 메모리 풀에 엑세스 할 수 있다.</p>
 <p>메모리풀은 BIP 35 (Bitcoin Imporvment Proposal)의 일부이며, SPV wallets(경량형 비트코인 지갑)이 트랜잭션을 기록하는 것을 돕는다. 기본적으로 메모리풀은 일종의 비트코인 네트워크의 병목현상이라 볼 수 있다. 블록체인에서 더 빠른 트랜잭션이 확인될 수록, 사용자는 더 나은 경험을 할 수 있게 된다. 신규 트랜잭션 블록 마이닝 비율이 메모리풀에 도착하는 신규 트랜잭션 속도보다 낮으면, 정체현상이 발생하고, 거래가 승인되기까지 오래 걸릴 수 있다. 노드가 새 유효한 블록을 수신하면, 해등 블록에 포함된 모든 트랜잭션이 해당 메모리풀에서 제거된다. 이는 메모리 풀 크기의 감소를 가져온다.</p>
 <p><img src="/images/2018/09/mempool.png" alt="mempool"></p>
@@ -288,7 +290,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/bitcoin/">bitcoin</a> <a class="tag tag--primary tag--small t-link" href="/tags/blockchain/">blockchain</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/bitcoin/" rel="tag">bitcoin</a> <a class="tag tag--primary tag--small t-link" href="/tags/blockchain/" rel="tag">blockchain</a>
 
             </div>
         
@@ -341,12 +343,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -361,10 +357,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -428,12 +420,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -572,8 +558,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -591,8 +577,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -648,8 +634,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -667,8 +653,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -728,7 +714,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -738,26 +724,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2018/09/29/mempool/';
-                 
-                    this.page.identifier = '2018/09/29/mempool/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

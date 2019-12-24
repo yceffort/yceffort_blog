@@ -30,7 +30,7 @@ sidebar:
   menu:
     home:
       title: global.home
-      url: /
+      url: ./
       icon: fa fa-home
     # categories:
     #     title: global.categories
@@ -186,19 +186,15 @@ tag_pagination: true
 # ---------------
 
 # Your Disqus shortname
-disqus_shortname: https-www-yceffort-kr
+disqus_shortname:
 # Your Gitment information
 # Read https://github.com/imsun/gitment#get-started to setup Gitment
 gitment:
   # Switch
   enable: false
-  # Your Github ID (Github username):
   github_id: yceffort
-  # The repo to store comments:
-  repo: https://github.com/yceffort/yceffort_blog
-  # Your client ID:
+  repo:
   client_id:
-  # Your client secret:
   client_secret:
 
 # -------------------

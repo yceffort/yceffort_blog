@@ -110,12 +110,15 @@ markdown:
     linkify: true
     typographer: true
     quotes: "“”‘’"
+  plugins:
   anchors:
     level: 2
-    collisionSuffix: "v"
-    permalink: true
-    permalinkClass: header-anchor
-    permalinkSymbol: ¶
+    collisionSuffix: ""
+    permalink: true,
+    permalinkClass: "header-anchor"
+    permalinkSymbol: "¶"
+    case: 0
+    separator: ""
 
 mathjax:
   enable: true

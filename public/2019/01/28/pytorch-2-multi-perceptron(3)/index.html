@@ -34,19 +34,19 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"뉴스 말뭉치를 다운로드 받아서 분석해보자. 말뭉치는 여기에서 받을 수 있다. 과거 뉴스 데이터를 다운로드해서, 어떤 카테코리인지 분류하는 학습을 진행해보자.\n먼저 구글드라이브에 해당 파일을 업로드해서 진행했다. 물론 아래와 같은 코드로 colab docker에 업로드 할 수 있지만\n12from google.colab import filesupload = files.upload()\n속도가 너무 느리다. ㅠ.ㅠ 그래서 그냥 구글 드라이브에 올려서 진행했다.\n12from google.colab import drivedrive.mount('/content/gdrive')\n이렇게하면, 구글드라이브의 내용을 /contnet/gdrive에 마운트 할 수 있다. 마운트 된 gdrive는 파일 시스템에 접근하는 것처럼 손쉽게 접근할 수 있다. 오오 구글신 오오…\n그리고 한글 형태소를 분석해야 하므로, 한글 형태소 분석을 지원하는 라이브러리를 깔았다.\n1!pip3 install konlpy\n한글 형태소 라이브러리에 관한 글은 여기저기에 많으니 따로 설명하지 않겠다.\n123456789101112import osimport refrom sklearn import datasets, model_selectionfrom sklearn.feature_extraction.text import CountVectorizerfrom sklearn.feature_extraction.text import TfidfVectorizerfrom konlpy.tag import Hannanumfrom konlpy.tag import Kkmaimport pandas as pdimport numpy as np\n123456target_dir = 'HKIB-20000'cat_dirs = ['healths', 'economy', 'science', 'education', 'culture', 'society', 'industry', 'leisure', 'politics']cat_prefixes = ['건강', '경제', '과학', '교육', '문화', '사회', '산업', '여가', '정치']files = os.listdir(data_path+'/'+target_dir)files\n1234567891011121314151617[&apos;hkib20000-cat03-file3.categories&apos;, &apos;hkib20000-cat07-all.categories&apos;, &apos;hkib20000-cat07-file3.categories&apos;, &apos;hkib20000-cat03-file1.categories&apos;, &apos;hkib20000-cat07-file4.categories&apos;, &apos;hkib20000-cat07-file2.categories&apos;, &apos;hkib20000-cat03-file4.categories&apos;, &apos;hkib20000-cat03-file5.categories&apos;, &apos;hkib20000-cat03-all.categories&apos;, &apos;hkib20000-cat07-file5.categories&apos;, &apos;hkib20000-cat03-file2.categories&apos;, &apos;hkib20000-cat07-file1.categories&apos;, &apos;HKIB-20000_003.txt&apos;, &apos;HKIB-20000_002.txt&apos;, &apos;HKIB-20000_001.txt&apos;, &apos;HKIB-20000_005.txt&apos;, &apos;HKIB-20000_004.txt&apos;]\n12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758# 데이터 정리files = os.listdir(data_path+'/'+target_dir)# 5분할된 텍스트 파일을 각각 처리for file in files:    # 데이터가 담긴 파일만 처리    if not file.endswith('.txt'):        continue        # 각 텍스트 파일을 처리    with open(data_path + 'HKIB-20000/' + file) as currfile:        doc_cnt = 0        docs = []        curr_doc = None                # 기사 단위로 분할하여 리스트를 생성        for curr_line in currfile:            if curr_line.startswith('@DOCUMENT'):                if curr_doc is not None:                    docs.append(curr_doc)                curr_doc = curr_line                doc_cnt = doc_cnt + 1                continue            curr_doc = curr_doc + curr_line                # 각 기사를 대주제 별로 분류하여 기사별 파일로 정리        for doc in docs:            doc_lines = doc.split('\\n')            doc_no = doc_lines[1][9:]                        # 주제 추출            doc_cat03 = ''            for line in doc_lines[:10]:                if line.startswith(\"#CAT'03:\"):                    doc_cat03 = line[10:]                    break                        # 추출한 주제 별로 디렉토리 정리            for cat_prefix in cat_prefixes:                if doc_cat03.startswith(cat_prefix):                    dir_index = cat_prefixes.index(cat_prefix)                    break                                # 문서 정보를 제거하고 기사 본문만 남기기            filtered_lines = []            for line in doc_lines:                if not (line.startswith('#') or line.startswith('@')):                    filtered_lines.append(line)                                # 주제별 디렉토리에 기사를 파일로 쓰기            filename = 'hkib-' + doc_no + '.txt'            filepath = data_path + 'HKIB-20000/' + cat_dirs[dir_index]                        if not os.path.exists(filepath):                os.makedirs(filepath)            f = open(filepath + '/' + filename, 'w')            f.write('\\n'.join(filtered_lines))            f.close()\n이렇게 해서, 각각의 주제별로 나눈 다음에 txt파일을 생성하였다. 고오급 스킬이 필요한 것은 아니고, 단순 노가다의 문제다.\n123456789101112131415161718192021222324252627282930313233dirs = cat_dirsx_ls = []y_ls = []tmp1 = []tmp2 = ''tokenizer = Kkma()for i, d in enumerate(dirs):  files = os.listdir(data_path+'HKIB-20000/'+d)    for file in files:    f = open(data_path+'HKIB-20000/'+d+'/'+file, 'r', encoding='UTF-8')    raw = f.read()        reg_raw = re.sub(r'[-\\'@#:/◆▲0-9a-zA-Z&lt;&gt;!-\"*\\(\\)]', '', raw)    reg_raw = re.sub(r'[ ]+', ' ', reg_raw)    reg_raw = reg_raw.replace('\\n', ' ')        tokens = tokenizer.nouns(reg_raw)        for token in tokens:      tmp1.append(token)          tmp2 = ' '.join(tmp1)    x_ls.append(tmp2)    tmp1 = []    y_ls.append(i)        f.close()\n내용에서 특수문자를 제거하고, x_ls에 설명변수, y_ls에 목적변수를 각각 넣었다. 처음에는 딱 두개카테코리만 0, 1 로 분석해서 진행했다. 여유가 되다면 (시간이 남고 컴퓨터도 빠르다면…) 모든 파일을 분석해보는 것도 재밌을 수 있다.\n12345678x_array = np.array(x_ls)y_array = np.array(y_ls)cntvec = CountVectorizer()x_cntvecs = cntvec.fit_transform(x_array)x_cntarray = x_cntvecs.toarray()pd.DataFrame(x_cntarray)\nCounterVectyorizer를 통해서 단어 별로 쪼갰다. 그 결과 1001행 * 33572열 크기의 표가 생성되었다. 프린트를 해보면\n12for k, v in sorted(cntvec.vocabulary_.items(), key=lambda x: x[1]):  print(k, v)\n123456789101112가가 0가가치 1가검물 2가게 3가격 4가격등 5가격명 6가격문란 7가격변동 8가격산정 9가격상승요인 10....\n이런식으로 추출해 놓은 단어가 나온다.\n이제 본격적으로 분석해보자.\n12345678910111213141516train_X, test_X, train_Y, test_Y = model_selection.train_test_split(x_tfidf_array, y_array, test_size=0.2)import torchfrom torch.autograd import Variableimport torch.nn as nnimport torch.nn.functional as Fimport torch.optim as optimfrom torch.utils.data import DataLoader, TensorDatasettrain_X = torch.from_numpy(train_X).float()train_Y = torch.from_numpy(train_Y).long()test_X = torch.from_numpy(test_X).float()test_Y = torch.from_numpy(test_Y).float()train = TensorDataset(train_X, train_Y)train_loader = DataLoader(train, batch_size=100, shuffle=True)\n이제 신경망을 구성해보자.\n입력층에는 33572개의 단어가 있었고, 중간노드수는 256개, 128객 그리고 출력층은 2개 (두 개의 카테고리만 분석)로 구성해두었다.\n12345678910111213141516171819202122# 신경망 구성class Net(nn.Module):    def __init__(self):        super(Net, self).__init__()        self.fc1 = nn.Linear(33572, 256)        self.fc2 = nn.Linear(256, 256)        self.fc3 = nn.Linear(256, 256)        self.fc4 = nn.Linear(256, 128)        self.fc5 = nn.Linear(128, 128)        self.fc6 = nn.Linear(128, 2)            def forward(self, x):        x = F.relu(self.fc1(x))        x = F.relu(self.fc2(x))        x = F.relu(self.fc3(x))        x = F.relu(self.fc4(x))        x = F.relu(self.fc5(x))        x = self.fc5(x)        return F.log_softmax(x)    # 인스턴스 생성model = Net()\n1234567891011121314151617criterion = nn.CrossEntropyLoss()optimizer = optim.Adam(model.parameters(), lr=0.05)for epoch in range(20):  total_loss = 0    for train_x, train_y in train_loader:    train_x, train_y = Variable(train_x), Variable(train_y)    optimizer.zero_grad()    output = model(train_x)    loss = criterion(output, train_y)    loss.backward()    optimizer.step()    total_loss += loss.data.item()      print(epoch + 1, total_loss)\n1234test_x, test_y = Variable(test_X), Variable(test_Y)result = torch.max(model(test_x).data, 1)[1]accuracy = sum(test_y.data.numpy() == result.numpy()) / len(test_y.data.numpy())accuracy\n10.9203980099502488\n92%의 정확성으로 구별해 내었다.\n","dateCreated":"2019-01-28T00:00:00+09:00","dateModified":"2019-01-28T12:32:01+09:00","datePublished":"2019-01-28T00:00:00+09:00","description":"뉴스 말뭉치를 다운로드 받아서 분석해보자. 말뭉치는 여기에서 받을 수 있다. 과거 뉴스 데이터를 다운로드해서, 어떤 카테코리인지 분류하는 학습을 진행해보자.\n\n먼저 구글드라이브에 해당 파일을 업로드해서 진행했다. 물론 아래와 같은 코드로 colab docker에 업로드 할 수 있지만\n\n1\n2\n\n\nfrom google.colab import files\nupload = files.upload()\n\n\n속도가 너무 느리다. ㅠ.ㅠ 그래서 그냥 구글 드라이브에 올려서 진행했다.\n\n1\n2\n\n\nfrom google.colab import dri","headline":"Pytorch (2-3) - 뉴스 카테고리 분류하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/01/28/pytorch-2-multi-perceptron(3)/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/01/28/pytorch-2-multi-perceptron(3)/","keywords":"pytorch"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"뉴스 말뭉치를 다운로드 받아서 분석해보자. 말뭉치는 여기에서 받을 수 있다. 과거 뉴스 데이터를 다운로드해서, 어떤 카테코리인지 분류하는 학습을 진행해보자.\n먼저 구글드라이브에 해당 파일을 업로드해서 진행했다. 물론 아래와 같은 코드로 colab docker에 업로드 할 수 있지만\n12from google.colab import filesupload = files.upload()\n속도가 너무 느리다. ㅠ.ㅠ 그래서 그냥 구글 드라이브에 올려서 진행했다.\n12from google.colab import drivedrive.mount('/content/gdrive')\n이렇게하면, 구글드라이브의 내용을 /contnet/gdrive에 마운트 할 수 있다. 마운트 된 gdrive는 파일 시스템에 접근하는 것처럼 손쉽게 접근할 수 있다. 오오 구글신 오오…\n그리고 한글 형태소를 분석해야 하므로, 한글 형태소 분석을 지원하는 라이브러리를 깔았다.\n1!pip3 install konlpy\n한글 형태소 라이브러리에 관한 글은 여기저기에 많으니 따로 설명하지 않겠다.\n123456789101112import osimport refrom sklearn import datasets, model_selectionfrom sklearn.feature_extraction.text import CountVectorizerfrom sklearn.feature_extraction.text import TfidfVectorizerfrom konlpy.tag import Hannanumfrom konlpy.tag import Kkmaimport pandas as pdimport numpy as np\n123456target_dir = 'HKIB-20000'cat_dirs = ['healths', 'economy', 'science', 'education', 'culture', 'society', 'industry', 'leisure', 'politics']cat_prefixes = ['건강', '경제', '과학', '교육', '문화', '사회', '산업', '여가', '정치']files = os.listdir(data_path+'/'+target_dir)files\n1234567891011121314151617[&apos;hkib20000-cat03-file3.categories&apos;, &apos;hkib20000-cat07-all.categories&apos;, &apos;hkib20000-cat07-file3.categories&apos;, &apos;hkib20000-cat03-file1.categories&apos;, &apos;hkib20000-cat07-file4.categories&apos;, &apos;hkib20000-cat07-file2.categories&apos;, &apos;hkib20000-cat03-file4.categories&apos;, &apos;hkib20000-cat03-file5.categories&apos;, &apos;hkib20000-cat03-all.categories&apos;, &apos;hkib20000-cat07-file5.categories&apos;, &apos;hkib20000-cat03-file2.categories&apos;, &apos;hkib20000-cat07-file1.categories&apos;, &apos;HKIB-20000_003.txt&apos;, &apos;HKIB-20000_002.txt&apos;, &apos;HKIB-20000_001.txt&apos;, &apos;HKIB-20000_005.txt&apos;, &apos;HKIB-20000_004.txt&apos;]\n12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758# 데이터 정리files = os.listdir(data_path+'/'+target_dir)# 5분할된 텍스트 파일을 각각 처리for file in files:    # 데이터가 담긴 파일만 처리    if not file.endswith('.txt'):        continue        # 각 텍스트 파일을 처리    with open(data_path + 'HKIB-20000/' + file) as currfile:        doc_cnt = 0        docs = []        curr_doc = None                # 기사 단위로 분할하여 리스트를 생성        for curr_line in currfile:            if curr_line.startswith('@DOCUMENT'):                if curr_doc is not None:                    docs.append(curr_doc)                curr_doc = curr_line                doc_cnt = doc_cnt + 1                continue            curr_doc = curr_doc + curr_line                # 각 기사를 대주제 별로 분류하여 기사별 파일로 정리        for doc in docs:            doc_lines = doc.split('\\n')            doc_no = doc_lines[1][9:]                        # 주제 추출            doc_cat03 = ''            for line in doc_lines[:10]:                if line.startswith(\"#CAT'03:\"):                    doc_cat03 = line[10:]                    break                        # 추출한 주제 별로 디렉토리 정리            for cat_prefix in cat_prefixes:                if doc_cat03.startswith(cat_prefix):                    dir_index = cat_prefixes.index(cat_prefix)                    break                                # 문서 정보를 제거하고 기사 본문만 남기기            filtered_lines = []            for line in doc_lines:                if not (line.startswith('#') or line.startswith('@')):                    filtered_lines.append(line)                                # 주제별 디렉토리에 기사를 파일로 쓰기            filename = 'hkib-' + doc_no + '.txt'            filepath = data_path + 'HKIB-20000/' + cat_dirs[dir_index]                        if not os.path.exists(filepath):                os.makedirs(filepath)            f = open(filepath + '/' + filename, 'w')            f.write('\\n'.join(filtered_lines))            f.close()\n이렇게 해서, 각각의 주제별로 나눈 다음에 txt파일을 생성하였다. 고오급 스킬이 필요한 것은 아니고, 단순 노가다의 문제다.\n123456789101112131415161718192021222324252627282930313233dirs = cat_dirsx_ls = []y_ls = []tmp1 = []tmp2 = ''tokenizer = Kkma()for i, d in enumerate(dirs):  files = os.listdir(data_path+'HKIB-20000/'+d)    for file in files:    f = open(data_path+'HKIB-20000/'+d+'/'+file, 'r', encoding='UTF-8')    raw = f.read()        reg_raw = re.sub(r'[-\\'@#:/◆▲0-9a-zA-Z&lt;&gt;!-\"*\\(\\)]', '', raw)    reg_raw = re.sub(r'[ ]+', ' ', reg_raw)    reg_raw = reg_raw.replace('\\n', ' ')        tokens = tokenizer.nouns(reg_raw)        for token in tokens:      tmp1.append(token)          tmp2 = ' '.join(tmp1)    x_ls.append(tmp2)    tmp1 = []    y_ls.append(i)        f.close()\n내용에서 특수문자를 제거하고, x_ls에 설명변수, y_ls에 목적변수를 각각 넣었다. 처음에는 딱 두개카테코리만 0, 1 로 분석해서 진행했다. 여유가 되다면 (시간이 남고 컴퓨터도 빠르다면…) 모든 파일을 분석해보는 것도 재밌을 수 있다.\n12345678x_array = np.array(x_ls)y_array = np.array(y_ls)cntvec = CountVectorizer()x_cntvecs = cntvec.fit_transform(x_array)x_cntarray = x_cntvecs.toarray()pd.DataFrame(x_cntarray)\nCounterVectyorizer를 통해서 단어 별로 쪼갰다. 그 결과 1001행 * 33572열 크기의 표가 생성되었다. 프린트를 해보면\n12for k, v in sorted(cntvec.vocabulary_.items(), key=lambda x: x[1]):  print(k, v)\n123456789101112가가 0가가치 1가검물 2가게 3가격 4가격등 5가격명 6가격문란 7가격변동 8가격산정 9가격상승요인 10....\n이런식으로 추출해 놓은 단어가 나온다.\n이제 본격적으로 분석해보자.\n12345678910111213141516train_X, test_X, train_Y, test_Y = model_selection.train_test_split(x_tfidf_array, y_array, test_size=0.2)import torchfrom torch.autograd import Variableimport torch.nn as nnimport torch.nn.functional as Fimport torch.optim as optimfrom torch.utils.data import DataLoader, TensorDatasettrain_X = torch.from_numpy(train_X).float()train_Y = torch.from_numpy(train_Y).long()test_X = torch.from_numpy(test_X).float()test_Y = torch.from_numpy(test_Y).float()train = TensorDataset(train_X, train_Y)train_loader = DataLoader(train, batch_size=100, shuffle=True)\n이제 신경망을 구성해보자. \n입력층에는 33572개의 단어가 있었고, 중간노드수는 256개, 128객 그리고 출력층은 2개 (두 개의 카테고리만 분석)로 구성해두었다.\n12345678910111213141516171819202122# 신경망 구성class Net(nn.Module):    def __init__(self):        super(Net, self).__init__()        self.fc1 = nn.Linear(33572, 256)        self.fc2 = nn.Linear(256, 256)        self.fc3 = nn.Linear(256, 256)        self.fc4 = nn.Linear(256, 128)        self.fc5 = nn.Linear(128, 128)        self.fc6 = nn.Linear(128, 2)            def forward(self, x):        x = F.relu(self.fc1(x))        x = F.relu(self.fc2(x))        x = F.relu(self.fc3(x))        x = F.relu(self.fc4(x))        x = F.relu(self.fc5(x))        x = self.fc5(x)        return F.log_softmax(x)    # 인스턴스 생성model = Net()\n1234567891011121314151617criterion = nn.CrossEntropyLoss()optimizer = optim.Adam(model.parameters(), lr=0.05)for epoch in range(20):  total_loss = 0    for train_x, train_y in train_loader:    train_x, train_y = Variable(train_x), Variable(train_y)    optimizer.zero_grad()    output = model(train_x)    loss = criterion(output, train_y)    loss.backward()    optimizer.step()    total_loss += loss.data.item()      print(epoch + 1, total_loss)\n1234test_x, test_y = Variable(test_X), Variable(test_Y)result = torch.max(model(test_x).data, 1)[1]accuracy = sum(test_y.data.numpy() == result.numpy()) / len(test_y.data.numpy())accuracy\n10.9203980099502488\n92%의 정확성으로 구별해 내었다.\n","dateCreated":"2019-01-28T00:00:00+09:00","dateModified":"2019-01-28T12:32:01+09:00","datePublished":"2019-01-28T00:00:00+09:00","description":"뉴스 말뭉치를 다운로드 받아서 분석해보자. 말뭉치는 여기에서 받을 수 있다. 과거 뉴스 데이터를 다운로드해서, 어떤 카테코리인지 분류하는 학습을 진행해보자.\n\n먼저 구글드라이브에 해당 파일을 업로드해서 진행했다. 물론 아래와 같은 코드로 colab docker에 업로드 할 수 있지만\n\n1\n2\n\n\nfrom google.colab import files\nupload = files.upload()\n\n\n속도가 너무 느리다. ㅠ.ㅠ 그래서 그냥 구글 드라이브에 올려서 진행했다.\n\n1\n2\n\n\nfrom google.colab import dri","headline":"Pytorch (2-3) - 뉴스 카테고리 분류하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/01/28/pytorch-2-multi-perceptron(3)/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/01/28/pytorch-2-multi-perceptron(3)/","keywords":"pytorch"}</script>
     <meta name="description" content="뉴스 말뭉치를 다운로드 받아서 분석해보자. 말뭉치는 여기에서 받을 수 있다. 과거 뉴스 데이터를 다운로드해서, 어떤 카테코리인지 분류하는 학습을 진행해보자.  먼저 구글드라이브에 해당 파일을 업로드해서 진행했다. 물론 아래와 같은 코드로 colab docker에 업로드 할 수 있지만  1 2   from google.colab import files upl">
-<meta name="keywords" content="pytorch">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Pytorch (2-3) - 뉴스 카테고리 분류하기">
 <meta property="og:url" content="https://www.yceffort.kr/2019/01/28/pytorch-2-multi-perceptron(3)/index.html">
 <meta property="og:site_name" content="yceffort">
 <meta property="og:description" content="뉴스 말뭉치를 다운로드 받아서 분석해보자. 말뭉치는 여기에서 받을 수 있다. 과거 뉴스 데이터를 다운로드해서, 어떤 카테코리인지 분류하는 학습을 진행해보자.  먼저 구글드라이브에 해당 파일을 업로드해서 진행했다. 물론 아래와 같은 코드로 colab docker에 업로드 할 수 있지만  1 2   from google.colab import files upl">
-<meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-01-28T03:32:01.000Z">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-01-27T15:00:00.000Z">
+<meta property="article:modified_time" content="2019-01-28T03:32:01.000Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="pytorch">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Pytorch (2-3) - 뉴스 카테고리 분류하기">
-<meta name="twitter:description" content="뉴스 말뭉치를 다운로드 받아서 분석해보자. 말뭉치는 여기에서 받을 수 있다. 과거 뉴스 데이터를 다운로드해서, 어떤 카테코리인지 분류하는 학습을 진행해보자.  먼저 구글드라이브에 해당 파일을 업로드해서 진행했다. 물론 아래와 같은 코드로 colab docker에 업로드 할 수 있지만  1 2   from google.colab import files upl">
     
     
     
@@ -58,7 +58,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -85,7 +87,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -124,8 +126,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -284,7 +285,7 @@
 <p>이런식으로 추출해 놓은 단어가 나온다.</p>
 <p>이제 본격적으로 분석해보자.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">train_X, test_X, train_Y, test_Y = model_selection.train_test_split(x_tfidf_array, y_array, test_size=<span class="number">0.2</span>)</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> DataLoader, TensorDataset</span><br><span class="line"></span><br><span class="line">train_X = torch.from_numpy(train_X).float()</span><br><span class="line">train_Y = torch.from_numpy(train_Y).long()</span><br><span class="line"></span><br><span class="line">test_X = torch.from_numpy(test_X).float()</span><br><span class="line">test_Y = torch.from_numpy(test_Y).float()</span><br><span class="line"></span><br><span class="line">train = TensorDataset(train_X, train_Y)</span><br><span class="line">train_loader = DataLoader(train, batch_size=<span class="number">100</span>, shuffle=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
-<p>이제 신경망을 구성해보자.</p>
+<p>이제 신경망을 구성해보자. </p>
 <p>입력층에는 33572개의 단어가 있었고, 중간노드수는 256개, 128객 그리고 출력층은 2개 (두 개의 카테고리만 분석)로 구성해두었다.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 신경망 구성</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Net</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        super(Net, self).__init__()</span><br><span class="line">        self.fc1 = nn.Linear(<span class="number">33572</span>, <span class="number">256</span>)</span><br><span class="line">        self.fc2 = nn.Linear(<span class="number">256</span>, <span class="number">256</span>)</span><br><span class="line">        self.fc3 = nn.Linear(<span class="number">256</span>, <span class="number">256</span>)</span><br><span class="line">        self.fc4 = nn.Linear(<span class="number">256</span>, <span class="number">128</span>)</span><br><span class="line">        self.fc5 = nn.Linear(<span class="number">128</span>, <span class="number">128</span>)</span><br><span class="line">        self.fc6 = nn.Linear(<span class="number">128</span>, <span class="number">2</span>)</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        x = F.relu(self.fc1(x))</span><br><span class="line">        x = F.relu(self.fc2(x))</span><br><span class="line">        x = F.relu(self.fc3(x))</span><br><span class="line">        x = F.relu(self.fc4(x))</span><br><span class="line">        x = F.relu(self.fc5(x))</span><br><span class="line">        x = self.fc5(x)</span><br><span class="line">        <span class="keyword">return</span> F.log_softmax(x)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 인스턴스 생성</span></span><br><span class="line">model = Net()</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">criterion = nn.CrossEntropyLoss()</span><br><span class="line"></span><br><span class="line">optimizer = optim.Adam(model.parameters(), lr=<span class="number">0.05</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(<span class="number">20</span>):</span><br><span class="line">  total_loss = <span class="number">0</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> train_x, train_y <span class="keyword">in</span> train_loader:</span><br><span class="line">    train_x, train_y = Variable(train_x), Variable(train_y)</span><br><span class="line">    optimizer.zero_grad()</span><br><span class="line">    output = model(train_x)</span><br><span class="line">    loss = criterion(output, train_y)</span><br><span class="line">    loss.backward()</span><br><span class="line">    optimizer.step()</span><br><span class="line">    total_loss += loss.data.item()</span><br><span class="line">    </span><br><span class="line">  print(epoch + <span class="number">1</span>, total_loss)</span><br></pre></td></tr></table></figure>
@@ -306,7 +307,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/">pytorch</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/" rel="tag">pytorch</a>
 
             </div>
         
@@ -359,12 +360,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -379,10 +374,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -446,12 +437,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -590,8 +575,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -609,8 +594,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -666,8 +651,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -685,8 +670,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -746,7 +731,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -756,26 +741,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/01/28/pytorch-2-multi-perceptron(3)/';
-                 
-                    this.page.identifier = '2019/01/28/pytorch-2-multi-perceptron(3)/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

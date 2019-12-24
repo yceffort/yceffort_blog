@@ -34,21 +34,22 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Classification 2\n¶ROC 커브\nROC 커브는 Binary Classification에서 가장 잘 사용하는 검증기다. 왼쪽 위로 그래프가 상승해 있을 수록 (우하단 면적이 넓을 수록) 좋은 분류기라고 할 수 있다.\n12345678910111213141516# ROC 커브는 binary classifiers에서 잘 사용하는 검증기다.# 왼쪽 위로 그래프로 올라갈 수록 좋은 분류기다.from sklearn.metrics import roc_curvefpr, tpr, thresholds = roc_curve(y_train_5, y_scores)def plot_roc_curve(fpr, tpr, label=None):    plt.plot(fpr, tpr, linewidth=2, label=label)    plt.plot([0, 1], [0, 1], 'k--')    plt.axis([0, 1, 0, 1])    plt.xlabel('False Positive Rate')    plt.ylabel('True Positive Rate')    plot_roc_curve(fpr, tpr)plt.show()\n\n이런 그래프가 아니고, 점수를 보고 싶다면\n123# 점수로 보고 싶다면, from sklearn.metrics import roc_auc_scoreroc_auc_score(y_train_5, y_scores)\n10.963161488618153\n이 ROC 커브를 활용하여 RandomForestClassifier와 비교해보자.\n1234567891011from sklearn.ensemble import RandomForestClassifierforest_clf = RandomForestClassifier(random_state=42)y_probas_forest = cross_val_predict(forest_clf, X_train, y_train_5, cv=3, method='predict_proba')y_scores_forest = y_probas_forest[:, 1]fpr_forest, tpr_forest, thresholds_forest = roc_curve(y_train_5, y_scores_forest)plt.plot(fpr, tpr, 'b:', label=\"SGD\")plot_roc_curve(fpr_forest, tpr_forest, \"Random Forest\")plt.legend(loc=\"lower right\")plt.show()\n\n1roc_auc_score(y_train_5, y_scores_forest)\n10.9922948905208268\nRandomForestClassifier가 더 낫다는 것을 알 수 있다.\n¶Multiple Class Classifier\n이런 다양한 클래스를 구분하는 Classifier에는 RandomForestClassifier와 BayesClassifier가 있다. 그리고 Binary Clasifier에는 SupportVectorMachine과 LinearClassifier가 있다.앞서서는 5인지 아닌지만 확인했다. 만약 1~10까지를\n구별해야 한다면 어떻게 해야할까?\n\nMultipleClassifier 를 사용하는 법\nOne Versus All: OVA) 0~9를 구별하는 binary 분류기 10개를 만들기. 즉 이것이 무슨 숫자인지 10개의 분류기를 모두 거치는 방법이다.\nOne Versus One: OVO) 이름 그대로, 각각 맞짱(?) 뜨는 방법이다. 0과 1분류기를 거치고, 0과 2분류기를 거치고, 0과 3분류기를 거치고… 이런식으로 가지수가 나올 수 있는 모든 분류기를 만드는 방법이다. 이 방법은 $$N\\times(N-1)$$ 개의 분류기가 필요할 것이다. OVO는 시간은 물론 오래걸리지만, (45개) 트레이닝세트가 적게 필요하므로 더 이점이 있다.\n\nSVM과 같은 일부 알고리즘은 트레이닝 세트의 크기에 민감해서, 크기가 커질 경우 성능이 뚝뚝 떨어지는데, OVO를 사용하면 더 빠르게 구별할 수 있다. 그러나, 이 외의 경우에는 OVA를 보통 선호 한다고 한다.\nscikit-learn의 경우, 다중 클래스 분류에 binary-classification를 사용할 경우, 알아서 자동으로 OvA (SVM은 OVO)를 사용한다. 아래의 예제를 보자.\n12sgd_clf.fit(X_train, y_train)sgd_clf.predict([some_digit])\n1array([5.])\n이 코드에서는, 5만 구별한 y_train_5대신 원래 타겟을 사용하여 SGDClassifier를 훈련시켰다. 그런다음 예측을 하나 만들어 냈는데, 내부에서는 scikit-learn이 실제로 10개의 이진 분류기를 훈련시키고 각각의 결정점수를 얻어서 가장 높은 클래스 (5) 를  호출해 낸것이다.\n12some_digit_scores = sgd_clf.decision_function([some_digit])some_digit_scores\n1234array([[-210257.90046371, -417036.80313781, -405317.41607626,         -81007.86225196, -357657.92769475,   32836.21879306,        -743346.95995739, -210459.08988114, -826317.66173769,        -523922.97081691]])\n1np.argmax(some_digit_scores)\n15\n이번에는 OvO 와 OvA를 수동으로 사용하게 해보자.\n12345# OVOfrom sklearn.multiclass import OneVsOneClassifierovo_clf = OneVsOneClassifier(SGDClassifier(random_state=42, max_iter=5, tol=None))ovo_clf.fit(X_train, y_train)ovo_clf.predict([some_digit])\n1array([5.])\n5를 잘 예측하였다. RaondomForestClassifier의 경우는 더 쉽다.\n12forest_clf.fit(X_train, y_train)forest_clf.predict([some_digit])\n1array([5.])\n각각에 대해서 확률을 보고 싶다면\n1forest_clf.predict_proba([some_digit])\n1array([[0. , 0. , 0. , 0.1, 0. , 0.9, 0. , 0. , 0. , 0. ]])\n90%의 확률로 5임을 예측했다는 것을 알 수 있다. 이제 한번 테스트를 해보자.\n1cross_val_score(sgd_clf, X_train, y_train, cv=3, scoring='accuracy')\n1array([0.84953009, 0.84259213, 0.82712407])\n대략 85%의 확률로 맞추고 있는 것을 볼 수 있다. 여기서 성능을 더 향상 시키기 위해서는, input값을 조절해보면 될 것이다.\n12345from sklearn.preprocessing import StandardScalerscaler = StandardScaler()X_train_scaled = scaler.fit_transform(X_train.astype(np.float64))cross_val_score(sgd_clf, X_train_scaled, y_train, cv=3, scoring='accuracy')\n1array([0.90586883, 0.91309565, 0.91003651])\n정확도가 약 90%까지 향상한 것을 알 수 있다.\n","dateCreated":"2018-11-23T00:00:00+09:00","dateModified":"2018-11-23T19:44:01+09:00","datePublished":"2018-11-23T00:00:00+09:00","description":"Classification 2\n\n¶ROC 커브\nROC 커브는 Binary Classification에서 가장 잘 사용하는 검증기다. 왼쪽 위로 그래프가 상승해 있을 수록 (우하단 면적이 넓을 수록) 좋은 분류기라고 할 수 있다.\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n\n\n# ROC 커브는 binary classifiers에서 잘 사용하는 검증기다.\n# 왼쪽 위로 그래프로 올라갈 수록 좋은 분류기다.\n\nfrom sklearn.metrics import roc_curve\n\nfpr, tpr, thresho","headline":"Step by Step machine laerning - 03","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/11/23/step-by-step-machine-learning-03/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/11/23/step-by-step-machine-learning-03/","keywords":"machine-learning, scikit-learn"}</script>
-    <meta name="description" content="Classification 2  ¶ROC 커브 ROC 커브는 Binary Classification에서 가장 잘 사용하는 검증기다. 왼쪽 위로 그래프가 상승해 있을 수록 (우하단 면적이 넓을 수록) 좋은 분류기라고 할 수 있다.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16   # ROC 커브는 binary classifiers에서">
-<meta name="keywords" content="machine-learning,scikit-learn">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Classification 2\nROC 커브ROC 커브는 Binary Classification에서 가장 잘 사용하는 검증기다. 왼쪽 위로 그래프가 상승해 있을 수록 (우하단 면적이 넓을 수록) 좋은 분류기라고 할 수 있다.\n12345678910111213141516# ROC 커브는 binary classifiers에서 잘 사용하는 검증기다.# 왼쪽 위로 그래프로 올라갈 수록 좋은 분류기다.from sklearn.metrics import roc_curvefpr, tpr, thresholds = roc_curve(y_train_5, y_scores)def plot_roc_curve(fpr, tpr, label=None):    plt.plot(fpr, tpr, linewidth=2, label=label)    plt.plot([0, 1], [0, 1], 'k--')    plt.axis([0, 1, 0, 1])    plt.xlabel('False Positive Rate')    plt.ylabel('True Positive Rate')    plot_roc_curve(fpr, tpr)plt.show()\n\n이런 그래프가 아니고, 점수를 보고 싶다면 \n123# 점수로 보고 싶다면, from sklearn.metrics import roc_auc_scoreroc_auc_score(y_train_5, y_scores)\n10.963161488618153\n이 ROC 커브를 활용하여 RandomForestClassifier와 비교해보자.\n1234567891011from sklearn.ensemble import RandomForestClassifierforest_clf = RandomForestClassifier(random_state=42)y_probas_forest = cross_val_predict(forest_clf, X_train, y_train_5, cv=3, method='predict_proba')y_scores_forest = y_probas_forest[:, 1]fpr_forest, tpr_forest, thresholds_forest = roc_curve(y_train_5, y_scores_forest)plt.plot(fpr, tpr, 'b:', label=\"SGD\")plot_roc_curve(fpr_forest, tpr_forest, \"Random Forest\")plt.legend(loc=\"lower right\")plt.show()\n\n1roc_auc_score(y_train_5, y_scores_forest)\n10.9922948905208268\nRandomForestClassifier가 더 낫다는 것을 알 수 있다.\nMultiple Class Classifier이런 다양한 클래스를 구분하는 Classifier에는 RandomForestClassifier와 BayesClassifier가 있다. 그리고 Binary Clasifier에는 SupportVectorMachine과 LinearClassifier가 있다.앞서서는 5인지 아닌지만 확인했다. 만약 1~10까지를구별해야 한다면 어떻게 해야할까? \n1) MultipleClassifier 를 사용하는 법2) One Versus All: OVA) 0~9를 구별하는 binary 분류기 10개를 만들기. 즉 이것이 무슨 숫자인지 10개의 분류기를 모두 거치는 방법이다.3) One Versus One: OVO) 이름 그대로, 각각 맞짱(?) 뜨는 방법이다. 0과 1분류기를 거치고, 0과 2분류기를 거치고, 0과 3분류기를 거치고… 이런식으로 가지수가 나올 수 있는 모든 분류기를 만드는 방법이다. 이 방법은 N\\times(N-1) 개의 분류기가 필요할 것이다. OVO는 시간은 물론 오래걸리지만, (45개) 트레이닝세트가 적게 필요하므로 더 이점이 있다. \nSVM과 같은 일부 알고리즘은 트레이닝 세트의 크기에 민감해서, 크기가 커질 경우 성능이 뚝뚝 떨어지는데, OVO를 사용하면 더 빠르게 구별할 수 있다. 그러나, 이 외의 경우에는 OVA를 보통 선호 한다고 한다.\nscikit-learn의 경우, 다중 클래스 분류에 binary-classification를 사용할 경우, 알아서 자동으로 OvA (SVM은 OVO)를 사용한다. 아래의 예제를 보자.\n12sgd_clf.fit(X_train, y_train)sgd_clf.predict([some_digit])\n1array([5.])\n이 코드에서는, 5만 구별한 y_train_5대신 원래 타겟을 사용하여 SGDClassifier를 훈련시켰다. 그런다음 예측을 하나 만들어 냈는데, 내부에서는 scikit-learn이 실제로 10개의 이진 분류기를 훈련시키고 각각의 결정점수를 얻어서 가장 높은 클래스 (5) 를  호출해 낸것이다. \n12some_digit_scores = sgd_clf.decision_function([some_digit])some_digit_scores\n1234array([[-210257.90046371, -417036.80313781, -405317.41607626,         -81007.86225196, -357657.92769475,   32836.21879306,        -743346.95995739, -210459.08988114, -826317.66173769,        -523922.97081691]])\n1np.argmax(some_digit_scores)\n15\n이번에는 OvO 와 OvA를 수동으로 사용하게 해보자.\n12345# OVOfrom sklearn.multiclass import OneVsOneClassifierovo_clf = OneVsOneClassifier(SGDClassifier(random_state=42, max_iter=5, tol=None))ovo_clf.fit(X_train, y_train)ovo_clf.predict([some_digit])\n1array([5.])\n5를 잘 예측하였다. RaondomForestClassifier의 경우는 더 쉽다.\n12forest_clf.fit(X_train, y_train)forest_clf.predict([some_digit])\n1array([5.])\n각각에 대해서 확률을 보고 싶다면\n1forest_clf.predict_proba([some_digit])\n1array([[0. , 0. , 0. , 0.1, 0. , 0.9, 0. , 0. , 0. , 0. ]])\n90%의 확률로 5임을 예측했다는 것을 알 수 있다. 이제 한번 테스트를 해보자.\n1cross_val_score(sgd_clf, X_train, y_train, cv=3, scoring='accuracy')\n1array([0.84953009, 0.84259213, 0.82712407])\n대략 85%의 확률로 맞추고 있는 것을 볼 수 있다. 여기서 성능을 더 향상 시키기 위해서는, input값을 조절해보면 될 것이다.\n12345from sklearn.preprocessing import StandardScalerscaler = StandardScaler()X_train_scaled = scaler.fit_transform(X_train.astype(np.float64))cross_val_score(sgd_clf, X_train_scaled, y_train, cv=3, scoring='accuracy')\n1array([0.90586883, 0.91309565, 0.91003651])\n정확도가 약 90%까지 향상한 것을 알 수 있다.\n","dateCreated":"2018-11-23T00:00:00+09:00","dateModified":"2018-11-23T19:44:01+09:00","datePublished":"2018-11-23T00:00:00+09:00","description":"Classification 2\n\nROC 커브\nROC 커브는 Binary Classification에서 가장 잘 사용하는 검증기다. 왼쪽 위로 그래프가 상승해 있을 수록 (우하단 면적이 넓을 수록) 좋은 분류기라고 할 수 있다.\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n\n\n# ROC 커브는 binary classifiers에서 잘 사용하는 검증기다.\n# 왼쪽 위로 그래프로 올라갈 수록 좋은 분류기다.\n\nfrom sklearn.metrics import roc_curve\n\nfpr, tpr, threshol","headline":"Step by Step machine laerning - 03","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/11/23/step-by-step-machine-learning-03/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/11/23/step-by-step-machine-learning-03/","keywords":"machine-learning, scikit-learn"}</script>
+    <meta name="description" content="Classification 2  ROC 커브 ROC 커브는 Binary Classification에서 가장 잘 사용하는 검증기다. 왼쪽 위로 그래프가 상승해 있을 수록 (우하단 면적이 넓을 수록) 좋은 분류기라고 할 수 있다.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16   # ROC 커브는 binary classifiers에서">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Step by Step machine laerning - 03">
 <meta property="og:url" content="https://www.yceffort.kr/2018/11/23/step-by-step-machine-learning-03/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="Classification 2  ¶ROC 커브 ROC 커브는 Binary Classification에서 가장 잘 사용하는 검증기다. 왼쪽 위로 그래프가 상승해 있을 수록 (우하단 면적이 넓을 수록) 좋은 분류기라고 할 수 있다.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16   # ROC 커브는 binary classifiers에서">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="Classification 2  ROC 커브 ROC 커브는 Binary Classification에서 가장 잘 사용하는 검증기다. 왼쪽 위로 그래프가 상승해 있을 수록 (우하단 면적이 넓을 수록) 좋은 분류기라고 할 수 있다.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16   # ROC 커브는 binary classifiers에서">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.yceffort.kr/images/2018/11/ml-2-3.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2018/11/ml-2-4.png">
-<meta property="og:updated_time" content="2018-11-23T10:44:01.000Z">
+<meta property="article:published_time" content="2018-11-22T15:00:00.000Z">
+<meta property="article:modified_time" content="2018-11-23T10:44:01.000Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="machine-learning">
+<meta property="article:tag" content="scikit-learn">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Step by Step machine laerning - 03">
-<meta name="twitter:description" content="Classification 2  ¶ROC 커브 ROC 커브는 Binary Classification에서 가장 잘 사용하는 검증기다. 왼쪽 위로 그래프가 상승해 있을 수록 (우하단 면적이 넓을 수록) 좋은 분류기라고 할 수 있다.  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16   # ROC 커브는 binary classifiers에서">
 <meta name="twitter:image" content="https://www.yceffort.kr/images/2018/11/ml-2-3.png">
     
     
@@ -61,7 +62,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -88,7 +91,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -127,8 +130,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -265,11 +267,10 @@
     <div class="post-content markdown">
         <div class="main-content-wrap">
             <p>Classification 2</p>
-<h2 id="roc-커브"><a class="header-anchor" href="#roc-커브">¶</a>ROC 커브</h2>
-<p>ROC 커브는 Binary Classification에서 가장 잘 사용하는 검증기다. 왼쪽 위로 그래프가 상승해 있을 수록 (우하단 면적이 넓을 수록) 좋은 분류기라고 할 수 있다.</p>
+<h2 id="ROC-커브"><a href="#ROC-커브" class="headerlink" title="ROC 커브"></a>ROC 커브</h2><p>ROC 커브는 Binary Classification에서 가장 잘 사용하는 검증기다. 왼쪽 위로 그래프가 상승해 있을 수록 (우하단 면적이 넓을 수록) 좋은 분류기라고 할 수 있다.</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ROC 커브는 binary classifiers에서 잘 사용하는 검증기다.</span></span><br><span class="line"><span class="comment"># 왼쪽 위로 그래프로 올라갈 수록 좋은 분류기다.</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> roc_curve</span><br><span class="line"></span><br><span class="line">fpr, tpr, thresholds = roc_curve(y_train_5, y_scores)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_roc_curve</span><span class="params">(fpr, tpr, label=None)</span>:</span></span><br><span class="line">    plt.plot(fpr, tpr, linewidth=<span class="number">2</span>, label=label)</span><br><span class="line">    plt.plot([<span class="number">0</span>, <span class="number">1</span>], [<span class="number">0</span>, <span class="number">1</span>], <span class="string">'k--'</span>)</span><br><span class="line">    plt.axis([<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">1</span>])</span><br><span class="line">    plt.xlabel(<span class="string">'False Positive Rate'</span>)</span><br><span class="line">    plt.ylabel(<span class="string">'True Positive Rate'</span>)</span><br><span class="line">    </span><br><span class="line">plot_roc_curve(fpr, tpr)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
 <p><img src="/images/2018/11/ml-2-3.png" alt="ml-2-3.png"></p>
-<p>이런 그래프가 아니고, 점수를 보고 싶다면</p>
+<p>이런 그래프가 아니고, 점수를 보고 싶다면 </p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 점수로 보고 싶다면, </span></span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> roc_auc_score</span><br><span class="line">roc_auc_score(y_train_5, y_scores)</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0.963161488618153</span><br></pre></td></tr></table></figure>
 <p>이 ROC 커브를 활용하여 <code>RandomForestClassifier</code>와 비교해보자.</p>
@@ -278,19 +279,13 @@
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">roc_auc_score(y_train_5, y_scores_forest)</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0.9922948905208268</span><br></pre></td></tr></table></figure>
 <p>RandomForestClassifier가 더 낫다는 것을 알 수 있다.</p>
-<h2 id="multiple-class-classifier"><a class="header-anchor" href="#multiple-class-classifier">¶</a>Multiple Class Classifier</h2>
-<p>이런 다양한 클래스를 구분하는 Classifier에는 <code>RandomForestClassifier</code>와 <code>BayesClassifier</code>가 있다. 그리고 Binary Clasifier에는 <code>SupportVectorMachine</code>과 <code>LinearClassifier</code>가 있다.앞서서는 5인지 아닌지만 확인했다. 만약 1~10까지를<br>
-구별해야 한다면 어떻게 해야할까?</p>
-<ol>
-<li>MultipleClassifier 를 사용하는 법</li>
-<li>One Versus All: OVA) 0~9를 구별하는 binary 분류기 10개를 만들기. 즉 이것이 무슨 숫자인지 10개의 분류기를 모두 거치는 방법이다.</li>
-<li>One Versus One: OVO) 이름 그대로, 각각 맞짱(?) 뜨는 방법이다. 0과 1분류기를 거치고, 0과 2분류기를 거치고, 0과 3분류기를 거치고… 이런식으로 가지수가 나올 수 있는 모든 분류기를 만드는 방법이다. 이 방법은 $$N\times(N-1)$$ 개의 분류기가 필요할 것이다. OVO는 시간은 물론 오래걸리지만, (45개) 트레이닝세트가 적게 필요하므로 더 이점이 있다.</li>
-</ol>
+<h2 id="Multiple-Class-Classifier"><a href="#Multiple-Class-Classifier" class="headerlink" title="Multiple Class Classifier"></a>Multiple Class Classifier</h2><p>이런 다양한 클래스를 구분하는 Classifier에는 <code>RandomForestClassifier</code>와 <code>BayesClassifier</code>가 있다. 그리고 Binary Clasifier에는 <code>SupportVectorMachine</code>과 <code>LinearClassifier</code>가 있다.앞서서는 5인지 아닌지만 확인했다. 만약 1~10까지를<br>구별해야 한다면 어떻게 해야할까? </p>
+<p>1) MultipleClassifier 를 사용하는 법<br>2) One Versus All: OVA) 0~9를 구별하는 binary 분류기 10개를 만들기. 즉 이것이 무슨 숫자인지 10개의 분류기를 모두 거치는 방법이다.<br>3) One Versus One: OVO) 이름 그대로, 각각 맞짱(?) 뜨는 방법이다. 0과 1분류기를 거치고, 0과 2분류기를 거치고, 0과 3분류기를 거치고… 이런식으로 가지수가 나올 수 있는 모든 분류기를 만드는 방법이다. 이 방법은 <script type="math/tex">N\times(N-1)</script> 개의 분류기가 필요할 것이다. OVO는 시간은 물론 오래걸리지만, (45개) 트레이닝세트가 적게 필요하므로 더 이점이 있다. </p>
 <p>SVM과 같은 일부 알고리즘은 트레이닝 세트의 크기에 민감해서, 크기가 커질 경우 성능이 뚝뚝 떨어지는데, OVO를 사용하면 더 빠르게 구별할 수 있다. 그러나, 이 외의 경우에는 OVA를 보통 선호 한다고 한다.</p>
 <p>scikit-learn의 경우, 다중 클래스 분류에 binary-classification를 사용할 경우, 알아서 자동으로 OvA (SVM은 OVO)를 사용한다. 아래의 예제를 보자.</p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sgd_clf.fit(X_train, y_train)</span><br><span class="line">sgd_clf.predict([some_digit])</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array([5.])</span><br></pre></td></tr></table></figure>
-<p>이 코드에서는, 5만 구별한 <code>y_train_5</code>대신 원래 타겟을 사용하여 <code>SGDClassifier</code>를 훈련시켰다. 그런다음 예측을 하나 만들어 냈는데, 내부에서는 scikit-learn이 실제로 10개의 이진 분류기를 훈련시키고 각각의 결정점수를 얻어서 가장 높은 클래스 (5) 를  호출해 낸것이다.</p>
+<p>이 코드에서는, 5만 구별한 <code>y_train_5</code>대신 원래 타겟을 사용하여 <code>SGDClassifier</code>를 훈련시켰다. 그런다음 예측을 하나 만들어 냈는데, 내부에서는 scikit-learn이 실제로 10개의 이진 분류기를 훈련시키고 각각의 결정점수를 얻어서 가장 높은 클래스 (5) 를  호출해 낸것이다. </p>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">some_digit_scores = sgd_clf.decision_function([some_digit])</span><br><span class="line">some_digit_scores</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">array([[-210257.90046371, -417036.80313781, -405317.41607626,</span><br><span class="line">         -81007.86225196, -357657.92769475,   32836.21879306,</span><br><span class="line">        -743346.95995739, -210459.08988114, -826317.66173769,</span><br><span class="line">        -523922.97081691]])</span><br></pre></td></tr></table></figure>
 <figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">np.argmax(some_digit_scores)</span><br></pre></td></tr></table></figure>
@@ -326,7 +321,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/machine-learning/">machine-learning</a> <a class="tag tag--primary tag--small t-link" href="/tags/scikit-learn/">scikit-learn</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/machine-learning/" rel="tag">machine-learning</a> <a class="tag tag--primary tag--small t-link" href="/tags/scikit-learn/" rel="tag">scikit-learn</a>
 
             </div>
         
@@ -337,7 +332,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/23/decentralized-ai-benefits/" data-tooltip="탈중앙화된 AI: 블록체인의 미래" aria-label="PREVIOUS: 탈중앙화된 AI: 블록체인의 미래">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/30/malicious-code-in-npm-event-stream-package-targets-a-bitcoin-wallet/" data-tooltip="npm &#39;event-stream&#39; 패키지, 비트코인 지갑을 노리는 악성코드에 감염" aria-label="PREVIOUS: npm &#39;event-stream&#39; 패키지, 비트코인 지갑을 노리는 악성코드에 감염">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -346,7 +341,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/22/us-crypto-currencies-payments-analysis:bitcoin-for-payments-a-distant-dream-as-usage-dries-up/" data-tooltip="결제 수단으로서 비트코인 사용이 지속적으로 감소 중" aria-label="NEXT: 결제 수단으로서 비트코인 사용이 지속적으로 감소 중">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/23/decentralized-ai-benefits/" data-tooltip="탈중앙화된 AI: 블록체인의 미래" aria-label="NEXT: 탈중앙화된 AI: 블록체인의 미래">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -379,12 +374,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -399,10 +388,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -425,7 +410,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/23/decentralized-ai-benefits/" data-tooltip="탈중앙화된 AI: 블록체인의 미래" aria-label="PREVIOUS: 탈중앙화된 AI: 블록체인의 미래">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/30/malicious-code-in-npm-event-stream-package-targets-a-bitcoin-wallet/" data-tooltip="npm &#39;event-stream&#39; 패키지, 비트코인 지갑을 노리는 악성코드에 감염" aria-label="PREVIOUS: npm &#39;event-stream&#39; 패키지, 비트코인 지갑을 노리는 악성코드에 감염">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -434,7 +419,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/22/us-crypto-currencies-payments-analysis:bitcoin-for-payments-a-distant-dream-as-usage-dries-up/" data-tooltip="결제 수단으로서 비트코인 사용이 지속적으로 감소 중" aria-label="NEXT: 결제 수단으로서 비트코인 사용이 지속적으로 감소 중">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/11/23/decentralized-ai-benefits/" data-tooltip="탈중앙화된 AI: 블록체인의 미래" aria-label="NEXT: 탈중앙화된 AI: 블록체인의 미래">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -466,12 +451,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -610,8 +589,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -629,8 +608,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -686,8 +665,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -705,8 +684,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -766,7 +745,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -776,26 +755,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2018/11/23/step-by-step-machine-learning-03/';
-                 
-                    this.page.identifier = '2018/11/23/step-by-step-machine-learning-03/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

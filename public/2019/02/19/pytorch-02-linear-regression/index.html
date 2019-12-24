@@ -34,23 +34,23 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Pytorch - 02) Linear Regression\n¶Linear Regression\nLinear Regression이 한국말로 뭐였더라?\n1234import torchimport torch.nn as nnimport matplotlib.pyplot as pltimport numpy as np\n¶데이터셋 만들기\n대충 뭔가 있어보이는 데이터셋을 만들자.\n12345X = torch.randn(100, 1)*10y = X + 3*torch.randn(100, 1)plt.plot(X.numpy(), y.numpy(), 'o')plt.ylabel('y')plt.xlabel('x')\n\n12345678910111213# nn.Module은 사용자 정의 모듈을 생성하는데 있어서 가장 기초가 되는 모듈이다.class LR(nn.Module):  # linear regression의 입력값과 출력값 갯수를 받는다.  def __init__(self, input_size, output_size):    super().__init__()    # nn.Linear를 상속받는다.    self.linear = nn.Linear(input_size, output_size)  # 정방향 호출 함수. 이 함수를 통해서 linear regression을 수행하게 된다.  def forward(self, x):    pred = self.linear(x)    return pred\nnn.Linear는\n$$y = xA^{T} + b$$\n12345# random seedtorch.manual_seed(1)# 입력값이 한개고, 출력값이 한개model = LR(1, 1)print(model)\n123LR(  (linear): Linear(in_features=1, out_features=1, bias=True))\n파라미터를 살펴보면\n1print(list(model.parameters()))\n이렇게 weight와 bias 가 무작위로 들어가 있는 것을 알 수 있다.\n123[Parameter containing:tensor([[0.5153]], requires_grad=True), Parameter containing:tensor([-0.4414], requires_grad=True)]\n이제 Linear Regression을 해보자.\n1234567891011121314151617w, b = model.parameters()def get_params():  return w[0][0].item(), b[0].item()def plot_fit(title):  plt.title = title  # weight 와 bias  w1, b1 = get_params()  # -30 부터 30까지   x1 = np.array([-30, 30])  # 선형 추정선을 그려본다.  y1 = w1*x1 + b1  plt.plot(x1, y1, 'r')  plt.scatter(X, y)  plt.show()plot_fit('Initial Model')\n\n회귀선,인지, 추정선,인지 암튼지간에 제대로 그리지 못했다는 것을 알 수 있다. 그래서 이를 학습시키려고 한다.\n12criterion = nn.MSELoss()optimizer = torch.optim.SGD(model.parameters(), lr = 0.01)\ncriterion은 Mean Squred Error를 , optimizer는 stochastic gradient descent (확률적 경사하강법)을 사용한다. learning_rate는 0.01 이다.\n배치 경사하강법은, 매스텝에서 전체 훈련세트를 활용해서 그래디언트를 계산하기 대문에, 훈련세트가 커지면 속도가 매우 느려진다. 그러나 SGD는 매스텝에서 무작위 딱 한개의 샘플만을 처리하고, 그 샘플에 대한 그래디언트만 계산한다.\n따라서 속도는 훨씬 빠르지만, 매 iteration 에서 적은 데이터만 처리하기 때문에 훨씬 불안정하다. 위아래로 요동치면서 감소하므로, 물론 시간이 지나면 최소값에 얼추 닿긴 하겠지만, 말그대로 얼추일 뿐이다.\n이러한 무작위성은 국소최소값을 벗어나게 하므로 (무작위로 처리하므로), 전역 최소값을 찾을 확률이 더 크다.\n암튼 지간에\n123456789101112131415161718# 100 회 반복epochs = 100losses = []for i in range(epochs):  # 예측  y_pred = model.forward(X)  # 오차 계산  loss = criterion(y_pred, y)  print(\"epoch:\", i, \"loss:\", loss.item())    # 오차 누적 (계산을 위해서)  losses.append(loss)  # optimzer 초기화  optimizer.zero_grad()  # backward를 수행하여 그래디언트 계산  loss.backward()  # learning rate 만큼 가중치를 주어서 hyper parameter 업데이트  optimizer.step()\n123456789101112131415161718192021epoch: 0 loss: 31.671594619750977epoch: 1 loss: 22.02737808227539epoch: 2 loss: 16.717256546020508epoch: 3 loss: 13.792343139648438epoch: 4 loss: 12.180136680603027epoch: 5 loss: 11.290426254272461epoch: 6 loss: 10.798413276672363epoch: 7 loss: 10.525352478027344epoch: 8 loss: 10.372870445251465epoch: 9 loss: 10.286834716796875...epoch: 90 loss: 10.071357727050781epoch: 91 loss: 10.071175575256348epoch: 92 loss: 10.071000099182129epoch: 93 loss: 10.070833206176758epoch: 94 loss: 10.070671081542969epoch: 95 loss: 10.070516586303711epoch: 96 loss: 10.070366859436035epoch: 97 loss: 10.07022476196289epoch: 98 loss: 10.070086479187012epoch: 99 loss: 10.069954872131348\n123plt.plot(range(epochs), losses)plt.ylabel('Loss')plt.xlabel('epoch')\n\n시간이 지나면서 오차가 감소한 것을 알 수 있다.\n1plot_fit(\"Trained Model\")\n\n이전보다 잘 학습되었다.\n","dateCreated":"2019-02-19T00:00:00+09:00","dateModified":"2019-02-19T09:46:13+09:00","datePublished":"2019-02-19T00:00:00+09:00","description":"Pytorch - 02) Linear Regression\n\n¶Linear Regression\nLinear Regression이 한국말로 뭐였더라?\n\n1\n2\n3\n4\n\n\nimport torch\nimport torch.nn as nn\nimport matplotlib.pyplot as plt\nimport numpy as np\n\n\n¶데이터셋 만들기\n대충 뭔가 있어보이는 데이터셋을 만들자.\n\n1\n2\n3\n4\n5\n\n\nX = torch.randn(100, 1)*10\ny = X + 3*torch.randn(100, 1)\nplt.plot(X.numpy","headline":"Pytorch 02) - Linear Regression","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/02/19/pytorch-02-linear-regression/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/02/19/pytorch-02-linear-regression/","keywords":"pytorch"}</script>
-    <meta name="description" content="Pytorch - 02) Linear Regression  ¶Linear Regression Linear Regression이 한국말로 뭐였더라?  1 2 3 4   import torch import torch.nn as nn import matplotlib.pyplot as plt import numpy as np   ¶데이터셋 만들기 대충 뭔가 있어보">
-<meta name="keywords" content="pytorch">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Pytorch - 02) Linear Regression\nLinear RegressionLinear Regression이 한국말로 뭐였더라?\n1234import torchimport torch.nn as nnimport matplotlib.pyplot as pltimport numpy as np\n데이터셋 만들기대충 뭔가 있어보이는 데이터셋을 만들자.\n12345X = torch.randn(100, 1)*10y = X + 3*torch.randn(100, 1)plt.plot(X.numpy(), y.numpy(), 'o')plt.ylabel('y')plt.xlabel('x')\n\n12345678910111213# nn.Module은 사용자 정의 모듈을 생성하는데 있어서 가장 기초가 되는 모듈이다.class LR(nn.Module):  # linear regression의 입력값과 출력값 갯수를 받는다.  def __init__(self, input_size, output_size):    super().__init__()    # nn.Linear를 상속받는다.    self.linear = nn.Linear(input_size, output_size)  # 정방향 호출 함수. 이 함수를 통해서 linear regression을 수행하게 된다.  def forward(self, x):    pred = self.linear(x)    return pred\nnn.Linear는 \ny = xA^{T} + b12345# random seedtorch.manual_seed(1)# 입력값이 한개고, 출력값이 한개model = LR(1, 1)print(model)\n123LR(  (linear): Linear(in_features=1, out_features=1, bias=True))\n파라미터를 살펴보면\n1print(list(model.parameters()))\n이렇게 weight와 bias 가 무작위로 들어가 있는 것을 알 수 있다.\n123[Parameter containing:tensor([[0.5153]], requires_grad=True), Parameter containing:tensor([-0.4414], requires_grad=True)]\n이제 Linear Regression을 해보자.\n1234567891011121314151617w, b = model.parameters()def get_params():  return w[0][0].item(), b[0].item()def plot_fit(title):  plt.title = title  # weight 와 bias  w1, b1 = get_params()  # -30 부터 30까지   x1 = np.array([-30, 30])  # 선형 추정선을 그려본다.  y1 = w1*x1 + b1  plt.plot(x1, y1, 'r')  plt.scatter(X, y)  plt.show()plot_fit('Initial Model')\n\n회귀선,,,인지,, 추정선,,,인지 암튼지간에 제대로 그리지 못했다는 것을 알 수 있다. 그래서 이를 학습시키려고 한다.\n12criterion = nn.MSELoss()optimizer = torch.optim.SGD(model.parameters(), lr = 0.01)\ncriterion은 Mean Squred Error를 , optimizer는 stochastic gradient descent (확률적 경사하강법)을 사용한다. learning_rate는 0.01 이다.\n배치 경사하강법은, 매스텝에서 전체 훈련세트를 활용해서 그래디언트를 계산하기 대문에, 훈련세트가 커지면 속도가 매우 느려진다. 그러나 SGD는 매스텝에서 무작위 딱 한개의 샘플만을 처리하고, 그 샘플에 대한 그래디언트만 계산한다. \n따라서 속도는 훨씬 빠르지만, 매 iteration 에서 적은 데이터만 처리하기 때문에 훨씬 불안정하다. 위아래로 요동치면서 감소하므로, 물론 시간이 지나면 최소값에 얼추 닿긴 하겠지만, 말그대로 얼추일 뿐이다. \n이러한 무작위성은 국소최소값을 벗어나게 하므로 (무작위로 처리하므로), 전역 최소값을 찾을 확률이 더 크다. \n암튼 지간에\n123456789101112131415161718# 100 회 반복epochs = 100losses = []for i in range(epochs):  # 예측  y_pred = model.forward(X)  # 오차 계산  loss = criterion(y_pred, y)  print(\"epoch:\", i, \"loss:\", loss.item())    # 오차 누적 (계산을 위해서)  losses.append(loss)  # optimzer 초기화  optimizer.zero_grad()  # backward를 수행하여 그래디언트 계산  loss.backward()  # learning rate 만큼 가중치를 주어서 hyper parameter 업데이트  optimizer.step()\n123456789101112131415161718192021epoch: 0 loss: 31.671594619750977epoch: 1 loss: 22.02737808227539epoch: 2 loss: 16.717256546020508epoch: 3 loss: 13.792343139648438epoch: 4 loss: 12.180136680603027epoch: 5 loss: 11.290426254272461epoch: 6 loss: 10.798413276672363epoch: 7 loss: 10.525352478027344epoch: 8 loss: 10.372870445251465epoch: 9 loss: 10.286834716796875...epoch: 90 loss: 10.071357727050781epoch: 91 loss: 10.071175575256348epoch: 92 loss: 10.071000099182129epoch: 93 loss: 10.070833206176758epoch: 94 loss: 10.070671081542969epoch: 95 loss: 10.070516586303711epoch: 96 loss: 10.070366859436035epoch: 97 loss: 10.07022476196289epoch: 98 loss: 10.070086479187012epoch: 99 loss: 10.069954872131348\n123plt.plot(range(epochs), losses)plt.ylabel('Loss')plt.xlabel('epoch')\n\n시간이 지나면서 오차가 감소한 것을 알 수 있다. \n1plot_fit(\"Trained Model\")\n\n이전보다 잘 학습되었다.\n","dateCreated":"2019-02-19T00:00:00+09:00","dateModified":"2019-02-19T09:46:13+09:00","datePublished":"2019-02-19T00:00:00+09:00","description":"Pytorch - 02) Linear Regression\n\nLinear Regression\nLinear Regression이 한국말로 뭐였더라?\n\n1\n2\n3\n4\n\n\nimport torch\nimport torch.nn as nn\nimport matplotlib.pyplot as plt\nimport numpy as np\n\n\n데이터셋 만들기\n대충 뭔가 있어보이는 데이터셋을 만들자.\n\n1\n2\n3\n4\n5\n\n\nX = torch.randn(100, 1)*10\ny = X + 3*torch.randn(100, 1)\nplt.plot(X.numpy()","headline":"Pytorch 02) - Linear Regression","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/02/19/pytorch-02-linear-regression/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/02/19/pytorch-02-linear-regression/","keywords":"pytorch"}</script>
+    <meta name="description" content="Pytorch - 02) Linear Regression  Linear Regression Linear Regression이 한국말로 뭐였더라?  1 2 3 4   import torch import torch.nn as nn import matplotlib.pyplot as plt import numpy as np   데이터셋 만들기 대충 뭔가 있어보이는">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Pytorch 02) - Linear Regression">
 <meta property="og:url" content="https://www.yceffort.kr/2019/02/19/pytorch-02-linear-regression/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="Pytorch - 02) Linear Regression  ¶Linear Regression Linear Regression이 한국말로 뭐였더라?  1 2 3 4   import torch import torch.nn as nn import matplotlib.pyplot as plt import numpy as np   ¶데이터셋 만들기 대충 뭔가 있어보">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="Pytorch - 02) Linear Regression  Linear Regression Linear Regression이 한국말로 뭐였더라?  1 2 3 4   import torch import torch.nn as nn import matplotlib.pyplot as plt import numpy as np   데이터셋 만들기 대충 뭔가 있어보이는">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/02/lr1.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/02/lr2.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/02/lr3.png">
 <meta property="og:image" content="https://www.yceffort.kr/images/2019/02/lr4.png">
-<meta property="og:updated_time" content="2019-02-19T00:46:13.000Z">
+<meta property="article:published_time" content="2019-02-18T15:00:00.000Z">
+<meta property="article:modified_time" content="2019-02-19T00:46:13.000Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="pytorch">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Pytorch 02) - Linear Regression">
-<meta name="twitter:description" content="Pytorch - 02) Linear Regression  ¶Linear Regression Linear Regression이 한국말로 뭐였더라?  1 2 3 4   import torch import torch.nn as nn import matplotlib.pyplot as plt import numpy as np   ¶데이터셋 만들기 대충 뭔가 있어보">
 <meta name="twitter:image" content="https://www.yceffort.kr/images/2019/02/lr1.png">
     
     
@@ -63,7 +63,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -90,7 +92,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -129,8 +131,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -267,17 +268,14 @@
     <div class="post-content markdown">
         <div class="main-content-wrap">
             <p>Pytorch - 02) Linear Regression</p>
-<h2 id="linear-regression"><a class="header-anchor" href="#linear-regression">¶</a>Linear Regression</h2>
-<p>Linear Regression이 한국말로 뭐였더라?</p>
+<h2 id="Linear-Regression"><a href="#Linear-Regression" class="headerlink" title="Linear Regression"></a>Linear Regression</h2><p>Linear Regression이 한국말로 뭐였더라?</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
-<h3 id="데이터셋-만들기"><a class="header-anchor" href="#데이터셋-만들기">¶</a>데이터셋 만들기</h3>
-<p>대충 뭔가 있어보이는 데이터셋을 만들자.</p>
+<h3 id="데이터셋-만들기"><a href="#데이터셋-만들기" class="headerlink" title="데이터셋 만들기"></a>데이터셋 만들기</h3><p>대충 뭔가 있어보이는 데이터셋을 만들자.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">X = torch.randn(<span class="number">100</span>, <span class="number">1</span>)*<span class="number">10</span></span><br><span class="line">y = X + <span class="number">3</span>*torch.randn(<span class="number">100</span>, <span class="number">1</span>)</span><br><span class="line">plt.plot(X.numpy(), y.numpy(), <span class="string">'o'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'y'</span>)</span><br><span class="line">plt.xlabel(<span class="string">'x'</span>)</span><br></pre></td></tr></table></figure>
 <p><img src="/images/2019/02/lr1.png" alt="lr1"></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># nn.Module은 사용자 정의 모듈을 생성하는데 있어서 가장 기초가 되는 모듈이다.</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LR</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line"></span><br><span class="line">  <span class="comment"># linear regression의 입력값과 출력값 갯수를 받는다.</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, input_size, output_size)</span>:</span></span><br><span class="line">    super().__init__()</span><br><span class="line">    <span class="comment"># nn.Linear를 상속받는다.</span></span><br><span class="line">    self.linear = nn.Linear(input_size, output_size)</span><br><span class="line"></span><br><span class="line">  <span class="comment"># 정방향 호출 함수. 이 함수를 통해서 linear regression을 수행하게 된다.</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">    pred = self.linear(x)</span><br><span class="line">    <span class="keyword">return</span> pred</span><br></pre></td></tr></table></figure>
-<p>nn.Linear는</p>
-<p>$$y = xA^{T} + b$$</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># random seed</span></span><br><span class="line">torch.manual_seed(<span class="number">1</span>)</span><br><span class="line"><span class="comment"># 입력값이 한개고, 출력값이 한개</span></span><br><span class="line">model = LR(<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">print(model)</span><br></pre></td></tr></table></figure>
+<p>nn.Linear는 </p>
+<script type="math/tex; mode=display">y = xA^{T} + b</script><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># random seed</span></span><br><span class="line">torch.manual_seed(<span class="number">1</span>)</span><br><span class="line"><span class="comment"># 입력값이 한개고, 출력값이 한개</span></span><br><span class="line">model = LR(<span class="number">1</span>, <span class="number">1</span>)</span><br><span class="line">print(model)</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">LR(</span><br><span class="line">  (linear): Linear(in_features=1, out_features=1, bias=True)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 <p>파라미터를 살펴보면</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(list(model.parameters()))</span><br></pre></td></tr></table></figure>
@@ -286,18 +284,18 @@
 <p>이제 Linear Regression을 해보자.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">w, b = model.parameters()</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_params</span><span class="params">()</span>:</span></span><br><span class="line">  <span class="keyword">return</span> w[<span class="number">0</span>][<span class="number">0</span>].item(), b[<span class="number">0</span>].item()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plot_fit</span><span class="params">(title)</span>:</span></span><br><span class="line">  plt.title = title</span><br><span class="line">  <span class="comment"># weight 와 bias</span></span><br><span class="line">  w1, b1 = get_params()</span><br><span class="line">  <span class="comment"># -30 부터 30까지 </span></span><br><span class="line">  x1 = np.array([<span class="number">-30</span>, <span class="number">30</span>])</span><br><span class="line">  <span class="comment"># 선형 추정선을 그려본다.</span></span><br><span class="line">  y1 = w1*x1 + b1</span><br><span class="line">  plt.plot(x1, y1, <span class="string">'r'</span>)</span><br><span class="line">  plt.scatter(X, y)</span><br><span class="line">  plt.show()</span><br><span class="line"></span><br><span class="line">plot_fit(<span class="string">'Initial Model'</span>)</span><br></pre></td></tr></table></figure>
 <p><img src="/images/2019/02/lr2.png" alt="lr2"></p>
-<p>회귀선,인지, 추정선,인지 암튼지간에 제대로 그리지 못했다는 것을 알 수 있다. 그래서 이를 학습시키려고 한다.</p>
+<p>회귀선,,,인지,, 추정선,,,인지 암튼지간에 제대로 그리지 못했다는 것을 알 수 있다. 그래서 이를 학습시키려고 한다.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">criterion = nn.MSELoss()</span><br><span class="line">optimizer = torch.optim.SGD(model.parameters(), lr = <span class="number">0.01</span>)</span><br></pre></td></tr></table></figure>
 <p>criterion은 <code>Mean Squred Error</code>를 , optimizer는 stochastic gradient descent (확률적 경사하강법)을 사용한다. learning_rate는 0.01 이다.</p>
-<p>배치 경사하강법은, 매스텝에서 전체 훈련세트를 활용해서 그래디언트를 계산하기 대문에, 훈련세트가 커지면 속도가 매우 느려진다. 그러나 SGD는 매스텝에서 무작위 딱 한개의 샘플만을 처리하고, 그 샘플에 대한 그래디언트만 계산한다.</p>
-<p>따라서 속도는 훨씬 빠르지만, 매 iteration 에서 적은 데이터만 처리하기 때문에 훨씬 불안정하다. 위아래로 요동치면서 감소하므로, 물론 시간이 지나면 최소값에 얼추 닿긴 하겠지만, 말그대로 얼추일 뿐이다.</p>
-<p>이러한 무작위성은 국소최소값을 벗어나게 하므로 (무작위로 처리하므로), 전역 최소값을 찾을 확률이 더 크다.</p>
+<p>배치 경사하강법은, 매스텝에서 전체 훈련세트를 활용해서 그래디언트를 계산하기 대문에, 훈련세트가 커지면 속도가 매우 느려진다. 그러나 SGD는 매스텝에서 무작위 딱 한개의 샘플만을 처리하고, 그 샘플에 대한 그래디언트만 계산한다. </p>
+<p>따라서 속도는 훨씬 빠르지만, 매 iteration 에서 적은 데이터만 처리하기 때문에 훨씬 불안정하다. 위아래로 요동치면서 감소하므로, 물론 시간이 지나면 최소값에 얼추 닿긴 하겠지만, 말그대로 얼추일 뿐이다. </p>
+<p>이러한 무작위성은 국소최소값을 벗어나게 하므로 (무작위로 처리하므로), 전역 최소값을 찾을 확률이 더 크다. </p>
 <p>암튼 지간에</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 100 회 반복</span></span><br><span class="line">epochs = <span class="number">100</span></span><br><span class="line">losses = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(epochs):</span><br><span class="line">  <span class="comment"># 예측</span></span><br><span class="line">  y_pred = model.forward(X)</span><br><span class="line">  <span class="comment"># 오차 계산</span></span><br><span class="line">  loss = criterion(y_pred, y)</span><br><span class="line">  print(<span class="string">"epoch:"</span>, i, <span class="string">"loss:"</span>, loss.item())</span><br><span class="line">  </span><br><span class="line">  <span class="comment"># 오차 누적 (계산을 위해서)</span></span><br><span class="line">  losses.append(loss)</span><br><span class="line">  <span class="comment"># optimzer 초기화</span></span><br><span class="line">  optimizer.zero_grad()</span><br><span class="line">  <span class="comment"># backward를 수행하여 그래디언트 계산</span></span><br><span class="line">  loss.backward()</span><br><span class="line">  <span class="comment"># learning rate 만큼 가중치를 주어서 hyper parameter 업데이트</span></span><br><span class="line">  optimizer.step()</span><br></pre></td></tr></table></figure>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">epoch: 0 loss: 31.671594619750977</span><br><span class="line">epoch: 1 loss: 22.02737808227539</span><br><span class="line">epoch: 2 loss: 16.717256546020508</span><br><span class="line">epoch: 3 loss: 13.792343139648438</span><br><span class="line">epoch: 4 loss: 12.180136680603027</span><br><span class="line">epoch: 5 loss: 11.290426254272461</span><br><span class="line">epoch: 6 loss: 10.798413276672363</span><br><span class="line">epoch: 7 loss: 10.525352478027344</span><br><span class="line">epoch: 8 loss: 10.372870445251465</span><br><span class="line">epoch: 9 loss: 10.286834716796875</span><br><span class="line">...</span><br><span class="line">epoch: 90 loss: 10.071357727050781</span><br><span class="line">epoch: 91 loss: 10.071175575256348</span><br><span class="line">epoch: 92 loss: 10.071000099182129</span><br><span class="line">epoch: 93 loss: 10.070833206176758</span><br><span class="line">epoch: 94 loss: 10.070671081542969</span><br><span class="line">epoch: 95 loss: 10.070516586303711</span><br><span class="line">epoch: 96 loss: 10.070366859436035</span><br><span class="line">epoch: 97 loss: 10.07022476196289</span><br><span class="line">epoch: 98 loss: 10.070086479187012</span><br><span class="line">epoch: 99 loss: 10.069954872131348</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">plt.plot(range(epochs), losses)</span><br><span class="line">plt.ylabel(<span class="string">'Loss'</span>)</span><br><span class="line">plt.xlabel(<span class="string">'epoch'</span>)</span><br></pre></td></tr></table></figure>
 <p><img src="/images/2019/02/lr3.png" alt="lr3"></p>
-<p>시간이 지나면서 오차가 감소한 것을 알 수 있다.</p>
+<p>시간이 지나면서 오차가 감소한 것을 알 수 있다. </p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plot_fit(<span class="string">"Trained Model"</span>)</span><br></pre></td></tr></table></figure>
 <p><img src="/images/2019/02/lr4.png" alt="lr4"></p>
 <p>이전보다 잘 학습되었다.</p>
@@ -316,7 +314,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/">pytorch</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/" rel="tag">pytorch</a>
 
             </div>
         
@@ -327,7 +325,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-01-tensor/" data-tooltip="Pytorch 01) - Tensor" aria-label="PREVIOUS: Pytorch 01) - Tensor">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/20/pytorch-04-deep-neural-network/" data-tooltip="Pytorch 04) - Deep Nueral Network" aria-label="PREVIOUS: Pytorch 04) - Deep Nueral Network">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -336,7 +334,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-03-perceptron/" data-tooltip="Pytorch 03) - Perceptron" aria-label="NEXT: Pytorch 03) - Perceptron">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-01-tensor/" data-tooltip="Pytorch 01) - Tensor" aria-label="NEXT: Pytorch 01) - Tensor">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -369,12 +367,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -389,10 +381,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -415,7 +403,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-01-tensor/" data-tooltip="Pytorch 01) - Tensor" aria-label="PREVIOUS: Pytorch 01) - Tensor">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/20/pytorch-04-deep-neural-network/" data-tooltip="Pytorch 04) - Deep Nueral Network" aria-label="PREVIOUS: Pytorch 04) - Deep Nueral Network">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -424,7 +412,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-03-perceptron/" data-tooltip="Pytorch 03) - Perceptron" aria-label="NEXT: Pytorch 03) - Perceptron">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/02/19/pytorch-01-tensor/" data-tooltip="Pytorch 01) - Tensor" aria-label="NEXT: Pytorch 01) - Tensor">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -456,12 +444,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -600,8 +582,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -619,8 +601,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -676,8 +658,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -695,8 +677,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -756,7 +738,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -766,26 +748,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/02/19/pytorch-02-linear-regression/';
-                 
-                    this.page.identifier = '2019/02/19/pytorch-02-linear-regression/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

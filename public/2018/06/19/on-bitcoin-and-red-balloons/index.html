@@ -34,20 +34,20 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"비트코인과 빨간풍선\n출처\n2009년 국방부는 미국 전역에 흩어진 10개의 빨간 풍선을 10개를 먼저 찾으면, 4만달러를 준다는 이벤트를 한 적이 있다. 이는 방위고등연구계획국(이하 DARPA)에서 인터넷의 정보 확산의 속도와 정확도를 측정하기에 한 실험이었다. 참고로 이곳은 인터넷을 만든 곳이기도 하다.\n최초에 DARPA는 모든 풍선을 다 찾는데 9일 정도를 예상헀지만, MIT의 팀은 겨우 9시간만에 모든 풍선의 위치를 찾는데 성공하였다.\n그들이 이용한 방법은 아래와 같다.\n\n풍선을 찾은 사람에게는 $2000를, 풍선을 찾은 사실을 전한 다음 사람에게는 $1000을, 그 사실을 전달하는 다음 사람에게는 $500 형식으로, 풍선에 대한 정보가 한단계 씩 넘어 갈 때 마다 2000에서 절반의 보을 준 것이다. 이 방법을 활용할 경우, 최초 보상 n의 두배를 넘지 않는다. 이 전략은 유효했고, MIT팀은 승리할 수 있었다.\n비트코인으로 돌아가보자.\n비트코인은 P2P네트워크를 사용하므로, 모든 거래내역을 노드가 인지하기 위해서 네트워크로 해당 거래 내역을 전파해야 한다. 그러나 현재 비트코인 구조에서는, 거래내역을 전파한다고 해서 특별한 인센티브가 부여되지 않는다. 오로지 block을 만드는 Miner에게만 인센티브가 제공되는 것이다. 만약 MIT의 빨간 풍선처럼, 해당 정보를 전파한 사람들에게도 인센티브가 부여된다면 보다 효과적으로 블록체인 네트워크가 동작할 수 있지 않을까? 이 논문에서는 이러한 전략을 Sybil-proofness라고 한다. 이 논문에서는 아주작은 payment overhead만 있다면, 반복적으로 우월전략을 제거함으로서 이러한 전략을 달성할 수 있다고 주장한다.\n다시 빨간풍선 찾기로 돌아와보자.\n만약 빨간풍선이 나타났다라고 속이는 사용자가 있고, 그 속인 사실을 전파하는 사용자가 반복해서 발생한다면 이 전략은 유용하지 않게 된다. 비트코인도 마찬가지이기 때문에 정보를 올바르게 전파하는 노드에게는 인센티브를, 그리고 이러한 경쟁에서 발생하는 인센티브를 상쇄해야 한다.\n비트코인은 P2P 네트워크에 의존하여 모든 거래를 확인하고 승인한다. 앨리스가 호텔에 30 비트코인을 지불한다고 가정해보자. 그녀는 암호로 30비트코인을 주는 거래에 사인한다. 네트워크의 노드들은 이 거래 내역을 다른 노드에게 알린다. 트랜잭션을 수신한 노드는 해당 거래가 정말 앨리스가 사인했는지 확인할 것인하고, 실제로 해당 거래에서 그 금액이 그녀의 소유인지 확인한다. 그리고 노드는 그 거래를 승인하기 위하여 컴퓨터 퍼즐을 풀 것이다. (hash function 으로 암호화 되어 있으므로) 만약 이 노드가 성공적으로 거래를 승인했다면 (hash의 원래값을 찾았다면) 다른 모든 노드에 전파할 것이다. 결국 네트워크 상의 모든 노드들은 해당 거래 내역에 대해 동의할 것이다.\n이런 거래 승인 과정을 장려하기 위해, 거래를 성공적으로 승인한 노드에게는 미리 주어진 양의 비트코인이 보상으로 주어진다. 그리고 이는 비트코인의 공급으로 작용한다. 그러나 비트코인 프로토콜은 총 비트코인의 양에 제한을 두기위해 화폐 창출속도가 기하급수적으로 감소 하도록 설계하였다. 노드에서 이런 지불이 서서히 작아지기 때문에, 비트코인 소유자들은 이러한 거래를 승인하기 위해서 승인 노드에 수수료를 지불해야 한다.\n바로 이 지점이 문제다.\n노드는 가장 먼저 이 거래내역을 알아내고 승인함으로써 거래 수수료를 취할 수 있기 때문에, 네트워크에서 전파되는 정보를 알 수 있는 동기가 부여되는 것이다. 그런데 만약, 단하나의 노드가 트랜잭션을 인지하고 있다면, 이 거래를 전파하지 않음으로서 경쟁자들을 제거하는 효과를 가져올 수 있다. 경쟁이 없다면, 해당 노드는 결국 수수료를 챙기는데 성공하게 될 것이다. 그리고 이는 결과적으로 승인에 오랜기간이 소요되게 할 것이다.\n이를 해결하기 위해서\n\n첫번째로, 정보를 전파하는 것과 중복이 없는 것에 인센티브를 부여한다. 이렇게 한다면, 노드가 스스로 정보를 복제하지 않고 거래내역을 전파하는 것에 인센티브를 갖게 될 것이고, 또한 거래가 승인이 될때까지 복제하지 않을 동기도 갖게 될 것이다.\n두번째로, 거래내역이 전파되는 마지막 단계에서 대부분의 노드가 해당 트랜잭션을 알수 있도록 한다.\n마지막으로, 이를 구현하고 initial distribution 단계에서 부담을 줄이기 위해, 작은 양의 reward만을 사용한다.\n\n","dateCreated":"2018-06-19T00:00:00+09:00","dateModified":"2018-06-19T12:00:23+09:00","datePublished":"2018-06-19T00:00:00+09:00","description":"비트코인과 빨간풍선\n\n출처\n\n2009년 국방부는 미국 전역에 흩어진 10개의 빨간 풍선을 10개를 먼저 찾으면, 4만달러를 준다는 이벤트를 한 적이 있다. 이는 방위고등연구계획국(이하 DARPA)에서 인터넷의 정보 확산의 속도와 정확도를 측정하기에 한 실험이었다. 참고로 이곳은 인터넷을 만든 곳이기도 하다.\n\n최초에 DARPA는 모든 풍선을 다 찾는데 9일 정도를 예상헀지만, MIT의 팀은 겨우 9시간만에 모든 풍선의 위치를 찾는데 성공하였다.\n그들이 이용한 방법은 아래와 같다.\n\n\n\n풍선을 찾은 사람에게는 $2000를, 풍선을 찾","headline":"Bitcoin) 비트코인과 빨간풍선","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/06/19/on-bitcoin-and-red-balloons/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/06/19/on-bitcoin-and-red-balloons/","keywords":"bitcoin"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"비트코인과 빨간풍선\n출처\n2009년 국방부는 미국 전역에 흩어진 10개의 빨간 풍선을 10개를 먼저 찾으면, 4만달러를 준다는 이벤트를 한 적이 있다. 이는 방위고등연구계획국(이하 DARPA)에서 인터넷의 정보 확산의 속도와 정확도를 측정하기에 한 실험이었다. 참고로 이곳은 인터넷을 만든 곳이기도 하다.\n최초에 DARPA는 모든 풍선을 다 찾는데 9일 정도를 예상헀지만, MIT의 팀은 겨우 9시간만에 모든 풍선의 위치를 찾는데 성공하였다.그들이 이용한 방법은 아래와 같다.\n\n풍선을 찾은 사람에게는 $2000를, 풍선을 찾은 사실을 전한 다음 사람에게는 $1000을, 그 사실을 전달하는 다음 사람에게는 $500 형식으로, 풍선에 대한 정보가 한단계 씩 넘어 갈 때 마다 2000에서 절반의 보을 준 것이다. 이 방법을 활용할 경우, 최초 보상 n의 두배를 넘지 않는다. 이 전략은 유효했고, MIT팀은 승리할 수 있었다.\n비트코인으로 돌아가보자.  \n비트코인은 P2P네트워크를 사용하므로, 모든 거래내역을 노드가 인지하기 위해서 네트워크로 해당 거래 내역을 전파해야 한다. 그러나 현재 비트코인 구조에서는, 거래내역을 전파한다고 해서 특별한 인센티브가 부여되지 않는다. 오로지 block을 만드는 Miner에게만 인센티브가 제공되는 것이다. 만약 MIT의 빨간 풍선처럼, 해당 정보를 전파한 사람들에게도 인센티브가 부여된다면 보다 효과적으로 블록체인 네트워크가 동작할 수 있지 않을까? 이 논문에서는 이러한 전략을 Sybil-proofness라고 한다. 이 논문에서는 아주작은 payment overhead만 있다면, 반복적으로 우월전략을 제거함으로서 이러한 전략을 달성할 수 있다고 주장한다.\n다시 빨간풍선 찾기로 돌아와보자.만약 빨간풍선이 나타났다라고 속이는 사용자가 있고, 그 속인 사실을 전파하는 사용자가 반복해서 발생한다면 이 전략은 유용하지 않게 된다. 비트코인도 마찬가지이기 때문에 정보를 올바르게 전파하는 노드에게는 인센티브를, 그리고 이러한 경쟁에서 발생하는 인센티브를 상쇄해야 한다.\n비트코인은 P2P 네트워크에 의존하여 모든 거래를 확인하고 승인한다. 앨리스가 호텔에 30 비트코인을 지불한다고 가정해보자. 그녀는 암호로 30비트코인을 주는 거래에 사인한다. 네트워크의 노드들은 이 거래 내역을 다른 노드에게 알린다. 트랜잭션을 수신한 노드는 해당 거래가 정말 앨리스가 사인했는지 확인할 것인하고, 실제로 해당 거래에서 그 금액이 그녀의 소유인지 확인한다. 그리고 노드는 그 거래를 승인하기 위하여 컴퓨터 퍼즐을 풀 것이다. (hash function 으로 암호화 되어 있으므로) 만약 이 노드가 성공적으로 거래를 승인했다면 (hash의 원래값을 찾았다면) 다른 모든 노드에 전파할 것이다. 결국 네트워크 상의 모든 노드들은 해당 거래 내역에 대해 동의할 것이다.\n이런 거래 승인 과정을 장려하기 위해, 거래를 성공적으로 승인한 노드에게는 미리 주어진 양의 비트코인이 보상으로 주어진다. 그리고 이는 비트코인의 공급으로 작용한다. 그러나 비트코인 프로토콜은 총 비트코인의 양에 제한을 두기위해 화폐 창출속도가 기하급수적으로 감소 하도록 설계하였다. 노드에서 이런 지불이 서서히 작아지기 때문에, 비트코인 소유자들은 이러한 거래를 승인하기 위해서 승인 노드에 수수료를 지불해야 한다.\n바로 이 지점이 문제다.\n노드는 가장 먼저 이 거래내역을 알아내고 승인함으로써 거래 수수료를 취할 수 있기 때문에, 네트워크에서 전파되는 정보를 알 수 있는 동기가 부여되는 것이다. 그런데 만약, 단하나의 노드가 트랜잭션을 인지하고 있다면, 이 거래를 전파하지 않음으로서 경쟁자들을 제거하는 효과를 가져올 수 있다. 경쟁이 없다면, 해당 노드는 결국 수수료를 챙기는데 성공하게 될 것이다. 그리고 이는 결과적으로 승인에 오랜기간이 소요되게 할 것이다.\n이를 해결하기 위해서\n\n첫번째로, 정보를 전파하는 것과 중복이 없는 것에 인센티브를 부여한다. 이렇게 한다면, 노드가 스스로 정보를 복제하지 않고 거래내역을 전파하는 것에 인센티브를 갖게 될 것이고, 또한 거래가 승인이 될때까지 복제하지 않을 동기도 갖게 될 것이다.\n두번째로, 거래내역이 전파되는 마지막 단계에서 대부분의 노드가 해당 트랜잭션을 알수 있도록 한다.\n마지막으로, 이를 구현하고 initial distribution 단계에서 부담을 줄이기 위해, 작은 양의 reward만을 사용한다.\n\n","dateCreated":"2018-06-19T00:00:00+09:00","dateModified":"2018-06-19T12:00:23+09:00","datePublished":"2018-06-19T00:00:00+09:00","description":"비트코인과 빨간풍선\n\n출처\n\n2009년 국방부는 미국 전역에 흩어진 10개의 빨간 풍선을 10개를 먼저 찾으면, 4만달러를 준다는 이벤트를 한 적이 있다. 이는 방위고등연구계획국(이하 DARPA)에서 인터넷의 정보 확산의 속도와 정확도를 측정하기에 한 실험이었다. 참고로 이곳은 인터넷을 만든 곳이기도 하다.\n\n최초에 DARPA는 모든 풍선을 다 찾는데 9일 정도를 예상헀지만, MIT의 팀은 겨우 9시간만에 모든 풍선의 위치를 찾는데 성공하였다.\n그들이 이용한 방법은 아래와 같다.\n\n\n\n풍선을 찾은 사람에게는 $2000를, 풍선을 찾","headline":"Bitcoin) 비트코인과 빨간풍선","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/06/19/on-bitcoin-and-red-balloons/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/06/19/on-bitcoin-and-red-balloons/","keywords":"bitcoin"}</script>
     <meta name="description" content="비트코인과 빨간풍선  출처  2009년 국방부는 미국 전역에 흩어진 10개의 빨간 풍선을 10개를 먼저 찾으면, 4만달러를 준다는 이벤트를 한 적이 있다. 이는 방위고등연구계획국(이하 DARPA)에서 인터넷의 정보 확산의 속도와 정확도를 측정하기에 한 실험이었다. 참고로 이곳은 인터넷을 만든 곳이기도 하다.  최초에 DARPA는 모든 풍선을 다 찾는데 9일">
-<meta name="keywords" content="bitcoin">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Bitcoin) 비트코인과 빨간풍선">
 <meta property="og:url" content="https://www.yceffort.kr/2018/06/19/on-bitcoin-and-red-balloons/index.html">
 <meta property="og:site_name" content="yceffort">
 <meta property="og:description" content="비트코인과 빨간풍선  출처  2009년 국방부는 미국 전역에 흩어진 10개의 빨간 풍선을 10개를 먼저 찾으면, 4만달러를 준다는 이벤트를 한 적이 있다. 이는 방위고등연구계획국(이하 DARPA)에서 인터넷의 정보 확산의 속도와 정확도를 측정하기에 한 실험이었다. 참고로 이곳은 인터넷을 만든 곳이기도 하다.  최초에 DARPA는 모든 풍선을 다 찾는데 9일">
-<meta property="og:locale" content="en">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://deliveryimages.acm.org/10.1145/1930000/1924441/figs/f2.jpg">
-<meta property="og:updated_time" content="2018-06-19T03:00:23.000Z">
+<meta property="article:published_time" content="2018-06-18T15:00:00.000Z">
+<meta property="article:modified_time" content="2018-06-19T03:00:23.000Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="bitcoin">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Bitcoin) 비트코인과 빨간풍선">
-<meta name="twitter:description" content="비트코인과 빨간풍선  출처  2009년 국방부는 미국 전역에 흩어진 10개의 빨간 풍선을 10개를 먼저 찾으면, 4만달러를 준다는 이벤트를 한 적이 있다. 이는 방위고등연구계획국(이하 DARPA)에서 인터넷의 정보 확산의 속도와 정확도를 측정하기에 한 실험이었다. 참고로 이곳은 인터넷을 만든 곳이기도 하다.  최초에 DARPA는 모든 풍선을 다 찾는데 9일">
 <meta name="twitter:image" content="http://deliveryimages.acm.org/10.1145/1930000/1924441/figs/f2.jpg">
     
     
@@ -60,7 +60,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -87,7 +89,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -126,8 +128,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -266,14 +267,12 @@
             <p>비트코인과 빨간풍선</p>
 <p><a href="https://arxiv.org/pdf/1111.2626.pdf" target="_blank" rel="noopener">출처</a></p>
 <p>2009년 국방부는 미국 전역에 흩어진 10개의 빨간 풍선을 10개를 먼저 찾으면, 4만달러를 준다는 이벤트를 한 적이 있다. 이는 방위고등연구계획국(이하 DARPA)에서 인터넷의 정보 확산의 속도와 정확도를 측정하기에 한 실험이었다. 참고로 이곳은 인터넷을 만든 곳이기도 하다.</p>
-<p>최초에 DARPA는 모든 풍선을 다 찾는데 9일 정도를 예상헀지만, MIT의 팀은 겨우 9시간만에 모든 풍선의 위치를 찾는데 성공하였다.<br>
-그들이 이용한 방법은 아래와 같다.</p>
+<p>최초에 DARPA는 모든 풍선을 다 찾는데 9일 정도를 예상헀지만, MIT의 팀은 겨우 9시간만에 모든 풍선의 위치를 찾는데 성공하였다.<br>그들이 이용한 방법은 아래와 같다.</p>
 <p><img src="http://deliveryimages.acm.org/10.1145/1930000/1924441/figs/f2.jpg" alt="find-red-baloon"></p>
 <p>풍선을 찾은 사람에게는 $2000를, 풍선을 찾은 사실을 전한 다음 사람에게는 $1000을, 그 사실을 전달하는 다음 사람에게는 $500 형식으로, 풍선에 대한 정보가 한단계 씩 넘어 갈 때 마다 2000에서 절반의 보을 준 것이다. 이 방법을 활용할 경우, 최초 보상 n의 두배를 넘지 않는다. 이 전략은 유효했고, MIT팀은 승리할 수 있었다.</p>
-<p>비트코인으로 돌아가보자.</p>
+<p>비트코인으로 돌아가보자.  </p>
 <p>비트코인은 P2P네트워크를 사용하므로, 모든 거래내역을 노드가 인지하기 위해서 네트워크로 해당 거래 내역을 전파해야 한다. 그러나 현재 비트코인 구조에서는, 거래내역을 전파한다고 해서 특별한 인센티브가 부여되지 않는다. 오로지 block을 만드는 Miner에게만 인센티브가 제공되는 것이다. 만약 MIT의 빨간 풍선처럼, 해당 정보를 전파한 사람들에게도 인센티브가 부여된다면 보다 효과적으로 블록체인 네트워크가 동작할 수 있지 않을까? 이 논문에서는 이러한 전략을 <code>Sybil-proofness</code>라고 한다. 이 논문에서는 아주작은 payment overhead만 있다면, 반복적으로 우월전략을 제거함으로서 이러한 전략을 달성할 수 있다고 주장한다.</p>
-<p>다시 빨간풍선 찾기로 돌아와보자.<br>
-만약 빨간풍선이 나타났다라고 속이는 사용자가 있고, 그 속인 사실을 전파하는 사용자가 반복해서 발생한다면 이 전략은 유용하지 않게 된다. 비트코인도 마찬가지이기 때문에 정보를 올바르게 전파하는 노드에게는 인센티브를, 그리고 이러한 경쟁에서 발생하는 인센티브를 상쇄해야 한다.</p>
+<p>다시 빨간풍선 찾기로 돌아와보자.<br>만약 빨간풍선이 나타났다라고 속이는 사용자가 있고, 그 속인 사실을 전파하는 사용자가 반복해서 발생한다면 이 전략은 유용하지 않게 된다. 비트코인도 마찬가지이기 때문에 정보를 올바르게 전파하는 노드에게는 인센티브를, 그리고 이러한 경쟁에서 발생하는 인센티브를 상쇄해야 한다.</p>
 <p>비트코인은 P2P 네트워크에 의존하여 모든 거래를 확인하고 승인한다. 앨리스가 호텔에 30 비트코인을 지불한다고 가정해보자. 그녀는 암호로 30비트코인을 주는 거래에 사인한다. 네트워크의 노드들은 이 거래 내역을 다른 노드에게 알린다. 트랜잭션을 수신한 노드는 해당 거래가 정말 앨리스가 사인했는지 확인할 것인하고, 실제로 해당 거래에서 그 금액이 그녀의 소유인지 확인한다. 그리고 노드는 그 거래를 승인하기 위하여 컴퓨터 퍼즐을 풀 것이다. (hash function 으로 암호화 되어 있으므로) 만약 이 노드가 성공적으로 거래를 승인했다면 (hash의 원래값을 찾았다면) 다른 모든 노드에 전파할 것이다. 결국 네트워크 상의 모든 노드들은 해당 거래 내역에 대해 동의할 것이다.</p>
 <p>이런 거래 승인 과정을 장려하기 위해, 거래를 성공적으로 승인한 노드에게는 미리 주어진 양의 비트코인이 보상으로 주어진다. 그리고 이는 비트코인의 공급으로 작용한다. 그러나 비트코인 프로토콜은 총 비트코인의 양에 제한을 두기위해 화폐 창출속도가 기하급수적으로 감소 하도록 설계하였다. 노드에서 이런 지불이 서서히 작아지기 때문에, 비트코인 소유자들은 이러한 거래를 승인하기 위해서 승인 노드에 수수료를 지불해야 한다.</p>
 <p>바로 이 지점이 문제다.</p>
@@ -299,7 +298,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/bitcoin/">bitcoin</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/bitcoin/" rel="tag">bitcoin</a>
 
             </div>
         
@@ -310,7 +309,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/20/majority-is-not-enough-bitcoin-mining-is-vulnerable/" data-tooltip="Bitcoin) 비트코인 마이닝의 취약점" aria-label="PREVIOUS: Bitcoin) 비트코인 마이닝의 취약점">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/19/bitcoin-backbone-protocol/" data-tooltip="Bitcoin) 비트코인 백본 프로토콜, 분석과 어플리케이션" aria-label="PREVIOUS: Bitcoin) 비트코인 백본 프로토콜, 분석과 어플리케이션">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -319,7 +318,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/19/bitcoin-backbone-protocol/" data-tooltip="Bitcoin) 비트코인 백본 프로토콜, 분석과 어플리케이션" aria-label="NEXT: Bitcoin) 비트코인 백본 프로토콜, 분석과 어플리케이션">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/18/research-perspectives-and-challenges-for-bitcoin-and-cryptocurrencies/" data-tooltip="Blockchain) 비트코인과 암호화폐의 연구관점 및 과제" aria-label="NEXT: Blockchain) 비트코인과 암호화폐의 연구관점 및 과제">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -352,12 +351,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -372,10 +365,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -398,7 +387,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/20/majority-is-not-enough-bitcoin-mining-is-vulnerable/" data-tooltip="Bitcoin) 비트코인 마이닝의 취약점" aria-label="PREVIOUS: Bitcoin) 비트코인 마이닝의 취약점">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/19/bitcoin-backbone-protocol/" data-tooltip="Bitcoin) 비트코인 백본 프로토콜, 분석과 어플리케이션" aria-label="PREVIOUS: Bitcoin) 비트코인 백본 프로토콜, 분석과 어플리케이션">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -407,7 +396,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/19/bitcoin-backbone-protocol/" data-tooltip="Bitcoin) 비트코인 백본 프로토콜, 분석과 어플리케이션" aria-label="NEXT: Bitcoin) 비트코인 백본 프로토콜, 분석과 어플리케이션">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/06/18/research-perspectives-and-challenges-for-bitcoin-and-cryptocurrencies/" data-tooltip="Blockchain) 비트코인과 암호화폐의 연구관점 및 과제" aria-label="NEXT: Blockchain) 비트코인과 암호화폐의 연구관점 및 과제">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -439,12 +428,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -583,8 +566,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -602,8 +585,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -659,8 +642,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -678,8 +661,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -739,7 +722,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -749,26 +732,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2018/06/19/on-bitcoin-and-red-balloons/';
-                 
-                    this.page.identifier = '2018/06/19/on-bitcoin-and-red-balloons/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

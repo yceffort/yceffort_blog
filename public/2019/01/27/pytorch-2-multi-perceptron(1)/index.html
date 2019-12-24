@@ -34,22 +34,22 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"전에는 신경망에서 중간층을 하나로만 했지만, 이 중간층을 여러개로 늘린 것을 심층신경망 (deep neural network) 라고 한다. 벌써 부터 뭔가 있어보인다. 이는 딥러닝에서 주요 매커니즘이다. 신경망과 심층 신경망 모두 퍼셉트론을 여러개 조합해서 구성한 것으로, 다층 퍼셉트론 (multilayer perceptron, MLP)라고 한다.\n어쩄거나, 입력층, 중간층, 출력층으로 구성되어 있는 것은 똑같다. 다만 차이점은 중간층이 여러개라는 것 뿐이다.\n\n마찬가지로, 순전파와 역전파를 반복해서 학습이 이뤄지며 모형을 생성한다. 다만 중간층이 여러개라는 차이점과 함께 또다른 차이가 있는데, 바로 학습 이전단계에 노드간 연결의 가중치를 조절하는 사전 학습을 거친다는 차이가 있다.\n사전 학습 알고리즘으로는, 자기부호화기(Autoencoder)가 유명하다.\n¶자기 부호화기\n\n자기부호화기는 다층 퍼셉트론 처럼 입력층, 중간층, 출력층으로 구성된다. 다만 입력층과 출력층의 노드 수가 같아야 하며, 비지도학습, 차원축소에 쓰이는 알고리즘이므로 설명변수만으로 구성되어 있다.\n그리고 순전파와 역전파를 반복하면서 출력값과 입력값이 비슷해지도록 (자기 자신을 재현하도록) 학습하고 모형을 생성한다. 이 때 입력층과 중간층에서는 정보 압축 (encoding)이 일어나고, 중간층과 출력층 사이에서는 복호화 (decoding)이 일어난다.\n자기 부호화기를 이용하면, 다층 퍼셉트론을 한층씩 쌓아 올릴 수 있다.\n¶최적화 기법\n이전에는 최적화 기법으로 경사하강법을 사용했다. 이 밖에도 momentum, adam 등이 있는데, 특히 adam을 많이 사용한다. 경사하강법에서는 학습률이 고정이었지만, adam에서는 학습도중에 자동으로 학습률을 자동으로 조정한다. (오오…) 따라서 좀더 효율적인 학습이 가능하다.\n최적화의 효과를 더 높이기 위한 방법도 있다. 가중치 감쇠는 가중치에 계수를 곱해서, 가중치 값이 크게 발산하는 현상을 방지, 최적화가 안정적으로 진행되게 한다. 배치 정규화는 미니배치의 평균과 분산값으로 각층 노드의 값을 평균 0, 분산 1이 되도록 표준화 해서학습 속도를 개선한다.\n¶과적합 (Overfitting)\n\n¶와인 분류하기 2\n이번엔 다층 퍼셉트론으로 와인을 분석해보자. 텐서로 변환하고, 준비하는 과정까지는 똑같다.\n1234567891011121314151617181920212223242526import torchfrom torch.autograd import Variableimport torch.nn as nnimport torch.nn.functional as Fimport torch.optim as optimfrom torch.utils.data import DataLoader, TensorDatasetfrom sklearn.datasets import load_winefrom sklearn.model_selection import train_test_splitimport pandas as pdwine = load_wine()wine_data = wine.data[0:130]wine_target = wine.target[0:130]train_X, test_X, train_Y, test_Y = train_test_split(wine_data, wine_target, test_size=0.2)# 데이터를 텐서 형태로 변환train_X = torch.from_numpy(train_X).float()train_Y = torch.from_numpy(train_Y).long()test_X = torch.from_numpy(test_X).float()test_Y = torch.from_numpy(test_Y).float()train = TensorDataset(train_X, train_Y)\n신경망 구성\n12345678910111213141516171819202122232425class Net(nn.Module):    def __init__(self):    super(Net, self).__init__()    self.fc1 = nn.Linear(13, 96)    self.fc2 = nn.Linear(96, 96)    self.fc3 = nn.Linear(96, 96)    self.fc4 = nn.Linear(96, 96)    self.fc5 = nn.Linear(96, 96)    self.fc6 = nn.Linear(96, 2)          def forward(self, x):    x = F.relu(self.fc1(x))    x = F.relu(self.fc2(x))    x = F.relu(self.fc3(x))    x = F.relu(self.fc4(x))    x = F.relu(self.fc5(x))    x = self.fc6(x)        return F.log_softmax(x)    model = Net()\n계산은 똑같다.\n1234567891011121314151617181920212223242526272829303132333435#오차함수criterion = nn.CrossEntropyLoss()#최적화 담당optimizer = optim.SGD(model.parameters(), lr=0.01)#학습 300회 ㄱㄱfor epoch in range(300):  total_loss = 0    for train_x, train_y in train_loader:    train_x, train_y = Variable(train_x), Variable(train_y)        #경사 초기화    optimizer.zero_grad()        #순전파    output = model(train_x)        #오차    loss = criterion(output, train_y)        #역전파 계산    loss.backward()        #가중치 업데이트        optimizer.step()        #총 오차 업데이트    total_loss += loss.data.item()         if (epoch + 1) % 50 == 0:    print(epoch + 1, total_loss)\n1234test_x, test_y = Variable(test_X), Variable(test_Y)result = torch.max(model(test_x).data, 1)[1]accuracy = sum(test_y.data.numpy() == result.numpy()) / len(test_y.data.numpy())accuracy\n결과: 0.8846153846153846\n와 88%! 이번에는 좀 쓸 만해졌다.\n","dateCreated":"2019-01-27T00:00:00+09:00","dateModified":"2019-01-27T10:20:06+09:00","datePublished":"2019-01-27T00:00:00+09:00","description":"전에는 신경망에서 중간층을 하나로만 했지만, 이 중간층을 여러개로 늘린 것을 심층신경망 (deep neural network) 라고 한다. 벌써 부터 뭔가 있어보인다. 이는 딥러닝에서 주요 매커니즘이다. 신경망과 심층 신경망 모두 퍼셉트론을 여러개 조합해서 구성한 것으로, 다층 퍼셉트론 (multilayer perceptron, MLP)라고 한다.\n\n어쩄거나, 입력층, 중간층, 출력층으로 구성되어 있는 것은 똑같다. 다만 차이점은 중간층이 여러개라는 것 뿐이다.\n\n\n\n마찬가지로, 순전파와 역전파를 반복해서 학습이 이뤄지며 모형을 생","headline":"Pytorch (2-1) - 다층 퍼셉트론","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/01/27/pytorch-2-multi-perceptron(1)/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/01/27/pytorch-2-multi-perceptron(1)/","keywords":"pytorch"}</script>
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"전에는 신경망에서 중간층을 하나로만 했지만, 이 중간층을 여러개로 늘린 것을 심층신경망 (deep neural network) 라고 한다. 벌써 부터 뭔가 있어보인다. 이는 딥러닝에서 주요 매커니즘이다. 신경망과 심층 신경망 모두 퍼셉트론을 여러개 조합해서 구성한 것으로, 다층 퍼셉트론 (multilayer perceptron, MLP)라고 한다.\n어쩄거나, 입력층, 중간층, 출력층으로 구성되어 있는 것은 똑같다. 다만 차이점은 중간층이 여러개라는 것 뿐이다.\n\n마찬가지로, 순전파와 역전파를 반복해서 학습이 이뤄지며 모형을 생성한다. 다만 중간층이 여러개라는 차이점과 함께 또다른 차이가 있는데, 바로 학습 이전단계에 노드간 연결의 가중치를 조절하는 사전 학습을 거친다는 차이가 있다.\n사전 학습 알고리즘으로는, 자기부호화기(Autoencoder)가 유명하다.\n자기 부호화기\n자기부호화기는 다층 퍼셉트론 처럼 입력층, 중간층, 출력층으로 구성된다. 다만 입력층과 출력층의 노드 수가 같아야 하며, 비지도학습, 차원축소에 쓰이는 알고리즘이므로 설명변수만으로 구성되어 있다.\n그리고 순전파와 역전파를 반복하면서 출력값과 입력값이 비슷해지도록 (자기 자신을 재현하도록) 학습하고 모형을 생성한다. 이 때 입력층과 중간층에서는 정보 압축 (encoding)이 일어나고, 중간층과 출력층 사이에서는 복호화 (decoding)이 일어난다. \n자기 부호화기를 이용하면, 다층 퍼셉트론을 한층씩 쌓아 올릴 수 있다.\n최적화 기법이전에는 최적화 기법으로 경사하강법을 사용했다. 이 밖에도 momentum, adam 등이 있는데, 특히 adam을 많이 사용한다. 경사하강법에서는 학습률이 고정이었지만, adam에서는 학습도중에 자동으로 학습률을 자동으로 조정한다. (오오..) 따라서 좀더 효율적인 학습이 가능하다.\n최적화의 효과를 더 높이기 위한 방법도 있다. 가중치 감쇠는 가중치에 계수를 곱해서, 가중치 값이 크게 발산하는 현상을 방지, 최적화가 안정적으로 진행되게 한다. 배치 정규화는 미니배치의 평균과 분산값으로 각층 노드의 값을 평균 0, 분산 1이 되도록 표준화 해서학습 속도를 개선한다.\n과적합 (Overfitting)\n와인 분류하기 2이번엔 다층 퍼셉트론으로 와인을 분석해보자. 텐서로 변환하고, 준비하는 과정까지는 똑같다.\n1234567891011121314151617181920212223242526import torchfrom torch.autograd import Variableimport torch.nn as nnimport torch.nn.functional as Fimport torch.optim as optimfrom torch.utils.data import DataLoader, TensorDatasetfrom sklearn.datasets import load_winefrom sklearn.model_selection import train_test_splitimport pandas as pdwine = load_wine()wine_data = wine.data[0:130]wine_target = wine.target[0:130]train_X, test_X, train_Y, test_Y = train_test_split(wine_data, wine_target, test_size=0.2)# 데이터를 텐서 형태로 변환train_X = torch.from_numpy(train_X).float()train_Y = torch.from_numpy(train_Y).long()test_X = torch.from_numpy(test_X).float()test_Y = torch.from_numpy(test_Y).float()train = TensorDataset(train_X, train_Y)\n신경망 구성 \n12345678910111213141516171819202122232425class Net(nn.Module):    def __init__(self):    super(Net, self).__init__()    self.fc1 = nn.Linear(13, 96)    self.fc2 = nn.Linear(96, 96)    self.fc3 = nn.Linear(96, 96)    self.fc4 = nn.Linear(96, 96)    self.fc5 = nn.Linear(96, 96)    self.fc6 = nn.Linear(96, 2)          def forward(self, x):    x = F.relu(self.fc1(x))    x = F.relu(self.fc2(x))    x = F.relu(self.fc3(x))    x = F.relu(self.fc4(x))    x = F.relu(self.fc5(x))    x = self.fc6(x)        return F.log_softmax(x)    model = Net()\n계산은 똑같다.\n1234567891011121314151617181920212223242526272829303132333435#오차함수criterion = nn.CrossEntropyLoss()#최적화 담당optimizer = optim.SGD(model.parameters(), lr=0.01)#학습 300회 ㄱㄱfor epoch in range(300):  total_loss = 0    for train_x, train_y in train_loader:    train_x, train_y = Variable(train_x), Variable(train_y)        #경사 초기화    optimizer.zero_grad()        #순전파    output = model(train_x)        #오차    loss = criterion(output, train_y)        #역전파 계산    loss.backward()        #가중치 업데이트        optimizer.step()        #총 오차 업데이트    total_loss += loss.data.item()         if (epoch + 1) % 50 == 0:    print(epoch + 1, total_loss)\n1234test_x, test_y = Variable(test_X), Variable(test_Y)result = torch.max(model(test_x).data, 1)[1]accuracy = sum(test_y.data.numpy() == result.numpy()) / len(test_y.data.numpy())accuracy\n결과: 0.8846153846153846\n와 88%! 이번에는 좀 쓸 만해졌다.\n","dateCreated":"2019-01-27T00:00:00+09:00","dateModified":"2019-01-27T10:20:06+09:00","datePublished":"2019-01-27T00:00:00+09:00","description":"전에는 신경망에서 중간층을 하나로만 했지만, 이 중간층을 여러개로 늘린 것을 심층신경망 (deep neural network) 라고 한다. 벌써 부터 뭔가 있어보인다. 이는 딥러닝에서 주요 매커니즘이다. 신경망과 심층 신경망 모두 퍼셉트론을 여러개 조합해서 구성한 것으로, 다층 퍼셉트론 (multilayer perceptron, MLP)라고 한다.\n\n어쩄거나, 입력층, 중간층, 출력층으로 구성되어 있는 것은 똑같다. 다만 차이점은 중간층이 여러개라는 것 뿐이다.\n\n\n\n마찬가지로, 순전파와 역전파를 반복해서 학습이 이뤄지며 모형을 생","headline":"Pytorch (2-1) - 다층 퍼셉트론","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/01/27/pytorch-2-multi-perceptron(1)/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/01/27/pytorch-2-multi-perceptron(1)/","keywords":"pytorch"}</script>
     <meta name="description" content="전에는 신경망에서 중간층을 하나로만 했지만, 이 중간층을 여러개로 늘린 것을 심층신경망 (deep neural network) 라고 한다. 벌써 부터 뭔가 있어보인다. 이는 딥러닝에서 주요 매커니즘이다. 신경망과 심층 신경망 모두 퍼셉트론을 여러개 조합해서 구성한 것으로, 다층 퍼셉트론 (multilayer perceptron, MLP)라고 한다.  어쩄거">
-<meta name="keywords" content="pytorch">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Pytorch (2-1) - 다층 퍼셉트론">
 <meta property="og:url" content="https://www.yceffort.kr/2019/01/27/pytorch-2-multi-perceptron(1)/index.html">
 <meta property="og:site_name" content="yceffort">
 <meta property="og:description" content="전에는 신경망에서 중간층을 하나로만 했지만, 이 중간층을 여러개로 늘린 것을 심층신경망 (deep neural network) 라고 한다. 벌써 부터 뭔가 있어보인다. 이는 딥러닝에서 주요 매커니즘이다. 신경망과 심층 신경망 모두 퍼셉트론을 여러개 조합해서 구성한 것으로, 다층 퍼셉트론 (multilayer perceptron, MLP)라고 한다.  어쩄거">
-<meta property="og:locale" content="en">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://pubs.sciepub.com/ajmm/3/3/1/bigimage/fig5.png">
 <meta property="og:image" content="https://cdn-images-1.medium.com/max/1600/1*44eDEuZBEsmG_TCAKRI3Kw@2x.png">
 <meta property="og:image" content="https://cdn-images-1.medium.com/max/1125/1*_7OPgojau8hkiPUiHoGK_w.png">
-<meta property="og:updated_time" content="2019-01-27T01:20:06.000Z">
+<meta property="article:published_time" content="2019-01-26T15:00:00.000Z">
+<meta property="article:modified_time" content="2019-01-27T01:20:06.000Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="pytorch">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Pytorch (2-1) - 다층 퍼셉트론">
-<meta name="twitter:description" content="전에는 신경망에서 중간층을 하나로만 했지만, 이 중간층을 여러개로 늘린 것을 심층신경망 (deep neural network) 라고 한다. 벌써 부터 뭔가 있어보인다. 이는 딥러닝에서 주요 매커니즘이다. 신경망과 심층 신경망 모두 퍼셉트론을 여러개 조합해서 구성한 것으로, 다층 퍼셉트론 (multilayer perceptron, MLP)라고 한다.  어쩄거">
 <meta name="twitter:image" content="http://pubs.sciepub.com/ajmm/3/3/1/bigimage/fig5.png">
     
     
@@ -62,7 +62,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -89,7 +91,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -128,8 +130,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -270,20 +271,16 @@
 <p><img src="http://pubs.sciepub.com/ajmm/3/3/1/bigimage/fig5.png" alt="multi-layer-perceptron"></p>
 <p>마찬가지로, 순전파와 역전파를 반복해서 학습이 이뤄지며 모형을 생성한다. 다만 중간층이 여러개라는 차이점과 함께 또다른 차이가 있는데, 바로 <em>학습 이전단계에 노드간 연결의 가중치를 조절하는 사전 학습</em>을 거친다는 차이가 있다.</p>
 <p>사전 학습 알고리즘으로는, 자기부호화기(Autoencoder)가 유명하다.</p>
-<h3 id="자기-부호화기"><a class="header-anchor" href="#자기-부호화기">¶</a>자기 부호화기</h3>
-<p><img src="https://cdn-images-1.medium.com/max/1600/1*44eDEuZBEsmG_TCAKRI3Kw@2x.png" alt="auto-encoder"></p>
+<h3 id="자기-부호화기"><a href="#자기-부호화기" class="headerlink" title="자기 부호화기"></a>자기 부호화기</h3><p><img src="https://cdn-images-1.medium.com/max/1600/1*44eDEuZBEsmG_TCAKRI3Kw@2x.png" alt="auto-encoder"></p>
 <p>자기부호화기는 다층 퍼셉트론 처럼 입력층, 중간층, 출력층으로 구성된다. 다만 입력층과 출력층의 노드 수가 같아야 하며, 비지도학습, 차원축소에 쓰이는 알고리즘이므로 설명변수만으로 구성되어 있다.</p>
-<p>그리고 순전파와 역전파를 반복하면서 출력값과 입력값이 비슷해지도록 (자기 자신을 재현하도록) 학습하고 모형을 생성한다. 이 때 입력층과 중간층에서는 정보 압축 (encoding)이 일어나고, 중간층과 출력층 사이에서는 복호화 (decoding)이 일어난다.</p>
+<p>그리고 순전파와 역전파를 반복하면서 출력값과 입력값이 비슷해지도록 (자기 자신을 재현하도록) 학습하고 모형을 생성한다. 이 때 입력층과 중간층에서는 정보 압축 (encoding)이 일어나고, 중간층과 출력층 사이에서는 복호화 (decoding)이 일어난다. </p>
 <p>자기 부호화기를 이용하면, 다층 퍼셉트론을 한층씩 쌓아 올릴 수 있다.</p>
-<h3 id="최적화-기법"><a class="header-anchor" href="#최적화-기법">¶</a>최적화 기법</h3>
-<p>이전에는 최적화 기법으로 경사하강법을 사용했다. 이 밖에도 momentum, adam 등이 있는데, 특히 adam을 많이 사용한다. 경사하강법에서는 학습률이 고정이었지만, adam에서는 학습도중에 자동으로 학습률을 자동으로 조정한다. (오오…) 따라서 좀더 효율적인 학습이 가능하다.</p>
+<h3 id="최적화-기법"><a href="#최적화-기법" class="headerlink" title="최적화 기법"></a>최적화 기법</h3><p>이전에는 최적화 기법으로 경사하강법을 사용했다. 이 밖에도 momentum, adam 등이 있는데, 특히 adam을 많이 사용한다. 경사하강법에서는 학습률이 고정이었지만, adam에서는 학습도중에 자동으로 학습률을 자동으로 조정한다. (오오..) 따라서 좀더 효율적인 학습이 가능하다.</p>
 <p>최적화의 효과를 더 높이기 위한 방법도 있다. 가중치 감쇠는 가중치에 계수를 곱해서, 가중치 값이 크게 발산하는 현상을 방지, 최적화가 안정적으로 진행되게 한다. 배치 정규화는 미니배치의 평균과 분산값으로 각층 노드의 값을 평균 0, 분산 1이 되도록 표준화 해서학습 속도를 개선한다.</p>
-<h3 id="과적합-overfitting"><a class="header-anchor" href="#과적합-overfitting">¶</a>과적합 (Overfitting)</h3>
-<p><img src="https://cdn-images-1.medium.com/max/1125/1*_7OPgojau8hkiPUiHoGK_w.png" alt="over-fitting"></p>
-<h2 id="와인-분류하기-2"><a class="header-anchor" href="#와인-분류하기-2">¶</a>와인 분류하기 2</h2>
-<p>이번엔 다층 퍼셉트론으로 와인을 분석해보자. 텐서로 변환하고, 준비하는 과정까지는 똑같다.</p>
+<h3 id="과적합-Overfitting"><a href="#과적합-Overfitting" class="headerlink" title="과적합 (Overfitting)"></a>과적합 (Overfitting)</h3><p><img src="https://cdn-images-1.medium.com/max/1125/1*_7OPgojau8hkiPUiHoGK_w.png" alt="over-fitting"></p>
+<h2 id="와인-분류하기-2"><a href="#와인-분류하기-2" class="headerlink" title="와인 분류하기 2"></a>와인 분류하기 2</h2><p>이번엔 다층 퍼셉트론으로 와인을 분석해보자. 텐서로 변환하고, 준비하는 과정까지는 똑같다.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> DataLoader, TensorDataset</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_wine</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"></span><br><span class="line">wine = load_wine()</span><br><span class="line">wine_data = wine.data[<span class="number">0</span>:<span class="number">130</span>]</span><br><span class="line">wine_target = wine.target[<span class="number">0</span>:<span class="number">130</span>]</span><br><span class="line"></span><br><span class="line">train_X, test_X, train_Y, test_Y = train_test_split(wine_data, wine_target, test_size=<span class="number">0.2</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 데이터를 텐서 형태로 변환</span></span><br><span class="line">train_X = torch.from_numpy(train_X).float()</span><br><span class="line">train_Y = torch.from_numpy(train_Y).long()</span><br><span class="line"></span><br><span class="line">test_X = torch.from_numpy(test_X).float()</span><br><span class="line">test_Y = torch.from_numpy(test_Y).float()</span><br><span class="line"></span><br><span class="line">train = TensorDataset(train_X, train_Y)</span><br></pre></td></tr></table></figure>
-<p>신경망 구성</p>
+<p>신경망 구성 </p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Net</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">    super(Net, self).__init__()</span><br><span class="line">    self.fc1 = nn.Linear(<span class="number">13</span>, <span class="number">96</span>)</span><br><span class="line">    self.fc2 = nn.Linear(<span class="number">96</span>, <span class="number">96</span>)</span><br><span class="line">    self.fc3 = nn.Linear(<span class="number">96</span>, <span class="number">96</span>)</span><br><span class="line">    self.fc4 = nn.Linear(<span class="number">96</span>, <span class="number">96</span>)</span><br><span class="line">    self.fc5 = nn.Linear(<span class="number">96</span>, <span class="number">96</span>)</span><br><span class="line">    self.fc6 = nn.Linear(<span class="number">96</span>, <span class="number">2</span>)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">    x = F.relu(self.fc1(x))</span><br><span class="line">    x = F.relu(self.fc2(x))</span><br><span class="line">    x = F.relu(self.fc3(x))</span><br><span class="line">    x = F.relu(self.fc4(x))</span><br><span class="line">    x = F.relu(self.fc5(x))</span><br><span class="line"></span><br><span class="line">    x = self.fc6(x)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> F.log_softmax(x)</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">model = Net()</span><br></pre></td></tr></table></figure>
 <p>계산은 똑같다.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#오차함수</span></span><br><span class="line">criterion = nn.CrossEntropyLoss()</span><br><span class="line"></span><br><span class="line"><span class="comment">#최적화 담당</span></span><br><span class="line">optimizer = optim.SGD(model.parameters(), lr=<span class="number">0.01</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">#학습 300회 ㄱㄱ</span></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(<span class="number">300</span>):</span><br><span class="line">  total_loss = <span class="number">0</span></span><br><span class="line">  </span><br><span class="line">  <span class="keyword">for</span> train_x, train_y <span class="keyword">in</span> train_loader:</span><br><span class="line">    train_x, train_y = Variable(train_x), Variable(train_y)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#경사 초기화</span></span><br><span class="line">    optimizer.zero_grad()</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#순전파</span></span><br><span class="line">    output = model(train_x)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#오차</span></span><br><span class="line">    loss = criterion(output, train_y)</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#역전파 계산</span></span><br><span class="line">    loss.backward()</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#가중치 업데이트</span></span><br><span class="line">    </span><br><span class="line">    optimizer.step()</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#총 오차 업데이트</span></span><br><span class="line">    total_loss += loss.data.item()</span><br><span class="line">    </span><br><span class="line">   </span><br><span class="line">  <span class="keyword">if</span> (epoch + <span class="number">1</span>) % <span class="number">50</span> == <span class="number">0</span>:</span><br><span class="line">    print(epoch + <span class="number">1</span>, total_loss)</span><br></pre></td></tr></table></figure>
@@ -305,7 +302,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/">pytorch</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/pytorch/" rel="tag">pytorch</a>
 
             </div>
         
@@ -316,7 +313,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/01/28/pytorch-2-multi-perceptron(4)/" data-tooltip="Pytorch (2-4) - 이상 날씨 탐지" aria-label="PREVIOUS: Pytorch (2-4) - 이상 날씨 탐지">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/01/27/pytorch-1-perceptron-nerual-network/" data-tooltip="Pytorch (1) - 퍼셉트론 알고리즘과 신경망 알고리즘" aria-label="PREVIOUS: Pytorch (1) - 퍼셉트론 알고리즘과 신경망 알고리즘">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -325,7 +322,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/01/27/pytorch-1-perceptron-nerual-network/" data-tooltip="Pytorch (1) - 퍼셉트론 알고리즘과 신경망 알고리즘" aria-label="NEXT: Pytorch (1) - 퍼셉트론 알고리즘과 신경망 알고리즘">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/01/27/pytorch-2-multi-perceptron(2)/" data-tooltip="Pytorch (2-2) - 손 글씨 분류하기" aria-label="NEXT: Pytorch (2-2) - 손 글씨 분류하기">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -358,12 +355,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -378,10 +369,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -404,7 +391,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/01/28/pytorch-2-multi-perceptron(4)/" data-tooltip="Pytorch (2-4) - 이상 날씨 탐지" aria-label="PREVIOUS: Pytorch (2-4) - 이상 날씨 탐지">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/01/27/pytorch-1-perceptron-nerual-network/" data-tooltip="Pytorch (1) - 퍼셉트론 알고리즘과 신경망 알고리즘" aria-label="PREVIOUS: Pytorch (1) - 퍼셉트론 알고리즘과 신경망 알고리즘">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -413,7 +400,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/01/27/pytorch-1-perceptron-nerual-network/" data-tooltip="Pytorch (1) - 퍼셉트론 알고리즘과 신경망 알고리즘" aria-label="NEXT: Pytorch (1) - 퍼셉트론 알고리즘과 신경망 알고리즘">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2019/01/27/pytorch-2-multi-perceptron(2)/" data-tooltip="Pytorch (2-2) - 손 글씨 분류하기" aria-label="NEXT: Pytorch (2-2) - 손 글씨 분류하기">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -445,12 +432,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -589,8 +570,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -608,8 +589,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -665,8 +646,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -684,8 +665,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -745,7 +726,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -755,26 +736,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/01/27/pytorch-2-multi-perceptron(1)/';
-                 
-                    this.page.identifier = '2019/01/27/pytorch-2-multi-perceptron(1)/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

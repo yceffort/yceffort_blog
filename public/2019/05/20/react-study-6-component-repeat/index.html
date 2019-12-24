@@ -34,19 +34,20 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"¶컴포넌트 반복해서 쓰기\n123456789101112131415161718import React, &#123;Component&#125; from 'react';class IterationSample extends Component &#123;    render () &#123;        const names = ['눈사람', '얼음', '눈', '바람']        const nameList = names.map(            (name) =&gt; (&lt;li&gt;&#123;name&#125;&lt;/li&gt;)        );        return (            &lt;ul&gt;                &#123;nameList&#125;            &lt;/ul&gt;        )    &#125;&#125;export default IterationSample;\n1234567class App extends Component &#123;  render () &#123;    return (      &lt;IterationSample/&gt;    )  &#125;&#125;\n특별한 거는 없지만, 콘솔에서 key가 없다는 에러가 발생한다. 가상 DOM을 비교한느 과정에서, Key값을 활용하여 변화가 일어나는지 확인하기 때문에, key값을 지정해줘야한다.\n1234567891011121314class IterationSample extends Component &#123;    render () &#123;        const names = ['눈사람', '얼음', '눈', '바람']        const nameList = names.map(            (name, index) =&gt; (&lt;li key=&#123;index&#125;&gt;&#123;name&#125;&lt;/li&gt;)        );        return (            &lt;ul&gt;                &#123;nameList&#125;            &lt;/ul&gt;        )    &#125;&#125;\n이제 에러가 나지 않는다.\n보통은 이렇게 정적인 데이터를 쓰기보다는, 동적인 데이터를 더 렌더링할 기회가 더 많을 것이다.\n1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950import React, &#123;Component&#125; from 'react';class IterationSample extends Component &#123;    state = &#123;        names: ['토니안', '강타', '문희준', '이재원', '장우혁'],        name: ''    &#125;    handleChange = (e) =&gt; &#123;        this.setState(&#123;            name: e.target.value        &#125;)    &#125;    handleInsert = (e) =&gt; &#123;        this.setState(&#123;            names: this.state.names.concat(this.state.name),            name: ''        &#125;)    &#125;    handleRemove = (index) =&gt; &#123;        // this.state의 레퍼런스        const &#123;names&#125; = this.state;        this.setState(&#123;            names: names.filter((item, idx) =&gt; &#123;return idx !== index&#125;)        &#125;)    &#125;    render() &#123;        const nameList = this.state.names.map(            (name, index) =&gt; (&lt;li onDoubleClick=&#123;() =&gt; this.handleRemove(index)&#125; key=&#123;index&#125;&gt;&#123;name&#125;&lt;/li&gt;)        );        return (            &lt;div&gt;                &lt;input                 onChange=&#123;this.handleChange&#125;                value=&#123;this.state.name&#125;/&gt;                &lt;button onClick=&#123;this.handleInsert&#125;&gt;추가&lt;/button&gt;                &lt;ul&gt;                    &#123;nameList&#125;                &lt;/ul&gt;            &lt;/div&gt;        )    &#125;&#125;export default IterationSample;","dateCreated":"2019-05-20T15:16:08+09:00","dateModified":"2019-05-20T15:39:42+09:00","datePublished":"2019-05-20T15:16:08+09:00","description":"¶컴포넌트 반복해서 쓰기\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n\n\nimport React, {Component} from 'react';\n\nclass IterationSample extends Component {\n    render () {\n        const names = ['눈사람', '얼음', '눈', '바람']\n        const nameList = names.map(\n            (name) => ({name})\n        );\n\n     ","headline":"React 공부하기 6 - 컴포넌트 반복","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/05/20/react-study-6-component-repeat/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/05/20/react-study-6-component-repeat/","keywords":"react, javascript"}</script>
-    <meta name="description" content="¶컴포넌트 반복해서 쓰기 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18   import React, {Component} from &apos;react&apos;;  class IterationSample extends Component {     render () {         const names = [&apos;눈사람&apos;, &apos;얼음&apos;, &apos;눈&apos;,">
-<meta name="keywords" content="react,javascript">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"컴포넌트 반복해서 쓰기123456789101112131415161718import React, &#123;Component&#125; from 'react';class IterationSample extends Component &#123;    render () &#123;        const names = ['눈사람', '얼음', '눈', '바람']        const nameList = names.map(            (name) =&gt; (&lt;li&gt;&#123;name&#125;&lt;/li&gt;)        );        return (            &lt;ul&gt;                &#123;nameList&#125;            &lt;/ul&gt;        )    &#125;&#125;export default IterationSample;\n1234567class App extends Component &#123;  render () &#123;    return (      &lt;IterationSample/&gt;    )  &#125;&#125;\n특별한 거는 없지만, 콘솔에서 key가 없다는 에러가 발생한다. 가상 DOM을 비교한느 과정에서, Key값을 활용하여 변화가 일어나는지 확인하기 때문에, key값을 지정해줘야한다.\n1234567891011121314class IterationSample extends Component &#123;    render () &#123;        const names = ['눈사람', '얼음', '눈', '바람']        const nameList = names.map(            (name, index) =&gt; (&lt;li key=&#123;index&#125;&gt;&#123;name&#125;&lt;/li&gt;)        );        return (            &lt;ul&gt;                &#123;nameList&#125;            &lt;/ul&gt;        )    &#125;&#125;\n이제 에러가 나지 않는다. \n보통은 이렇게 정적인 데이터를 쓰기보다는, 동적인 데이터를 더 렌더링할 기회가 더 많을 것이다.\n1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950import React, &#123;Component&#125; from 'react';class IterationSample extends Component &#123;    state = &#123;        names: ['토니안', '강타', '문희준', '이재원', '장우혁'],        name: ''    &#125;    handleChange = (e) =&gt; &#123;        this.setState(&#123;            name: e.target.value        &#125;)    &#125;    handleInsert = (e) =&gt; &#123;        this.setState(&#123;            names: this.state.names.concat(this.state.name),            name: ''        &#125;)    &#125;    handleRemove = (index) =&gt; &#123;        // this.state의 레퍼런스        const &#123;names&#125; = this.state;        this.setState(&#123;            names: names.filter((item, idx) =&gt; &#123;return idx !== index&#125;)        &#125;)    &#125;    render() &#123;        const nameList = this.state.names.map(            (name, index) =&gt; (&lt;li onDoubleClick=&#123;() =&gt; this.handleRemove(index)&#125; key=&#123;index&#125;&gt;&#123;name&#125;&lt;/li&gt;)        );        return (            &lt;div&gt;                &lt;input                 onChange=&#123;this.handleChange&#125;                value=&#123;this.state.name&#125;/&gt;                &lt;button onClick=&#123;this.handleInsert&#125;&gt;추가&lt;/button&gt;                &lt;ul&gt;                    &#123;nameList&#125;                &lt;/ul&gt;            &lt;/div&gt;        )    &#125;&#125;export default IterationSample;","dateCreated":"2019-05-20T15:16:08+09:00","dateModified":"2019-05-20T15:39:42+09:00","datePublished":"2019-05-20T15:16:08+09:00","description":"컴포넌트 반복해서 쓰기\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n\n\nimport React, {Component} from 'react';\n\nclass IterationSample extends Component {\n    render () {\n        const names = ['눈사람', '얼음', '눈', '바람']\n        const nameList = names.map(\n            (name) => ({name})\n        );\n\n      ","headline":"React 공부하기 6 - 컴포넌트 반복","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/05/20/react-study-6-component-repeat/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/05/20/react-study-6-component-repeat/","keywords":"react, javascript"}</script>
+    <meta name="description" content="컴포넌트 반복해서 쓰기 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18   import React, {Component} from &#39;react&#39;;  class IterationSample extends Component {     render () {         const names &#x3D; [&#39;눈사람&#39;, &#39;얼음&#39;, &#39;눈&#39;,">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="React 공부하기 6 - 컴포넌트 반복">
 <meta property="og:url" content="https://www.yceffort.kr/2019/05/20/react-study-6-component-repeat/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="¶컴포넌트 반복해서 쓰기 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18   import React, {Component} from &apos;react&apos;;  class IterationSample extends Component {     render () {         const names = [&apos;눈사람&apos;, &apos;얼음&apos;, &apos;눈&apos;,">
-<meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-05-20T06:39:42.269Z">
+<meta property="og:description" content="컴포넌트 반복해서 쓰기 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18   import React, {Component} from &#39;react&#39;;  class IterationSample extends Component {     render () {         const names &#x3D; [&#39;눈사람&#39;, &#39;얼음&#39;, &#39;눈&#39;,">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-05-20T06:16:08.000Z">
+<meta property="article:modified_time" content="2019-05-20T06:39:42.269Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="react">
+<meta property="article:tag" content="javascript">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="React 공부하기 6 - 컴포넌트 반복">
-<meta name="twitter:description" content="¶컴포넌트 반복해서 쓰기 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18   import React, {Component} from &apos;react&apos;;  class IterationSample extends Component {     render () {         const names = [&apos;눈사람&apos;, &apos;얼음&apos;, &apos;눈&apos;,">
     
     
     
@@ -58,7 +59,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -85,7 +88,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -124,8 +127,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -261,12 +263,11 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h2 id="컴포넌트-반복해서-쓰기"><a class="header-anchor" href="#컴포넌트-반복해서-쓰기">¶</a>컴포넌트 반복해서 쓰기</h2>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123;Component&#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IterationSample</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">    render () &#123;</span><br><span class="line">        <span class="keyword">const</span> names = [<span class="string">'눈사람'</span>, <span class="string">'얼음'</span>, <span class="string">'눈'</span>, <span class="string">'바람'</span>]</span><br><span class="line">        <span class="keyword">const</span> nameList = names.map(</span><br><span class="line">            (name) =&gt; (<span class="xml"><span class="tag">&lt;<span class="name">li</span>&gt;</span>&#123;name&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span>)</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            &lt;ul&gt;</span><br><span class="line">                &#123;nameList&#125;</span><br><span class="line">            &lt;<span class="regexp">/ul&gt;</span></span><br><span class="line"><span class="regexp">        )</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default IterationSample;</span></span><br></pre></td></tr></table></figure>
+            <h2 id="컴포넌트-반복해서-쓰기"><a href="#컴포넌트-반복해서-쓰기" class="headerlink" title="컴포넌트 반복해서 쓰기"></a>컴포넌트 반복해서 쓰기</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123;Component&#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IterationSample</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">    render () &#123;</span><br><span class="line">        <span class="keyword">const</span> names = [<span class="string">'눈사람'</span>, <span class="string">'얼음'</span>, <span class="string">'눈'</span>, <span class="string">'바람'</span>]</span><br><span class="line">        <span class="keyword">const</span> nameList = names.map(</span><br><span class="line">            (name) =&gt; (<span class="xml"><span class="tag">&lt;<span class="name">li</span>&gt;</span>&#123;name&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span>)</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            &lt;ul&gt;</span><br><span class="line">                &#123;nameList&#125;</span><br><span class="line">            &lt;<span class="regexp">/ul&gt;</span></span><br><span class="line"><span class="regexp">        )</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default IterationSample;</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">App</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">  render () &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;IterationSample/&gt;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>특별한 거는 없지만, 콘솔에서 <code>key</code>가 없다는 에러가 발생한다. 가상 DOM을 비교한느 과정에서, Key값을 활용하여 변화가 일어나는지 확인하기 때문에, key값을 지정해줘야한다.</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IterationSample</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">    render () &#123;</span><br><span class="line">        <span class="keyword">const</span> names = [<span class="string">'눈사람'</span>, <span class="string">'얼음'</span>, <span class="string">'눈'</span>, <span class="string">'바람'</span>]</span><br><span class="line">        <span class="keyword">const</span> nameList = names.map(</span><br><span class="line">            (name, index) =&gt; (<span class="xml"><span class="tag">&lt;<span class="name">li</span> <span class="attr">key</span>=<span class="string">&#123;index&#125;</span>&gt;</span>&#123;name&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span>)</span><br><span class="line">        );</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">            &lt;ul&gt;</span><br><span class="line">                &#123;nameList&#125;</span><br><span class="line">            &lt;<span class="regexp">/ul&gt;</span></span><br><span class="line"><span class="regexp">        )</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
-<p>이제 에러가 나지 않는다.</p>
+<p>이제 에러가 나지 않는다. </p>
 <p>보통은 이렇게 정적인 데이터를 쓰기보다는, 동적인 데이터를 더 렌더링할 기회가 더 많을 것이다.</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React, &#123;Component&#125; <span class="keyword">from</span> <span class="string">'react'</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IterationSample</span> <span class="keyword">extends</span> <span class="title">Component</span> </span>&#123;</span><br><span class="line">    state = &#123;</span><br><span class="line">        names: [<span class="string">'토니안'</span>, <span class="string">'강타'</span>, <span class="string">'문희준'</span>, <span class="string">'이재원'</span>, <span class="string">'장우혁'</span>],</span><br><span class="line">        name: <span class="string">''</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    handleChange = <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">            name: e.target.value</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    handleInsert = <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">            names: <span class="keyword">this</span>.state.names.concat(<span class="keyword">this</span>.state.name),</span><br><span class="line">            name: <span class="string">''</span></span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    handleRemove = <span class="function">(<span class="params">index</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="comment">// this.state의 레퍼런스</span></span><br><span class="line">        <span class="keyword">const</span> &#123;names&#125; = <span class="keyword">this</span>.state;</span><br><span class="line">        <span class="keyword">this</span>.setState(&#123;</span><br><span class="line">            names: names.filter(<span class="function">(<span class="params">item, idx</span>) =&gt;</span> &#123;<span class="keyword">return</span> idx !== index&#125;)</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">        <span class="keyword">const</span> nameList = <span class="keyword">this</span>.state.names.map(</span><br><span class="line">            (name, index) =&gt; <span class="function">(<span class="params">&lt;li onDoubleClick=&#123;(</span>) =&gt;</span> <span class="keyword">this</span>.handleRemove(index)&#125; key=&#123;index&#125;&gt;&#123;name&#125;&lt;<span class="regexp">/li&gt;)</span></span><br><span class="line"><span class="regexp">        );</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">        return (</span></span><br><span class="line"><span class="regexp">            &lt;div&gt;</span></span><br><span class="line"><span class="regexp">                &lt;input </span></span><br><span class="line"><span class="regexp">                onChange=&#123;this.handleChange&#125;</span></span><br><span class="line"><span class="regexp">                value=&#123;this.state.name&#125;/</span>&gt;</span><br><span class="line"></span><br><span class="line">                &lt;button onClick=&#123;<span class="keyword">this</span>.handleInsert&#125;&gt;추가&lt;<span class="regexp">/button&gt;</span></span><br><span class="line"><span class="regexp">                &lt;ul&gt;</span></span><br><span class="line"><span class="regexp">                    &#123;nameList&#125;</span></span><br><span class="line"><span class="regexp">                &lt;/u</span>l&gt;</span><br><span class="line">            &lt;<span class="regexp">/div&gt;</span></span><br><span class="line"><span class="regexp">        )</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">export default IterationSample;</span></span><br></pre></td></tr></table></figure>
             
@@ -283,7 +284,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/">javascript</a> <a class="tag tag--primary tag--small t-link" href="/tags/react/">react</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/" rel="tag">javascript</a> <a class="tag tag--primary tag--small t-link" href="/tags/react/" rel="tag">react</a>
 
             </div>
         
@@ -336,12 +337,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -356,10 +351,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -423,12 +414,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -567,8 +552,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -586,8 +571,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -643,8 +628,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -662,8 +647,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -723,7 +708,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -733,26 +718,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/05/20/react-study-6-component-repeat/';
-                 
-                    this.page.identifier = '2019/05/20/react-study-6-component-repeat/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

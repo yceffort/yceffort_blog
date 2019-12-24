@@ -34,19 +34,19 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"보통 일반적인 프로그램의 경우에는, 하나씩 작성된 순서에 따라 로직이 실행되고, 완료되면 또다른 로직이 실행되는 등의 순서가 있음을 알수 있다.\n그러나 이와 달리 ReactiveX는 &quot;Observer&quot;에 의해 임의의 순서에 따라 병렬적으로 실행되고 나중에 결과나 나온다.\n즉 메서드를 호출하는 것이 아니라, Observable안의 데이터를 조회하고, 변환 하는 등의 프로세스를 정의한 후, Observable이 이벤트를 발생시키면 옵저버의 관찰자가 그 순간을 감지하고 준비된 연산을 실행하고 결과를 리턴한다. 그래서 Observable을 Subscribe한다는 표현을 쓴다.\n일반적으로 Observable을 구현하기 위해서 다음과 같은 절차를 거친다.\n\n비동기 호출로 결과를 리턴받고, 필요한 동작을 처리하는 메서드를 정의한다.\nObservable로 비동기 호출을 정의한다.\nSubscribe를 통해 옵저버를 Observable에 연결 시킨다.\n메서드 호출로 결과가 리턴 될 때마다, 옵저버의 메서더는 리턴 값 또는 항목을 사용해서 연산을 한다.\n\nonNext Observable은 새로운 항목을 push 할 때 마다 이 메서드를 호출한다. 이 메서드는 Observable 이 배출하는 항목을 parameter 로 전달 받는다.\noNError 기대하는 데이터가 생성되지 않았거나, 오류가 발생할 경우 호출된다. 이 경우 onNext, onCompleted는 호출되지 않는다.\nonCompleted 마지막 onNext가 호출된 뒤에 호출된다.\n더이상 구독을 하지 않으려면 unSubscirbe를 호출한다.\nObservable이 연속된 항목을 push하는 방법에는 두가지가 있는데 바로 hot과 cold다. hot은 생성되자마자 push하고, cold는 옵저버가 구독할때까지 배출하지 않는다.\n이러한 Observable은 연산자와 연결하여 사용할 수 있는데, 이런 연산자들은 리턴된 observable을 변경하여 제공할 수 있다.\n","dateCreated":"2018-05-31T00:00:00+09:00","dateModified":"2018-05-31T12:01:45+09:00","datePublished":"2018-05-31T00:00:00+09:00","description":"보통 일반적인 프로그램의 경우에는, 하나씩 작성된 순서에 따라 로직이 실행되고, 완료되면 또다른 로직이 실행되는 등의 순서가 있음을 알수 있다.\n\n그러나 이와 달리 ReactiveX는 \"Observer\"에 의해 임의의 순서에 따라 병렬적으로 실행되고 나중에 결과나 나온다.\n\n즉 메서드를 호출하는 것이 아니라, Observable안의 데이터를 조회하고, 변환 하는 등의 프로세스를 정의한 후, Observable이 이벤트를 발생시키면 옵저버의 관찰자가 그 순간을 감지하고 준비된 연산을 실행하고 결과를 리턴한다. 그래서 Observabl","headline":"ReactiveX) Observable","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/","keywords":"development"}</script>
-    <meta name="description" content="보통 일반적인 프로그램의 경우에는, 하나씩 작성된 순서에 따라 로직이 실행되고, 완료되면 또다른 로직이 실행되는 등의 순서가 있음을 알수 있다.  그러나 이와 달리 ReactiveX는 &quot;Observer&quot;에 의해 임의의 순서에 따라 병렬적으로 실행되고 나중에 결과나 나온다.  즉 메서드를 호출하는 것이 아니라, Observable안의 데이터를 조회하고, 변환">
-<meta name="keywords" content="development">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"보통 일반적인 프로그램의 경우에는, 하나씩 작성된 순서에 따라 로직이 실행되고, 완료되면 또다른 로직이 실행되는 등의 순서가 있음을 알수 있다.\n그러나 이와 달리 ReactiveX는 “Observer”에 의해 임의의 순서에 따라 병렬적으로 실행되고 나중에 결과나 나온다.\n즉 메서드를 호출하는 것이 아니라, Observable안의 데이터를 조회하고, 변환 하는 등의 프로세스를 정의한 후, Observable이 이벤트를 발생시키면 옵저버의 관찰자가 그 순간을 감지하고 준비된 연산을 실행하고 결과를 리턴한다. 그래서 Observable을 Subscribe한다는 표현을 쓴다.\n일반적으로 Observable을 구현하기 위해서 다음과 같은 절차를 거친다.\n\n비동기 호출로 결과를 리턴받고, 필요한 동작을 처리하는 메서드를 정의한다.\nObservable로 비동기 호출을 정의한다.\nSubscribe를 통해 옵저버를 Observable에 연결 시킨다.\n메서드 호출로 결과가 리턴 될 때마다, 옵저버의 메서더는 리턴 값 또는 항목을 사용해서 연산을 한다.\n\nonNext Observable은 새로운 항목을 push 할 때 마다 이 메서드를 호출한다. 이 메서드는 Observable 이 배출하는 항목을 parameter 로 전달 받는다.\noNError 기대하는 데이터가 생성되지 않았거나, 오류가 발생할 경우 호출된다. 이 경우 onNext, onCompleted는 호출되지 않는다.\nonCompleted 마지막 onNext가 호출된 뒤에 호출된다.\n더이상 구독을 하지 않으려면 unSubscirbe를 호출한다.\nObservable이 연속된 항목을 push하는 방법에는 두가지가 있는데 바로 hot과 cold다. hot은 생성되자마자 push하고, cold는 옵저버가 구독할때까지 배출하지 않는다.\n이러한 Observable은 연산자와 연결하여 사용할 수 있는데, 이런 연산자들은 리턴된 observable을 변경하여 제공할 수 있다.\n","dateCreated":"2018-05-31T00:00:00+09:00","dateModified":"2018-05-31T12:01:45+09:00","datePublished":"2018-05-31T00:00:00+09:00","description":"보통 일반적인 프로그램의 경우에는, 하나씩 작성된 순서에 따라 로직이 실행되고, 완료되면 또다른 로직이 실행되는 등의 순서가 있음을 알수 있다.\n\n그러나 이와 달리 ReactiveX는 “Observer”에 의해 임의의 순서에 따라 병렬적으로 실행되고 나중에 결과나 나온다.\n\n즉 메서드를 호출하는 것이 아니라, Observable안의 데이터를 조회하고, 변환 하는 등의 프로세스를 정의한 후, Observable이 이벤트를 발생시키면 옵저버의 관찰자가 그 순간을 감지하고 준비된 연산을 실행하고 결과를 리턴한다. 그래서 Observabl","headline":"ReactiveX) Observable","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/","keywords":"development"}</script>
+    <meta name="description" content="보통 일반적인 프로그램의 경우에는, 하나씩 작성된 순서에 따라 로직이 실행되고, 완료되면 또다른 로직이 실행되는 등의 순서가 있음을 알수 있다.  그러나 이와 달리 ReactiveX는 “Observer”에 의해 임의의 순서에 따라 병렬적으로 실행되고 나중에 결과나 나온다.  즉 메서드를 호출하는 것이 아니라, Observable안의 데이터를 조회하고, 변환">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="ReactiveX) Observable">
 <meta property="og:url" content="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="보통 일반적인 프로그램의 경우에는, 하나씩 작성된 순서에 따라 로직이 실행되고, 완료되면 또다른 로직이 실행되는 등의 순서가 있음을 알수 있다.  그러나 이와 달리 ReactiveX는 &quot;Observer&quot;에 의해 임의의 순서에 따라 병렬적으로 실행되고 나중에 결과나 나온다.  즉 메서드를 호출하는 것이 아니라, Observable안의 데이터를 조회하고, 변환">
-<meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2018-05-31T03:01:45.000Z">
+<meta property="og:description" content="보통 일반적인 프로그램의 경우에는, 하나씩 작성된 순서에 따라 로직이 실행되고, 완료되면 또다른 로직이 실행되는 등의 순서가 있음을 알수 있다.  그러나 이와 달리 ReactiveX는 “Observer”에 의해 임의의 순서에 따라 병렬적으로 실행되고 나중에 결과나 나온다.  즉 메서드를 호출하는 것이 아니라, Observable안의 데이터를 조회하고, 변환">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-05-30T15:00:00.000Z">
+<meta property="article:modified_time" content="2018-05-31T03:01:45.000Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="development">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ReactiveX) Observable">
-<meta name="twitter:description" content="보통 일반적인 프로그램의 경우에는, 하나씩 작성된 순서에 따라 로직이 실행되고, 완료되면 또다른 로직이 실행되는 등의 순서가 있음을 알수 있다.  그러나 이와 달리 ReactiveX는 &quot;Observer&quot;에 의해 임의의 순서에 따라 병렬적으로 실행되고 나중에 결과나 나온다.  즉 메서드를 호출하는 것이 아니라, Observable안의 데이터를 조회하고, 변환">
     
     
     
@@ -58,7 +58,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -85,7 +87,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -124,8 +126,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -262,7 +263,7 @@
     <div class="post-content markdown">
         <div class="main-content-wrap">
             <p>보통 일반적인 프로그램의 경우에는, 하나씩 작성된 순서에 따라 로직이 실행되고, 완료되면 또다른 로직이 실행되는 등의 순서가 있음을 알수 있다.</p>
-<p>그러나 이와 달리 ReactiveX는 &quot;Observer&quot;에 의해 임의의 순서에 따라 병렬적으로 실행되고 나중에 결과나 나온다.</p>
+<p>그러나 이와 달리 ReactiveX는 “Observer”에 의해 임의의 순서에 따라 병렬적으로 실행되고 나중에 결과나 나온다.</p>
 <p>즉 메서드를 호출하는 것이 아니라, Observable안의 데이터를 조회하고, 변환 하는 등의 프로세스를 정의한 후, Observable이 이벤트를 발생시키면 옵저버의 관찰자가 그 순간을 감지하고 준비된 연산을 실행하고 결과를 리턴한다. 그래서 Observable을 Subscribe한다는 표현을 쓴다.</p>
 <p>일반적으로 Observable을 구현하기 위해서 다음과 같은 절차를 거친다.</p>
 <ol>
@@ -292,7 +293,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/development/">development</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/development/" rel="tag">development</a>
 
             </div>
         
@@ -303,7 +304,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/05/31/bitcoin-btcd-bitcoin-cli/" data-tooltip="Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이" aria-label="PREVIOUS: Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/05/31/Reactivex-subject/" data-tooltip="ReactiveX) Subject" aria-label="PREVIOUS: ReactiveX) Subject">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -312,7 +313,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/05/31/compare-string-with-voice/" data-tooltip="발음 기반으로 String의 유사도를 비교해 보자." aria-label="NEXT: 발음 기반으로 String의 유사도를 비교해 보자.">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/05/31/bitcoin-btcd-bitcoin-cli/" data-tooltip="Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이" aria-label="NEXT: Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -345,12 +346,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -365,10 +360,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -391,7 +382,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/05/31/bitcoin-btcd-bitcoin-cli/" data-tooltip="Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이" aria-label="PREVIOUS: Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/05/31/Reactivex-subject/" data-tooltip="ReactiveX) Subject" aria-label="PREVIOUS: ReactiveX) Subject">
                 
                     <i class="fa fa-angle-left" aria-hidden="true"></i>
                     <span class="hide-xs hide-sm text-small icon-ml">PREVIOUS</span>
@@ -400,7 +391,7 @@
             <li class="post-action">
                 
                     
-                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/05/31/compare-string-with-voice/" data-tooltip="발음 기반으로 String의 유사도를 비교해 보자." aria-label="NEXT: 발음 기반으로 String의 유사도를 비교해 보자.">
+                    <a class="post-action-btn btn btn--default tooltip--top" href="/2018/05/31/bitcoin-btcd-bitcoin-cli/" data-tooltip="Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이" aria-label="NEXT: Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이">
                 
                     <span class="hide-xs hide-sm text-small icon-mr">NEXT</span>
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
@@ -432,12 +423,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -576,8 +561,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -595,8 +580,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -652,8 +637,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -671,8 +656,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -732,7 +717,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -742,26 +727,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/';
-                 
-                    this.page.identifier = '2018/05/31/ReactiveX-Observable/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

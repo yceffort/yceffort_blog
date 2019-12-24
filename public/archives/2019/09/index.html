@@ -35,17 +35,18 @@
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
     <script type="application/ld+json">{}</script>
-    <meta name="description" content="this is the yceffort&apos;s private blog">
-<meta name="keywords" content="programming,innovation,technology">
+    <meta name="description" content="this is the yceffort&#39;s private blog">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="yceffort">
 <meta property="og:url" content="https://www.yceffort.kr/archives/2019/09/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="this is the yceffort&apos;s private blog">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="this is the yceffort&#39;s private blog">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="programming">
+<meta property="article:tag" content="innovation">
+<meta property="article:tag" content="technology">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="yceffort">
-<meta name="twitter:description" content="this is the yceffort&apos;s private blog">
     
     
     
@@ -57,7 +58,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -84,7 +87,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -123,8 +126,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -261,7 +263,7 @@
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶브라우저 히스토리
+                    브라우저 히스토리
 브라우저의 히스토리는 window.history안에 있다.
 
 History {length: 3, scrollRestoration: "auto", state: null}
@@ -270,8 +272,8 @@ length만 가져올 수 있을 뿐, 실제 내부에 리스트는 가져올 수�
 
 window.history.back() window.history.forward()는 각각 브라우저의 앞으로가기 뒤로 가기와 동일한 역할을 한다.
 
-¶특정 위치로 가기
-window.history.go(n) 현재 페이지의 index는 0 이
+특정 위치로 가기
+window.history.go(n) 현재 페이지의 index는 0 이라고
                     
                         <a href="/2019/09/30/handle-browser-history/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -308,7 +310,7 @@ window.history.go(n) 현재 페이지의 index는 0 이
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶제네릭이란
+                    제네릭이란
 제네릭은 클래스 내부에서 사용하는 데이터의 타입을 외부에서 지정하는 것을 의미한다. 어떤 타입의 데이터를 쓸지를, 클래스 선언부가 아니라 외부에서 결정하는 것이다. 일단 자바 코드로 한번 살펴보자.
 
 1
@@ -327,7 +329,7 @@ Person<String> p1 = new Person<String>();
 Person<StringBuilder> p1 = new Person<StringBuilder>();
 
 
-T라는 데이터 타입은 존재하지 않는다. T는 nam
+T라는 데이터 타입은 존재하지 않는다. T는 name
                     
                         <a href="/2019/09/19/typescript-generic/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -364,14 +366,14 @@ T라는 데이터 타입은 존재하지 않는다. T는 nam
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶자바스크립트는 단일 스레드 기반의 언어
+                    자바스크립트는 단일 스레드 기반의 언어
 자바스크립트는 ‘단일 스레드’ 기반의 언어다. 즉, 스레드가 하나이기 때문에 동시에 하나의 작업만 처리할 수 있다. 그러나 자바스크립트가 사용되는 웹을 곰곰히 생각해보면 동시에 여러개의 작업을 처리하는 모습을 볼 수 있다. 스레드가 하나인 자바스크립트는 동시성을 어떻게 처리할까? 먼저 브라우저 구동환경을 살펴보자.
 
 
 
 
 
-위 이미지에서, 자바스크립트 엔진은 메모리 할당을 관리하는 heap과 call stack만 존재하는 것을 알 수 있다. 즉, 동시성에 대한 처리는 자바스크립트 외부에서 처
+위 이미지에서, 자바스크립트 엔진은 메모리 할당을 관리하는 heap과 call stack만 존재하는 것을 알 수 있다. 즉, 동시성에 대한 처리는 자바스크립트 외부에서 처리
                     
                         <a href="/2019/09/06/javascript-event-loop/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -502,8 +504,8 @@ T라는 데이터 타입은 존재하지 않는다. T는 nam
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -521,8 +523,8 @@ T라는 데이터 타입은 존재하지 않는다. T는 nam
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -578,8 +580,8 @@ T라는 데이터 타입은 존재하지 않는다. T는 nam
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -597,8 +599,8 @@ T라는 데이터 타입은 존재하지 않는다. T는 nam
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -658,7 +660,7 @@ T라는 데이터 타입은 존재하지 않는다. T는 nam
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -668,7 +670,9 @@ T라는 데이터 타입은 존재하지 않는다. T는 nam
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
 

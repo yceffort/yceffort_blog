@@ -35,17 +35,18 @@
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
     <script type="application/ld+json">{}</script>
-    <meta name="description" content="this is the yceffort&apos;s private blog">
-<meta name="keywords" content="programming,innovation,technology">
+    <meta name="description" content="this is the yceffort&#39;s private blog">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="yceffort">
 <meta property="og:url" content="https://www.yceffort.kr/tags/smartcontract/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="this is the yceffort&apos;s private blog">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="this is the yceffort&#39;s private blog">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="programming">
+<meta property="article:tag" content="innovation">
+<meta property="article:tag" content="technology">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="yceffort">
-<meta name="twitter:description" content="this is the yceffort&apos;s private blog">
     
     
     
@@ -57,7 +58,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -84,7 +87,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -123,8 +126,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -308,8 +310,8 @@
 
 원문
 
-¶1. Summary
-이 보고서의 목적은 블록체인 기술을 사용하여 디지털 투표 문제를 해결하자는 우리의 제안을 요약하는 것이다. 현재 투표 관행과 관련된 문제들을 소개함으로써 시작하고, 그 후 블록체인 기술이 무엇이고 어떻게 사용되고 있는지에 대한 간단한 설명을 시작한다. 다음 섹션에서는 디지털 투표의 현재 배치와 이들이 직면하고 있는 문제에 대해 살펴본다. 보고서의 주요 부분은 제안된 설계에 대한 상세 내역, 잠재적인 결함과 위
+1. Summary
+이 보고서의 목적은 블록체인 기술을 사용하여 디지털 투표 문제를 해결하자는 우리의 제안을 요약하는 것이다. 현재 투표 관행과 관련된 문제들을 소개함으로써 시작하고, 그 후 블록체인 기술이 무엇이고 어떻게 사용되고 있는지에 대한 간단한 설명을 시작한다. 다음 섹션에서는 디지털 투표의 현재 배치와 이들이 직면하고 있는 문제에 대해 살펴본다. 보고서의 주요 부분은 제안된 설계에 대한 상세 내역, 잠재적인 결함과 위협
                     
                         <a href="/2018/11/10/digital-voting-with-the-use-of-blockchain-technology/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -350,8 +352,8 @@
 
 원문
 
-¶기술은 시작점에 있다.
-1988년 Tim May는 다음과 같이 언급한 적이 있다.
+기술은 시작점에 있다.
+1988년 Tim May는 다음과 같이 언급한 적이 있다. 
 
 “컴퓨터 기술은 개인과 그룹이 완전히 익명의 방식으로 서로 의사 소통하고 상호 작용할 수 있는 능력을 제공하기 직전입니다. 두 사람은 메시지를 교환하고 사업을 수행하며 다른 사람의 실제 이름 또는 법적 신원을 몰라도 전자 계약을 협상할 수 있습니다.”
 
@@ -392,7 +394,7 @@
             </div>
             
                 <div class="postShorten-excerpt">
-                    인기 있는 블록체인 플랫폼을 개발하면서, 나는 때때로 Ethereum과 같은 스마트 컨트랙트가 MultiChain 로드맵에 있는지 질문을 받는다. 내가 항상 하는 대답은 항상 '아니오, 아니면 아직 아니다’이다.
+                    인기 있는 블록체인 플랫폼을 개발하면서, 나는 때때로 Ethereum과 같은 스마트 컨트랙트가 MultiChain 로드맵에 있는지 질문을 받는다. 내가 항상 하는 대답은 항상 ‘아니오, 아니면 아직 아니다’이다.
 
 그러나 과대 광고로 가득 찬 블록체인 세계에서는 스마트 컨트랙트가 대유행이다. 문제는, 현재 허가된 비트코인 스타일의 블록체인(증명서, 회사 기록 보관 및 경량의 금융)에 대한 세 가지 강력한 사용 사례를 알고 있지만, 이더리움의 스마트 컨트랙트에 상응하는 것을 아직 찾지 못했다는 것이다.
 
@@ -437,10 +439,10 @@
 
 원문
 
-¶스마트 컨트랙트란 무엇인가
+스마트 컨트랙트란 무엇인가
 스마트 컨트랙트에 대한 아이디어는 1994년 컴퓨터 과학자 Nick Szabo에 처음으로 개념화 되었다.
 
-스마트 컨트랙트는 계약 조건을 실행하는 전산화된 거래 프로토콜이다. 스마트 컨트랙트 설계의 일반적인 목적은 계약 조건을 충족시키고, 악의적이거나 우발적인 예외를 최소화 하며 신뢰할 수 있는 중개자의 필요성을 최소화 하는 것이다. 이와 관련된 경제적 목표에는 사기 손실 감소, 중재 및 집행 비
+스마트 컨트랙트는 계약 조건을 실행하는 전산화된 거래 프로토콜이다. 스마트 컨트랙트 설계의 일반적인 목적은 계약 조건을 충족시키고, 악의적이거나 우발적인 예외를 최소화 하며 신뢰할 수 있는 중개자의 필요성을 최소화 하는 것이다. 이와 관련된 경제적 목표에는 사기 손실 감소, 중재 및 집행 비용
                     
                         <a href="/2018/09/14/smart-contracts-and-blockchains-steroid-for-collusion/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -522,8 +524,8 @@
 
 원문
 
-¶블록체인과 GDPR
-블록체인은 현재 유럽을 비롯한 여러 곳에서 적극적으로 실험되고 있다. 이러한 복제 및 변조 방지 데이터베이스는 새로운 데이터 처리 방법을 제공한다. 블록체인의 특성은 규제 당국이 GDPR을 만들 때 염두해 둔 중앙 집중식 데이터 관리의 특성과 대조된다. 최근 논문에서는 분산 수집, 관리, 데이터 저장을 기반으로 한 이 기술이 데이터 사일로 용으로 만들어진 GDPR과 호환 될 수 있는지 여부를 조사했다. 이 질문은, GDPR이 유럽의 블록체인 프로젝트 뿐만 아
+블록체인과 GDPR
+블록체인은 현재 유럽을 비롯한 여러 곳에서 적극적으로 실험되고 있다. 이러한 복제 및 변조 방지 데이터베이스는 새로운 데이터 처리 방법을 제공한다. 블록체인의 특성은 규제 당국이 GDPR을 만들 때 염두해 둔 중앙 집중식 데이터 관리의 특성과 대조된다. 최근 논문에서는 분산 수집, 관리, 데이터 저장을 기반으로 한 이 기술이 데이터 사일로 용으로 만들어진 GDPR과 호환 될 수 있는지 여부를 조사했다. 이 질문은, GDPR이 유럽의 블록체인 프로젝트 뿐만 아니
                     
                         <a href="/2018/09/10/blockchains-and-the-GDPR/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -566,9 +568,9 @@
 
 브루클린의 로스쿨에서는 어떻게 블록체인이 사람의 책임을 증가시키는가라는 논문을 발표, ‘인공적인 책임(Artificial Responsibility)’ 이라는 용어를 사용했다.
 
-인공적인 책임은 ‘인간이 의사결정을 거부하거나 통제를 취소할 수 있는 기회가 제한된 중요한 문제를 통제하는 능력’ 을 의미한다.
+인공적인 책임은 ‘인간이 의사결정을 거부하거나 통제를 취소할 수 있는 기회가 제한된 중요한 문제를 통제하는 능력’ 을 의미한다. 
 
-인공지능이 가장 똑똑한 인간보다 조금 더 똑똑하다 해도, 그렇다고 우리를 노예로 만들 수 있다는 뜻은 아니다. 타인에 대한 지배는 
+인공지능이 가장 똑똑한 인간보다 조금 더 똑똑하다 해도, 그렇다고 우리를 노예로 만들 수 있다는 뜻은 아니다. 타인에 대한 지배는
                     
                         <a href="/2018/09/09/smart-contracts-can-kill/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -698,8 +700,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -717,8 +719,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -774,8 +776,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -793,8 +795,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -854,7 +856,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -864,7 +866,9 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
 

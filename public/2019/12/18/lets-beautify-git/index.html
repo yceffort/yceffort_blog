@@ -34,22 +34,22 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"¶Commit Message\n좋은 git commit 메시지를 위한 영어사전\n좋은 git 커밋 메시지를 작성하기 위한 7가지 약속\n¶요약\nSingle Line\n1[#issue number] :emoji: Commit Message\nMulti Line\n123[#issue number] :emoji: Commit Message- change detail1- change detail2\n\nSingle Line 과 동일하지만, Multi Line 으로 가면 두 번째 라인은 반드시 비워둘 것\n세 번째 라인부터 Change 상세를 리스트 형식으로 기술\n\n¶Linear History in git\n¶장점\n\ngit bisect\npossibility of submitting with history to another version control system like SVN\nDocumentation for the posterity. A linear history is typically easier to follow. This is similar to how you want your code to be well structured and documented: whenever someone needs to deal with it later (code or history) it is very valuable to be able to quickly understand what is going on.\nImproving code review efficiency and effectiveness. If a topic branch is divided into linear, logical steps, it is much easier to review it compared to reviewing a convoluted history or a squashed change-monolith (which can be overwhelming).\nWhen you need to modify the history at a later time. For instance when reverting or cherry-picking a feature in whole or in part.\nScalability. Unless you strive to keep your history linear when your team grows larger (e.g. hundreds of contributors), your history can become very bloated with cross branch merges, and it can be hard for all the contributors to keep track of what is going on.\n\n출처\n¶Rebase\n리베이스가 최고다\n출처\n간단히 요약하면, 내가 작업한 내용을 master의 최신 커밋 뒤에 이어서 붙이는 것이다.\n우리의 목표\n\n\nrebase 대상 브랜치 (보통은 master)를 checkout해서 pull\nrebase 하려는 브랜치 (내가 작업한 브랜치)를 checkout해서 pull\n\n\n현재까지의 상태는 이럴 것이다.\n\ngit rebase master 를 때린다\n\n\n\n\n컨플릭이 없다면 6번으로\n\n\n컨플릭이 있다면 컨플릭을 해결한 후에 git rebase --continue를 한다.\n\n\ngit push origin &lt;branch&gt; --force로 force push를 한다.\n\n\n리베이스는 과거 커밋을 지우고 뒤에 이어 붙인 새로운 커밋을 만들기 때문에, 저장소의 커밋 히스토리를 다시 쓰게 된다.\n","dateCreated":"2019-12-18T14:31:17+09:00","dateModified":"2019-12-18T16:22:00+09:00","datePublished":"2019-12-18T14:31:17+09:00","description":"¶Commit Message\n좋은 git commit 메시지를 위한 영어사전\n\n좋은 git 커밋 메시지를 작성하기 위한 7가지 약속\n\n¶요약\nSingle Line\n\n1\n\n\n[#issue number] :emoji: Commit Message\n\n\nMulti Line\n\n1\n2\n3\n\n\n[#issue number] :emoji: Commit Message\n- change detail1\n- change detail2\n\n\n * Single Line 과 동일하지만, Multi Line 으로 가면 두 번째 라인은 반드시 비워둘 것\n * 세 번째 ","headline":"Github을 아름답게 관리하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/12/18/lets-beautify-git/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/12/18/lets-beautify-git/","keywords":"git"}</script>
-    <meta name="description" content="¶Commit Message 좋은 git commit 메시지를 위한 영어사전  좋은 git 커밋 메시지를 작성하기 위한 7가지 약속  ¶요약 Single Line  1   [#issue number] :emoji: Commit Message   Multi Line  1 2 3   [#issue number] :emoji: Commit Message - ch">
-<meta name="keywords" content="git">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"Commit Message좋은 git commit 메시지를 위한 영어사전\n좋은 git 커밋 메시지를 작성하기 위한 7가지 약속\n요약Single Line\n1[#issue number] :emoji: Commit Message\nMulti Line\n123[#issue number] :emoji: Commit Message- change detail1- change detail2\n\nSingle Line 과 동일하지만, Multi Line 으로 가면 두 번째 라인은 반드시 비워둘 것\n세 번째 라인부터 Change 상세를 리스트 형식으로 기술\n\nLinear History in git장점\ngit bisect\npossibility of submitting with history to another version control system like SVN\nDocumentation for the posterity. A linear history is typically easier to follow. This is similar to how you want your code to be well structured and documented: whenever someone needs to deal with it later (code or history) it is very valuable to be able to quickly understand what is going on.\nImproving code review efficiency and effectiveness. If a topic branch is divided into linear, logical steps, it is much easier to review it compared to reviewing a convoluted history or a squashed change-monolith (which can be overwhelming).\nWhen you need to modify the history at a later time. For instance when reverting or cherry-picking a feature in whole or in part.\nScalability. Unless you strive to keep your history linear when your team grows larger (e.g. hundreds of contributors), your history can become very bloated with cross branch merges, and it can be hard for all the contributors to keep track of what is going on.\n\n출처\nRebase리베이스가 최고다\n출처\n간단히 요약하면, 내가 작업한 내용을 master의 최신 커밋 뒤에 이어서 붙이는 것이다.\n우리의 목표\n\n\nrebase 대상 브랜치 (보통은 master)를 checkout해서 pull\nrebase 하려는 브랜치 (내가 작업한 브랜치)를 checkout해서 pull\n\n현재까지의 상태는 이럴 것이다.\n\ngit rebase master 를 때린다\n\n\n\n컨플릭이 없다면 6번으로\n\n컨플릭이 있다면 컨플릭을 해결한 후에 git rebase --continue를 한다.\n\ngit push origin &lt;branch&gt; --force로 force push를 한다.\n\n\n리베이스는 과거 커밋을 지우고 뒤에 이어 붙인 새로운 커밋을 만들기 때문에, 저장소의 커밋 히스토리를 다시 쓰게 된다.\n","dateCreated":"2019-12-18T14:31:17+09:00","dateModified":"2019-12-18T16:22:00+09:00","datePublished":"2019-12-18T14:31:17+09:00","description":"Commit Message\n좋은 git commit 메시지를 위한 영어사전\n\n좋은 git 커밋 메시지를 작성하기 위한 7가지 약속\n\n요약\nSingle Line\n\n1\n\n\n[#issue number] :emoji: Commit Message\n\n\nMulti Line\n\n1\n2\n3\n\n\n[#issue number] :emoji: Commit Message\n- change detail1\n- change detail2\n\n\n * Single Line 과 동일하지만, Multi Line 으로 가면 두 번째 라인은 반드시 비워둘 것\n * 세 번째 라인","headline":"Github을 아름답게 관리하기","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/12/18/lets-beautify-git/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/12/18/lets-beautify-git/","keywords":"git"}</script>
+    <meta name="description" content="Commit Message 좋은 git commit 메시지를 위한 영어사전  좋은 git 커밋 메시지를 작성하기 위한 7가지 약속  요약 Single Line  1   [#issue number] :emoji: Commit Message   Multi Line  1 2 3   [#issue number] :emoji: Commit Message - chan">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="Github을 아름답게 관리하기">
 <meta property="og:url" content="https://www.yceffort.kr/2019/12/18/lets-beautify-git/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="¶Commit Message 좋은 git commit 메시지를 위한 영어사전  좋은 git 커밋 메시지를 작성하기 위한 7가지 약속  ¶요약 Single Line  1   [#issue number] :emoji: Commit Message   Multi Line  1 2 3   [#issue number] :emoji: Commit Message - ch">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="Commit Message 좋은 git commit 메시지를 위한 영어사전  좋은 git 커밋 메시지를 작성하기 위한 7가지 약속  요약 Single Line  1   [#issue number] :emoji: Commit Message   Multi Line  1 2 3   [#issue number] :emoji: Commit Message - chan">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://git-scm.com/book/en/v2/images/perils-of-rebasing-5.png">
 <meta property="og:image" content="https://git-scm.com/book/en/v2/images/basic-rebase-1.png">
 <meta property="og:image" content="https://git-scm.com/book/en/v2/images/basic-rebase-3.png">
-<meta property="og:updated_time" content="2019-12-18T07:22:00.830Z">
+<meta property="article:published_time" content="2019-12-18T05:31:17.000Z">
+<meta property="article:modified_time" content="2019-12-18T07:22:00.830Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="git">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Github을 아름답게 관리하기">
-<meta name="twitter:description" content="¶Commit Message 좋은 git commit 메시지를 위한 영어사전  좋은 git 커밋 메시지를 작성하기 위한 7가지 약속  ¶요약 Single Line  1   [#issue number] :emoji: Commit Message   Multi Line  1 2 3   [#issue number] :emoji: Commit Message - ch">
 <meta name="twitter:image" content="https://git-scm.com/book/en/v2/images/perils-of-rebasing-5.png">
     
     
@@ -62,7 +62,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -89,7 +91,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -128,8 +130,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -265,11 +266,9 @@
     
     <div class="post-content markdown">
         <div class="main-content-wrap">
-            <h2 id="commit-message"><a class="header-anchor" href="#commit-message">¶</a>Commit Message</h2>
-<p><a href="https://blog.ull.im/engineering/2019/03/10/logs-on-git.html" target="_blank" rel="noopener">좋은 git commit 메시지를 위한 영어사전</a></p>
+            <h2 id="Commit-Message"><a href="#Commit-Message" class="headerlink" title="Commit Message"></a>Commit Message</h2><p><a href="https://blog.ull.im/engineering/2019/03/10/logs-on-git.html" target="_blank" rel="noopener">좋은 git commit 메시지를 위한 영어사전</a></p>
 <p><a href="https://meetup.toast.com/posts/106" target="_blank" rel="noopener">좋은 git 커밋 메시지를 작성하기 위한 7가지 약속</a></p>
-<h3 id="요약"><a class="header-anchor" href="#요약">¶</a>요약</h3>
-<p>Single Line</p>
+<h3 id="요약"><a href="#요약" class="headerlink" title="요약"></a>요약</h3><p>Single Line</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[#issue number] :emoji: Commit Message</span><br></pre></td></tr></table></figure>
 <p>Multi Line</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[#issue number] :emoji: Commit Message</span><br><span class="line">- change detail1</span><br><span class="line">- change detail2</span><br></pre></td></tr></table></figure>
@@ -277,9 +276,7 @@
 <li>Single Line 과 동일하지만, Multi Line 으로 가면 두 번째 라인은 반드시 비워둘 것</li>
 <li>세 번째 라인부터 Change 상세를 리스트 형식으로 기술</li>
 </ul>
-<h2 id="linear-history-in-git"><a class="header-anchor" href="#linear-history-in-git">¶</a>Linear History in git</h2>
-<h3 id="장점"><a class="header-anchor" href="#장점">¶</a>장점</h3>
-<ol>
+<h2 id="Linear-History-in-git"><a href="#Linear-History-in-git" class="headerlink" title="Linear History in git"></a>Linear History in git</h2><h3 id="장점"><a href="#장점" class="headerlink" title="장점"></a>장점</h3><ol>
 <li><strong>git bisect</strong></li>
 <li><strong>possibility of submitting with history to another version control system like SVN</strong></li>
 <li><strong>Documentation for the posterity</strong>. A linear history is typically easier to follow. This is similar to how you want your code to be well structured and documented: whenever someone needs to deal with it later (code or history) it is very valuable to be able to quickly understand what is going on.</li>
@@ -288,8 +285,7 @@
 <li><strong>Scalability.</strong> Unless you strive to keep your history linear when your team grows larger (e.g. hundreds of contributors), your history can become very bloated with cross branch merges, and it can be hard for all the contributors to keep track of what is going on.</li>
 </ol>
 <p><a href="https://stackoverflow.com/questions/20348629/what-are-advantages-of-keeping-linear-history-in-git" target="_blank" rel="noopener">출처</a></p>
-<h3 id="rebase"><a class="header-anchor" href="#rebase">¶</a>Rebase</h3>
-<p>리베이스가 최고다</p>
+<h3 id="Rebase"><a href="#Rebase" class="headerlink" title="Rebase"></a>Rebase</h3><p>리베이스가 최고다</p>
 <p><a href="https://dev.to/maxwell_dev/the-git-rebase-introduction-i-wish-id-had" target="_blank" rel="noopener">출처</a></p>
 <p>간단히 요약하면, 내가 작업한 내용을 master의 최신 커밋 뒤에 이어서 붙이는 것이다.</p>
 <p>우리의 목표</p>
@@ -298,21 +294,17 @@
 <li>rebase 대상 브랜치 (보통은 master)를 checkout해서 pull</li>
 <li>rebase 하려는 브랜치 (내가 작업한 브랜치)를 checkout해서 pull</li>
 </ol>
-<p><img src="https://git-scm.com/book/en/v2/images/basic-rebase-1.png" alt="git-rebase"><br>
-현재까지의 상태는 이럴 것이다.</p>
-<ol start="3">
+<p><img src="https://git-scm.com/book/en/v2/images/basic-rebase-1.png" alt="git-rebase"><br>현재까지의 상태는 이럴 것이다.</p>
+<ol>
 <li><code>git rebase master</code> 를 때린다</li>
 </ol>
 <p><img src="https://git-scm.com/book/en/v2/images/basic-rebase-3.png" alt="git-rebase"></p>
-<ol start="4">
-<li>
-<p>컨플릭이 없다면 6번으로</p>
+<ol>
+<li><p>컨플릭이 없다면 6번으로</p>
 </li>
-<li>
-<p>컨플릭이 있다면 컨플릭을 해결한 후에 <code>git rebase --continue</code>를 한다.</p>
+<li><p>컨플릭이 있다면 컨플릭을 해결한 후에 <code>git rebase --continue</code>를 한다.</p>
 </li>
-<li>
-<p><code>git push origin &lt;branch&gt; --force</code>로 force push를 한다.</p>
+<li><p><code>git push origin &lt;branch&gt; --force</code>로 force push를 한다.</p>
 </li>
 </ol>
 <p>리베이스는 과거 커밋을 지우고 뒤에 이어 붙인 새로운 커밋을 만들기 때문에, 저장소의 커밋 히스토리를 다시 쓰게 된다.</p>
@@ -331,7 +323,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/git/">git</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/git/" rel="tag">git</a>
 
             </div>
         
@@ -384,12 +376,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -404,10 +390,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -471,12 +453,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -615,8 +591,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -634,8 +610,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -691,8 +667,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -710,8 +686,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -771,7 +747,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -781,26 +757,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/12/18/lets-beautify-git/';
-                 
-                    this.page.identifier = '2019/12/18/lets-beautify-git/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

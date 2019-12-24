@@ -34,19 +34,19 @@
     
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
-    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"ES6에서부터 생긴 arrow function은 일반적으로 ()=&gt;{}의 모양을 하고 있으며, 동작도 비슷해보인다. 하지만 이 두 선언방식은 두가지 분명한 차이를 가지고 있다.\n¶1. this와 arguments의 차이\n화살표 함수는 this와 arguments를 바인딩하지 않는다. 그 대신, 일반적인 this와 arguments와 동일한 범위를 가지고 있다.\n1234567891011function createObject() &#123;  console.log('Inside `createObject`:', this.foo);  return &#123;    foo: 42,    bar: function() &#123;      console.log('Inside `bar`:', this.foo);    &#125;,  &#125;;&#125;createObject.call(&#123;foo: 21&#125;).bar();\n위 함수의 결과는\n12Inside `createObject`: 21Inside `bar`: 42\n가 된다. 그러나 화살표 함수에서는 약간 다르다.\n123456789function createObject() &#123;  console.log('Inside `createObject`:', this.foo);  return &#123;    foo: 42,    bar: () =&gt; console.log('Inside `bar`:', this.foo),  &#125;;&#125;createObject.call(&#123;foo: 21&#125;).bar();\n결과는\n12Inside `createObject`: 21Inside `bar`: 21\n즉, 화살표 함수안에서의 this는 createObject안의 this를 따르게 된다. 이는 화살표 함수가 현재 환경의 this를 따르게 하고 싶을 때 유용하다는 뜻이다. 이 말인 즉슨, 화살표함수에서는 bind와 call을 사용할 수 없다는 뜻이기도 하다.\n¶2. 화살표 함수는 new로 호출할수 없다.\nes2015에서는 callable한 것과 constructable한 것과의 차이를 두고 있다. 어떤 함수가 constructable하다면, 이는 new로 호출되어야 한다. ex) new User() 그리고 만약 함수가 callable하다면, 이 함수는 new없이도 호출이 되어야 한다 .ex) 일반적인 함수 호출\n일반적인 함수의 경우 callable하며 constructable하다. 그러나 화살표 함수는 오로지 callable할 뿐이다. 반대로 class의 경우에는 오로지 constructable할 뿐이다.\n¶정리\n서로 바꿔서 쓸 수 있는 경우\n\nthis, arguments를 쓰지 않는 경우\nbind(this)를 사용하는 경우\n\n서로 바꿔쓸 수 없는 경우\n\nconstructable 함수\nprototype에 추가된 함수나 메소드\narguments를 함수의 인자로 사용하는 경우\n\n","dateCreated":"2019-07-09T09:39:42+09:00","dateModified":"2019-08-14T11:05:21+09:00","datePublished":"2019-07-09T09:39:42+09:00","description":"ES6에서부터 생긴 arrow function은 일반적으로 ()=>{}의 모양을 하고 있으며, 동작도 비슷해보인다. 하지만 이 두 선언방식은 두가지 분명한 차이를 가지고 있다.\n\n¶1. this와 arguments의 차이\n화살표 함수는 this와 arguments를 바인딩하지 않는다. 그 대신, 일반적인 this와 arguments와 동일한 범위를 가지고 있다.\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n\n\nfunction createObject() {\n  console.log('Inside `createObject`:', thi","headline":"javascript 일반 함수와 화살표 함수의 차이","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/07/09/difference-between-function-and-arrow/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/07/09/difference-between-function-and-arrow/","keywords":"javascript"}</script>
-    <meta name="description" content="ES6에서부터 생긴 arrow function은 일반적으로 ()=&amp;gt;{}의 모양을 하고 있으며, 동작도 비슷해보인다. 하지만 이 두 선언방식은 두가지 분명한 차이를 가지고 있다.  ¶1. this와 arguments의 차이 화살표 함수는 this와 arguments를 바인딩하지 않는다. 그 대신, 일반적인 this와 arguments와 동일한 범위를 가지고">
-<meta name="keywords" content="javascript">
+    <script type="application/ld+json">{"@context":"http://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"},"articleBody":"ES6에서부터 생긴 arrow function은 일반적으로 ()=&gt;{}의 모양을 하고 있으며, 동작도 비슷해보인다. 하지만 이 두 선언방식은 두가지 분명한 차이를 가지고 있다.\n1. this와 arguments의 차이화살표 함수는 this와 arguments를 바인딩하지 않는다. 그 대신, 일반적인 this와 arguments와 동일한 범위를 가지고 있다.\n1234567891011function createObject() &#123;  console.log('Inside `createObject`:', this.foo);  return &#123;    foo: 42,    bar: function() &#123;      console.log('Inside `bar`:', this.foo);    &#125;,  &#125;;&#125;createObject.call(&#123;foo: 21&#125;).bar();\n위 함수의 결과는\n12Inside `createObject`: 21Inside `bar`: 42\n가 된다. 그러나 화살표 함수에서는 약간 다르다.\n123456789function createObject() &#123;  console.log('Inside `createObject`:', this.foo);  return &#123;    foo: 42,    bar: () =&gt; console.log('Inside `bar`:', this.foo),  &#125;;&#125;createObject.call(&#123;foo: 21&#125;).bar();\n결과는12Inside `createObject`: 21Inside `bar`: 21\n즉, 화살표 함수안에서의 this는 createObject안의 this를 따르게 된다. 이는 화살표 함수가 현재 환경의 this를 따르게 하고 싶을 때 유용하다는 뜻이다. 이 말인 즉슨, 화살표함수에서는 bind와 call을 사용할 수 없다는 뜻이기도 하다.\n2. 화살표 함수는 new로 호출할수 없다.es2015에서는 callable한 것과 constructable한 것과의 차이를 두고 있다. 어떤 함수가 constructable하다면, 이는 new로 호출되어야 한다. ex) new User() 그리고 만약 함수가 callable하다면, 이 함수는 new없이도 호출이 되어야 한다 .ex) 일반적인 함수 호출\n일반적인 함수의 경우 callable하며 constructable하다. 그러나 화살표 함수는 오로지 callable할 뿐이다. 반대로 class의 경우에는 오로지 constructable할 뿐이다. \n정리서로 바꿔서 쓸 수 있는 경우\n\nthis, arguments를 쓰지 않는 경우\nbind(this)를 사용하는 경우\n\n서로 바꿔쓸 수 없는 경우\n\nconstructable 함수\nprototype에 추가된 함수나 메소드\narguments를 함수의 인자로 사용하는 경우\n\n","dateCreated":"2019-07-09T09:39:42+09:00","dateModified":"2019-08-14T11:05:21+09:00","datePublished":"2019-07-09T09:39:42+09:00","description":"ES6에서부터 생긴 arrow function은 일반적으로 ()=>{}의 모양을 하고 있으며, 동작도 비슷해보인다. 하지만 이 두 선언방식은 두가지 분명한 차이를 가지고 있다.\n\n1. this와 arguments의 차이\n화살표 함수는 this와 arguments를 바인딩하지 않는다. 그 대신, 일반적인 this와 arguments와 동일한 범위를 가지고 있다.\n\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n\n\nfunction createObject() {\n  console.log('Inside `createObject`:', this","headline":"javascript 일반 함수와 화살표 함수의 차이","image":[],"mainEntityOfPage":{"@type":"WebPage","@id":"https://www.yceffort.kr/2019/07/09/difference-between-function-and-arrow/"},"publisher":{"@type":"Organization","name":"yceffort","sameAs":["https://github.com/yceffort","mailto: root@yceffort.kr"],"image":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c","logo":{"@type":"ImageObject","url":"https://www.gravatar.com/avatar/f24f66c6311c477d8ac26a9ef346560c"}},"url":"https://www.yceffort.kr/2019/07/09/difference-between-function-and-arrow/","keywords":"javascript"}</script>
+    <meta name="description" content="ES6에서부터 생긴 arrow function은 일반적으로 ()&#x3D;&gt;{}의 모양을 하고 있으며, 동작도 비슷해보인다. 하지만 이 두 선언방식은 두가지 분명한 차이를 가지고 있다.  1. this와 arguments의 차이 화살표 함수는 this와 arguments를 바인딩하지 않는다. 그 대신, 일반적인 this와 arguments와 동일한 범위를 가지고 있">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="javascript 일반 함수와 화살표 함수의 차이">
 <meta property="og:url" content="https://www.yceffort.kr/2019/07/09/difference-between-function-and-arrow/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="ES6에서부터 생긴 arrow function은 일반적으로 ()=&amp;gt;{}의 모양을 하고 있으며, 동작도 비슷해보인다. 하지만 이 두 선언방식은 두가지 분명한 차이를 가지고 있다.  ¶1. this와 arguments의 차이 화살표 함수는 this와 arguments를 바인딩하지 않는다. 그 대신, 일반적인 this와 arguments와 동일한 범위를 가지고">
-<meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-08-14T02:05:21.889Z">
+<meta property="og:description" content="ES6에서부터 생긴 arrow function은 일반적으로 ()&#x3D;&gt;{}의 모양을 하고 있으며, 동작도 비슷해보인다. 하지만 이 두 선언방식은 두가지 분명한 차이를 가지고 있다.  1. this와 arguments의 차이 화살표 함수는 this와 arguments를 바인딩하지 않는다. 그 대신, 일반적인 this와 arguments와 동일한 범위를 가지고 있">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2019-07-09T00:39:42.000Z">
+<meta property="article:modified_time" content="2019-08-14T02:05:21.889Z">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="javascript">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="javascript 일반 함수와 화살표 함수의 차이">
-<meta name="twitter:description" content="ES6에서부터 생긴 arrow function은 일반적으로 ()=&amp;gt;{}의 모양을 하고 있으며, 동작도 비슷해보인다. 하지만 이 두 선언방식은 두가지 분명한 차이를 가지고 있다.  ¶1. this와 arguments의 차이 화살표 함수는 this와 arguments를 바인딩하지 않는다. 그 대신, 일반적인 this와 arguments와 동일한 범위를 가지고">
     
     
     
@@ -58,7 +58,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -85,7 +87,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -124,8 +126,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -262,21 +263,17 @@
     <div class="post-content markdown">
         <div class="main-content-wrap">
             <p>ES6에서부터 생긴 <code>arrow function</code>은 일반적으로 <code>()=&gt;{}</code>의 모양을 하고 있으며, 동작도 비슷해보인다. 하지만 이 두 선언방식은 두가지 분명한 차이를 가지고 있다.</p>
-<h2 id="1-this와-arguments의-차이"><a class="header-anchor" href="#1-this와-arguments의-차이">¶</a>1. this와 arguments의 차이</h2>
-<p>화살표 함수는 <code>this</code>와 <code>arguments</code>를 바인딩하지 않는다. 그 대신, 일반적인 <code>this</code>와 <code>arguments</code>와 동일한 범위를 가지고 있다.</p>
+<h2 id="1-this와-arguments의-차이"><a href="#1-this와-arguments의-차이" class="headerlink" title="1. this와 arguments의 차이"></a>1. this와 arguments의 차이</h2><p>화살표 함수는 <code>this</code>와 <code>arguments</code>를 바인딩하지 않는다. 그 대신, 일반적인 <code>this</code>와 <code>arguments</code>와 동일한 범위를 가지고 있다.</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createObject</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Inside `createObject`:'</span>, <span class="keyword">this</span>.foo);</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    foo: <span class="number">42</span>,</span><br><span class="line">    bar: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'Inside `bar`:'</span>, <span class="keyword">this</span>.foo);</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">createObject.call(&#123;<span class="attr">foo</span>: <span class="number">21</span>&#125;).bar();</span><br></pre></td></tr></table></figure>
 <p>위 함수의 결과는</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Inside `createObject`: 21</span><br><span class="line">Inside `bar`: 42</span><br></pre></td></tr></table></figure>
 <p>가 된다. 그러나 화살표 함수에서는 약간 다르다.</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createObject</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'Inside `createObject`:'</span>, <span class="keyword">this</span>.foo);</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    foo: <span class="number">42</span>,</span><br><span class="line">    bar: <span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="string">'Inside `bar`:'</span>, <span class="keyword">this</span>.foo),</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">createObject.call(&#123;<span class="attr">foo</span>: <span class="number">21</span>&#125;).bar();</span><br></pre></td></tr></table></figure>
-<p>결과는</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Inside `createObject`: 21</span><br><span class="line">Inside `bar`: 21</span><br></pre></td></tr></table></figure>
+<p>결과는<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Inside `createObject`: 21</span><br><span class="line">Inside `bar`: 21</span><br></pre></td></tr></table></figure></p>
 <p>즉, 화살표 함수안에서의 <code>this</code>는 <code>createObject</code>안의 <code>this</code>를 따르게 된다. 이는 화살표 함수가 현재 환경의 <code>this</code>를 따르게 하고 싶을 때 유용하다는 뜻이다. 이 말인 즉슨, 화살표함수에서는 <code>bind</code>와 <code>call</code>을 사용할 수 없다는 뜻이기도 하다.</p>
-<h2 id="2-화살표-함수는-new로-호출할수-없다"><a class="header-anchor" href="#2-화살표-함수는-new로-호출할수-없다">¶</a>2. 화살표 함수는 <code>new</code>로 호출할수 없다.</h2>
-<p>es2015에서는 <code>callable</code>한 것과 <code>constructable</code>한 것과의 차이를 두고 있다. 어떤 함수가 <code>constructable</code>하다면, 이는 <code>new</code>로 호출되어야 한다. ex) <code>new User()</code> 그리고 만약 함수가 <code>callable</code>하다면, 이 함수는 <code>new</code>없이도 호출이 되어야 한다 .ex) 일반적인 함수 호출</p>
-<p>일반적인 함수의 경우 <code>callable</code>하며 <code>constructable</code>하다. 그러나 화살표 함수는 오로지 <code>callable</code>할 뿐이다. 반대로 <code>class</code>의 경우에는 오로지 <code>constructable</code>할 뿐이다.</p>
-<h2 id="정리"><a class="header-anchor" href="#정리">¶</a>정리</h2>
-<p>서로 바꿔서 쓸 수 있는 경우</p>
+<h2 id="2-화살표-함수는-new로-호출할수-없다"><a href="#2-화살표-함수는-new로-호출할수-없다" class="headerlink" title="2. 화살표 함수는 new로 호출할수 없다."></a>2. 화살표 함수는 <code>new</code>로 호출할수 없다.</h2><p>es2015에서는 <code>callable</code>한 것과 <code>constructable</code>한 것과의 차이를 두고 있다. 어떤 함수가 <code>constructable</code>하다면, 이는 <code>new</code>로 호출되어야 한다. ex) <code>new User()</code> 그리고 만약 함수가 <code>callable</code>하다면, 이 함수는 <code>new</code>없이도 호출이 되어야 한다 .ex) 일반적인 함수 호출</p>
+<p>일반적인 함수의 경우 <code>callable</code>하며 <code>constructable</code>하다. 그러나 화살표 함수는 오로지 <code>callable</code>할 뿐이다. 반대로 <code>class</code>의 경우에는 오로지 <code>constructable</code>할 뿐이다. </p>
+<h2 id="정리"><a href="#정리" class="headerlink" title="정리"></a>정리</h2><p>서로 바꿔서 쓸 수 있는 경우</p>
 <ul>
 <li><code>this</code>, <code>arguments</code>를 쓰지 않는 경우</li>
 <li><code>bind(this)</code>를 사용하는 경우</li>
@@ -302,7 +299,7 @@
             <div class="post-footer-tags">
                 <span class="text-color-light text-small">TAGGED IN</span><br/>
                 
-    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/">javascript</a>
+    <a class="tag tag--primary tag--small t-link" href="/tags/javascript/" rel="tag">javascript</a>
 
             </div>
         
@@ -355,12 +352,6 @@
         
         
             
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
-            
         
         <li class="post-action">
             
@@ -375,10 +366,6 @@
 
         
         
-            
-                <div id="disqus_thread">
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
             
         
     </div>
@@ -442,12 +429,6 @@
             </li>
         
         
-            
-                <li class="post-action">
-                    <a class="post-action-btn btn btn--default" href="#disqus_thread">
-                        <i class="fa fa-comment"></i>
-                    </a>
-                </li>
             
         
         <li class="post-action">
@@ -586,8 +567,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -605,8 +586,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -662,8 +643,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -681,8 +662,8 @@
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -742,7 +723,7 @@
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -752,26 +733,11 @@
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
-    
-        <script>
-             var disqus_config = function () {
-                 this.page.url = 'https://www.yceffort.kr/2019/07/09/difference-between-function-and-arrow/';
-                 
-                    this.page.identifier = '2019/07/09/difference-between-function-and-arrow/';
-                 
-             };
-            (function() {
-                var d = document, s = d.createElement('script');
-                var disqus_shortname = 'https-www-yceffort-kr';
-                s.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-
-                s.setAttribute('data-timestamp', +new Date());
-                (d.head || d.body).appendChild(s);
-            })();
-        </script>
     
 
 

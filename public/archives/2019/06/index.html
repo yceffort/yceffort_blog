@@ -35,17 +35,18 @@
     <link rel="alternate" type="application/atom+xml" title="RSS" href="/atom.xml">
     
     <script type="application/ld+json">{}</script>
-    <meta name="description" content="this is the yceffort&apos;s private blog">
-<meta name="keywords" content="programming,innovation,technology">
+    <meta name="description" content="this is the yceffort&#39;s private blog">
 <meta property="og:type" content="blog">
 <meta property="og:title" content="yceffort">
 <meta property="og:url" content="https://www.yceffort.kr/archives/2019/06/index.html">
 <meta property="og:site_name" content="yceffort">
-<meta property="og:description" content="this is the yceffort&apos;s private blog">
-<meta property="og:locale" content="en">
+<meta property="og:description" content="this is the yceffort&#39;s private blog">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="yceffort">
+<meta property="article:tag" content="programming">
+<meta property="article:tag" content="innovation">
+<meta property="article:tag" content="technology">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="yceffort">
-<meta name="twitter:description" content="this is the yceffort&apos;s private blog">
     
     
     
@@ -57,7 +58,9 @@
     
     
     <!--STYLES-->
-    <link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+    
+<link rel="stylesheet" href="/assets/css/style-je9ne2wwvtssbupojm9va0xqtluc5xk9hlyjdqt05wwldmrgscrkdxxcibuq.min.css">
+
     <!--STYLES END-->
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-139493546-1"></script>
@@ -84,7 +87,7 @@
 <header id="header" data-behavior="2">
     <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
     <div class="header-title">
-        <a class="header-title-link" href="/ ">yceffort</a>
+        <a class="header-title-link" href="/%20">yceffort</a>
     </div>
     
         
@@ -123,8 +126,7 @@
                 <li class="sidebar-button">
                     
                         <a  class="sidebar-button-link "
-                             href="/ "
-                            
+                             href="/./"
                             title="Home"
                         >
                     
@@ -261,7 +263,7 @@
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶Intersection Observer
+                    Intersection Observer
 Intersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여부를 확인해주는 API다. 간단히 말해 브라우저의 어떤 요소가 화면에 노출되고 있는지 안되고 있는지를 확인해주는 라이브러리라고 생각하면 될 것 같다. 이 라이브러리가 없이 엘리먼트가 노출중인지 확인하려면 어떻게 해야할까? 이전까지 주로 사용되던 API는 getBoundingClientRect다. 이 메서드는 해당 엘리먼트의 크기와 viewport에서의 상대적인 위치를 알려준다.
 
 1
@@ -271,7 +273,7 @@ Intersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여�
 5
 6
 7
-
+8
                     
                         <a href="/2019/06/24/intersection-observer/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -308,15 +310,15 @@ Intersection Observer는 엘리먼트가 viewport에 노출되고 있는지 여�
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶사용한 오픈소스
-¶React
+                    사용한 오픈소스
+React
 자세한 설명은 생략 한다
 
-¶Nextjs
-NextJs 리액트에서 서버사이드 렌더링을 할 수 있도록 해주는 프레임워크다. angular나 react 등은 SPA라서 불편한 점이 더러 있는데, React에서 NextJS를 활용하면 react를 ssr(server side rendering)이 되도록 바꿔줄 수 있다. 그리고 자동으로 code splitting이 되고, 파일 시스템을 기준으로 라우팅이 되며, … 뭐 이런저런 장점이 있다.
+Nextjs
+NextJs 리액트에서 서버사이드 렌더링을 할 수 있도록 해주는 프레임워크다. angular나 react 등은 SPA라서 불편한 점이 더러 있는데, React에서 NextJS를 활용하면 react를 ssr(server side rendering)이 되도록 바꿔줄 수 있다. 그리고 자동으로 code splitting이 되고, 파일 시스템을 기준으로 라우팅이 되며, .. 뭐 이런저런 장점이 있다.
 
-¶koa
-express를 만든 개발자들이 따로 떨어져 나와서 만든 w
+koa
+express를 만든 개발자들이 따로 떨어져 나와서 만든 web 
                     
                         <a href="/2019/06/20/react-nextjs-koa/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -353,13 +355,13 @@ express를 만든 개발자들이 따로 떨어져 나와서 만든 w
             </div>
             
                 <div class="postShorten-excerpt">
-                    ¶고민지점
+                    고민지점
  * Global 로 관리하는 Colorset Red, Blue, Green, Black이 있다.
  * 이 색들은 각각 지정된 칼라코드가 있다
  * 그러나 때로는 그 컬러코드에 맞게 안쓰는 경우도 있다
  * 그러나 때로는 저 네개를 다 안쓰고 1~3개만 쓰는 경우가 있다.
 
-¶Union types
+Union types
 Union Type
 
 어떤 라이브러리에서 받는 파라미터의 값을 number와 string으로 제한한다고 하자. 그렇다면 코드는 아래와 같을 것이다.
@@ -376,7 +378,7 @@ Union Type
 10
 
 
-function numberOrStr
+function numberOrStrin
                     
                         <a href="/2019/06/17/typescript-type-enum-partial-record/" class="postShorten-excerpt_link link">
                             Continue reading
@@ -507,8 +509,8 @@ function numberOrStr
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
-                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
+                            <h3 class="media-heading">ReactiveX) Observable</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -526,8 +528,8 @@ function numberOrStr
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/ReactiveX-Observable/">
-                            <h3 class="media-heading">ReactiveX) Observable</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/bitcoin-btcd-bitcoin-cli/">
+                            <h3 class="media-heading">Bitcoin) BTCD와 bitcoin-cli (bitcoin core)의 차이</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -583,8 +585,8 @@ function numberOrStr
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
-                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
+                            <h3 class="media-heading">Delphi) Some tricks</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -602,8 +604,8 @@ function numberOrStr
                 <div class="media">
                     
                     <div class="media-body">
-                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/some-trick-delphi/">
-                            <h3 class="media-heading">Delphi) Some tricks</h3>
+                        <a class="link-unstyled" href="https://www.yceffort.kr/2018/05/31/tracking-bitcoin-core-sync/">
+                            <h3 class="media-heading">Bitcoin) Bitcoin-core의 Sync를 동기화 해보자.</h3>
                         </a>
                         <span class="media-meta">
                             <span class="media-date text-small">
@@ -663,7 +665,7 @@ function numberOrStr
                 data-message-zero="no post found"
                 data-message-one="1 post found"
                 data-message-other="{n} posts found">
-                252 posts found
+                253 posts found
             </p>
         </div>
     </div>
@@ -673,7 +675,9 @@ function numberOrStr
         
 <div id="cover" style="background-image:url('https://photos.smugmug.com/Galleries/All/i-m7cLXBm/0/X3/Lights%20of%20Lyngen-X3.jpg');"></div>
         <!--SCRIPTS-->
+
 <script src="/assets/js/script-tyo1warvoujbh4kfpbfo25ifgfxk1phrstngrnj1bltb2lvqnfrkfwvv5szv.min.js"></script>
+
 <!--SCRIPTS END-->
 
 
